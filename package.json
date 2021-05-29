@@ -88,19 +88,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/adibbehjat/Bahai-Bot-for-Discord.git"
+    "url": "git+https://github.com/bahaidev/bahaibot.git"
   },
   "keywords": [
     "discord",
     "bot",
     "Bahai"
   ],
-  "author": "Adib Behjat",
+  "author": "Bahaidev",
   "contributors": [
+    "Adib Behjat",
     "dragfyre",
     "Brett Zamir"
   ],
   "license": "GPL-2.0-only",
-  "bugs": "https://github.com/adibbehjat/Bahai-Bot-for-Discord/issues",
-  "homepage": "https://github.com/adibbehjat/Bahai-Bot-for-Discord#readme"
+  "bugs": "https://github.com/bahaidev/bahaibot/issues",
+  "homepage": "https://github.com/bahaidev/bahaibot#readme"
 }
