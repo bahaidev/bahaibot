@@ -1,0 +1,58 @@
+{
+  "body": {
+    "BahaiBotOnline": {
+      "message": "The Bahá'í Bot Online!"
+    },
+    "serverName": {
+      "message": "Bahá'í.FYI"
+    },
+    "labServerName": {
+      "message": "Bahá'í Lab"
+    },
+    "guildMemberAddWelcome": {
+      "message": "{greet}, {userID}! Welcome to {serverName}. :wave:\n\nTo gain access to all channels, please take a moment to read the {rulesChannel}. When you're done, please ping {helpTeam} and let the help team know that you've read and accept the rules. {happy}"
+    },
+    "errorExecuting": {
+      "message": "Error executing command with message"
+    },
+    "checkingIn": {
+      "message": "Checking in on {guildName}."
+    },
+    "greetingSent": {
+      "message": "Greeting sent to {channels}."
+    },
+    "firstGreet": {
+      "message": "First greet for {channels}"
+    },
+    "lastGreeting": {
+      "message": "Last greeting to {channels}: {relativeTime} ago."
+    },
+    "uptimeGreet": {
+      "message": "{greet}, just checking in. *(timestamp: {now}; uptime: {uptime})*"
+    },
+    "errorWritingGuild": {
+      "message": "Error writing {guildFileName} file"
+    },
+    "channelFound": {
+      "message": "{guildName} #{channelName} found"
+    },
+    "postingTodayInHistory": {
+      "message": "Query completed, posting Today in History."
+    },
+    "todayInHistoryResult": {
+      "message": "{bstar} Here's Bahaipedia's Today in History entry for {today}.\n\n {todayInHistoryResult}"
+    },
+    "hereIsQueryResult": {
+      "message": "Here is the result of your query."
+    },
+    "speechError": {
+      "message": "There was a speech error."
+    },
+    "speakingBegun": {
+      "message": "Speaking has begun."
+    },
+    "routerResponse": {
+      "message": "Router response:"
+    }
+  }
+}

@@ -1,0 +1,3 @@
+Copyright (C) Kilian Cirera
+
+The BStar.png file was permitted to be re-released under this project's own open source license terms, with the above copyright of the original author noted.

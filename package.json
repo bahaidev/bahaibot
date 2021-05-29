@@ -1,0 +1,106 @@
+{
+  "name": "bahaibot",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A bot made for Bahá'í discourses",
+  "main": "index.js",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "bot": "./bot.js",
+    "discordBot": "./discordBot.js"
+  },
+  "bin": {
+    "bahaibot": "./src/binary.js"
+  },
+  "dependencies": {
+    "@discordjs/opus": "^0.5.0",
+    "apiai": "^4.0.3",
+    "discord-tts": "^1.0.3",
+    "discord.js": "^12.5.3",
+    "discord.js-rate-limiter": "^1.0.7",
+    "file-fetch": "^1.6.0",
+    "intl-dom": "^0.13.4",
+    "node-fetch": "^2.6.1",
+    "object.hasown": "^1.0.0",
+    "set-safer-interval": "^0.3.0",
+    "striptags": "^3.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.3",
+    "@babel/eslint-parser": "^7.14.3",
+    "@babel/plugin-syntax-top-level-await": "^7.12.13",
+    "@brettz9/eslint-plugin": "^1.0.3",
+    "@rollup/plugin-commonjs": "^19.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "c8": "^7.7.2",
+    "chai": "^4.3.4",
+    "eslint": "^7.27.0",
+    "eslint-config-ash-nazg": "29.16.2",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-array-func": "^3.1.7",
+    "eslint-plugin-chai-friendly": "^0.7.1",
+    "eslint-plugin-compat": "^3.9.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-html": "^6.1.2",
+    "eslint-plugin-import": "^2.23.3",
+    "eslint-plugin-jsdoc": "^35.0.0",
+    "eslint-plugin-jsonc": "^1.2.1",
+    "eslint-plugin-markdown": "^2.2.0",
+    "eslint-plugin-no-unsanitized": "^3.1.5",
+    "eslint-plugin-no-use-extend-native": "^0.5.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "eslint-plugin-radar": "^0.2.1",
+    "eslint-plugin-unicorn": "^32.0.1",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
+    "mocha": "^8.4.0",
+    "nodemon": "^2.0.7",
+    "rollup": "^2.50.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "sinon": "^11.1.0"
+  },
+  "engines": {
+    "node": ">=14.8.0"
+  },
+  "scripts": {
+    "rollup": "rollup -c",
+    "lint": "eslint --ext=js,md,html .",
+    "lint-arg-fix": "eslint --fix --ext=js,md,html",
+    "lint-json-arg-fix": "eslint --config=.eslintrc-json.js --no-eslintrc --fix --ext=json",
+    "lint-json": "eslint --config=.eslintrc-json.js --no-eslintrc --ext=json library",
+    "start-dev": "nodemon src/index.js",
+    "start": "node src/index.js --checkins",
+    "mocha": "mocha --require chai/register-expect --exit --timeout 9000",
+    "prepare": "husky install",
+    "test": "rm -Rf ./node_modules/.cache && c8 --check-coverage --statements 100 --lines 100 --functions 100 --branches 100 npm run mocha test/*.js"
+  },
+  "lint-staged": {
+    "library/*.json": "npm run lint-json-arg-fix --",
+    "*.{js,md,html}": "npm run lint-arg-fix --"
+  },
+  "c8": {
+    "reporter": [
+      "text",
+      "lcov"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adibbehjat/Bahai-Bot-for-Discord.git"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "Bahai"
+  ],
+  "author": "Adib Behjat",
+  "contributors": [
+    "dragfyre",
+    "Brett Zamir"
+  ],
+  "license": "GPL-2.0-only",
+  "bugs": "https://github.com/adibbehjat/Bahai-Bot-for-Discord/issues",
+  "homepage": "https://github.com/adibbehjat/Bahai-Bot-for-Discord#readme"
+}

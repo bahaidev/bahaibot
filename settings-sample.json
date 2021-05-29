@@ -1,0 +1,24 @@
+{
+  "production" : {
+    "dialogflowToken": "",
+    "token": "",
+    "embedColor": 16732271,
+    "embedTextLimit": 2000,
+
+    "anti_abuse": {
+      "_minimum time between mentions": 300000,
+      "_maximum message limit": 10
+    }
+  },
+  "development": {
+  	"dialogflowToken": "",
+  	"token": "",
+  	"embedColor": 16732271,
+  	"embedTextLimit": 2000,
+
+  	"anti_abuse": {
+  		"_minimum time between mentions": 300000,
+  		"_maximum message limit": 10
+  	}
+  }
+}

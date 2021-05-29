@@ -1,0 +1,92 @@
+[
+	{
+		"id": 0,
+		"code": "hwa",
+		"aka_codes": [],
+		"title": "The Arabic Hidden Words",
+		"author": "Bahá’u’lláh",
+		"filename": "hw_arabic.json",
+		"url": "http://www.bahai.org/library/authoritative-texts/bahaullah/hidden-words/#r=hw_en-1"
+	},
+	{
+		"id": 1,
+		"code": "hwp",
+		"aka_codes": [],
+		"title": "The Persian Hidden Words",
+		"author": "Bahá’u’lláh",
+		"filename": "hw_persian.json",
+		"url": "http://www.bahai.org/library/authoritative-texts/bahaullah/hidden-words/#r=hw_en-2"
+	},
+	{
+		"id": 2,
+		"code": "pwp",
+		"aka_codes": [],
+		"title": "The Promise of World Peace",
+		"author": "The Universal House of Justice",
+		"filename": "peace.json",
+		"url": "http://www.bahai.org/library/authoritative-texts/the-universal-house-of-justice/messages/#d=19851001_001&f=f1"
+	},
+	{
+		"id": 3,
+		"code": "gems",
+		"aka_codes": ["gdm"],
+		"title": "Gems of Divine Mysteries",
+		"author": "Bahá’u’lláh",
+		"filename": "gems.json",
+		"url": "http://www.bahai.org/library/authoritative-texts/bahaullah/gems-divine-mysteries/#r=gdm_en-title"
+	},
+	{
+		"id": 4,
+		"code": "aqdas",
+		"aka_codes": ["ka"],
+		"title": "The Kitáb-i-Aqdas - The Most Holy Book",
+		"author": "Bahá’u’lláh",
+		"filename": "aqdas.json",
+		"url": "http://www.bahai.org/library/authoritative-texts/bahaullah/kitab-i-aqdas/#r=ka_en-title"
+	},
+	{
+		"id": 5,
+		"code": "esw",
+		"aka_codes": [],
+		"title": "Epistle to the Son of the Wolf",
+		"author": "Bahá’u’lláh",
+		"filename": "epistle_sw.json",
+		"url": "http://www.bahai.org/library/authoritative-texts/bahaullah/epistle-son-wolf/#r=esw_en-title"
+	},
+	{
+		"id": 6,
+		"code": "forel",
+		"aka_codes": ["taf"],
+		"title": "Tablet to Dr. Auguste Forel",
+		"author": "‘Abdu’l-Bahá",
+		"filename": "dr_forel.json",
+		"url": "http://www.bahai.org/library/authoritative-texts/abdul-baha/tablet-august-forel/#r=taf_en-title"
+	},
+	{
+		"id": 7,
+		"code": "will",
+		"aka_codes": ["wt"],
+		"title": "The Will and Testament of ‘Abdu’l-Bahá",
+		"author": "‘Abdu’l-Bahá",
+		"filename": "will_testament.json",
+		"url": "http://www.bahai.org/library/authoritative-texts/abdul-baha/will-testament-abdul-baha/#r=wta_en-title"
+	},
+	{
+		"id": 8,
+		"code": "wrl",
+		"aka_codes": [],
+		"title": "Letter to the World's Religious Leaders",
+		"author": "The Universal House of Justice",
+		"filename": "rel_leaders.json",
+		"url": "http://www.bahai.org/library/authoritative-texts/the-universal-house-of-justice/messages/#d=20020401_001&f=f1"
+	},
+	{
+		"id": 9,
+		"code": "iqan",
+		"aka_codes": ["ki"],
+		"title": "The Kitáb-i-Íqán",
+		"author": "Bahá’u’lláh",
+		"filename": "iqan.json",
+		"url": "http://www.bahai.org/library/authoritative-texts/bahaullah/kitab-i-iqan/"
+	}
+]
