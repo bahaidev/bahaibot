@@ -2,4 +2,8 @@ settings.json
 test
 pnpm-lock.yaml
 coverage
+src/_unused
 .nyc_output
+.pnpm-debug.log
+.github
+.husky
