@@ -184,7 +184,7 @@ checkinGuilds = [
 
 ## Building one's own implemenations
 
-See [implementation-notes.md](./implementation-notes.md).
+See [implementation-notes.md](./docs/implementation-notes.md).
 
 ## Developing
 
