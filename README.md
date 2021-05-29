@@ -1,5 +1,7 @@
 # Bahá'í Bot
 
+[![npm](https://img.shields.io/npm/v/bahaibot.svg)](https://www.npmjs.com/package/bahaibot)
+
 The Bahá'í Bot has default support for the chat server,
 [Discord](https://discord.com/), but it could be applied for other
 applications, including even client-side browser-based apps.
