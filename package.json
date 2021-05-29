@@ -1,6 +1,5 @@
 {
   "name": "bahaibot",
-  "private": true,
   "version": "0.1.0",
   "description": "A bot made for Bahá'í discourses",
   "main": "index.js",
