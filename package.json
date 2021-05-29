@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
-    "@babel/eslint-parser": "^7.14.3",
+    "@babel/eslint-parser": "^7.14.4",
     "@babel/plugin-syntax-top-level-await": "^7.12.13",
     "@brettz9/eslint-plugin": "^1.0.3",
     "@rollup/plugin-commonjs": "^19.0.0",
@@ -57,14 +57,15 @@
     "lint-staged": "^11.0.0",
     "mocha": "^8.4.0",
     "nodemon": "^2.0.7",
-    "rollup": "^2.50.0",
+    "rollup": "^2.50.4",
     "rollup-plugin-terser": "^7.0.2",
-    "sinon": "^11.1.0"
+    "sinon": "^11.1.1"
   },
   "engines": {
     "node": ">=14.8.0"
   },
   "scripts": {
+    "prepublishOnly": "pnpm i && pnpm rollup",
     "rollup": "rollup -c",
     "lint": "eslint --ext=js,md,html .",
     "lint-arg-fix": "eslint --fix --ext=js,md,html",

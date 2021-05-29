@@ -3110,7 +3110,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RateLimiter = void 0;
 var rate_limiter_1 = rateLimiter$1;
 Object.defineProperty(exports, "RateLimiter", { enumerable: true, get: function () { return rate_limiter_1.RateLimiter; } });
-//# sourceMappingURL=index.js.map
+
 }(dist));
 
 /**
@@ -3124,10 +3124,11 @@ Object.defineProperty(exports, "RateLimiter", { enumerable: true, get: function 
 /**
  * @param {PlainObject} cfg
  * @param {window.fetch} cfg.fetch
+ * @param {external:IntlDom} cfg._
  * @param {striptags} cfg.striptags
  * @returns {BotWikiTools}
  */
-function getWikiTools ({fetch, striptags}) {
+function getWikiTools ({fetch, striptags, _}) {
   // Modules
   /**
    * @type {BotWikiTools}
@@ -3143,7 +3144,9 @@ function getWikiTools ({fetch, striptags}) {
     async bpGetToday () {
       const options = {month: 'long', day: 'numeric'};
       const date = Date.now();
-      const md = new Intl.DateTimeFormat('en-US', options).format(date);
+      const md = new Intl.DateTimeFormat(
+        _.resolvedLocale, options
+      ).format(date);
       // console.log(md);
 
       const url = 'https://bahaipedia.org/api.php';
@@ -3417,8 +3420,11 @@ function getWikiTools ({fetch, striptags}) {
 /**
  * Given time in seconds, creates pretty output in days, hours,
  *   minutes, and seconds.
- * @todo See about replacing with {@link https://github.com/tc39/proposal-intl-duration-format|Intl.DurationFormat}
- *   once it may be standardized.
+ * @todo See about replacing with
+ *   {@link https://github.com/tc39/proposal-intl-duration-format|Intl.DurationFormat}
+ *   once it may be standardized and/or better polyfilled.
+ * This should also be i18nized but should be able to get that easier by
+ *   replacing with `Intl.DurationFormat` when available.
  * @param {Float} seconds
  * @returns {string}
  */
@@ -4614,10 +4620,10 @@ shim();
 /**
  * @param {PlainObject} cfg
  * @param {FileSystem} cfg.fs
- * @param {getSettingsPath} cfg.getSettingsPath
+ * @param {Settings} cfg.settings
  * @returns {Reader}
  */
-async function getReader ({fs, getSettingsPath}) {
+async function getReader ({fs, settings}) {
   // IMPORT FILES
 
   /**
@@ -4640,10 +4646,6 @@ async function getReader ({fs, getSettingsPath}) {
     await fs.readFile(
       new URL('../../library/library_listing.json', import.meta.url), 'utf8'
     )
-  );
-
-  const settings = JSON.parse(
-    await fs.readFile(getSettingsPath(), 'utf8')
   );
 
   // GLOBAL VARIABLES
@@ -4957,37 +4959,9 @@ async function getReader ({fs, getSettingsPath}) {
   /**
    *
    * @param {external:DiscordMessage} message
-   * @param {string} avatar
-   * @param {external:DiscordModule} Discord
-   * @returns {Promise<void>}
+   * @returns {void}
    */
-  async function reader (message, avatar, Discord) {
-    const listRegex = /\bread list$/iu;
-    const randRegex = /\bread random$/iu;
-
-    const userInput = message.content;
-
-    // Check if passes the file regex test
-    if (fileRegex.test(userInput)) {
-      await readBook(message, avatar, Discord);
-
-      return;
-    }
-
-    // Check if it passes the listRegex test
-    if (listRegex.test(userInput)) {
-      showList(message);
-
-      return;
-    }
-
-    // Check if the user wants to read a random quote
-    if (randRegex.test(userInput)) {
-      await readRandom(message, avatar, Discord);
-
-      return;
-    }
-
+  function reader (message) {
     // Inform the user they need to provide the correct input.
     // This is the default false conditions
     message.channel.send(
@@ -5011,17 +4985,55 @@ async function getReader ({fs, getSettingsPath}) {
 /**
  * @param {PlainObject} cfg
  * @param {FileSystem} cfg.fs
- * @param {GetSettingsPath} cfg.getSettingsPath
+ * @param {Settings} cfg.settings
  * @param {DiscordClient} cfg.client
  * @param {Discord} cfg.Discord
  * @returns {BotCommands}
  */
-const getBahaiWritings = async ({fs, getSettingsPath, client, Discord}) => {
-  const reader = await getReader({fs, getSettingsPath});
+const getBahaiWritings = async ({fs, settings, client, Discord}) => {
+  const reader = await getReader({fs, settings});
 
   return {
+    readBook: {
+      re: /\bread (?<refName>\S.+) (?<index>[-.\d]+)\b/iu,
+      /**
+       * Reads some scripture.
+       * @param {DiscordMessage} message
+       * @returns {Promise<void>}
+       */
+      async action (message) {
+        return await reader.readBook(
+          message, client.user.avatarURL(), Discord
+        );
+      }
+    },
+    showList: {
+      re: /\bread list$/iu,
+      /**
+       *
+       * @param {DiscordMessage} message
+       * @returns {Promise<void>}
+       */
+      async action (message) {
+        return await reader.showList(message);
+      }
+    },
+    readRandom: {
+      re: /\bread random$/iu,
+      /**
+       *
+       * @param {DiscordMessage} message
+       * @returns {Promise<void>}
+       */
+      async action (message) {
+        return await reader.readRandom(
+          message, client.user.avatarURL(), Discord
+        );
+      }
+    },
     read: {
       re: /!read\b/iu,
+      // This is reused for the other commands
       helpInfo: {
         name: '!read [list | random | *‹text›* *‹chapter›*]',
         value: 'Reads from the Bahá\'í Writings. Displays an excerpt ' +
@@ -5030,12 +5042,12 @@ const getBahaiWritings = async ({fs, getSettingsPath, client, Discord}) => {
             'a random passage from available texts.'
       },
       /**
-       * Reads some scripture.
+       * A fallback if the user fails to provide an argument.
        * @param {DiscordMessage} message
-       * @returns {Promise<void>}
+       * @returns {void}
        */
-      async action (message) {
-        return await reader.reader(message, client.user.avatarURL(), Discord);
+      action (message) {
+        return reader.reader(message);
       }
     }
   };
@@ -5045,10 +5057,64 @@ const getBahaiWritings = async ({fs, getSettingsPath, client, Discord}) => {
  * @param {PlainObject} cfg
  * @param {BotWikiTools} cfg.wikiTools
  * @param {DiscordClient} cfg.client
+ * @param {external:IntlDom} cfg._
  * @returns {BotCommand}
  */
-const getBahaiWikis = function ({wikiTools, client}) {
+const getBahaiWikis = function ({wikiTools, client, _}) {
   // Private methods
+
+  /**
+   * @param {DiscordMessage} message
+   * @param {string} bstarString
+   * @returns {Promise<void>}
+   */
+  const todayInHistory = async function (message, bstarString) {
+    let res;
+    try {
+      res = await wikiTools.bpGetToday();
+    // Shouldn't need catch
+    /* c8 ignore next 5 */
+    } catch (err) {
+      // eslint-disable-next-line no-console -- CLI
+      console.error('Error getting Bahaipedia Today', err);
+      return;
+    }
+    // console.log(pi);
+    if (res) {
+      // eslint-disable-next-line no-console -- CLI
+      console.log('Query completed.');
+      const options = {month: 'long', day: 'numeric'};
+      const date = Date.now();
+      const md = new Intl.DateTimeFormat(
+        _.resolvedLocale, options
+      ).format(date);
+      message.channel.send({
+        content: 'Here is the result of your query.',
+        embed: {
+          color: 3447003,
+          description: `${
+            bstarString
+          }}Here's Bahaipedia's Today in History entry for ${
+            md
+          }, ${message.author.username}:\n\n ${res}`
+        }
+      });
+      return;
+    }
+    message.channel.send({
+      content: 'Here is the result of your query.',
+      embed: {
+        color: 3447003,
+        description: `${
+          bstarString
+        }Bahaipedia did not return any results for your query, ${
+          message.author.username
+        }. There may have been a network problem. If you think ` +
+          `you're getting this message in error, you may want to ` +
+          `try again later.`
+      }
+    });
+  };
 
   /**
    * @param {DiscordMessage} message
@@ -5078,12 +5144,10 @@ const getBahaiWikis = function ({wikiTools, client}) {
       // eslint-disable-next-line no-console -- CLI
       console.log('Query completed.');
       message.channel.send({
-        content: `Here is the result of your query, ${
-          message.author.username
-        }.`,
+        content: 'Here is the result of your query.',
         embed: {
           color: 3447003,
-          description: `${bstarString} ${
+          description: `${bstarString}${
             sitename
           } has returned the following random page, ${
             message.author.username
@@ -5101,69 +5165,12 @@ const getBahaiWikis = function ({wikiTools, client}) {
       return;
     }
     message.channel.send({
-      content: `Here is the result of your query, ${
-        message.author.username
-      }.`,
+      content: 'Here is the result of your query.',
       embed: {
         color: 3447003,
-        description: `${bstarString} ${
+        description: `${bstarString}${
           sitename
         } did not return any results for your query, ${
-          message.author.username
-        }. There may have been a network problem. If you think ` +
-          `you're getting this message in error, you may want to ` +
-          `try again later.`
-      }
-    });
-  };
-
-  /**
-   * @param {DiscordMessage} message
-   * @param {string} bstarString
-   * @returns {Promise<void>}
-   */
-  const todayInHistory = async function (message, bstarString) {
-    let res;
-    try {
-      res = await wikiTools.bpGetToday();
-    // Shouldn't need catch
-    /* c8 ignore next 5 */
-    } catch (err) {
-      // eslint-disable-next-line no-console -- CLI
-      console.error('Error getting Bahaipedia Today', err);
-      return;
-    }
-    // console.log(pi);
-    if (res) {
-      // eslint-disable-next-line no-console -- CLI
-      console.log('Query completed.');
-      const options = {month: 'long', day: 'numeric'};
-      const date = Date.now();
-      const md = new Intl.DateTimeFormat('en-US', options).format(date);
-      message.channel.send({
-        content: `Here is the result of your query, ${
-          message.author.username
-        }.`,
-        embed: {
-          color: 3447003,
-          description: `${
-            bstarString
-          } Here's Bahaipedia's Today in History entry for ${
-            md
-          }, ${message.author.username}:\n\n ${res}`
-        }
-      });
-      return;
-    }
-    message.channel.send({
-      content: `Here is the result of your query, ${
-        message.author.username
-      }.`,
-      embed: {
-        color: 3447003,
-        description: `${
-          bstarString
-        } Bahaipedia did not return any results for your query, ${
           message.author.username
         }. There may have been a network problem. If you think ` +
           `you're getting this message in error, you may want to ` +
@@ -5204,12 +5211,10 @@ const getBahaiWikis = function ({wikiTools, client}) {
       const regex = /<span class="searchmatch">|<\/span>/gui;
       const snip = res.snippet.replace(regex, '**');
       message.channel.send({
-        content: `Here is the result of your search, ${
-          message.author.username
-        }.`,
+        content: 'Here is the result of your search.',
         embed: {
           color: 3447003,
-          description: `${bstarString} ${
+          description: `${bstarString}${
             sitename
           } has returned the following page as the top result ` +
             `for your search, ${
@@ -5228,12 +5233,10 @@ const getBahaiWikis = function ({wikiTools, client}) {
       return;
     }
     message.channel.send({
-      content: `Here is the result of your search, ${
-        message.author.username
-      }.`,
+      content: 'Here is the result of your search.',
       embed: {
         color: 3447003,
-        description: `${bstarString} ${
+        description: `${bstarString}${
           sitename
         } did not return any results for your search, ${
           message.author.username
@@ -5248,9 +5251,11 @@ const getBahaiWikis = function ({wikiTools, client}) {
   // Bp looks up keywords on bahaipedia
   /**
    * @param {DiscordMessage} message
+   * @param {PlainObject} cfg
+   * @param {boolean} cfg.forceToday
    * @returns {Promise<void>}
    */
-  async function bahaipediaAction (message) {
+  async function bahaipediaAction (message, {forceToday} = {}) {
     const bwikiMatch = /!(?:bp|pedia|b9|bahai9|bm|media|img)/gui;
     // const flag = /-([1-5]|r|rnd|rand|t|tih|today)/gui;
 
@@ -5327,8 +5332,10 @@ const getBahaiWikis = function ({wikiTools, client}) {
     // console.log("2: " + rand);
 
     const bstar = client.emojis.cache.find((val) => val.name === 'bstar');
-    const bstarString = bstar.toString();
-    message.react(bstar);
+    const bstarString = bstar?.toString() ? `${bstar.toString()} ` : '';
+    if (bstar) {
+      message.react(bstar);
+    }
 
     // random page
     if (rand) {
@@ -5344,7 +5351,12 @@ const getBahaiWikis = function ({wikiTools, client}) {
         return;
       }
     // today in history
-    } else if (tih) {
+    } else if (
+      tih &&
+      // Could remove this condition if other wikis support, but they
+      //   don't currently, and we're hard-coding the URL in the tools method.
+      (forceToday || host === 'bahaipedia.org')
+    ) {
       try {
         await todayInHistory(message, bstarString);
       // Shouldn't err out.
@@ -5385,7 +5397,7 @@ const getBahaiWikis = function ({wikiTools, client}) {
      * @returns {Promise<void>}
      */
     async action (message) {
-      return await bahaipediaAction(message);
+      return await bahaipediaAction(message, {forceToday: true});
     }
   };
 
@@ -5452,12 +5464,12 @@ function puppet ({content, guild, author, member, channel}, permissions) {
   // or are using this file elsewhere
   // || member.permissions.has(permissions.permission)
   ) {
-    const regex = /!puppet (?<channel>\S.+) \| (?<msg>\S.+)/iu;
+    const regex = /!puppet (?<userChannel>\S.+) \| (?<msg>\S.+)/iu;
     const echo = content.match(regex);
 
     // Did regex pass
     if (echo) {
-      const {channel: userChannel, msg} = echo.groups;
+      const {userChannel, msg} = echo.groups;
 
       const destination = guild.channels.cache.find(
         (val) => val.name === userChannel
@@ -5479,12 +5491,66 @@ function puppet ({content, guild, author, member, channel}, permissions) {
  * @param {string} cfg.ADMIN_PERMISSION
  * @param {string} cfg.PUPPET_AUTHOR
  * @param {GuildCheckin} cfg.guildCheckin
+ * @param {external:IntlDom} cfg._
+ * @param {DiscordClient} cfg.client
+ * @param {DiscordTTS} cfg.discordTTS
  * @returns {BotCommands}
  */
 const getAdmin = ({
-  ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR, guildCheckin
+  ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR,
+  discordTTS, guildCheckin, _, client
 }) => {
   return {
+    speak: {
+      re: /!speak/iu,
+      /*
+      helpInfo: {
+        name: '!speak some words',
+        value: 'Reads some words as speech'
+      },
+      */
+      /* c8 ignore next 39 */
+      /**
+       * Reads some scripture.
+       * @param {DiscordMessage} message
+       * @returns {Promise<void>}
+       */
+      async action (message) {
+        // Todo: Needs testing
+        if (!ADMIN_IDS.includes(message.author.id)) {
+          return;
+        }
+
+        const words = message.content.split(' ').slice(2).join(' ');
+
+        // Todo: Abstract out code so browser can instead use `SpeechSynthesis`
+        const broadcast = client.voice.createBroadcast();
+        const channelId = message.member.voice.channelID;
+        if (!channelId) {
+          // eslint-disable-next-line no-console -- Debug
+          console.log('Message member not in a voice channel with `channelID`');
+        }
+        const channel = client.channels.cache.get(channelId);
+        const connection = await channel.join();
+        broadcast.play(discordTTS.getVoiceStream(words));
+        const dispatcher = connection.play(broadcast);
+        /* c8 ignore next 9 */
+        // Would seem difficult to simulate this.
+        dispatcher.on('error', (err) => {
+          // eslint-disable-next-line no-console -- Debug
+          console.error(_('speechError'), err);
+        });
+        dispatcher.on('debug', (err) => {
+          // eslint-disable-next-line no-console -- Debug
+          console.log(err);
+        });
+        /* c8 ignore next 5 */
+        dispatcher.on('start', () => {
+          // eslint-disable-next-line no-console -- Debug
+          console.log(_('speakingBegun'));
+        });
+      }
+    },
     puppet: {
       re: /!puppet (?:\S.+) \| (?:\S.+)/iu,
       /**
@@ -5607,7 +5673,9 @@ const getBahaiInfo = ({client, Discord}) => {
         message.channel.send(
           `OK ${
             message.author.username
-          }, here you go. https://bahaipedia.org/Badí‘ ${star.toString()}`
+          }, here you go. https://bahaipedia.org/Badí‘${star
+            ? ` ${star.toString()}`
+            : ''}`
         );
       }
     }
@@ -5620,6 +5688,17 @@ const getBahaiInfo = ({client, Discord}) => {
  * @returns {BotCommands}
  */
 const getBahaiSalutations = ({client}) => {
+  /**
+   * @param {DiscordMessage} message
+   * @returns {DiscordEmoji}
+   */
+  const reactToStar = (message) => {
+    const star = client.emojis.cache.find((val) => val.name === '9star');
+    if (star) {
+      message.react(star);
+    }
+    return star;
+  };
   return {
     // GREETINGS //
     abha: {
@@ -5630,10 +5709,12 @@ const getBahaiSalutations = ({client}) => {
        * @returns {void}
        */
       action (message) {
-        const star = client.emojis.cache.find((val) => val.name === '9star');
-        message.react(star);
+        const star = reactToStar(message);
+
         message.channel.send(
-          `Alláh-u-Abhá, ${message.author.username}! ${star.toString()}`
+          `Alláh-u-Abhá, ${message.author.username}! ${star
+            ? star.toString()
+            : ''}`
         );
       },
       notMentioned: {
@@ -5650,8 +5731,7 @@ const getBahaiSalutations = ({client}) => {
          * @returns {void}
          */
         action (message) {
-          const star = client.emojis.cache.find((val) => val.name === '9star');
-          message.react(star);
+          reactToStar(message);
         }
       }
     },
@@ -5662,11 +5742,14 @@ const getBahaiSalutations = ({client}) => {
        * @returns {void}
        */
       action (message) {
-        const star = client.emojis.cache.find((val) => val.name === '9star');
+        const star = reactToStar(message);
         const sabz = client.emojis.cache.find((val) => val.name === 'sabzi');
-        message.react(star);
         message.channel.send(
-          `Happy Naw-Rúz! ${star.toString()} ${sabz.toString()}`
+          `Happy Naw-Rúz! ${star
+            ? star.toString()
+            : ''}${sabz
+            ? sabz.toString()
+            : ''}`
         );
       }
     },
@@ -5677,17 +5760,16 @@ const getBahaiSalutations = ({client}) => {
        * @returns {void}
        */
       action (message) {
-        const star = client.emojis.cache.find((val) => val.name === '9star');
-        message.react(star);
-        message.channel.send(`Happy Ridván! ${star.toString()}`);
+        const star = reactToStar(message);
+        message.channel.send(`Happy Ridván! ${star ? star.toString() : ''}`);
       }
     }
   };
 };
 
 /**
-* @returns {BotCommands}
-*/
+ * @returns {BotCommands}
+ */
 const getSalutations = () => {
   return {
     sup: {
@@ -5957,9 +6039,10 @@ const getLightHearted = () => {
 * @param {DiscordClient} cfg.client
 * @param {Discord} cfg.Discord
 * @param {string} cfg.BOT_ID
+* @param {external:IntlDom} cfg._
 * @returns {BotCommand}
 */
-const getDefaultCommand = ({app, router, client, Discord, BOT_ID}) => {
+const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _}) => {
   return {
     re: /[\s\S]*/u, // Should always match
     /**
@@ -6000,7 +6083,7 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID}) => {
        */
       request.on('response', async function (response) {
         // Process action based on promise
-        await router(response, message, client, Discord);
+        await router(response, message, client, Discord, _);
       });
 
       // If error, console log
@@ -6103,7 +6186,7 @@ const ADMIN_ROLES = [
 
 const ADMIN_PERMISSION = 'ADMINISTRATOR';
 
-// Todo: i18nize messages within this file, `bp.js`, `router.js`,
+// Todo: i18nize messages within `getBahaiWikis.js`, `getReader.js`,
 
 /**
 * @callback ActionBehavior
@@ -6144,43 +6227,65 @@ const ADMIN_PERMISSION = 'ADMINISTRATOR';
  * @param {GuildCheckin} cfg.guildCheckin
  * @param {external:IntlDom} cfg._
  * @param {GetLocalizedSetting} cfg.getLocalizedSetting
- * @param {GetSettings} cfg.getSettings
  * @param {FileSystem} cfg.fs
- * @param {GetSettingsPath} cfg.getSettingsPath
+ * @param {Settings} cfg.settings
+ * @param {DiscordTTS} cfg.discordTTS
  * @returns {BotCommands}
  */
 const getCommands = async function ({
   app, router, Discord,
   wikiTools, client, guildCheckin,
-  _, getLocalizedSetting, getSettings,
-  fs, getSettingsPath
+  _, getLocalizedSetting,
+  fs, settings,
+  discordTTS
 }) {
   const {
     PUPPET_AUTHOR = USER_AB,
     ADMIN_PERMISSION: ADMIN_PERMISSION$1 = ADMIN_PERMISSION,
     BOT_ID = BAHAI_BOT_ID,
     ADMIN_IDS: ADMIN_IDS$1 = ADMIN_IDS,
-    ADMIN_ROLES: ADMIN_ROLES$1 = ADMIN_ROLES
-  } = getSettings();
+    ADMIN_ROLES: ADMIN_ROLES$1 = ADMIN_ROLES,
+    enabledCommandGroups = ['*'],
+    disabledCommandGroups = []
+  } = settings;
 
-  const commands = {
-    ...getSocialInfo({ADMIN_ROLES: ADMIN_ROLES$1, client}),
-    ...await getBahaiWritings({fs, getSettingsPath, client, Discord}),
-    ...getBahaiWikis({wikiTools, client}),
-    ...getAdmin({
-      ADMIN_IDS: ADMIN_IDS$1, ADMIN_PERMISSION: ADMIN_PERMISSION$1, PUPPET_AUTHOR, guildCheckin
-    }),
-    ...getBahaiInfo({client, Discord}),
-    ...getBahaiSalutations({client}),
-    ...getSalutations(),
-    ...getLightHearted()
-  };
+  const anyCommand = enabledCommandGroups.includes('*');
+
+  const objs = await Promise.all([
+    ['socialInfo', () => getSocialInfo({ADMIN_ROLES: ADMIN_ROLES$1, client})],
+    [
+      'bahaiWritings',
+      () => getBahaiWritings({fs, settings, client, Discord})
+    ],
+    ['bahaiWikis', () => getBahaiWikis({wikiTools, client, _})],
+    ['admin', () => getAdmin({
+      ADMIN_IDS: ADMIN_IDS$1, ADMIN_PERMISSION: ADMIN_PERMISSION$1, PUPPET_AUTHOR, guildCheckin, _, client,
+      discordTTS
+    })],
+    ['bahaiInfo', () => getBahaiInfo({client, Discord})],
+    ['bahaiSalutations', () => getBahaiSalutations({client})],
+    ['salutations', () => getSalutations()],
+    ['lightHearted', () => getLightHearted()]
+  ].map(async ([name, cmd]) => {
+    if (
+      (anyCommand || enabledCommandGroups.includes(name)) &&
+      !disabledCommandGroups.includes(name)
+    ) {
+      return await cmd();
+    }
+    return null;
+  }));
+
+  const commands = objs.reduce((cmds, obj) => {
+    cmds = {...cmds, ...obj};
+    return cmds;
+  }, {});
 
   addHelp({commands});
 
   // After adding help to ensure `!help` has priority
   commands.default = getDefaultCommand({
-    app, router, client, Discord, BOT_ID
+    app, router, client, Discord, BOT_ID, _
   });
 
   return commands;
@@ -6222,15 +6327,16 @@ const getCommands = async function ({
  * @param {external:DiscordMessage} message
  * @param {external:DiscordClient} client
  * @param {external:DiscordModule} Discord
+ * @param {external:IntlDom} _
  * @returns {void}
  */
 
 /**
  * @type {Router}
  */
-const router = (response, message, client, Discord) => {
+const router = (response, message, client, Discord, _) => {
   // eslint-disable-next-line no-console -- CLI
-  console.log('Router response:', response);
+  console.log(_('routerResponse'), response);
 
   // Output default answer
   const {messages} = response.result.fulfillment;
@@ -6316,13 +6422,13 @@ const readytime = Date.now();
  * @param {DiscordClient} [cfg.client]
  * @param {FileSystem} cfg.fs
  * @param {BotWikiTools} cfg.wikiTools
- * @param {GetSettings} cfg.getSettings
+ * @param {Settings} cfg.settings
  * @param {GetLocalizedSetting} cfg.getLocalizedSetting
  * @param {external:IntlDOMInternationalizer} cfg._
  * @returns {GuildCheckin}
  */
 function getCheckin ({
-  client, fs, wikiTools, getSettings, getLocalizedSetting, _
+  client, fs, wikiTools, settings, getLocalizedSetting, _
 }) {
   const {
     bstarEmoji = 'bstar',
@@ -6363,7 +6469,7 @@ function getCheckin ({
         ]
       }
     ]
-  } = getSettings();
+  } = settings;
 
   /**
    * @callback GuildCheckin
@@ -6559,6 +6665,11 @@ const supportedLocales = [
 ];
 
 /**
+ * @callback GetSettings
+ * @returns {Object<string,any>}
+ */
+
+/**
  * @param {BotOptions} cfg
  * @returns {Promise<BotResponse>}
  */
@@ -6577,8 +6688,13 @@ const bot = async ({
   striptags = window.striptags,
   client: cl,
   Discord,
+  discordTTS, // `speak` admin command
   apiai,
   fs,
+  /**
+   * @type {GetSettings}
+   */
+  getSettings: defaultGetSettings,
   getSettingsPath,
   numberOfCommands = 1,
   commandInterval = 2000,
@@ -6607,7 +6723,11 @@ const bot = async ({
     await fs.readFile(getSettingsPath(), 'utf8')
   );
 
-  const settings = system.development;
+  const getSettings = typeof defaultGetSettings === 'function'
+    ? defaultGetSettings
+    : (sys) => sys.development;
+
+  const settings = getSettings(system);
 
   // const dayInSeconds = 24 * 60 * 60;
   // const twelveHoursInSeconds = 12 * 60 * 60;
@@ -6626,23 +6746,12 @@ const bot = async ({
     // https://discordapp.com/developers/applications/me
     //  (set on settings.json)
     token,
+    disableNotMentioned = false,
     welcomeChannel = 'welcome',
     awesomeEmoji = 'awesome',
     helpTeam = BAHAI_FYI_HELP_TEAM,
     rulesChannel = BAHAI_FYI_RULES_CHANNEL_ID
   } = settings;
-
-  /**
-   * @callback GetSettings
-   * @returns {Object<string,any>}
-   */
-
-  /**
-   * @type {GetSettings}
-   */
-  const getSettings = () => {
-    return settings;
-  };
 
   /**
   * @external IntlDOMInternationalizer
@@ -6673,19 +6782,19 @@ const bot = async ({
   };
 
   const wikiTools = getWikiTools({
-    fetch, striptags
+    fetch, striptags, _
   });
 
   // Import commands and set default command
   const guildCheckin = getCheckin({
-    client, fs, wikiTools, getSettings, getLocalizedSetting, _
+    client, fs, wikiTools, settings, getLocalizedSetting, _
   });
 
   const botCommands = await getCommands({
     app, router, Discord,
     wikiTools, client, guildCheckin,
-    _, getLocalizedSetting, getSettings,
-    fs, getSettingsPath
+    _, getLocalizedSetting,
+    fs, settings, discordTTS
   });
 
   // The ready event is vital, it means that your bot will only start
@@ -6771,7 +6880,7 @@ const bot = async ({
             break;
           }
         }
-      } else { // If the Bot is NOT Mentioned
+      } else if (!disableNotMentioned) { // If the Bot is NOT Mentioned
         const notMentionedCommands = Object.values(
           botCommands
         ).filter((cmd) => {
@@ -6824,7 +6933,9 @@ const bot = async ({
       }
     );
 
-    const happiesArray = happiesObj.guildMemberAdd(awesome.toString());
+    const happiesArray = awesome
+      ? happiesObj.guildMemberAdd(awesome.toString())
+      : happiesObj.guildMemberAdd(':smile:');
 
     const happy = happiesArray[
       Math.floor(Math.random() * happiesArray.length)
