@@ -170,7 +170,7 @@ mentioned in the "Required by" column.
 | `channel.send(object)` | Like the `channel.send` above | Bahá'í Writings (`readBook` and `readRandom` commands); possibly in apiai router (via default command)
 | `channel.send(object)` | Like the `channel.send` above though also has `fields` on `embed` which is an array of `{name: string, value: string}` objects (the command and help text for it) | Help (`help` command), Bahá'í Writings (`showList` command); Bahá'í Info (`info` command)
 | `channel.send(object)` | Like the `channel.send` above though also has `image: {url: string}` on `embed` | Bahá'í Wikis (`bp`, `today`, `b9`, `bm` commands)
-| `guild.members.cache.filter({presence: {status}, roles: {cache: {some}}})` | `some` will check against a role `name` property |
+| `guild.members.cache.filter({presence: {status}, roles: {cache: {some}}})` | `some` will check against a role `name` property | Social Info (`users` and `seen` commands)
 | `guild.channels.cache.find({name})` | Checks against channel name | Admin (`puppet` command)
 | `member.permissions.has(permissions.permission)` | | Admin (`puppet`) though not currently enabled
 | `member.voice.channelID` | | Admin (`speak` command)
