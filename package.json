@@ -15,7 +15,7 @@
   "dependencies": {
     "@discordjs/opus": "^0.5.0",
     "apiai": "^4.0.3",
-    "discord-tts": "^1.0.3",
+    "discord-tts": "^1.1.0",
     "discord.js": "^12.5.3",
     "discord.js-rate-limiter": "^1.0.7",
     "file-fetch": "^1.6.0",
@@ -42,8 +42,8 @@
     "eslint-plugin-compat": "^3.9.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-html": "^6.1.2",
-    "eslint-plugin-import": "^2.23.3",
-    "eslint-plugin-jsdoc": "^35.0.0",
+    "eslint-plugin-jsdoc": "35.0.0",
+    "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jsonc": "^1.2.1",
     "eslint-plugin-markdown": "^2.2.0",
     "eslint-plugin-no-unsanitized": "^3.1.5",
@@ -56,7 +56,7 @@
     "lint-staged": "^11.0.0",
     "mocha": "^8.4.0",
     "nodemon": "^2.0.7",
-    "rollup": "^2.50.4",
+    "rollup": "^2.50.5",
     "rollup-plugin-terser": "^7.0.2",
     "sinon": "^11.1.1"
   },
