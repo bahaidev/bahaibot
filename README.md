@@ -114,7 +114,8 @@ buildBahaiBot({
   fs, // The Node `fs/promises`
 
   // Provided `system` value of `getSettingsPath()` JSON; returns settings
-  //  object `system.development` by default
+  //  object `system.development` by default, though in Node, allowing for a
+  //  `--production` flag to trigger getting `system.production` instead.
   getSettings,
   getSettingsPath // The Node equivalent of:
   //                  `require('path').join(process.cwd(), 'settings.json')`

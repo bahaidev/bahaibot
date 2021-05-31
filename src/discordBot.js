@@ -54,6 +54,15 @@ const getSettingsPath = () => {
 };
 
 /**
+* @param {Settings} sys
+*/
+const getSettings = (sys) => {
+  return process.argv.includes('--production')
+    ? sys.production
+    : sys.development;
+};
+
+/**
  * This is created separately from `index.js` so as to allow testing files to
  * have Discord conveniently baked in, requiring case-by-case overrides only.
  * @param {BotOptions} args
@@ -64,6 +73,7 @@ function discordBot (args) {
     checkins,
     locales,
     fs,
+    getSettings,
     getSettingsPath,
     apiai,
     i18n,
