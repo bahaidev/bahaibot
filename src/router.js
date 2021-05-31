@@ -31,7 +31,8 @@ import 'object.hasown/auto';
 /**
  * @callback Router
  * @param {external:APIAIResponse} response Note that
- * `response.result.fulfillment.messages` is an array.
+ * `response.result.fulfillment.messages` is an array. //SJS that was V1, in V2 response.queryResult.fulfillmentMessages is the array
+ * NOTE: //SJS response.queryResult.fulfillmentText now a string
  * @param {external:DiscordMessage} message
  * @param {external:DiscordClient} client
  * @param {external:DiscordModule} Discord
@@ -47,13 +48,16 @@ const router = (response, message, client, Discord, _) => {
   console.log(_('routerResponse'), response);
 
   // Output default answer
-  const {messages} = response.result.fulfillment;
-
+//SJS  const {messages} = response.result.fulfillment;
+  const messages = response.queryResult.fulfillmentMessages;  //SJS
   const content = messages.find((obj) => {
-    return !Object.hasOwn(obj, 'platform');
+    return !Object.hasOwn(obj, 'platform'); //SJS Question: Note: not all messages have .platform key, what is this doing??
+                                            //                it is not checking if the any of the messages have platform
+                                            //                being platform: 'discord'
   });
 
-  const {speech} = content;
+ //SJS const {speech} = content;
+  const speech = response.queryResult.fulfillmentText;  //SJS
 
   message.channel.send(speech);
 };

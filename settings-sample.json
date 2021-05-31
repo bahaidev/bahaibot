@@ -1,14 +1,36 @@
 {
   "production" : {
-    "dialogflowToken": "",
+    "dialogflowToken": "this is removed in V2 of the api",
     "token": "",
     "embedColor": 16732271,
+<<<<<<< HEAD
     "embedTextLimit": 2000
+=======
+    "embedTextLimit": 2000,
+    "PROJECT_ID": "<the-dialogflow-agent-id, i.e.: baha-i-qna-2-xxxxxx",
+    "PROJECT_JSON": "<the-dialogflow-agent-credentials-json-file, i.e.: baha-i-qna-2-xxxxxx-xxxxxxxxxxx.json",
+
+    "anti_abuse": {
+      "_minimum time between mentions": 300000,
+      "_maximum message limit": 10
+    }
+>>>>>>> 134162d (mod'ed 5 files - first commit)
   },
   "development": {
-  	"dialogflowToken": "",
+  	"dialogflowToken": "this is removed in V2 of the api",
   	"token": "",
   	"embedColor": 16732271,
+<<<<<<< HEAD
   	"embedTextLimit": 2000
+=======
+  	"embedTextLimit": 2000,
+    "PROJECT_ID": "<the-dialogflow-agent-id, i.e.: baha-i-qna-2-xxxxxx",
+    "PROJECT_JSON": "<the-dialogflow-agent-credentials-json-file, i.e.: baha-i-qna-2-xxxxxx-xxxxxxxxxxx.json",
+
+  	"anti_abuse": {
+  		"_minimum time between mentions": 300000,
+  		"_maximum message limit": 10
+  	}
+>>>>>>> 134162d (mod'ed 5 files - first commit)
   }
 }

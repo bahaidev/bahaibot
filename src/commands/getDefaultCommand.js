@@ -22,7 +22,7 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _}) => {
       const userInput = message.content.replace(
         `<@${BOT_ID}>`, ''
       );
-
+/*SJS
       // Options to specify that this is from Discord
       const options = {
         sessionId: message.author.id,
@@ -35,28 +35,84 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _}) => {
           }
         ]
       };
+*/
 
+/*SJS BEGIN... from nodebahaiqna2servergit/server.js  modified with original getDefaultCommand.js info */
+
+  // Creates a new session
+  const sessionID = message.author.id;  // SJS uses original discord bot defined sessionID
+  const sessionClient = new dialogflow.SessionsClient({
+    keyFilename: path.join(__dirname, "SJS NEED REPLACEMENT FROM settings for: process.env.PROJECT_JSON"),  //SJS  need PROJECT_JSON filename in settings.json file
+  });
+  const sessionPath = sessionClient.projectAgentSessionPath("SJS NEED REPLACEMENT FROM settings for: process.env.PROJECT_ID", sessionID); //SJS need PROJECT_ID in settings.json file
+
+  // The text query request.
+  const request = {
+    session: sessionPath,
+    queryInput: {
+      text: {
+        // The query to send to the dialogflow agent
+        text: userInput, // was message,
+        // The language used by the client (en-US)
+        languageCode: "en-US",
+      },
+    },
+    queryParams: {
+      contexts: [ 
+        {
+          name: 'ecosystem',  // NOTE: every call to dialogflow from the bot has the context named ecosystem
+                              //       but only a few intents have a the ecosystem context defined for it (in V1)
+          parameters: {
+            platform: 'discord'
+          }
+        }
+      ]
+    }
+  };
+
+  // Send request and log result
+  try {
+    const responses = await sessionClient.detectIntent(request); 
+	  await router(responses[0], message, client, Discord, _);  // return res.status(200).json(responses[0]);
+  } catch (error) {
+        // Let the user know
+        message.channel.send(
+          `<@${
+            message.author.id
+          }>, I couldn't process your question at the moment.`
+        );
+        // eslint-disable-next-line no-console -- CLI
+        console.error(error);
+   // console.log(e);
+   // res.status(422).send({ e });
+  }
+
+/*SJS END... from nodebahaiqna2servergit/server.js  modified with original getDefaultCommand.js info */
+
+/*SJS
       // To send a request, you should issue the question AND a
       //   unique session ID.
       // In this case, the session ID is the author ID from Discord
       const request = app.textRequest(userInput, options);
-
+*/
       /**
        * Once the robot responds, reply to user :) .
        * @param {external:APIAIResponse} response Note that
        * `response.result.fulfillment.messages` is an array.
        * @returns {void}
        */
+/*SJS
       request.on('response', async function (response) {
         // Process action based on promise
         await router(response, message, client, Discord, _);
       });
-
+*/
       // If error, console log
       /**
        * @param {external:APIAIError} error
        * @returns {void}
        */
+/*SJS
       request.on('error', function (error) {
         // Let the user know
         message.channel.send(
@@ -67,13 +123,13 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _}) => {
         // eslint-disable-next-line no-console -- CLI
         console.error(error);
       });
-
+*/
       // End the request process
-      request?.end();
+//SJS needed     request?.end();
 
       // Return in case an implementation wants this as a Promise that
       //  waits to resolve (e.g., until it calls the callbacks)
-      return request;
+      return responses;   //SJS request;
     }
   };
 };
