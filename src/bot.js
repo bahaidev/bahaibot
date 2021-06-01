@@ -331,7 +331,7 @@ const bot = async ({
   // Log our bot in
   client.login(token);
 
-  return {client, botCommands, guildCheckin};
+  return {client, botCommands, guildCheckin, system, getSettings};
 };
 
 export default bot;

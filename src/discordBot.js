@@ -58,6 +58,7 @@ const getSettingsPath = () => {
 */
 const getSettings = (sys) => {
   return process.argv.includes('--production')
+    /* c8 ignore next */
     ? sys.production
     : sys.development;
 };
