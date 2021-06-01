@@ -235,3 +235,7 @@ const commands = {
 #### Search
 
 #### Prayers
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
