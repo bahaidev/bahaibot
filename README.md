@@ -187,45 +187,6 @@ checkinGuilds = [
 
 See [implementation-notes.md](./docs/implementation-notes.md).
 
-## Developing
-
-### Commands
-
-Bot commands are stored in the file `getCommands.js` which expects the
-following structure:
-
-```js
-const commands = {
-  commandKey: {
-
-    // The regex expression you wish to examine in a text from a user
-    re: /(?:regexToMatchYourCommandHere)/iu,
-
-    // The action you wish the bot to take given satisfaction of regex
-    //   condition
-    action (message) {
-      // Do something
-    }
-  }
-};
-```
-
-Here's an example:
-
-```js
-const commands = {
-  morning: {
-    re: /\bgood morning\b/iu,
-    // Good morning
-    action (message) {
-      message.channel.send(
-        `Good morning ${message.author.username}! :coffee:`
-      );
-    }
-  }
-};
-```
-
 ### A.I. Integration
 
 ### Functions
