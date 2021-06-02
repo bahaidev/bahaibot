@@ -73,7 +73,7 @@ import buildBahaiBot from 'bahaibot/dist/integratedClientServerBot.js';
 
 const bahaibot = buildBahaiBot({
   // Supply implementations for:
-  apiai,
+  dialogflow,
   Discord
 });
 ```
@@ -109,7 +109,7 @@ buildBahaiBot({
 
   Discord, // A Discord implementation
   client, // A Discord.Client implementation (defaults to `new Discord.Client`)
-  apiai, // apiai implementation
+  dialogflow, // dialogflow implementation
 
   fs, // The Node `fs/promises`
 
