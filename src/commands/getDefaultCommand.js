@@ -1,12 +1,13 @@
 /*   eslint-disable max-len -- long */
 /**
 * @param {PlainObject} cfg
-* @param {ApiaiApp} cfg.app
+* @param {dialogflow} cfg.app
 * @param {Router} cfg.router
 * @param {DiscordClient} cfg.client
 * @param {Discord} cfg.Discord
 * @param {string} cfg.BOT_ID
 * @param {external:IntlDom} cfg._
+* @param {external:settings} cfg.settings
 * @returns {BotCommand}
 */
 const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _, settings}) => {
@@ -42,10 +43,11 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _, settings}) 
 
       // Creates a new session
       const sessionID = message.author.id; // SJS uses original discord bot defined sessionID
-      const sessionClient = new dialogflow.SessionsClient({
-        keyFilename: path.join(__dirname, settings.PROJECT_JSON) // SJS  need PROJECT_JSON filename in settings.json file
-      });
-      const sessionPath = sessionClient.projectAgentSessionPath(settings.PROJECT_ID, sessionID); // SJS need PROJECT_ID in settings.json file
+      //     const sessionClient = new dialogflow.SessionsClient({
+      //       keyFilename: path.join(__dirname, settings.PROJECT_JSON) // SJS  need PROJECT_JSON filename in settings.json file
+      //     }); // move to bot and call app?
+      //   const sessionPath = sessionClient.projectAgentSessionPath(settings.PROJECT_ID, sessionID); // SJS need PROJECT_ID in settings.json file
+      const sessionPath = app.projectAgentSessionPath(settings.PROJECT_ID, sessionID); // SJS need PROJECT_ID in settings.json file
 
       // The text query request.
       const request = {
@@ -77,7 +79,8 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _, settings}) 
       async function dialogflowCall () {
       // Send request and log result
         try {
-          const responses = await sessionClient.detectIntent(request);
+        //          const responses = await sessionClient.detectIntent(request);
+          const responses = await app.detectIntent(request);
           await router(responses[0], message, client, Discord, _); // return res.status(200).json(responses[0]);
           return responses; // so that can use as returned value from call by enclosing function
         } catch (error) {
