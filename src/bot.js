@@ -116,7 +116,7 @@ const bot = async ({
   //   resolve as a Promise.
   // const app = await apiai(dfToken);
   const app = new dialogflow.SessionsClient({
-    keyFilename: path.join(__dirname, settings.PROJECT_JSON) // SJS  need PROJECT_JSON filename in settings.json file
+    keyFilename: path.join(__dirname, settings.PROJECT_JSON)
   }); // was sessionClient in getDefaultCommand.js
 
   const {
