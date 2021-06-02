@@ -21,14 +21,9 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _, settings}) 
       /* BOT DATA */
       // Variables and initial data
       // Replace removes the bot reference
-      // eslint-disable-next-line no-console -- temp
-      console.log('message>>', message);
-      // eslint-disable-next-line no-console -- temp
-      console.log('BOT_ID=', BOT_ID);
+
       const regex = /\d+/u;
       const numberMessage = message.content.match(regex);
-      // eslint-disable-next-line no-console -- temp
-      console.log('numberMessage[0]', numberMessage[0]);
       const userInput = message.content.replace(
       //  `<@${BOT_ID}>`, ''
         `<@!${numberMessage[0]}>`, '' // remove aribrary number from userInput
@@ -81,8 +76,6 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _, settings}) 
           ]
         } */
       };
-      // eslint-disable-next-line no-console -- long
-      console.error('request', request);
 
       /**
       *
