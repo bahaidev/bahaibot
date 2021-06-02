@@ -59,7 +59,7 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _, settings}) 
             // The language used by the client (en-US)
             languageCode: 'en-US'
           }
-        },
+        } /*,
         queryParams: {
           contexts: [
             {
@@ -70,7 +70,7 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _, settings}) 
               }
             }
           ]
-        }
+        } */
       };
       // eslint-disable-next-line no-console -- long
       console.error('request', request);
