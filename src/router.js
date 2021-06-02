@@ -1,5 +1,6 @@
-/* eslint-disable no-use-extend-native/no-use-extend-native,
+/* eslint-disable
   node/file-extension-in-import -- Polyfill */
+// SJS removed no-use-extend-native/no-use-extend-native,
 import 'object.hasown/auto';
 
 // These are for the current API; old docs not online
@@ -31,7 +32,8 @@ import 'object.hasown/auto';
 /**
  * @callback Router
  * @param {external:APIAIResponse} response Note that
- * `response.result.fulfillment.messages` is an array. //SJS that was V1, in V2 response.queryResult.fulfillmentMessages is the array
+ * `response.result.fulfillment.messages` is an array.
+ * //SJS in V2 response.queryResult.fulfillmentMessages is the array
  * NOTE: //SJS response.queryResult.fulfillmentText now a string
  * @param {external:DiscordMessage} message
  * @param {external:DiscordClient} client
@@ -48,20 +50,22 @@ const router = (response, message, client, Discord, _) => {
   console.log(_('routerResponse'), response);
 
   // Output default answer
-//SJS  const {messages} = response.result.fulfillment;
+  // SJS  const {messages} = response.result.fulfillment;
 
-/*
-  const messages = response.queryResult.fulfillmentMessages;  //SJS changes line above for V2, but not needed
-                                                              //Since next statement unneeded
+  /*
+  const messages = response.queryResult.fulfillmentMessages;
+             //SJS changes line above for V2, but not needed
+            //Since next statement unneeded
   const content = messages.find((obj) => {
-    return !Object.hasOwn(obj, 'platform'); //SJS  Note: I believe this is searcing for the default response
-                                            //           which is the wone without a platform key defined
+    return !Object.hasOwn(obj, 'platform');
+    //SJS  Note: I believe this is searcing for the default response
+    //           which is the wone without a platform key defined
 
   });
-*/ 
+*/
 
- //SJS const {speech} = content;
-  const speech = response.queryResult.fulfillmentText;  //SJS
+  // SJS const {speech} = content;
+  const speech = response.queryResult.fulfillmentText;// SJS
 
   message.channel.send(speech);
 };
