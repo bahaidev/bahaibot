@@ -22,7 +22,7 @@ import * as DiscordConstants from './messages/DiscordConstants.js';
  * @property {striptags} [striptags=window.striptags]
  * @property {DiscordClient} [client=new Discord.Client()]
  * @property {Discord} Discord
- * @property {apiai} apiai
+ * @property {dialogflow} dialogflow
  * @property {FileSystem} fs
  * @property {GetSettingsPath} getSettingsPath
  * @property {boolean} [exitNoThrow=false] Set to true for testing
@@ -64,7 +64,7 @@ const bot = async ({
   client: cl,
   Discord,
   discordTTS, // `speak` admin command
-  apiai,
+  dialogflow,
   fs,
   /**
    * @type {GetSettings}
@@ -110,11 +110,14 @@ const bot = async ({
   const fiftyMinutesInMilliseconds = 50 * 60 * 1000;
 
   // Dialog flow tokens
-  const dfToken = settings.dialogflowToken;
+  // const dfToken = settings.dialogflowToken;
 
   // This is not a Promise in normal npm `apiai`, but allow consumers to
   //   resolve as a Promise.
-  const app = await apiai(dfToken);
+  // const app = await apiai(dfToken);
+  const app = new dialogflow.SessionsClient({
+    keyFilename: path.join(__dirname, settings.PROJECT_JSON) // SJS  need PROJECT_JSON filename in settings.json file
+  }); // was sessionClient in getDefaultCommand.js
 
   const {
     // The token of your bot -
