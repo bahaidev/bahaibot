@@ -46,7 +46,7 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
 
 /**
  * @param {PlainObject} cfg
- * @param {ApiaiApp} cfg.app
+ * @param {dialogflow} cfg.app
  * @param {Router} cfg.router
  * @param {Discord} cfg.Discord
  * @param {BotWikiTools} cfg.wikiTools
