@@ -46,8 +46,8 @@ import 'object.hasown/auto';
  * @type {Router}
  */
 const router = (response, message, client, Discord, _) => {
-  // eslint-disable-next-line no-console -- CLI
-  console.log(_('routerResponse'), 'hi there!', response);
+  //                      // eslint-disable-next-line no-console -- CLI
+  // SJS commented out... console.log(_('routerResponse'), response);
 
   // Output default answer
   // SJS  const {messages} = response.result.fulfillment;
