@@ -28,10 +28,10 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _, settings}) 
       const regex = /\d+/u;
       const numberMessage = message.content.match(regex);
       // eslint-disable-next-line no-console -- temp
-      console.log('numberMessage', numberMessage);
+      console.log('numberMessage[0]', numberMessage[0]);
       const userInput = message.content.replace(
       //  `<@${BOT_ID}>`, ''
-        `<@${numberMessage}>`, '' // remove aribrary number from userInput
+        `<@!${numberMessage[0]}>`, '' // remove aribrary number from userInput
       );
       /* SJS
       // Options to specify that this is from Discord
