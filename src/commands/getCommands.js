@@ -114,8 +114,7 @@ const getCommands = async function ({
   commands.default = getDefaultCommand({
     app, router, client, Discord, BOT_ID, _, settings // added settings to call
   });
-  // eslint-disable-next-line no-console -- temp
-  console.log('commands', commands);
+
   return commands;
 };
 
