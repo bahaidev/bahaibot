@@ -25,7 +25,8 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _, settings}) 
       console.log('message>>', message);
       // eslint-disable-next-line no-console -- temp
       console.log('BOT_ID=', BOT_ID);
-      const numberMessage = message.content.match(/\d+/u);
+      const regex = /\d+/u;
+      const numberMessage = message.content.match(regex);
       // eslint-disable-next-line no-console -- temp
       console.log('numberMessage', numberMessage);
       const userInput = message.content.replace(
