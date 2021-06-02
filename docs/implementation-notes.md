@@ -1,6 +1,6 @@
 ## Building one's own implemenations
 
-To fully repeat the functionality of the Discord and apiai content, a lot of
+To fully repeat the functionality of the Discord and dialogflow content, a lot of
 methods need to be polyfilled.
 
 However, some implementations might not be concerned with chat-type
@@ -8,9 +8,9 @@ functionality, and one can see below which components require a certain API.
 If not needed by the core, an implementation might choose to avoid support
 for parts of the API.
 
-### Building one's own `apiai` implementation
+### Building one's own `dialogflow` implementation
 
-If supplying one's own apiai implementation, it must be a function (which
+If supplying one's own dialogflow implementation, it must be a function (which
 accepts a string token) and returns an object with a `textRequest` method
 which will be invoked with the user input (as a string) and the options.
 The return request object must have an `on` (which receives `response` or
@@ -19,6 +19,7 @@ up).
 
 (These are created and called in the default command and passed to the router.)
 
+NOTE: BELOW IS OBSOLETE WITH V2 OF THE DIALOGFLOW API
 ```js
 function apiai (token) {
   // Use `token` to authenticate
