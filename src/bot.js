@@ -121,8 +121,7 @@ const bot = async ({
     keyFilename: join(process.cwd(), settings.PROJECT_JSON)
     // above was path.join(__dirname, settings.PROJECT_JSON)
   }); // was sessionClient in getDefaultCommand.js
-  // eslint-disable-next-line no-console -- temp
-  console.log('keyFilename', join(process.cwd(), settings.PROJECT_JSON));
+
   const {
     // The token of your bot -
     // https://discordapp.com/developers/applications/me

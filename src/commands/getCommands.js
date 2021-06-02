@@ -78,6 +78,8 @@ const getCommands = async function ({
 
   const anyCommand = enabledCommandGroups.includes('*');
 
+  // eslint-disable-next-line no-console -- temp
+  console.log('getCommands line81');
   const objs = await Promise.all([
     ['socialInfo', () => getSocialInfo({ADMIN_ROLES, client})],
     [
@@ -109,7 +111,8 @@ const getCommands = async function ({
   }, {});
 
   addHelp({commands});
-
+  // eslint-disable-next-line no-console -- temp
+  console.log('getCommands line 114');
   // After adding help to ensure `!help` has priority
   commands.default = getDefaultCommand({
     app, router, client, Discord, BOT_ID, _, settings // added settings to call
