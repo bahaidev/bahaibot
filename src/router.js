@@ -49,12 +49,16 @@ const router = (response, message, client, Discord, _) => {
 
   // Output default answer
 //SJS  const {messages} = response.result.fulfillment;
-  const messages = response.queryResult.fulfillmentMessages;  //SJS
+
+/*
+  const messages = response.queryResult.fulfillmentMessages;  //SJS changes line above for V2, but not needed
+                                                              //Since next statement unneeded
   const content = messages.find((obj) => {
-    return !Object.hasOwn(obj, 'platform'); //SJS Question: Note: not all messages have .platform key, what is this doing??
-                                            //                it is not checking if the any of the messages have platform
-                                            //                being platform: 'discord'
+    return !Object.hasOwn(obj, 'platform'); //SJS  Note: I believe this is searcing for the default response
+                                            //           which is the wone without a platform key defined
+
   });
+*/ 
 
  //SJS const {speech} = content;
   const speech = response.queryResult.fulfillmentText;  //SJS
