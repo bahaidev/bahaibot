@@ -17,7 +17,11 @@ import discordTTS from 'discord-tts';
 
 // Todo: apiai should be replaced with:
 //   https://cloud.google.com/dialogflow/es/docs/reference/libraries/nodejs
-import apiai from 'apiai';
+// SJS import apiai from 'apiai';
+//
+// Importing dialogflow v2 api
+import dialogflow from '@google-cloud/dialogflow';
+// Note: dialogflow is an object(?), does it need to have key (.v2) selected?
 import {i18n, setFetch} from 'intl-dom';
 import fileFetch from 'file-fetch'; // For `intl-dom`
 import fetch from 'node-fetch';
@@ -76,7 +80,7 @@ function discordBot (args) {
     fs,
     getSettings,
     getSettingsPath,
-    apiai,
+    dialogflow,
     i18n,
     striptags,
     fetch,
