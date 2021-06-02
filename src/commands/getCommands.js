@@ -112,7 +112,7 @@ const getCommands = async function ({
 
   // After adding help to ensure `!help` has priority
   commands.default = getDefaultCommand({
-    app, router, client, Discord, BOT_ID, _
+    app, router, client, Discord, BOT_ID, _, settings // added settings to call
   });
 
   return commands;

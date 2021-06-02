@@ -8,7 +8,7 @@
 * @param {external:IntlDom} cfg._
 * @returns {BotCommand}
 */
-const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _}) => {
+const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _, settings}) => {
   return {
     re: /[\s\S]*/u, // Should always match
     /**
@@ -42,9 +42,9 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _}) => {
   // Creates a new session
   const sessionID = message.author.id;  // SJS uses original discord bot defined sessionID
   const sessionClient = new dialogflow.SessionsClient({
-    keyFilename: path.join(__dirname, "SJS NEED REPLACEMENT FROM settings for: process.env.PROJECT_JSON"),  //SJS  need PROJECT_JSON filename in settings.json file
+    keyFilename: path.join(__dirname, settings.PROJECT_JSON),  //SJS  need PROJECT_JSON filename in settings.json file
   });
-  const sessionPath = sessionClient.projectAgentSessionPath("SJS NEED REPLACEMENT FROM settings for: process.env.PROJECT_ID", sessionID); //SJS need PROJECT_ID in settings.json file
+  const sessionPath = sessionClient.projectAgentSessionPath(settings.PROJECT_ID, sessionID); //SJS need PROJECT_ID in settings.json file
 
   // The text query request.
   const request = {
@@ -69,24 +69,26 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _}) => {
       ]
     }
   };
-
+  async function dialogflowCall(){
   // Send request and log result
-  try {
-    const responses = await sessionClient.detectIntent(request); 
-	  await router(responses[0], message, client, Discord, _);  // return res.status(200).json(responses[0]);
-  } catch (error) {
-        // Let the user know
-        message.channel.send(
-          `<@${
-            message.author.id
-          }>, I couldn't process your question at the moment.`
-        );
-        // eslint-disable-next-line no-console -- CLI
-        console.error(error);
-   // console.log(e);
-   // res.status(422).send({ e });
+    try {
+      const responses = await sessionClient.detectIntent(request); 
+      await router(responses[0], message, client, Discord, _);  // return res.status(200).json(responses[0]);
+      return responses; // so that can use as returned value from call by enclosing function
+    } catch (error) {
+          // Let the user know
+          message.channel.send(
+              `<@${
+              message.author.id
+            }>, I couldn't process your question at the moment.`
+          );
+          // eslint-disable-next-line no-console -- CLI
+          console.error(error);
+    // console.log(e);
+    // res.status(422).send({ e });
+    }
   }
-
+  const responses = dialogflowCall();
 /*SJS END... from nodebahaiqna2servergit/server.js  modified with original getDefaultCommand.js info */
 
 /*SJS
