@@ -23,6 +23,8 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _, settings}) 
       // Replace removes the bot reference
       // eslint-disable-next-line no-console -- temp
       console.log('message>>', message);
+      // eslint-disable-next-line no-console -- temp
+      console.log('BOT_ID=', BOT_ID);
       const userInput = message.content.replace(
         `<@${BOT_ID}>`, ''
       );
