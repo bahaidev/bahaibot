@@ -113,16 +113,10 @@ const bot = async ({
   const fortyMinutesInMilliseconds = 40 * 60 * 1000;
   const fiftyMinutesInMilliseconds = 50 * 60 * 1000;
 
-  // Dialog flow tokens
-  // const dfToken = settings.dialogflowToken;
-
-  // This is not a Promise in normal npm `apiai`, but allow consumers to
-  //   resolve as a Promise.
-  // const app = await apiai(dfToken);
+  // Dialogflow setup
   const app = new dialogflow.SessionsClient({
     keyFilename: getDialogflowKeyPath(settings.PROJECT_JSON)
-    // above was path.join(__dirname, settings.PROJECT_JSON)
-  }); // was sessionClient in getDefaultCommand.js
+  });
 
   const {
     // The token of your bot -
