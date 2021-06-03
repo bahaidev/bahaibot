@@ -41,6 +41,7 @@ module.exports = {
         striptags: 'readonly',
         Discord: 'readonly',
         client: 'readonly',
+        dialogflow: 'readonly',
         fs: 'readonly',
         getSettings: 'readonly',
         getSettingsPath: 'readonly'
