@@ -15,13 +15,9 @@ import discordTTS from 'discord-tts';
 // ChatBot functions
 // Require Modules and settings for AI
 
-// Todo: apiai should be replaced with:
-//   https://cloud.google.com/dialogflow/es/docs/reference/libraries/nodejs
-// SJS import apiai from 'apiai';
-//
 // Importing dialogflow v2 api
 import dialogflow from '@google-cloud/dialogflow';
-// Note: dialogflow is an object(?), does it need to have key (.v2) selected?
+
 import {i18n, setFetch} from 'intl-dom';
 import fileFetch from 'file-fetch'; // For `intl-dom`
 import fetch from 'node-fetch';
