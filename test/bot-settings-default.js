@@ -6,7 +6,6 @@ import fetch from 'node-fetch';
 import {i18n, setFetch} from 'intl-dom';
 import fileFetch from 'file-fetch'; // For `intl-dom`
 import striptags from 'striptags';
-import apiai from 'apiai';
 
 import bot from '../src/bot.js';
 
@@ -28,8 +27,7 @@ describe('Bot', function () {
       striptags,
       Discord,
       fs,
-      getSettingsPath,
-      apiai
+      getSettingsPath
     });
 
     const settings = getSettings(system);

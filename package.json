@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@discordjs/opus": "^0.5.0",
-    "apiai": "^4.0.3",
+    
     "discord-tts": "^1.1.0",
     "discord.js": "^12.5.3",
     "discord.js-rate-limiter": "^1.0.7",

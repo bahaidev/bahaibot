@@ -17,8 +17,8 @@ import 'object.hasown/auto';
  * @see https://discord.js.org/#/docs/main/stable/class/Message
  */
 /**
- * @external APIAIResponse
- * @see https://github.com/api-ai/apiai-nodejs-client
+ * @external DialogflowResponse
+ * @see https://github.com/googleapis/nodejs-dialogflow
  */
 
 /*

@@ -41,7 +41,6 @@ module.exports = {
         striptags: 'readonly',
         Discord: 'readonly',
         client: 'readonly',
-        apiai: 'readonly',
         fs: 'readonly',
         getSettings: 'readonly',
         getSettingsPath: 'readonly'

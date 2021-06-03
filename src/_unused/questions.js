@@ -7,7 +7,7 @@ const questions = {
    * @param {external:DiscordMessage} message
    * @param {string} avatar
    * @param {external:DiscordModule} Discord
-   * @param {ApiaiApp} app
+   * @param {dialogflowApp} app
    * @returns {void}
    */
   answer (message, avatar, Discord, app) {
@@ -37,7 +37,7 @@ const questions = {
 
     /**
      * Once the robot responds, reply to user :) .
-     * @param {external:APIAIResponse} response Note that
+     * @param {external:dialogflowResponse} response Note that
      * `response.result.fulfillment.messages` is an array.
      * @returns {void}
      */
