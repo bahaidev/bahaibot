@@ -1,7 +1,7 @@
 // Todo: Ought to do a review to ensure all Promise APIs are awaited or at
 //   least flagged as deliberately not awaiting
 
-import {join} from 'path'; // SJS added to allow defining full path name
+// import {join} from 'path'; // SJS added to allow defining full path name
 
 import setSaferInterval from 'set-safer-interval';
 import {RateLimiter} from 'discord.js-rate-limiter';
@@ -67,6 +67,7 @@ const bot = async ({
   Discord,
   discordTTS, // `speak` admin command
   dialogflow,
+  getDialogflowKeyPath, // function to get the path to the keyfile
   fs,
   /**
    * @type {GetSettings}
@@ -118,7 +119,7 @@ const bot = async ({
   //   resolve as a Promise.
   // const app = await apiai(dfToken);
   const app = new dialogflow.SessionsClient({
-    keyFilename: join(process.cwd(), settings.PROJECT_JSON)
+    keyFilename: getDialogflowKeyPath(settings.PROJECT_JSON)
     // above was path.join(__dirname, settings.PROJECT_JSON)
   }); // was sessionClient in getDefaultCommand.js
 

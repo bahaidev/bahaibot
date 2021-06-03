@@ -58,6 +58,14 @@ const getSettingsPath = () => {
 };
 
 /**
+ * @param {string} serviceAccountKeyfileName - service account key json file
+ * @returns {string} Full path to dialogflow SA key file
+ */
+const getDialogflowKeyPath = (serviceAccountKeyfileName) => {
+  return join(process.cwd(), serviceAccountKeyfileName);
+};
+
+/**
 * @param {Settings} sys
 */
 const getSettings = (sys) => {
@@ -81,6 +89,7 @@ function discordBot (args) {
     getSettings,
     getSettingsPath,
     dialogflow,
+    getDialogflowKeyPath, // this is a function being passed to bot.js
     i18n,
     striptags,
     fetch,
