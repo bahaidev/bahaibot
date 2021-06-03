@@ -86,7 +86,7 @@ The HTTP middleware which could facilitate such a bot might be added in
 the future.
 
 ## API
-
+NOTE: This may be obsolete
 ```js
 buildBahaiBot({
   // Boolean whether to run checkin code
@@ -124,7 +124,7 @@ buildBahaiBot({
 
 ## Settings
 
-- `dialogflowToken`
+- `dialogflowToken` (unused)
 - `token`
 - `disableNotMentioned` - Defaults to `false`
 - `welcomeChannel` - Defaults to 'welcome'
@@ -140,6 +140,8 @@ buildBahaiBot({
 - `enabledCommandGroups` - Defaults to `['*']`
 - `embedColor` - The color border
 - `embedTextLimit` - The maximum text limit
+- `PROJECT_ID` - dialogflow service account key (see https://cloud.google.com/dialogflow/es/docs/quick/setup#sa-create)
+- `PROJECT_JSON` - dialogflow service account key json file (see https://cloud.google.com/dialogflow/es/docs/quick/setup#sa-create)
 - `bstarEmoji` - Defaults to 'bstar'
 - `checkinGuilds` = Defaults to:
 
