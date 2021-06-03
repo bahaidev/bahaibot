@@ -25,6 +25,7 @@ import * as DiscordConstants from './messages/DiscordConstants.js';
  * @property {DiscordClient} [client=new Discord.Client()]
  * @property {Discord} Discord
  * @property {dialogflow} dialogflow
+ * @property {GetDialogflowKeyPath} getDialogflowKeyPath
  * @property {FileSystem} fs
  * @property {GetSettingsPath} getSettingsPath
  * @property {boolean} [exitNoThrow=false] Set to true for testing

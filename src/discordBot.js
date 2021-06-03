@@ -58,9 +58,13 @@ const getSettingsPath = () => {
 };
 
 /**
+ * @callback GetDialogflowKeyPath
  * @param {string} serviceAccountKeyfileName - service account key json file
  * @returns {string} Full path to dialogflow SA key file
  */
+/**
+* @type {GetDialogflowKeyPath}
+*/
 const getDialogflowKeyPath = (serviceAccountKeyfileName) => {
   return join(process.cwd(), serviceAccountKeyfileName);
 };
