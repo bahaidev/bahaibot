@@ -31,10 +31,9 @@ import 'object.hasown/auto';
 
 /**
  * @callback Router
- * @param {external:APIAIResponse} response Note that
- * `response.result.fulfillment.messages` is an array.
- * //SJS in V2 response.queryResult.fulfillmentMessages is the array
- * NOTE: //SJS response.queryResult.fulfillmentText now a string
+ * @param {external:dialogflowResponse} response
+ * NOTE: response.queryResult.fulfillmentMessages is the array (not used)
+ * NOTE: response.queryResult.fulfillmentText a string with default response
  * @param {external:DiscordMessage} message
  * @param {external:DiscordClient} client
  * @param {external:DiscordModule} Discord
@@ -46,27 +45,7 @@ import 'object.hasown/auto';
  * @type {Router}
  */
 const router = (response, message, client, Discord, _) => {
-  //                      // eslint-disable-next-line no-console -- CLI
-  // SJS commented out... console.log(_('routerResponse'), response);
-
-  // Output default answer
-  // SJS  const {messages} = response.result.fulfillment;
-
-  /*
-  const messages = response.queryResult.fulfillmentMessages;
-             //SJS changes line above for V2, but not needed
-            //Since next statement unneeded
-  const content = messages.find((obj) => {
-    return !Object.hasOwn(obj, 'platform');
-    //SJS  Note: I believe this is searcing for the default response
-    //           which is the wone without a platform key defined
-
-  });
-*/
-
-  // SJS const {speech} = content;
-  const speech = response.queryResult.fulfillmentText;// SJS
-
+  const speech = response.queryResult.fulfillmentText; // SJS
   message.channel.send(speech);
 };
 
