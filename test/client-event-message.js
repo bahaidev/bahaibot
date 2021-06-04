@@ -153,7 +153,7 @@ describe('Client event (message)', function () {
     const message = {
       content: '',
       author: {
-        // No ID
+        id: 'abc'
       },
       mentions: {
         /**
@@ -177,10 +177,13 @@ describe('Client event (message)', function () {
     return new Promise((resolve) => {
       setTimeout(() => {
         expect(channelSpy.firstCall.firstArg).to.have.string(
-          "<@undefined>, I couldn't process your question at the moment."
+          "<@abc>, I couldn't process your question at the moment."
         );
-        expect(console.error.firstCall.firstArg.message).to.have.string(
-          'Wrong response status code'
+        expect(console.error.firstCall.firstArg).to.equal(
+          'Error executing command with message'
+        );
+        expect(console.error.secondCall.lastArg.message).to.have.string(
+          'Input text not set'
         );
         resolve();
       }, 5000);

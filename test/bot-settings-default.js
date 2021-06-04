@@ -7,6 +7,7 @@ import {i18n, setFetch} from 'intl-dom';
 import fileFetch from 'file-fetch'; // For `intl-dom`
 import striptags from 'striptags';
 
+import getDialogflowAdapter from '../src/getDialogflowAdapter.js';
 import bot from '../src/bot.js';
 
 /**
@@ -27,7 +28,12 @@ describe('Bot', function () {
       striptags,
       Discord,
       fs,
-      getPath
+      getPath,
+      dialogflow: getDialogflowAdapter({
+        doAIProcessing () {
+          //
+        }
+      })
     });
 
     const settings = getSettings(system);

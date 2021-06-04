@@ -40,6 +40,8 @@
  * @type {Router}
  */
 const router = (response, message, client, Discord, _) => {
+  // eslint-disable-next-line no-console -- CLI
+  console.log(_('routerResponse'), response);
   const speech = response.queryResult.fulfillmentText;
   message.channel.send(speech);
 };
