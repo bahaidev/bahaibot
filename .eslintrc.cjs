@@ -20,6 +20,15 @@ module.exports = {
 
   overrides: [
     {
+      files: 'src/middleware/client/*.js',
+      env: {
+        browser: true
+      },
+      rules: {
+        'import/unambiguous': 0
+      }
+    },
+    {
       files: '**/*.md/*.js',
       globals: {
         doAIProcessing: 'readonly',

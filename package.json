@@ -15,6 +15,7 @@
     "bahaibot": "./src/binary.js"
   },
   "dependencies": {
+    "@brettz9/node-static": "^0.1.1",
     "@discordjs/opus": "^0.5.0",
     "@google-cloud/dialogflow": "^3.5.0",
     "discord-tts": "^1.1.0",
@@ -25,7 +26,8 @@
     "node-fetch": "^2.6.1",
     "object.hasown": "^1.0.0",
     "set-safer-interval": "^0.3.0",
-    "striptags": "^3.1.1"
+    "striptags": "^3.1.1",
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
@@ -68,6 +70,7 @@
   "scripts": {
     "prepublishOnly": "pnpm i && pnpm rollup",
     "rollup": "rollup -c",
+    "middleware": "node src/middleware/index.js",
     "lint": "eslint --ext=js,md,html .",
     "lint-arg-fix": "eslint --fix --ext=js,md,html",
     "lint-json-arg-fix": "eslint --config=.eslintrc-json.cjs --no-eslintrc --fix --ext=json",
