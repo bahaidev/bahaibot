@@ -26,15 +26,19 @@ socket.addEventListener('message', function (ev) {
   // eslint-disable-next-line no-console -- Debugging
   console.log('Message from server', response);
   const {
-    message: {content, embed: {color, description}}
-  } = response;
+    message: {content, embed: {color = 3447003, description} = {}}
+  } = typeof response.message === 'object'
+    ? response
+    : {
+      message: {content: response.message}
+    };
   $('#messages').append(jml('br'), jml('div', {
     style: `padding: 5px; border: 2px solid #${color.toString(16)}`
   }, [
     ['b', [content]],
     ['br', 'br'],
     ['div', {
-      innerHTML: marked(description)
+      innerHTML: description ? marked(description) : description
     }]
   ]));
 });
