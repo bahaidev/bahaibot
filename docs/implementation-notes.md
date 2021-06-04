@@ -20,9 +20,16 @@ router.)
 // 1. Use the `dialogflow` wrapper with your own `doAIProcessing`.
 import getDialogflowAdapter from 'bahaibot/getDialogflowAdapter';
 
+// This is the default, so you can omit this
+const projectAgentSessionPath = (projectID, sessionID) => {
+  // This can be shaped differently
+  return `${projectID}--${sessionID}`;
+};
+
 const dialogflow = getDialogflowAdapter({
   // You must supply this yourself
-  doAIProcessing
+  doAIProcessing,
+  projectAgentSessionPath
 });
 
 // Pass on `dialogflow` to `bot.js` or `discordBot.js`

@@ -12,7 +12,11 @@
  * @returns {dialogflow}
  */
 function getDialogflowAdapter ({
-  doAIProcessing
+  doAIProcessing,
+  projectAgentSessionPath = (projectID, sessionID) => {
+    // This can be shaped differently
+    return `${projectID}--${sessionID}`;
+  }
 }) {
   const dialogflow = {
     /**
@@ -26,16 +30,12 @@ function getDialogflowAdapter ({
       constructor ({keyFilename}) {
         this.keyFilename = keyFilename;
       }
-      /* eslint-disable class-methods-use-this -- Not needed */
       /**
       * @param {string} projectID
       * @param {string} sessionID
       * @returns {string}
       */
-      projectAgentSessionPath (projectID, sessionID) {
-        // This can be shaped differently
-        return `${projectID}--${sessionID}`;
-      }
+      [projectAgentSessionPath]
 
       /**
        *
@@ -71,7 +71,6 @@ function getDialogflowAdapter ({
           }
         }];
       }
-      /* eslint-enable class-methods-use-this -- Not needed */
     }
   };
   return dialogflow;
