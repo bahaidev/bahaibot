@@ -51,7 +51,7 @@ const getBahaiInfo = ({client, Discord}) => {
           `OK ${
             message.author.username
           }, here you go. https://bahaipedia.org/Badí‘${star
-            ? ` ${star?.toString() ?? ''}`
+            ? ` ${star.toString() ?? ''}`
             : ''}`
         );
       }
