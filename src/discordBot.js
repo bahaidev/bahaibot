@@ -42,27 +42,16 @@ const checkins = process.argv.includes('--checkins');
 setFetch(fileFetch);
 
 /**
- * @callback GetSettingsPath
+ * @callback GetPath
+ * @param {string} path
  * @returns {string}
  */
 
 /**
-* @type {GetSettingsPath}
+* @type {GetPath}
 */
-const getSettingsPath = () => {
-  return join(process.cwd(), 'settings.json');
-};
-
-/**
- * @callback GetDialogflowKeyPath
- * @param {string} serviceAccountKeyfileName - service account key json file
- * @returns {string} Full path to dialogflow SA key file
- */
-/**
-* @type {GetDialogflowKeyPath}
-*/
-const getDialogflowKeyPath = (serviceAccountKeyfileName) => {
-  return join(process.cwd(), serviceAccountKeyfileName);
+const getPath = (path) => {
+  return join(process.cwd(), path);
 };
 
 /**
@@ -87,9 +76,8 @@ function discordBot (args) {
     locales,
     fs,
     getSettings,
-    getSettingsPath,
+    getPath,
     dialogflow,
-    getDialogflowKeyPath, // this is a function being passed to bot.js
     i18n,
     striptags,
     fetch,

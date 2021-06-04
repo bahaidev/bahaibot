@@ -10,10 +10,10 @@ import striptags from 'striptags';
 import bot from '../src/bot.js';
 
 /**
-* @type {GetSettingsPath}
+* @type {GetPath}
 */
-const getSettingsPath = () => {
-  return join(process.cwd(), 'settings.json');
+const getPath = (path) => {
+  return join(process.cwd(), path);
 };
 
 // Needed by intl-dom
@@ -27,7 +27,7 @@ describe('Bot', function () {
       striptags,
       Discord,
       fs,
-      getSettingsPath
+      getPath
     });
 
     const settings = getSettings(system);

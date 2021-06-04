@@ -23,9 +23,8 @@ import * as DiscordConstants from './messages/DiscordConstants.js';
  * @property {DiscordClient} [client=new Discord.Client()]
  * @property {Discord} Discord
  * @property {dialogflow} dialogflow
- * @property {GetDialogflowKeyPath} getDialogflowKeyPath
  * @property {FileSystem} fs
- * @property {GetSettingsPath} getSettingsPath
+ * @property {GetPath} getPath
  * @property {boolean} [exitNoThrow=false] Set to true for testing
  */
 
@@ -66,13 +65,12 @@ const bot = async ({
   Discord,
   discordTTS, // `speak` admin command
   dialogflow,
-  getDialogflowKeyPath, // function to get the path to the keyfile
   fs,
   /**
    * @type {GetSettings}
    */
   getSettings: defaultGetSettings,
-  getSettingsPath,
+  getPath,
   numberOfCommands = 1,
   commandInterval = 2000,
   rateLimiter = new RateLimiter(1, commandInterval),
@@ -97,7 +95,7 @@ const bot = async ({
   // import system from '../settings.json';
 
   const system = JSON.parse(
-    await fs.readFile(getSettingsPath(), 'utf8')
+    await fs.readFile(getPath('settings.json'), 'utf8')
   );
 
   const getSettings = typeof defaultGetSettings === 'function'
@@ -113,7 +111,7 @@ const bot = async ({
 
   // Dialogflow setup
   const app = new dialogflow.SessionsClient({
-    keyFilename: getDialogflowKeyPath(settings.PROJECT_JSON)
+    keyFilename: getPath(settings.PROJECT_JSON)
   });
 
   const {

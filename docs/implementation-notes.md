@@ -83,7 +83,7 @@ const dialogflow = {
 
 // 1. Will first have `SessionsClient` property instantiated
 const app = dialogflow.SessionsClient({
-  keyFilename: getDialogflowKeyPath(settings.PROJECT_JSON)
+  keyFilename: getPath(settings.PROJECT_JSON)
 });
 
 // 2. Later as commands arrive, will be sent user input and the options which

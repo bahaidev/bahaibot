@@ -23,10 +23,11 @@ const checkins = new URLSearchParams(hashParams).get('checkins') ||
   new URLSearchParams(search).get('checkins');
 
 /**
+ * @param {string} path
  * @returns {string}
  */
-const getSettingsPath = () => {
-  return `${location.href.replace(/\/$/u, '')}/settings.json`;
+const getPath = (path) => {
+  return `${location.href.replace(/\/$/u, '')}/${path}`;
 };
 
 // Note: These implementations are specific to our needs
@@ -72,7 +73,7 @@ function discordBot (args) {
   return bot({
     checkins,
     locales,
-    getSettingsPath,
+    getPath,
     fs,
     fetch,
     i18n,

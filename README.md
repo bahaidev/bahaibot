@@ -63,7 +63,7 @@ the API (see the API below).
 For the rarer use case that one wishes an integrated client-server environment
 which runs in a browser context like an add-on or a web app where there is only
 one (trusted) user, you can use the `integratedClientServerBot` which has
-`fs` and `getSettingsPath` implementations baked in:
+`fs` and `getPath` implementations baked in:
 
 ```js
 // If you do not want a build step, you can use this import instead:
@@ -113,12 +113,16 @@ buildBahaiBot({
 
   fs, // The Node `fs/promises`
 
-  // Provided `system` value of `getSettingsPath()` JSON; returns settings
-  //  object `system.development` by default, though in Node, allowing for a
-  //  `--production` flag to trigger getting `system.production` instead.
+  // Provided `system` value of `getPath('settings.json')` JSON; returns
+  //  settings object `system.development` by default, though in Node,
+  //  allowing for a `--production` flag to trigger getting `system.production`
+  //  instead.
   getSettings,
-  getSettingsPath // The Node equivalent of:
-  //                  `require('path').join(process.cwd(), 'settings.json')`
+  getPath // The Node equivalent of:
+  //           `require('path').join(process.cwd(), path)`
+  //            May be passed `settings.json` or `PROJECT_JSON` within
+  //            `settings.json`
+
 });
 ```
 

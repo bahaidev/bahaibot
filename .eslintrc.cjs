@@ -44,9 +44,8 @@ module.exports = {
         dialogflow: 'readonly',
         fs: 'readonly',
         getSettings: 'readonly',
-        getSettingsPath: 'readonly',
-        settings: 'readonly',
-        getDialogflowKeyPath: 'readonly'
+        getPath: 'readonly',
+        settings: 'readonly'
       },
       rules: {
         'no-shadow': 0,
