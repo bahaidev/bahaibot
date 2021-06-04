@@ -1,8 +1,3 @@
-/* eslint-disable
-  node/file-extension-in-import -- Polyfill */
-// SJS removed no-use-extend-native/no-use-extend-native,
-import 'object.hasown/auto';
-
 // These are for the current API; old docs not online
 /**
  * @external DiscordModule
@@ -45,7 +40,7 @@ import 'object.hasown/auto';
  * @type {Router}
  */
 const router = (response, message, client, Discord, _) => {
-  const speech = response.queryResult.fulfillmentText; // SJS
+  const speech = response.queryResult.fulfillmentText;
   message.channel.send(speech);
 };
 
