@@ -10,129 +10,59 @@ for parts of the API.
 
 ### Building one's own `dialogflow` implementation
 
-If supplying one's own dialogflow implementation, it must be a function (which
-accepts a string token) and returns an object with a `textRequest` method
-which will be invoked with the user input (as a string) and the options.
-The return request object must have an `on` (which receives `response` or
-`error` events) method and an `end` method (called after all `on` are set
-up).
+If supplying one's own dialogflow implementation, it should use, or follow
+the structure modeled in `getDialogflowAdapter`.
 
-(These are created and called in the default command and passed to the router.)
+(It will be called in the default command and its responses passed to the
+router.)
 
-// TODO: This needs further updating
 ```js
-const dialogflow = {
-  SessionsClient: class {
-    constructor ({keyFilename}) {
-      this.sessions = {};
-      this.keyFilename = keyFilename;
-    }
-    /* eslint-disable class-methods-use-this -- Not needed */
-    /**
-    * @param {string} projectID
-    * @param {string} sessionID
-    * @returns {string}
-    */
-    projectAgentSessionPath (projectID, sessionID) {
-      // This can be shaped differently
-      return `${projectID}--${sessionID}`;
-    }
+// 1. Use the `dialogflow` wrapper with your own `doAIProcessing`.
+import getDialogflowAdapter from 'bahaibot/getDialogflowAdapter';
 
-    /**
-     *
-     * @param {PlainObject} cfg
-     * @param {string} cfg.session
-     * @param {PlainObject} cfg.queryInput
-     * @param {PlainObject} cfg.queryInput.text
-     * @param {string} cfg.queryInput.text.text
-     * @param {string} cfg.queryInput.text.languageCode
-     * @returns {Promise<>} Resolved value not used internally.
-     */
-    async detectIntent ({session, queryInput: {text: {
-      text: userInput,
-      languageCode
-    }}}) {
-      const {sessionId} = options;
-      this.sessions[sessionId] = {};
+const dialogflow = getDialogflowAdapter({
+  // You must supply this yourself
+  doAIProcessing
+});
 
-      let success, speech;
-      try {
-        ({success, speech} = await doAIProcessing(userInput, options));
-      } catch (err) {
-        this.sessions[sessionId].error(err);
-        return;
-      }
-      if (!success) {
-        // This need not be a string. A DiscordMessage object (see below
-        // for the properties we support/require) may also be supplied.
-        speech = `We didn't understand your command: ${userInput}`;
-      }
-      const response = {
-        result: {
-          fulfillment: {
-            messages: [
-              {
-                // The first messages object without a `platform` property
-                //  will be used and its `speech` property passed to
-                //  our mock Discord API's `message.channel.send`.
-                speech
-              }
-            ]
-          }
-        }
-      };
-      this.sessions[sessionId].response(response);
+// Pass on `dialogflow` to `bot.js` or `discordBot.js`
+await bot({
+  dialogflow
+  // ...other arguments
+});
+```
 
-      /**
-       * @param {"response"|"error"} type
-       * @param {external:APIAIResponse|external:APIAIError} listener
-       * @returns {void}
-       */
-      request.on = (type, listener) => {
-        this.sessions[sessionId][type] = listener;
-      };
-      request.end = () => {
-        // Can be omitted
-      };
+The items that will be passed to your `doAIProcessing` will be as follows:
 
-      return request;
-    }
-    /* eslint-enable class-methods-use-this -- Not needed */
-  }
-};
-
+```js
 // 1. Will first have `SessionsClient` property instantiated
+const keyFilename = getPath(settings.PROJECT_JSON);
+
 const app = dialogflow.SessionsClient({
-  keyFilename: getPath(settings.PROJECT_JSON)
+  keyFilename
 });
 
 // 2. Later as commands arrive, will be sent user input and the options which
 //   include the current message's author ID (from your Discord mock API)
 const userInput = 'What is God?';
-const options = {
-  sessionId: message.author.id,
-  contexts: [
-    {
-      name: 'ecosystem',
-      parameters: {
-        platform: 'discord'
-      }
-    }
-  ]
-};
 
-// 3. `textRequest` method will be called
-const responses = app.detectIntent(request);
+// 3. `projectAgentSessionPath` method will be called to create a `sessionId`,
+//   using `PROJECT_ID` in the `settings.json` file
 
-// 4. Listeners will be added
-request.on('response', internalBotResponseListener);
-request.on('error', internalBotErrorListener);
+const sessionId = app.projectAgentSessionPath(
+  settings.PROJECT_ID,
+  message.author.id
+);
 
-// 5. `end` will be called
-request.end();
-
-// 6. Your own implementation of `textRequest` should resolve with calls
-//     to the callbacks supplied in step 4.
+// 4. `detectIntent` method will be called with a request, using the
+//      `sessionPath` and `userInput` (as well as the current locale). Its
+//        response will be passed to the Bot's router for processing.
+const fulfillmentText = await doAIProcessing({
+  userInput,
+  sessionId,
+  keyFilename,
+  languageCode // Locale
+});
 ```
 
 ### Building one's own `discordTTS` implementation

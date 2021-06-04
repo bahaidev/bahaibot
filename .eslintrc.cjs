@@ -23,8 +23,9 @@ module.exports = {
       files: '**/*.md/*.js',
       globals: {
         doAIProcessing: 'readonly',
-        internalBotResponseListener: 'readonly',
-        internalBotErrorListener: 'readonly',
+        bot: 'readonly',
+        theCurrentLocale: 'readonly',
+        languageCode: 'readonly',
 
         DiscordConstants: 'readonly',
         getLocalizedSetting: 'readonly',
@@ -55,7 +56,7 @@ module.exports = {
           ignore: ['bahaibot']
         }],
         'no-unused-vars': ['error', {
-          varsIgnorePattern: 'commands|buildBahaiBot|bahaibot',
+          varsIgnorePattern: 'commands|buildBahaiBot|bahaibot|fulfillmentText',
           argsIgnorePattern: 'message'
         }]
       }
