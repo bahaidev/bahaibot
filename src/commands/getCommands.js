@@ -46,7 +46,7 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
 
 /**
  * @param {PlainObject} cfg
- * @param {dialogflow} cfg.app
+ * @param {DialogflowApp} cfg.app
  * @param {Router} cfg.router
  * @param {Discord} cfg.Discord
  * @param {BotWikiTools} cfg.wikiTools
@@ -112,7 +112,7 @@ const getCommands = async function ({
 
   // After adding help to ensure `!help` has priority
   commands.default = getDefaultCommand({
-    app, router, client, Discord, BOT_ID, _, settings // added settings to call
+    app, router, client, Discord, BOT_ID, _, settings
   });
 
   return commands;

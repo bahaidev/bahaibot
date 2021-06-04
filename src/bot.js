@@ -1,8 +1,6 @@
 // Todo: Ought to do a review to ensure all Promise APIs are awaited or at
 //   least flagged as deliberately not awaiting
 
-// import {join} from 'path'; // SJS added to allow defining full path name
-
 import setSaferInterval from 'set-safer-interval';
 import {RateLimiter} from 'discord.js-rate-limiter';
 

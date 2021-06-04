@@ -86,7 +86,7 @@ The HTTP middleware which could facilitate such a bot might be added in
 the future.
 
 ## API
-NOTE: This may be obsolete
+
 ```js
 buildBahaiBot({
   // Boolean whether to run checkin code
@@ -124,7 +124,6 @@ buildBahaiBot({
 
 ## Settings
 
-- `dialogflowToken` (unused)
 - `token`
 - `disableNotMentioned` - Defaults to `false`
 - `welcomeChannel` - Defaults to 'welcome'

@@ -19,70 +19,72 @@ up).
 
 (These are created and called in the default command and passed to the router.)
 
-NOTE: BELOW IS OBSOLETE WITH V2 OF THE DIALOGFLOW API
+// TODO: This needs further updating
 ```js
-function apiai (token) {
-  // Use `token` to authenticate
-  const sessions = {};
-  const _state = {
-    sessions,
-    token
-  };
-  return {
-    _state,
-    textRequest (userInput, options) {
-      const {sessionId} = options;
-      sessions[sessionId] = {};
+const dialogflow = {
+  SessionsClient ({keyFilename}) {
+    const sessions = {};
+    const _state = {
+      sessions,
+      keyFilename
+    };
+    return {
+      _state,
+      textRequest (userInput, options) {
+        const {sessionId} = options;
+        sessions[sessionId] = {};
 
-      const request = (async () => {
-        let success, speech;
-        try {
-          ({success, speech} = await doAIProcessing(userInput, options));
-        } catch (err) {
-          sessions[sessionId].error(err);
-          return;
-        }
-        if (!success) {
-          // This need not be a string. A DiscordMessage object (see below
-          // for the properties we support/require) may also be supplied.
-          speech = `We didn't understand your command: ${userInput}`;
-        }
-        const response = {
-          result: {
-            fulfillment: {
-              messages: [
-                {
-                  // The first messages object without a `platform` property
-                  //  will be used and its `speech` property passed to
-                  //  our mock Discord API's `message.channel.send`.
-                  speech
-                }
-              ]
-            }
+        const request = (async () => {
+          let success, speech;
+          try {
+            ({success, speech} = await doAIProcessing(userInput, options));
+          } catch (err) {
+            sessions[sessionId].error(err);
+            return;
           }
+          if (!success) {
+            // This need not be a string. A DiscordMessage object (see below
+            // for the properties we support/require) may also be supplied.
+            speech = `We didn't understand your command: ${userInput}`;
+          }
+          const response = {
+            result: {
+              fulfillment: {
+                messages: [
+                  {
+                    // The first messages object without a `platform` property
+                    //  will be used and its `speech` property passed to
+                    //  our mock Discord API's `message.channel.send`.
+                    speech
+                  }
+                ]
+              }
+            }
+          };
+          sessions[sessionId].response(response);
+        })();
+        /**
+         * @param {"response"|"error"} type
+         * @param {external:APIAIResponse|external:APIAIError} listener
+         * @returns {void}
+         */
+        request.on = (type, listener) => {
+          sessions[sessionId][type] = listener;
         };
-        sessions[sessionId].response(response);
-      })();
-      /**
-       * @param {"response"|"error"} type
-       * @param {external:APIAIResponse|external:APIAIError} listener
-       * @returns {void}
-       */
-      request.on = (type, listener) => {
-        sessions[sessionId][type] = listener;
-      };
-      request.end = () => {
-        // Can be omitted
-      };
+        request.end = () => {
+          // Can be omitted
+        };
 
-      return request;
-    }
-  };
-}
+        return request;
+      }
+    };
+  }
+};
 
-// 1. Will first be passed token
-const token = 'abcdefg';
-const app = apiai(token);
+// 1. Will first have `SessionsClient` property instantiated
+const app = dialogflow.SessionsClient({
+  keyFilename: getDialogflowKeyPath(settings.PROJECT_JSON)
+});
 
 // 2. Later as commands arrive, will be sent user input and the options which
 //   include the current message's author ID (from your Discord mock API)

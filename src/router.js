@@ -31,7 +31,7 @@ import 'object.hasown/auto';
 
 /**
  * @callback Router
- * @param {external:dialogflowResponse} response
+ * @param {external:DialogflowResponse} response
  * NOTE: response.queryResult.fulfillmentMessages is the array (not used)
  * NOTE: response.queryResult.fulfillmentText a string with default response
  * @param {external:DiscordMessage} message

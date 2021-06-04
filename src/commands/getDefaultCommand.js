@@ -1,7 +1,6 @@
-/*   eslint-disable max-len -- long */
 /**
 * @param {PlainObject} cfg
-* @param {dialogflow} cfg.app
+* @param {DialogflowApp} cfg.app
 * @param {Router} cfg.router
 * @param {DiscordClient} cfg.client
 * @param {Discord} cfg.Discord
@@ -10,14 +9,16 @@
 * @param {external:settings} cfg.settings
 * @returns {BotCommand}
 */
-const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _, settings}) => {
+const getDefaultCommand = ({
+  app, router, client, Discord, BOT_ID, _, settings
+}) => {
   return {
     re: /[\s\S]*/u, // Should always match
     /**
      * @param {DiscordMessage} message
      * @returns {void}
      */
-    action (message) {
+    async action (message) {
       /* BOT DATA */
       // Variables and initial data
       // Replace removes the bot reference
@@ -29,9 +30,12 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _, settings}) 
         `<@!${numberMessage[0]}>`, '' // remove aribrary number from userInput
       );
 
-      // Creates a new session
-      const sessionID = message.author.id; // SJS uses original discord bot defined sessionID
-      const sessionPath = app.projectAgentSessionPath(settings.PROJECT_ID, sessionID); // SJS need PROJECT_ID in settings.json file
+      // Creates a new session, using original discord bot defined sessionID
+      const sessionID = message.author.id;
+      const sessionPath = app.projectAgentSessionPath(
+        settings.PROJECT_ID,
+        sessionID
+      );
 
       // The text query request.
       const request = {
@@ -47,15 +51,16 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _, settings}) 
       };
 
       /**
-      *
-      * @returns {external:Dialogflow-Responses} responses
+      * @throws {DialogflowError}
+      * @returns {Promise<external:DialogflowResponse[]>} responses
       */
       async function dialogflowCall () {
-      // Send request and log result
+        // Send request and log result
         try {
           const responses = await app.detectIntent(request);
           await router(responses[0], message, client, Discord, _);
-          return responses; // so that can use as returned value from call by enclosing function
+          // Allow use as returned value from call by enclosing function
+          return responses;
         } catch (error) {
           // Let the user know
           message.channel.send(
@@ -63,16 +68,16 @@ const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _, settings}) 
               message.author.id
             }>, I couldn't process your question at the moment.`
           );
-          // eslint-disable-next-line no-console -- CLI
-          console.error(error);
-          return error; // SJS not sure this is useful
+
+          // Allow a consuming await chain to catch this as a proper error (and
+          //   log there)
+          throw error;
         }
       }
-      const responses = dialogflowCall();
 
       // Return in case an implementation wants this as a Promise that
       //  waits to resolve (e.g., until it calls the callbacks)
-      return responses; // SJS request;
+      return await dialogflowCall();
     }
   };
 };

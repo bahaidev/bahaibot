@@ -1,6 +1,5 @@
 {
   "production" : {
-    "dialogflowToken": "this is removed in V2 of the api",
     "token": "",
     "embedColor": 16732271,
     "embedTextLimit": 2000,
@@ -8,10 +7,9 @@
     "PROJECT_JSON": "<the-dialogflow-agent-credentials-json-file, i.e.: baha-i-qna-2-xxxxxx-xxxxxxxxxxx.json"
   },
   "development": {
-  	"dialogflowToken": "this is removed in V2 of the api",
-  	"token": "",
-  	"embedColor": 16732271,
-  	"embedTextLimit": 2000,
+    "token": "",
+    "embedColor": 16732271,
+    "embedTextLimit": 2000,
     "PROJECT_ID": "<the-dialogflow-agent-id, i.e.: baha-i-qna-2-xxxxxx",
     "PROJECT_JSON": "<the-dialogflow-agent-credentials-json-file, i.e.: baha-i-qna-2-xxxxxx-xxxxxxxxxxx.json"
   }
