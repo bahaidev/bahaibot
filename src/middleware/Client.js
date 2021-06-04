@@ -63,10 +63,14 @@ class Client {
     this.listeners = {};
     this.httpPort = 8000;
     this.websocketPort = 8081;
+    this.user = new User({
+      id: 'bot',
+      username: 'Bot'
+    });
     // Discord iterates over guilds to get these
     this.emojis = {
-      _emojis: [],
       cache: {
+        _emojis: [],
         /**
          * @param {PlainObject} cfg
          * @param {string} cfg.name

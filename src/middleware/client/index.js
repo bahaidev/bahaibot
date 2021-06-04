@@ -2,9 +2,9 @@ const socket = new WebSocket('ws://localhost:8081');
 
 socket.addEventListener('open', function (ev) {
   socket.send(JSON.stringify({
-    message: 'test',
+    message: '!b9 God',
     user: {
-      mentions: []
+      mentions: ['bot']
     }
   }));
 });

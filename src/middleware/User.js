@@ -13,8 +13,8 @@ class User {
     id = 'defaultID', username = 'user', avatarURL,
     socketJSON
   }) {
-    this.id = {id};
-    this.username = {username};
+    this.id = id;
+    this.username = username;
     this.avatarURL = avatarURL;
 
     this._socketJSON = socketJSON;
