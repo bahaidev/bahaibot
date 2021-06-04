@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@discordjs/opus": "^0.5.0",
-
+    "@google-cloud/dialogflow": "^3.5.0",
     "discord-tts": "^1.1.0",
     "discord.js": "^12.5.3",
     "discord.js-rate-limiter": "^1.0.7",
@@ -25,10 +25,7 @@
     "node-fetch": "^2.6.1",
     "object.hasown": "^1.0.0",
     "set-safer-interval": "^0.3.0",
-    "striptags": "^3.1.1",
-
-    "@google-cloud/dialogflow": "^3.5.0"
-
+    "striptags": "^3.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
