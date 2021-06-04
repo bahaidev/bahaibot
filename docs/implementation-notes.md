@@ -150,7 +150,6 @@ mentioned in the "Required by" column.
 | `guildMemberAddEvent` | `guild.channels.cache.get(rulesChannel).toString()` | Uses `channel.send(string)` | (Called in main bot code)
 | `guildMemberAddEvent` | `user.id` | String | (Called in main bot code)
 | `message`| | Tracks a subset of `Discord.Message`; may be a string or an object | See table below and "Building one's own `apiai` implementation" section
-| `message` | `.mentions.has(user)` | Passed a user object | (Called in main bot code (within "message" event))
 | `guild` | `.channels.cache.get(guildChannelID)` | Returns a channel object | (Called in main bot code if `checkins` flag passed; also in Admin (`checkin` command); see also `channel` for the returned object)
 | `broadcast` | `play` | Will be passed `discordTTS.getVoiceStream(words)` | Admin (`speak` command)
 | `channel` | `.name` | A string | (Accessed in main bot code if `checkins` flag passed); also in Admin (`checkin` command))
@@ -174,5 +173,6 @@ mentioned in the "Required by" column.
 | `guild.channels.cache.find({name})` | Checks against channel name | Admin (`puppet` command)
 | `member.permissions.has(permissions.permission)` | | Admin (`puppet`) though not currently enabled
 | `member.voice.channelID` | | Admin (`speak` command)
+| `mentions.has(user)` | Passed a user object | (Called in main bot code (within "message" event))
 | `mentions.members.first()` | Truthy result; called within `notMentioned` only | Bahá'í Salutations (`abha` command); Salutations (`welcome` command `notMentioned` check)
 | `react` | | Bahá'í Salutations (`abha`, `nawruz`, and `ridvan` commands); Salutations (`welcome` command `notMentioned` check); Light-hearted (`goodbot`, `badbot` commands; `tea` and `coffee` `notMentioned` commands); Bahá'í Wikis (`bp`, `today`, `b9`, `bm` commands)

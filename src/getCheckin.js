@@ -198,7 +198,7 @@ function getCheckin ({
                 {month: 'long', day: 'numeric'}
               ]
             },
-            bstar: bstar.toString(),
+            bstar: bstar?.toString() ?? '',
             todayInHistoryResult
           })
         }

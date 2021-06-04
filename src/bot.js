@@ -172,9 +172,14 @@ const bot = async ({
     fs, settings, discordTTS
   });
 
+  /**
+  * @callback ReadyListener
+  * @returns {void}
+  */
+
   // The ready event is vital, it means that your bot will only start
   //  reacting to information from Discord _after_ ready is emitted
-  client.on('ready', () => {
+  client.on('ready', /** @type {ReadyListener} */ () => {
     // eslint-disable-next-line no-console -- CLI
     console.log(_('BahaiBotOnline'));
 
@@ -221,9 +226,15 @@ const bot = async ({
 
   // Process Bot Commands
 
+  /**
+  * @callback MessageListener
+  * @param {external:DiscordMessage} message
+  * @returns {void}
+  */
+
   // Create an event listener for messages
   client.on(
-    'message', async (/** @type {external:DiscordMessage} */ message) => {
+    'message', /** @type {MessageListener} */ async (message) => {
       // Collect userID
       // Ensure that the bot is being messaged
       if (message.mentions.has(client.user)) {
@@ -281,7 +292,13 @@ const bot = async ({
 
   // New user added
 
-  client.on('guildMemberAdd', (/** @type {DiscordGuildMember} */ ev) => {
+  /**
+  * @callback GuildMemberAddListener
+  * @param {DiscordGuildMember} ev
+  * @returns {void}
+  */
+
+  client.on('guildMemberAdd', /** @type {GuildMemberAddListener} */ (ev) => {
     const wcChannel = ev.guild.channels.cache.find(
       (val) => val.name === welcomeChannel
     );
