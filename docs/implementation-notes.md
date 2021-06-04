@@ -22,62 +22,82 @@ up).
 // TODO: This needs further updating
 ```js
 const dialogflow = {
-  SessionsClient ({keyFilename}) {
-    const sessions = {};
-    const _state = {
-      sessions,
-      keyFilename
-    };
-    return {
-      _state,
-      textRequest (userInput, options) {
-        const {sessionId} = options;
-        sessions[sessionId] = {};
+  SessionsClient: class {
+    constructor ({keyFilename}) {
+      this.sessions = {};
+      this.keyFilename = keyFilename;
+    }
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+    * @param {string} projectID
+    * @param {string} sessionID
+    * @returns {string}
+    */
+    projectAgentSessionPath (projectID, sessionID) {
+      // This can be shaped differently
+      return `${projectID}--${sessionID}`;
+    }
 
-        const request = (async () => {
-          let success, speech;
-          try {
-            ({success, speech} = await doAIProcessing(userInput, options));
-          } catch (err) {
-            sessions[sessionId].error(err);
-            return;
-          }
-          if (!success) {
-            // This need not be a string. A DiscordMessage object (see below
-            // for the properties we support/require) may also be supplied.
-            speech = `We didn't understand your command: ${userInput}`;
-          }
-          const response = {
-            result: {
-              fulfillment: {
-                messages: [
-                  {
-                    // The first messages object without a `platform` property
-                    //  will be used and its `speech` property passed to
-                    //  our mock Discord API's `message.channel.send`.
-                    speech
-                  }
-                ]
-              }
-            }
-          };
-          sessions[sessionId].response(response);
-        })();
-        /**
-         * @param {"response"|"error"} type
-         * @param {external:APIAIResponse|external:APIAIError} listener
-         * @returns {void}
-         */
-        request.on = (type, listener) => {
-          sessions[sessionId][type] = listener;
-        };
-        request.end = () => {
-          // Can be omitted
-        };
+    /**
+     *
+     * @param {PlainObject} cfg
+     * @param {string} cfg.session
+     * @param {PlainObject} cfg.queryInput
+     * @param {PlainObject} cfg.queryInput.text
+     * @param {string} cfg.queryInput.text.text
+     * @param {string} cfg.queryInput.text.languageCode
+     * @returns {Promise<>} Resolved value not used internally.
+     */
+    async detectIntent ({session, queryInput: {text: {
+      text: userInput,
+      languageCode
+    }}}) {
+      const {sessionId} = options;
+      this.sessions[sessionId] = {};
 
-        return request;
+      let success, speech;
+      try {
+        ({success, speech} = await doAIProcessing(userInput, options));
+      } catch (err) {
+        this.sessions[sessionId].error(err);
+        return;
       }
-    };
+      if (!success) {
+        // This need not be a string. A DiscordMessage object (see below
+        // for the properties we support/require) may also be supplied.
+        speech = `We didn't understand your command: ${userInput}`;
+      }
+      const response = {
+        result: {
+          fulfillment: {
+            messages: [
+              {
+                // The first messages object without a `platform` property
+                //  will be used and its `speech` property passed to
+                //  our mock Discord API's `message.channel.send`.
+                speech
+              }
+            ]
+          }
+        }
+      };
+      this.sessions[sessionId].response(response);
+
+      /**
+       * @param {"response"|"error"} type
+       * @param {external:APIAIResponse|external:APIAIError} listener
+       * @returns {void}
+       */
+      request.on = (type, listener) => {
+        this.sessions[sessionId][type] = listener;
+      };
+      request.end = () => {
+        // Can be omitted
+      };
+
+      return request;
+    }
+    /* eslint-enable class-methods-use-this -- Not needed */
   }
 };
 
@@ -102,7 +122,7 @@ const options = {
 };
 
 // 3. `textRequest` method will be called
-const request = app.textRequest(userInput, options);
+const responses = app.detectIntent(request);
 
 // 4. Listeners will be added
 request.on('response', internalBotResponseListener);

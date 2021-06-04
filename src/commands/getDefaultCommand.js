@@ -26,22 +26,22 @@ const getDefaultCommand = ({
         `<@!${client.user.id}>`, '' // remove aribrary number from userInput
       );
 
-      // Creates a new session, using original discord bot defined sessionID
+      // Creates a new session, using original Discord-bot-defined sessionID
       const sessionID = message.author.id;
       const sessionPath = app.projectAgentSessionPath(
         settings.PROJECT_ID,
         sessionID
       );
 
-      // The text query request.
+      // The text query request
       const request = {
         session: sessionPath,
         queryInput: {
           text: {
             // The query to send to the dialogflow agent
             text: userInput, // was message,
-            // The language used by the client (en-US)
-            languageCode: 'en-US'
+            // The language used by the client
+            languageCode: _.resolvedLocale
           }
         }
       };
