@@ -2057,9 +2057,6 @@ describe('Commands', function () {
         expect(
           console.log.calledWith("Checking in on Bahá'í.FYI.")
         ).to.be.true;
-        expect(
-          console.error.firstCall.firstArg
-        ).to.have.string('Error checking in');
 
         resolve();
       }, 2000);

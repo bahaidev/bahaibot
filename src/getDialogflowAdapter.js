@@ -13,6 +13,8 @@
  */
 function getDialogflowAdapter ({
   doAIProcessing,
+  // Reenable when ready to test
+  /* c8 ignore next 4 */
   projectAgentSessionPath = (projectID, sessionID) => {
     // This can be shaped differently
     return `${projectID}--${sessionID}`;
@@ -37,6 +39,8 @@ function getDialogflowAdapter ({
       */
       [projectAgentSessionPath]
 
+      // Reenable when ready to test
+      /* c8 ignore next 34 */
       /**
        *
        * @param {PlainObject} cfg

@@ -53,10 +53,10 @@ const getDefaultCommand = ({
       async function dialogflowCall () {
         // Send request and log result
         try {
-          const responses = await app.detectIntent(request);
-          await router(responses[0], message, client, Discord, _);
+          const [response] = await app.detectIntent(request);
+          await router(response, message, client, Discord, _);
           // Allow use as returned value from call by enclosing function
-          return responses;
+          return response;
         } catch (error) {
           // Let the user know
           message.channel.send(
@@ -72,7 +72,7 @@ const getDefaultCommand = ({
       }
 
       // Return in case an implementation wants this as a Promise that
-      //  waits to resolve (e.g., until it calls the callbacks)
+      //  waits to resolve
       return await dialogflowCall();
     }
   };

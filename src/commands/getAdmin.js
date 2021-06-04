@@ -164,6 +164,7 @@ const getAdmin = ({
           );
           try {
             return await guildCheckin();
+          /* c8 ignore next 4 */
           } catch (err) {
             // eslint-disable-next-line no-console -- CLI
             console.error('Error checking in', err);
