@@ -4,13 +4,12 @@
 * @param {Router} cfg.router
 * @param {DiscordClient} cfg.client
 * @param {Discord} cfg.Discord
-* @param {string} cfg.BOT_ID
 * @param {external:IntlDom} cfg._
 * @param {external:settings} cfg.settings
 * @returns {BotCommand}
 */
 const getDefaultCommand = ({
-  app, router, client, Discord, BOT_ID, _, settings
+  app, router, client, Discord, _, settings
 }) => {
   return {
     re: /[\s\S]*/u, // Should always match
@@ -23,11 +22,8 @@ const getDefaultCommand = ({
       // Variables and initial data
       // Replace removes the bot reference
 
-      const regex = /\d+/u;
-      const numberMessage = message.content.match(regex);
       const userInput = message.content.replace(
-      //  `<@${BOT_ID}>`, ''
-        `<@!${numberMessage[0]}>`, '' // remove aribrary number from userInput
+        `<@!${client.user.id}>`, '' // remove aribrary number from userInput
       );
 
       // Creates a new session, using original discord bot defined sessionID

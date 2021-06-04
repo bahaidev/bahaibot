@@ -69,7 +69,6 @@ const getCommands = async function ({
   const {
     PUPPET_AUTHOR = DiscordConstants.USER_AB,
     ADMIN_PERMISSION = DiscordConstants.ADMIN_PERMISSION,
-    BOT_ID = DiscordConstants.BAHAI_BOT_ID,
     ADMIN_IDS = DiscordConstants.ADMIN_IDS,
     ADMIN_ROLES = DiscordConstants.ADMIN_ROLES,
     enabledCommandGroups = ['*'],
@@ -112,7 +111,7 @@ const getCommands = async function ({
 
   // After adding help to ensure `!help` has priority
   commands.default = getDefaultCommand({
-    app, router, client, Discord, BOT_ID, _, settings
+    app, router, client, Discord, _, settings
   });
 
   return commands;

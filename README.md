@@ -132,7 +132,6 @@ buildBahaiBot({
 - `rulesChannel` - Defaults to `DiscordConstants.BAHAI_FYI_RULES_CHANNEL_ID`
 - `PUPPET_AUTHOR` - Defaults to `DiscordConstants.USER_AB`
 - `ADMIN_PERMISSION` - Defaults to `DiscordConstants.ADMIN_PERMISSION`
-- `BOT_ID` - Defaults to `DiscordConstants.BAHAI_BOT_ID`
 - `ADMIN_IDS` - Defaults to `DiscordConstants.ADMIN_IDS`
 - `ADMIN_ROLES` - Defaults to `DiscordConstants.ADMIN_ROLES`
 - `disabledCommandGroups` - Defaults to `[]`
