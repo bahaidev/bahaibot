@@ -36,7 +36,9 @@ specifiers:
   file-fetch: ^1.6.1
   husky: ^6.0.0
   intl-dom: ^0.13.4
+  jamilih: ^0.54.0
   lint-staged: ^11.0.0
+  marked: ^2.0.7
   mocha: ^8.4.0
   node-fetch: ^2.6.1
   nodemon: ^2.0.7
@@ -57,6 +59,8 @@ dependencies:
   discord.js-rate-limiter: 1.0.7_@discordjs+opus@0.5.0
   file-fetch: 1.6.1
   intl-dom: 0.13.4
+  jamilih: 0.54.0
+  marked: 2.0.7
   node-fetch: 2.6.1
   object.hasown: 1.0.0
   set-safer-interval: 0.3.0
@@ -2758,6 +2762,11 @@ packages:
       istanbul-lib-report: 3.0.0
     dev: true
 
+  /jamilih/0.54.0:
+    resolution: {integrity: sha512-x3rfmZhxocBFbowFbi79C+TtLxe3Bes0ypWly/RJvQ69ZkiLAlwX1kkDeDzpCXpwzXvg53FejVSbOveacB7NvQ==}
+    engines: {node: '>=10'}
+    dev: false
+
   /jest-worker/26.6.2:
     resolution: {integrity: sha512-KWYVV1c4i+jbMpaBC+U++4Va0cp8OisU185o73T1vo99hqi7w8tSJfUXYswwqqrjzwxa6KpRK54WhPvwf5w6PQ==}
     engines: {node: '>= 10.13.0'}
@@ -3070,6 +3079,12 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       semver: 6.3.0
+
+  /marked/2.0.7:
+    resolution: {integrity: sha512-BJXxkuIfJchcXOJWTT2DOL+yFWifFv2yGYOUzvXg8Qz610QKw+sHCvTMYwA+qWGhlA2uivBezChZ/pBy1tWdkQ==}
+    engines: {node: '>= 8.16.2'}
+    hasBin: true
+    dev: false
 
   /mdast-util-from-markdown/0.8.5:
     resolution: {integrity: sha512-2hkTXtYYnr+NubD/g6KGBS/0mFmBcifAsI0yIWRiRo0PjVs6SSOSOdtzbp6kSGnShDN6G5aWZpKQ2lWRy27mWQ==}
