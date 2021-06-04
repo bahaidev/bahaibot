@@ -11,7 +11,7 @@ for parts of the API.
 ### Building one's own `dialogflow` implementation
 
 If supplying one's own dialogflow implementation, it should use, or follow
-the structure modeled in `getDialogflowAdapter`.
+the structure modeled in `src/getDialogflowAdapter.js`.
 
 (It will be called in the default command and its responses passed to the
 router.)
