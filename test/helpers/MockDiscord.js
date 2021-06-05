@@ -149,7 +149,11 @@ class MockDiscord {
     );
     this.channel = this.mockChannel(opts.guilds?.[0]?.channels?.[0]?.id);
     this.textChannel = this.mockTextChannel();
-    this.user = this.mockUser({userID: opts.userID, userName: opts.userName});
+    this.user = this.mockUser({
+      userID: opts.userID,
+      userName: opts.userName,
+      hideUserStatus: opts.hideUserStatus
+    });
     if (opts.addClientUser !== false) {
       // Client logged in as:
       this.client.user = this.user;
@@ -361,11 +365,12 @@ class MockDiscord {
    * @param {DiscordGuild} cfg.guild
    * @param {string} cfg.status
    * @param {DiscordRole[]} cfg.roles
+   * @param {boolean} cfg.hideUserStatus
    * @param {DiscordClient} cfg.client
    * @returns {ClientUser}
    */
   mockUser ({
-    userID, userName, guild, status, roles, client = this.client
+    userID, userName, guild, status, roles, hideUserStatus, client = this.client
   } = {}) {
     const user = new Discord.ClientUser(this.client, {
       id: userID || 'user-id',
@@ -398,7 +403,10 @@ class MockDiscord {
       guild.members.cache.set(user.id, guildMember);
 
       client.guilds.cache.set(guild.id, guild);
-      // client.users.cache.set(user.id, user);
+    }
+
+    if (!hideUserStatus) {
+      client.users.cache.set(user.id, user);
     }
 
     return user;

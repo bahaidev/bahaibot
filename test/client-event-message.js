@@ -5,6 +5,8 @@ import MockDiscord from './helpers/MockDiscord.js';
 
 import bot from '../src/discordBot.js';
 
+import * as DiscordConstants from '../src/messages/DiscordConstants.js';
+
 describe('Client event (message)', function () {
   beforeEach(function () {
     this.sinon = sinon.createSandbox();
@@ -71,6 +73,128 @@ describe('Client event (message)', function () {
   );
 
   it(
+    'Passes message if Bot is messaged, stripping initial Bot ID, and ' +
+    'defaulting to use router',
+    async function () {
+      const discord = new MockDiscord({
+        userID: DiscordConstants.BAHAI_DEV_BOT_ID,
+        mentionEveryone: true,
+        messageContent: `<@${DiscordConstants.BAHAI_DEV_BOT_ID}> What ` +
+          "is the Baha'i Faith?"
+      });
+
+      const {client} = await bot({client: discord.getClient()});
+
+      const message = discord.getMessage();
+
+      this.sinon.spy(message.channel, 'send');
+
+      // console.log('message', message);
+      client.emit('message', message);
+
+      this.sinon.spy(console, 'log');
+
+      // eslint-disable-next-line promise/avoid-new -- Delay test
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          expect(message.channel.send.firstCall.firstArg).to.have.string(
+            "The Bahá'í Faith is an independent world religion"
+          );
+          expect(console.log.calledWith(
+            'Router response:'
+          )).to.be.true;
+          resolve();
+        }, 5000);
+      });
+    }
+  );
+
+  it(
+    'Passes message if Bot is messaged, converting initial user who is ' +
+    'not the current Bot to name, and defaulting to use router',
+    async function () {
+      const discord = new MockDiscord({
+        userID: DiscordConstants.BAHAI_DEV_BOT_ID,
+        mentionEveryone: true,
+        messageContent: `<@${DiscordConstants.BAHAI_BOT_ID}> Who am I?`
+      });
+
+      const {client} = await bot({client: discord.getClient()});
+
+      const message = discord.getMessage();
+
+      this.sinon.spy(message.channel, 'send');
+
+      const user = {
+        id: DiscordConstants.BAHAI_BOT_ID,
+        username: 'Other BahaiBot'
+      };
+      client.users.cache.set(user.id, user);
+
+      // console.log('message', message);
+      client.emit('message', message);
+
+      this.sinon.spy(console, 'log');
+
+      // eslint-disable-next-line promise/avoid-new -- Delay test
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          expect(message.channel.send.firstCall.firstArg).to.match(
+            /understand your question|know enough to answer/u
+          );
+          expect(console.log.calledWith(
+            'Router response:'
+          )).to.be.true;
+          resolve();
+        }, 5000);
+      });
+    }
+  );
+
+  it(
+    'Passes message if Bot is messaged, converting non-initial user to ' +
+    'name, and defaulting to use router',
+    async function () {
+      const discord = new MockDiscord({
+        userID: DiscordConstants.BAHAI_DEV_BOT_ID,
+        mentionEveryone: true,
+        messageContent: `<@${DiscordConstants.BAHAI_DEV_BOT_ID}> Who is ` +
+          `<@!${DiscordConstants.BAHAI_BOT_ID}>?`
+      });
+
+      const {client} = await bot({client: discord.getClient()});
+
+      const message = discord.getMessage();
+
+      this.sinon.spy(message.channel, 'send');
+
+      const user = {
+        id: DiscordConstants.BAHAI_BOT_ID,
+        username: 'Other BahaiBot'
+      };
+      client.users.cache.set(user.id, user);
+
+      // console.log('message', message);
+      client.emit('message', message);
+
+      this.sinon.spy(console, 'log');
+
+      // eslint-disable-next-line promise/avoid-new -- Delay test
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          expect(message.channel.send.firstCall.firstArg).to.match(
+            /understand your question|know enough to answer/u
+          );
+          expect(console.log.calledWith(
+            'Router response:'
+          )).to.be.true;
+          resolve();
+        }, 5000);
+      });
+    }
+  );
+
+  it(
     'Falls back to help message if command not recognized',
     async function () {
       const discord = new MockDiscord({
@@ -92,8 +216,8 @@ describe('Client event (message)', function () {
       // eslint-disable-next-line promise/avoid-new -- Delay test
       return new Promise((resolve) => {
         setTimeout(() => {
-          expect(message.channel.send.firstCall.firstArg).to.have.string(
-            "Sorry I don't understand your question"
+          expect(message.channel.send.firstCall.firstArg).to.match(
+            /understand your question|know enough to answer/u
           );
           expect(console.log.calledWith(
             'Router response:'

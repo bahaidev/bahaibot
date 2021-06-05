@@ -571,22 +571,22 @@ describe('Commands', function () {
   });
 
   [
-    ['Executes seen for one unseen user', {
+    ['Executes seen for one unseen user (dnd)', {
       users: ['AB'],
       counts: [2],
       stat: 'dnd'
     }],
-    ['Executes seen for two unseen users', {
+    ['Executes seen for two unseen users (dnd and offline)', {
       users: ['AB', 'OfflineNonAdmin'],
       counts: [2, 4],
       stat: 'dnd'
     }],
-    ['Executes seen for one unseen user', {
+    ['Executes seen for one unseen user (idle)', {
       users: ['AB'],
       counts: [2],
       stat: 'idle'
     }],
-    ['Executes seen for two unseen users', {
+    ['Executes seen for two unseen users (idle and offline)', {
       users: ['AB', 'OfflineNonAdmin'],
       counts: [2, 4],
       stat: 'idle'
@@ -623,6 +623,7 @@ describe('Commands', function () {
       const guild = discord.clientGuild;
 
       discord.mockUser({
+        hideUserStatus: true, // Treated as online otherwise
         userID: DiscordConstants.USER_AB,
         userName: 'AB',
         guild,
@@ -640,6 +641,7 @@ describe('Commands', function () {
       });
 
       discord.mockUser({
+        hideUserStatus: true, // Treated as online otherwise
         userID: 'offline-nonadmin',
         userName: 'OfflineNonAdmin',
         guild,

@@ -20,10 +20,22 @@ const getDefaultCommand = ({
     async action (message) {
       /* BOT DATA */
       // Variables and initial data
-      // Replace removes the bot reference
 
-      const userInput = message.content.replace(
-        `<@!${client.user.id}>`, '' // remove aribrary number from userInput
+      // Removes an initial bot reference and converts other snowflake
+      //  sequences to username
+
+      // Trim is necessary to ensure the `offset` can be 0 when matching
+      //   snowflake at beginning
+      const userInput = message.content.trimStart().replace(
+        /<@!?(?<snowflake>\d+)>/gu,
+        (__, n1, offset, wholeStr, {snowflake}) => {
+          if (!offset && snowflake === client.user.id) {
+            return '';
+          }
+          const {username} = client.users.resolve(snowflake);
+
+          return username;
+        }
       );
 
       // Creates a new session, using original Discord-bot-defined sessionID
