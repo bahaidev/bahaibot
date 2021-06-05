@@ -66,7 +66,7 @@ const getSocialInfo = ({
        * @returns {void}
        */
       action (message) {
-        const words = message.content.split(' ').slice(1);
+        const sname = message.content.split(' ').filter((word) => !(word.includes('391405681795923968') || word.includes('847456996738334730') || word === '!seen')).join(' ');
 
         // const {guild} = message;
         // const userOnline = guild.members.cache.filter(
@@ -74,40 +74,38 @@ const getSocialInfo = ({
         // let userStatus = '';
         const replies = [];
 
-        words.forEach(function (item, index, array) {
-          const user = client.users.cache.find((val) => {
-            return val.username === item;
-          });
-          if (!user) {
-            replies.push(`I haven't seen ${item} lately.`);
-            return;
-          }
-          // userStatus = user.presence.status;
-
-          // Todo: Stop ignoring this once test in place.
-          /* c8 ignore next 13 */
-          if (user.lastMessage) {
-            const lastchan = user.lastMessage.channel;
-            const stat = (
-              user.presence.status === 'dnd' ? 'busy' : user.presence.status
-            );
-            const lastseen = new Date(user.lastMessage.createdAt);
-            const now = new Date();
-            const timedelta = now - lastseen;
-            replies.push(
-              `${item} is now ${stat}, and was last seen in ${
-                lastchan
-              } ${istr(timedelta / 1000)} ago.`
-            );
-          } else {
-            const stat = (
-              user.presence.status === 'dnd' ? 'busy' : user.presence.status
-            );
-            replies.push(
-              `${item} is now ${stat}; I haven't seen them lately.`
-            );
-          }
+        const user = client.users.cache.find((val) => {
+          return val.username === sname;
         });
+        if (!user) {
+          replies.push(`I haven't seen ${sname} lately.`);
+          return;
+        }
+        // userStatus = user.presence.status;
+
+        // Todo: Stop ignoring this once test in place.
+        /* c8 ignore next 13 */
+        if (user.lastMessage) {
+          const lastchan = user.lastMessage.channel;
+          const stat = (
+            user.presence.status === 'dnd' ? 'busy' : user.presence.status
+          );
+          const lastseen = new Date(user.lastMessage.createdAt);
+          const now = new Date();
+          const timedelta = now - lastseen;
+          replies.push(
+            `${sname} is now ${stat}, and was last seen in ${
+              lastchan
+            } ${istr(timedelta / 1000)} ago.`
+          );
+        } else {
+          const stat = (
+            user.presence.status === 'dnd' ? 'busy' : user.presence.status
+          );
+          replies.push(
+            `${sname} is now ${stat}; I haven't seen them lately.`
+          );
+        }
 
         message.channel.send(replies.join('\n'));
 
