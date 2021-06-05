@@ -5610,6 +5610,7 @@ const getAdmin = ({
           );
           try {
             return await guildCheckin();
+          /* c8 ignore next 4 */
           } catch (err) {
             // eslint-disable-next-line no-console -- CLI
             console.error('Error checking in', err);
@@ -6034,80 +6035,98 @@ const getLightHearted = () => {
 
 /**
 * @param {PlainObject} cfg
-* @param {ApiaiApp} cfg.app
+* @param {DialogflowApp} cfg.app
 * @param {Router} cfg.router
 * @param {DiscordClient} cfg.client
 * @param {Discord} cfg.Discord
-* @param {string} cfg.BOT_ID
 * @param {external:IntlDom} cfg._
+* @param {external:settings} cfg.settings
 * @returns {BotCommand}
 */
-const getDefaultCommand = ({app, router, client, Discord, BOT_ID, _}) => {
+const getDefaultCommand = ({
+  app, router, client, Discord, _, settings
+}) => {
   return {
     re: /[\s\S]*/u, // Should always match
     /**
      * @param {DiscordMessage} message
      * @returns {void}
      */
-    action (message) {
+    async action (message) {
       /* BOT DATA */
       // Variables and initial data
-      // Replace removes the bot reference
-      const userInput = message.content.replace(
-        `<@${BOT_ID}>`, ''
+
+      // Removes an initial bot reference and converts other snowflake
+      //  sequences to username
+
+      // Trim is necessary to ensure the `offset` can be 0 when matching
+      //   snowflake at beginning
+      const userInput = message.content.trimStart().replace(
+        /<@!?(?<snowflake>\d+)>/gu,
+        (__, n1, offset, wholeStr, {snowflake}) => {
+          if (snowflake === client.user.id) {
+            // Re-add this condition if the intents are ever modified to take
+            //   into account "BahaiBot" as part of the text (e.g., so that
+            //   "Who is X, BahaiBot" is as good of a match as "Who is X",
+            //   and in case, it needs to handle, "Why is Bahaibot ignoring
+            //   me?") types of queries
+            // && !offset
+            return '';
+          }
+          const {username} = client.users.resolve(snowflake);
+
+          return username;
+        }
       );
 
-      // Options to specify that this is from Discord
-      const options = {
-        sessionId: message.author.id,
-        contexts: [
-          {
-            name: 'ecosystem',
-            parameters: {
-              platform: 'discord'
-            }
+      // Creates a new session, using original Discord-bot-defined sessionID
+      const sessionID = message.author.id;
+      const sessionPath = app.projectAgentSessionPath(
+        settings.PROJECT_ID,
+        sessionID
+      );
+
+      // The text query request
+      const request = {
+        session: sessionPath,
+        queryInput: {
+          text: {
+            // The query to send to the dialogflow agent
+            text: userInput, // was message,
+            // The language used by the client
+            languageCode: _.resolvedLocale
           }
-        ]
+        }
       };
 
-      // To send a request, you should issue the question AND a
-      //   unique session ID.
-      // In this case, the session ID is the author ID from Discord
-      const request = app.textRequest(userInput, options);
-
       /**
-       * Once the robot responds, reply to user :) .
-       * @param {external:APIAIResponse} response Note that
-       * `response.result.fulfillment.messages` is an array.
-       * @returns {void}
-       */
-      request.on('response', async function (response) {
-        // Process action based on promise
-        await router(response, message, client, Discord, _);
-      });
+      * @throws {DialogflowError}
+      * @returns {Promise<external:DialogflowResponse[]>} responses
+      */
+      async function dialogflowCall () {
+        // Send request and log result
+        try {
+          const [response] = await app.detectIntent(request);
+          await router(response, message, client, Discord, _);
+          // Allow use as returned value from call by enclosing function
+          return response;
+        } catch (error) {
+          // Let the user know
+          message.channel.send(
+            `<@${
+              message.author.id
+            }>, I couldn't process your question at the moment.`
+          );
 
-      // If error, console log
-      /**
-       * @param {external:APIAIError} error
-       * @returns {void}
-       */
-      request.on('error', function (error) {
-        // Let the user know
-        message.channel.send(
-          `<@${
-            message.author.id
-          }>, I couldn't process your question at the moment.`
-        );
-        // eslint-disable-next-line no-console -- CLI
-        console.error(error);
-      });
-
-      // End the request process
-      request?.end();
+          // Allow a consuming await chain to catch this as a proper error (and
+          //   log there)
+          throw error;
+        }
+      }
 
       // Return in case an implementation wants this as a Promise that
-      //  waits to resolve (e.g., until it calls the callbacks)
-      return request;
+      //  waits to resolve
+      return await dialogflowCall();
     }
   };
 };
@@ -6160,8 +6179,6 @@ const addHelp = ({commands}) => {
 };
 
 // DISCORD ID CONSTANTS
-
-const BAHAI_BOT_ID = '391405681795923968'; // BahaiBot
 
 const BAHAI_FYI_GUILD_ID = '346962599771897859'; // Bahá'í.FYI
 const BAHAI_FYI_RULES_CHANNEL_ID = '351854934368583681'; // #rules
@@ -6219,7 +6236,7 @@ const ADMIN_PERMISSION = 'ADMINISTRATOR';
 
 /**
  * @param {PlainObject} cfg
- * @param {ApiaiApp} cfg.app
+ * @param {DialogflowApp} cfg.app
  * @param {Router} cfg.router
  * @param {Discord} cfg.Discord
  * @param {BotWikiTools} cfg.wikiTools
@@ -6242,7 +6259,6 @@ const getCommands = async function ({
   const {
     PUPPET_AUTHOR = USER_AB,
     ADMIN_PERMISSION: ADMIN_PERMISSION$1 = ADMIN_PERMISSION,
-    BOT_ID = BAHAI_BOT_ID,
     ADMIN_IDS: ADMIN_IDS$1 = ADMIN_IDS,
     ADMIN_ROLES: ADMIN_ROLES$1 = ADMIN_ROLES,
     enabledCommandGroups = ['*'],
@@ -6285,14 +6301,11 @@ const getCommands = async function ({
 
   // After adding help to ensure `!help` has priority
   commands.default = getDefaultCommand({
-    app, router, client, Discord, BOT_ID, _
+    app, router, client, Discord, _, settings
   });
 
   return commands;
 };
-
-/* eslint-disable no-use-extend-native/no-use-extend-native,
-  node/file-extension-in-import -- Polyfill */
 
 // These are for the current API; old docs not online
 /**
@@ -6308,8 +6321,8 @@ const getCommands = async function ({
  * @see https://discord.js.org/#/docs/main/stable/class/Message
  */
 /**
- * @external APIAIResponse
- * @see https://github.com/api-ai/apiai-nodejs-client
+ * @external DialogflowResponse
+ * @see https://github.com/googleapis/nodejs-dialogflow
  */
 
 /*
@@ -6322,8 +6335,9 @@ const getCommands = async function ({
 
 /**
  * @callback Router
- * @param {external:APIAIResponse} response Note that
- * `response.result.fulfillment.messages` is an array.
+ * @param {external:DialogflowResponse} response
+ * NOTE: response.queryResult.fulfillmentMessages is the array (not used)
+ * NOTE: response.queryResult.fulfillmentText a string with default response
  * @param {external:DiscordMessage} message
  * @param {external:DiscordClient} client
  * @param {external:DiscordModule} Discord
@@ -6337,16 +6351,7 @@ const getCommands = async function ({
 const router = (response, message, client, Discord, _) => {
   // eslint-disable-next-line no-console -- CLI
   console.log(_('routerResponse'), response);
-
-  // Output default answer
-  const {messages} = response.result.fulfillment;
-
-  const content = messages.find((obj) => {
-    return !Object.hasOwn(obj, 'platform');
-  });
-
-  const {speech} = content;
-
+  const speech = response.queryResult.fulfillmentText;
   message.channel.send(speech);
 };
 
@@ -6610,7 +6615,7 @@ function getCheckin ({
                 {month: 'long', day: 'numeric'}
               ]
             },
-            bstar: bstar.toString(),
+            bstar: bstar?.toString() ?? '',
             todayInHistoryResult
           })
         }
@@ -6647,9 +6652,9 @@ function getCheckin ({
  * @property {striptags} [striptags=window.striptags]
  * @property {DiscordClient} [client=new Discord.Client()]
  * @property {Discord} Discord
- * @property {apiai} apiai
+ * @property {dialogflow} dialogflow
  * @property {FileSystem} fs
- * @property {GetSettingsPath} getSettingsPath
+ * @property {GetPath} getPath
  * @property {boolean} [exitNoThrow=false] Set to true for testing
  */
 
@@ -6689,13 +6694,13 @@ const bot = async ({
   client: cl,
   Discord,
   discordTTS, // `speak` admin command
-  apiai,
+  dialogflow,
   fs,
   /**
    * @type {GetSettings}
    */
   getSettings: defaultGetSettings,
-  getSettingsPath,
+  getPath,
   numberOfCommands = 1,
   commandInterval = 2000,
   rateLimiter = new dist.RateLimiter(1, commandInterval),
@@ -6720,7 +6725,7 @@ const bot = async ({
   // import system from '../settings.json';
 
   const system = JSON.parse(
-    await fs.readFile(getSettingsPath(), 'utf8')
+    await fs.readFile(getPath('settings.json'), 'utf8')
   );
 
   const getSettings = typeof defaultGetSettings === 'function'
@@ -6734,12 +6739,10 @@ const bot = async ({
   const fortyMinutesInMilliseconds = 40 * 60 * 1000;
   const fiftyMinutesInMilliseconds = 50 * 60 * 1000;
 
-  // Dialog flow tokens
-  const dfToken = settings.dialogflowToken;
-
-  // This is not a Promise in normal npm `apiai`, but allow consumers to
-  //   resolve as a Promise.
-  const app = await apiai(dfToken);
+  // Dialogflow setup
+  const app = new dialogflow.SessionsClient({
+    keyFilename: getPath(settings.PROJECT_JSON)
+  });
 
   const {
     // The token of your bot -
@@ -6797,9 +6800,14 @@ const bot = async ({
     fs, settings, discordTTS
   });
 
+  /**
+  * @callback ReadyListener
+  * @returns {void}
+  */
+
   // The ready event is vital, it means that your bot will only start
   //  reacting to information from Discord _after_ ready is emitted
-  client.on('ready', () => {
+  client.on('ready', /** @type {ReadyListener} */ () => {
     // eslint-disable-next-line no-console -- CLI
     console.log(_('BahaiBotOnline'));
 
@@ -6846,9 +6854,15 @@ const bot = async ({
 
   // Process Bot Commands
 
+  /**
+  * @callback MessageListener
+  * @param {external:DiscordMessage} message
+  * @returns {void}
+  */
+
   // Create an event listener for messages
   client.on(
-    'message', async (/** @type {external:DiscordMessage} */ message) => {
+    'message', /** @type {MessageListener} */ async (message) => {
       // Collect userID
       // Ensure that the bot is being messaged
       if (message.mentions.has(client.user)) {
@@ -6906,7 +6920,13 @@ const bot = async ({
 
   // New user added
 
-  client.on('guildMemberAdd', (/** @type {DiscordGuildMember} */ ev) => {
+  /**
+  * @callback GuildMemberAddListener
+  * @param {DiscordGuildMember} ev
+  * @returns {void}
+  */
+
+  client.on('guildMemberAdd', /** @type {GuildMemberAddListener} */ (ev) => {
     const wcChannel = ev.guild.channels.cache.find(
       (val) => val.name === welcomeChannel
     );
@@ -6956,7 +6976,7 @@ const bot = async ({
   // Log our bot in
   client.login(token);
 
-  return {client, botCommands, guildCheckin};
+  return {client, botCommands, guildCheckin, system, getSettings};
 };
 
 // eslint-disable-next-line max-len -- Long
@@ -6975,10 +6995,11 @@ const checkins = new URLSearchParams(hashParams).get('checkins') ||
   new URLSearchParams(search).get('checkins');
 
 /**
+ * @param {string} path
  * @returns {string}
  */
-const getSettingsPath = () => {
-  return `${location.href.replace(/\/$/u, '')}/settings.json`;
+const getPath = (path) => {
+  return `${location.href.replace(/\/$/u, '')}/${path}`;
 };
 
 // Note: These implementations are specific to our needs
@@ -7024,7 +7045,7 @@ function discordBot (args) {
   return bot({
     checkins,
     locales,
-    getSettingsPath,
+    getPath,
     fs,
     fetch,
     i18n,
