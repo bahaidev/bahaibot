@@ -183,7 +183,7 @@ describe('Client event (message)', function () {
       return new Promise((resolve) => {
         setTimeout(() => {
           expect(message.channel.send.firstCall.firstArg).to.match(
-            /understand your question|know enough to answer/u
+            /end-time prophecies/u
           );
           expect(console.log.calledWith(
             'Router response:'

@@ -29,7 +29,13 @@ const getDefaultCommand = ({
       const userInput = message.content.trimStart().replace(
         /<@!?(?<snowflake>\d+)>/gu,
         (__, n1, offset, wholeStr, {snowflake}) => {
-          if (!offset && snowflake === client.user.id) {
+          if (snowflake === client.user.id) {
+            // Re-add this condition if the intents are ever modified to take
+            //   into account "BahaiBot" as part of the text (e.g., so that
+            //   "Who is X, BahaiBot" is as good of a match as "Who is X",
+            //   and in case, it needs to handle, "Why is Bahaibot ignoring
+            //   me?") types of queries
+            // && !offset
             return '';
           }
           const {username} = client.users.resolve(snowflake);
