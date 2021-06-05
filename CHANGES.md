@@ -1,6 +1,10 @@
 # CHANGES for `bahaibot`
 
-## 0.2.0
+## 0.3.0
+
+- See `0.2.0`.
+
+## 0.2.0 (Unpublished)
 
 - Update from deprecated `apiai` to `@google-cloud/dialogflow` (@sscotti)
 - Fix: Ensure there is a means to get at `settings.json` `production` section
