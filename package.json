@@ -74,6 +74,7 @@
     "lint-json": "eslint --config=.eslintrc-json.cjs --no-eslintrc --ext=json library",
     "start-dev": "nodemon src/index.js",
     "start": "node src/index.js --checkins",
+    "start-prod": "node src/index.js --checkins --production",
     "mocha": "mocha --require chai/register-expect --exit --timeout 9000",
     "prepare": "husky install",
     "test": "rm -Rf ./node_modules/.cache && c8 --check-coverage --statements 100 --lines 100 --functions 100 --branches 100 npm run mocha test/*.js"
