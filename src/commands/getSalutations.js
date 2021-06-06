@@ -79,7 +79,7 @@ const getSalutations = () => {
       }
     },
     welcome: {
-      re: /^(?:everyone|everybody)[\s\W]*(?:please|pleez|pls|plz)?*[\s\W]*(?:[\s\W]*welcome|.*>+[\s\W]*welcome\b|.*\bwb\b)/iu,
+      re: /^(?:everyone|everybody)[!:,\s\W]*(?:please|pleez|pls|plz)?[\s\W]*(?:[\s\W]*welcome|.*>+[\s\W]*welcome\b|.*\bwb\b)/iu,
       /**
        * Welcome.
        * @param {DiscordMessage} message
