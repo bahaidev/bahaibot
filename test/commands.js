@@ -2842,7 +2842,6 @@ describe('Commands', function () {
 
       client.emit('message', message);
 
-      await commandFinished(client);
       expect(
         message.react.firstCall
       ).to.be.null;
