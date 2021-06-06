@@ -2,6 +2,7 @@
 import sinon from 'sinon';
 
 import MockDiscord from './helpers/MockDiscord.js';
+import commandFinished from './helpers/commandFinished.js';
 
 import bot from '../src/discordBot.js';
 import * as DiscordConstants from '../src/messages/DiscordConstants.js';
@@ -35,15 +36,10 @@ describe('Commands', function () {
       client.emit('message', message);
     });
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(message.channel.send.firstCall.firstArg.content).to.have.string(
-          'Here are the instructions you need, user username.'
-        );
-        resolve();
-      });
-    });
+    await commandFinished(client);
+    expect(message.channel.send.firstCall.firstArg.content).to.have.string(
+      'Here are the instructions you need, user username.'
+    );
   });
 
   it('Executes help (custom rate limit)', async function () {
@@ -63,24 +59,24 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
+    await commandFinished(client);
+
     // eslint-disable-next-line promise/avoid-new -- Delay test
     return new Promise((resolve) => {
+      client.emit('message', message);
       setTimeout(() => {
-        client.emit('message', message);
-        setTimeout(() => {
-          expect(
-            message.channel.send.firstCall.firstArg.content
-          ).to.have.string(
-            'Here are the instructions you need, user username.'
-          );
-          expect(
-            message.channel.send.secondCall.firstArg.content
-          ).to.have.string(
-            'Here are the instructions you need, user username.'
-          );
-          resolve();
-        });
-      }, 500);
+        expect(
+          message.channel.send.firstCall.firstArg.content
+        ).to.have.string(
+          'Here are the instructions you need, user username.'
+        );
+        expect(
+          message.channel.send.secondCall.firstArg.content
+        ).to.have.string(
+          'Here are the instructions you need, user username.'
+        );
+        resolve();
+      });
     });
   });
 
@@ -168,29 +164,24 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.deep.include({
-          type: 'rich',
-          description: "Bahá'í Bot for Discord\n",
-          fields: [
-            {
-              name: 'Support Server',
-              value: '[Invite link](https://discord.gg/NE6dJaw)',
-              inline: false
-            }
-          ],
-          author: {
-            name: 'BahaiBot',
-            iconURL: 'https://cdn.discordapp.com/avatars/user-id/user-avatar-url.webp',
-            url: undefined
-          }
-        });
-        resolve();
-      });
+    await commandFinished(client);
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.deep.include({
+      type: 'rich',
+      description: "Bahá'í Bot for Discord\n",
+      fields: [
+        {
+          name: 'Support Server',
+          value: '[Invite link](https://discord.gg/NE6dJaw)',
+          inline: false
+        }
+      ],
+      author: {
+        name: 'BahaiBot',
+        iconURL: 'https://cdn.discordapp.com/avatars/user-id/user-avatar-url.webp',
+        url: undefined
+      }
     });
   });
 
@@ -239,30 +230,25 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const {
-          find: {
-            argSpies: [[guildChannelsFinderSpy]],
-            childSpies: [guildChannelsFindResultSendSpy]
-          }
-        } = guildChannelsCache;
-        expect(guildChannelsFinderSpy.firstCall.firstArg.name).to.equal(
-          'bot-testing'
-        );
-        expect(guildChannelsFinderSpy.firstCall.returnValue).to.equal(true);
-        expect(guildChannelsFindResultSendSpy.firstCall.firstArg).to.equal(
-          'hello'
-        );
+    await commandFinished(client);
+    const {
+      find: {
+        argSpies: [[guildChannelsFinderSpy]],
+        childSpies: [guildChannelsFindResultSendSpy]
+      }
+    } = guildChannelsCache;
+    expect(guildChannelsFinderSpy.firstCall.firstArg.name).to.equal(
+      'bot-testing'
+    );
+    expect(guildChannelsFinderSpy.firstCall.returnValue).to.equal(true);
+    expect(guildChannelsFindResultSendSpy.firstCall.firstArg).to.equal(
+      'hello'
+    );
 
-        expect(
-          console.log.calledWith('Puppet command issued by AB.')
-        ).to.be.true;
-        expect(channelSpy.firstCall).to.be.null;
-        resolve();
-      });
-    });
+    expect(
+      console.log.calledWith('Puppet command issued by AB.')
+    ).to.be.true;
+    expect(channelSpy.firstCall).to.be.null;
   });
 
   it('Executes puppet with bad name', async function () {
@@ -309,28 +295,24 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(channelSpy.firstCall.firstArg).to.have.string(
-          'Channel bad-name does not exist!'
-        );
-        const {
-          find: {
-            argSpies: [[guildChannelsFinderSpy]]
-          }
-        } = guildChannelsCache;
-        expect(guildChannelsFinderSpy.firstCall.firstArg.name).to.equal(
-          'bot-testing'
-        );
-        expect(guildChannelsFinderSpy.firstCall.returnValue).to.equal(false);
+    await commandFinished(client);
 
-        expect(
-          console.log.calledWith('Puppet command issued by AB.')
-        ).to.be.true;
-        resolve();
-      });
-    });
+    expect(channelSpy.firstCall.firstArg).to.have.string(
+      'Channel bad-name does not exist!'
+    );
+    const {
+      find: {
+        argSpies: [[guildChannelsFinderSpy]]
+      }
+    } = guildChannelsCache;
+    expect(guildChannelsFinderSpy.firstCall.firstArg.name).to.equal(
+      'bot-testing'
+    );
+    expect(guildChannelsFinderSpy.firstCall.returnValue).to.equal(false);
+
+    expect(
+      console.log.calledWith('Puppet command issued by AB.')
+    ).to.be.true;
   });
 
   [
@@ -428,84 +410,79 @@ describe('Commands', function () {
 
       client.emit('message', message);
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          const {
-            filter: {
-              argSpies: [
-                [guildMembersOnlineFilterSpy],
-                [guildMembersAdminsFilterSpy]
-              ],
-              childAccessorSpies: [
-                guildMembersFilterResultSizeSpy
-              ]
-            }
-          } = guildMembersCache;
+      await commandFinished(client);
+      const {
+        filter: {
+          argSpies: [
+            [guildMembersOnlineFilterSpy],
+            [guildMembersAdminsFilterSpy]
+          ],
+          childAccessorSpies: [
+            guildMembersFilterResultSizeSpy
+          ]
+        }
+      } = guildMembersCache;
 
-          // We should really have spying on the second filter call also,
-          //   but as per to-do in spyOnGetterResults file, we need to
-          //   refactor there and we can at least introspect on the
-          //   expected result.
+      // We should really have spying on the second filter call also,
+      //   but as per to-do in spyOnGetterResults file, we need to
+      //   refactor there and we can at least introspect on the
+      //   expected result.
 
-          expect(
-            guildMembersOnlineFilterSpy.firstCall.firstArg.presence.status
-          ).to.equal(
-            'online'
-          );
-          expect(
-            guildMembersOnlineFilterSpy.firstCall.returnValue
-          ).to.equal(true);
+      expect(
+        guildMembersOnlineFilterSpy.firstCall.firstArg.presence.status
+      ).to.equal(
+        'online'
+      );
+      expect(
+        guildMembersOnlineFilterSpy.firstCall.returnValue
+      ).to.equal(true);
 
-          expect(
-            guildMembersAdminsFilterSpy.firstCall.firstArg.presence.status
-          ).to.equal(
-            'online'
-          );
-          expect(
-            guildMembersAdminsFilterSpy.firstCall.returnValue
-          ).to.equal(true);
+      expect(
+        guildMembersAdminsFilterSpy.firstCall.firstArg.presence.status
+      ).to.equal(
+        'online'
+      );
+      expect(
+        guildMembersAdminsFilterSpy.firstCall.returnValue
+      ).to.equal(true);
 
-          if (testMultiple) {
-            expect(
-              guildMembersOnlineFilterSpy.secondCall.firstArg.presence.status
-            ).to.equal(
-              'online'
-            );
-            expect(
-              guildMembersOnlineFilterSpy.secondCall.returnValue
-            ).to.equal(true);
+      if (testMultiple) {
+        expect(
+          guildMembersOnlineFilterSpy.secondCall.firstArg.presence.status
+        ).to.equal(
+          'online'
+        );
+        expect(
+          guildMembersOnlineFilterSpy.secondCall.returnValue
+        ).to.equal(true);
 
-            expect(
-              guildMembersOnlineFilterSpy.thirdCall.firstArg.presence.status
-            ).to.equal(
-              'offline'
-            );
-            expect(
-              guildMembersOnlineFilterSpy.thirdCall.returnValue
-            ).to.equal(false);
-          }
+        expect(
+          guildMembersOnlineFilterSpy.thirdCall.firstArg.presence.status
+        ).to.equal(
+          'offline'
+        );
+        expect(
+          guildMembersOnlineFilterSpy.thirdCall.returnValue
+        ).to.equal(false);
+      }
 
-          expect(
-            guildMembersFilterResultSizeSpy.get.firstCall.returnValue
-          ).to.equal(testMultiple ? 2 : 1);
+      expect(
+        guildMembersFilterResultSizeSpy.get.firstCall.returnValue
+      ).to.equal(testMultiple ? 2 : 1);
 
-          expect(
-            message.channel.send.firstCall.firstArg
-          ).to.equal(
-            testMultiple
-              ? 'There are currently 2 users online, ' +
-                'including 1 admin/mod/helper(s).'
-              : 'There is currently 1 user online, ' +
-                'including 1 admin/mod/helper(s).'
-          );
+      expect(
+        message.channel.send.firstCall.firstArg
+      ).to.equal(
+        testMultiple
+          ? 'There are currently 2 users online, ' +
+            'including 1 admin/mod/helper(s).'
+          : 'There is currently 1 user online, ' +
+            'including 1 admin/mod/helper(s).'
+      );
 
-          expect(
-            console.log.calledWith('Users command issued by user username.')
-          ).to.be.true;
-          resolve();
-        });
-      });
+      expect(
+        console.log.calledWith('Users command issued by user username.')
+      ).to.be.true;
     });
   });
 
@@ -523,16 +500,11 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(message.channel.send.firstCall.firstArg).to.equal('');
-        expect(
-          console.log.calledWith('Seen command issued by user username.')
-        ).to.be.true;
-        resolve();
-      });
-    });
+    await commandFinished(client);
+    expect(message.channel.send.firstCall.firstArg).to.equal('');
+    expect(
+      console.log.calledWith('Seen command issued by user username.')
+    ).to.be.true;
   });
 
   [
@@ -553,20 +525,15 @@ describe('Commands', function () {
 
       client.emit('message', message);
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(message.channel.send.firstCall.firstArg).to.equal(
-            users.map((user) => {
-              return `I haven't seen ${user} lately.`;
-            }).join('\n')
-          );
-          expect(
-            console.log.calledWith('Seen command issued by user username.')
-          ).to.be.true;
-          resolve();
-        });
-      });
+      await commandFinished(client);
+      expect(message.channel.send.firstCall.firstArg).to.equal(
+        users.map((user) => {
+          return `I haven't seen ${user} lately.`;
+        }).join('\n')
+      );
+      expect(
+        console.log.calledWith('Seen command issued by user username.')
+      ).to.be.true;
     });
   });
 
@@ -664,90 +631,85 @@ describe('Commands', function () {
 
       client.emit('message', message);
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          const {
-            find: {
-              argSpies,
-              childAccessorSpies
-            }
-          } = clientUsersCache;
+      await commandFinished(client);
+      const {
+        find: {
+          argSpies,
+          childAccessorSpies
+        }
+      } = clientUsersCache;
 
-          let clientUsersFinderSpy, clientUsersFinderSpy2ndCall;
-          let clientUsersFindResultPresenceSpy,
-            clientUsersFindResultPresenceSpy2;
-          let clientUsersFindResultLastMessageSpy,
-            clientUsersFindResultLastMessageSpy2;
-          if (countSecond) {
-            [
-              [clientUsersFinderSpy],
-              [clientUsersFinderSpy2ndCall]
-            ] = argSpies;
-            [
-              clientUsersFindResultPresenceSpy,
-              clientUsersFindResultLastMessageSpy,
-              clientUsersFindResultPresenceSpy2,
-              clientUsersFindResultLastMessageSpy2
-            ] = childAccessorSpies;
-          } else {
-            [[clientUsersFinderSpy]] = argSpies;
-            [
-              clientUsersFindResultPresenceSpy,
-              clientUsersFindResultLastMessageSpy
-            ] = childAccessorSpies;
-          }
+      let clientUsersFinderSpy, clientUsersFinderSpy2ndCall;
+      let clientUsersFindResultPresenceSpy,
+        clientUsersFindResultPresenceSpy2;
+      let clientUsersFindResultLastMessageSpy,
+        clientUsersFindResultLastMessageSpy2;
+      if (countSecond) {
+        [
+          [clientUsersFinderSpy],
+          [clientUsersFinderSpy2ndCall]
+        ] = argSpies;
+        [
+          clientUsersFindResultPresenceSpy,
+          clientUsersFindResultLastMessageSpy,
+          clientUsersFindResultPresenceSpy2,
+          clientUsersFindResultLastMessageSpy2
+        ] = childAccessorSpies;
+      } else {
+        [[clientUsersFinderSpy]] = argSpies;
+        [
+          clientUsersFindResultPresenceSpy,
+          clientUsersFindResultLastMessageSpy
+        ] = childAccessorSpies;
+      }
 
+      expect(
+        clientUsersFinderSpy.firstCall.firstArg.id
+      ).to.equal('user-id');
+      expect(
+        clientUsersFinderSpy.callCount
+      ).to.equal(countFirst);
+
+      expect(
+        clientUsersFindResultLastMessageSpy.get.firstCall.returnValue
+      ).to.equal(null);
+      expect(
+        clientUsersFindResultPresenceSpy.get.firstCall.returnValue.status
+      ).to.equal(statAB);
+
+      if (clientUsersFinderSpy2ndCall) {
+        expect(
+          clientUsersFinderSpy2ndCall.firstCall.firstArg.id
+        ).to.equal('user-id');
+        expect(
+          clientUsersFinderSpy2ndCall.callCount
+        ).to.equal(countSecond);
+
+        expect(
+          clientUsersFindResultLastMessageSpy2.get.firstCall.returnValue
+        ).to.equal(null);
+        expect(
+          clientUsersFindResultPresenceSpy2.get.firstCall.returnValue.status
+        ).to.equal('offline');
+
+        if (statAB !== 'dnd') {
           expect(
-            clientUsersFinderSpy.firstCall.firstArg.id
-          ).to.equal('user-id');
-          expect(
-            clientUsersFinderSpy.callCount
-          ).to.equal(countFirst);
+            clientUsersFindResultPresenceSpy2
+              .get.secondCall.returnValue.status
+          ).to.equal('offline');
+        }
+      }
 
-          expect(
-            clientUsersFindResultLastMessageSpy.get.firstCall.returnValue
-          ).to.equal(null);
-          expect(
-            clientUsersFindResultPresenceSpy.get.firstCall.returnValue.status
-          ).to.equal(statAB);
-
-          if (clientUsersFinderSpy2ndCall) {
-            expect(
-              clientUsersFinderSpy2ndCall.firstCall.firstArg.id
-            ).to.equal('user-id');
-            expect(
-              clientUsersFinderSpy2ndCall.callCount
-            ).to.equal(countSecond);
-
-            expect(
-              clientUsersFindResultLastMessageSpy2.get.firstCall.returnValue
-            ).to.equal(null);
-            expect(
-              clientUsersFindResultPresenceSpy2.get.firstCall.returnValue.status
-            ).to.equal('offline');
-
-            if (statAB !== 'dnd') {
-              expect(
-                clientUsersFindResultPresenceSpy2
-                  .get.secondCall.returnValue.status
-              ).to.equal('offline');
-            }
-          }
-
-          expect(message.channel.send.firstCall.firstArg).to.equal(
-            users.map((user, idx) => {
-              return `${user} is now ${
-                idx === 1 ? 'offline' : expectedStatAB
-              }; I haven't seen them lately.`;
-            }).join('\n')
-          );
-          expect(
-            console.log.calledWith('Seen command issued by user username.')
-          ).to.be.true;
-          resolve();
-        });
-      });
+      expect(message.channel.send.firstCall.firstArg).to.equal(
+        users.map((user, idx) => {
+          return `${user} is now ${
+            idx === 1 ? 'offline' : expectedStatAB
+          }; I haven't seen them lately.`;
+        }).join('\n')
+      );
+      expect(
+        console.log.calledWith('Seen command issued by user username.')
+      ).to.be.true;
     });
   });
 
@@ -765,16 +727,10 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.have.string("I couldn't understand your request");
-
-        resolve();
-      });
-    });
+    await commandFinished(client);
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.have.string("I couldn't understand your request");
   });
 
   it('read (bad arguments)', async function () {
@@ -791,16 +747,10 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          message.channel.send.notCalled
-        ).to.be.true;
-
-        resolve();
-      });
-    });
+    await commandFinished(client);
+    expect(
+      message.channel.send.notCalled
+    ).to.be.true;
   });
 
   it('read with reference and index', async function () {
@@ -817,28 +767,22 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.deep.include({
-          type: 'rich',
-          author: {
-            name: 'The Arabic Hidden Words by Bahá’u’lláh',
-            iconURL: 'https://cdn.discordapp.com/avatars/user-id/user-avatar-url.webp',
-            url: undefined
-          }
-        });
-        expect(
-          message.channel.send.firstCall.firstArg.description
-        ).to.have.string(
-          'The best beloved of all things in My sight is Justice'
-        );
-
-        resolve();
-      }, 2000);
+    await commandFinished(client);
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.deep.include({
+      type: 'rich',
+      author: {
+        name: 'The Arabic Hidden Words by Bahá’u’lláh',
+        iconURL: 'https://cdn.discordapp.com/avatars/user-id/user-avatar-url.webp',
+        url: undefined
+      }
     });
+    expect(
+      message.channel.send.firstCall.firstArg.description
+    ).to.have.string(
+      'The best beloved of all things in My sight is Justice'
+    );
   });
 
   it('read with reference and index (hwp)', async function () {
@@ -855,28 +799,22 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.deep.include({
-          type: 'rich',
-          author: {
-            name: 'The Persian Hidden Words by Bahá’u’lláh',
-            iconURL: 'https://cdn.discordapp.com/avatars/user-id/user-avatar-url.webp',
-            url: undefined
-          }
-        });
-        expect(
-          message.channel.send.firstCall.firstArg.description
-        ).to.have.string(
-          'Abide not but in the rose-garden of the spirit.'
-        );
-
-        resolve();
-      }, 2000);
+    await commandFinished(client);
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.deep.include({
+      type: 'rich',
+      author: {
+        name: 'The Persian Hidden Words by Bahá’u’lláh',
+        iconURL: 'https://cdn.discordapp.com/avatars/user-id/user-avatar-url.webp',
+        url: undefined
+      }
     });
+    expect(
+      message.channel.send.firstCall.firstArg.description
+    ).to.have.string(
+      'Abide not but in the rose-garden of the spirit.'
+    );
   });
 
   it('read list', async function () {
@@ -893,32 +831,26 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.deep.include({
-          content: `The following texts are available in my ` +
-                          `library, user username.`,
-          embed: {
-            color: 8359053,
-            description: '\nTo read from one of these texts, mention the ' +
-                "book name and the section you're interested in. For " +
-                'example, to read the 12th Arabic Hidden Word, say: ' +
-                '`!read HWA 12`.',
-            fields: [
-              {
-                name: 'Available Texts',
-                value: '\n**HWA**: The Arabic Hidden Words (Bahá’u’lláh)\n' +
-                  '**HWP**: The Persian Hidden Words (Bahá’u’lláh)\n'
-              }
-            ]
+    await commandFinished(client);
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.deep.include({
+      content: `The following texts are available in my ` +
+                      `library, user username.`,
+      embed: {
+        color: 8359053,
+        description: '\nTo read from one of these texts, mention the ' +
+            "book name and the section you're interested in. For " +
+            'example, to read the 12th Arabic Hidden Word, say: ' +
+            '`!read HWA 12`.',
+        fields: [
+          {
+            name: 'Available Texts',
+            value: '\n**HWA**: The Arabic Hidden Words (Bahá’u’lláh)\n' +
+              '**HWP**: The Persian Hidden Words (Bahá’u’lláh)\n'
           }
-        });
-
-        resolve();
-      }, 2000);
+        ]
+      }
     });
   });
 
@@ -936,33 +868,27 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.deep.include({
-          type: 'rich'
-        });
-
-        expect(
-          message.channel.send.firstCall.firstArg.author.iconURL
-        ).to.equal(
-          'https://cdn.discordapp.com/avatars/user-id/user-avatar-url.webp'
-        );
-        expect(
-          message.channel.send.firstCall.firstArg.author.url
-        ).to.be.undefined;
-        expect(
-          message.channel.send.firstCall.firstArg.author.name
-        ).to.be.a.string;
-        expect(
-          message.channel.send.firstCall.firstArg.description
-        ).to.be.a.string;
-
-        resolve();
-      }, 2000);
+    await commandFinished(client);
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.deep.include({
+      type: 'rich'
     });
+
+    expect(
+      message.channel.send.firstCall.firstArg.author.iconURL
+    ).to.equal(
+      'https://cdn.discordapp.com/avatars/user-id/user-avatar-url.webp'
+    );
+    expect(
+      message.channel.send.firstCall.firstArg.author.url
+    ).to.be.undefined;
+    expect(
+      message.channel.send.firstCall.firstArg.author.name
+    ).to.be.a.string;
+    expect(
+      message.channel.send.firstCall.firstArg.description
+    ).to.be.a.string;
   });
 
   it('b9 (random)', async function () {
@@ -1012,35 +938,29 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          console.log.calledWith('Query completed.')
-        ).to.be.true;
+    await commandFinished(client);
+    expect(
+      console.log.calledWith('Query completed.')
+    ).to.be.true;
 
-        expect(
-          message.channel.send.firstCall.firstArg.content
-        ).to.equal(
-          'Here is the result of your query.'
-        );
+    expect(
+      message.channel.send.firstCall.firstArg.content
+    ).to.equal(
+      'Here is the result of your query.'
+    );
 
-        expect(
-          message.channel.send.firstCall.firstArg.embed.description
-        ).to.have.string(
-          'Bahai9 has returned the following random page, AB:\n\n **'
-        ).and.to.have.string(
-          '(https://bahai9.com/wiki/'
-        ).and.to.have.string(
-          `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
-        );
-        expect(
-          console.log.calledWith('BP command issued by AB.')
-        ).to.be.true;
-
-        resolve();
-      }, 4000);
-    });
+    expect(
+      message.channel.send.firstCall.firstArg.embed.description
+    ).to.have.string(
+      'Bahai9 has returned the following random page, AB:\n\n **'
+    ).and.to.have.string(
+      '(https://bahai9.com/wiki/'
+    ).and.to.have.string(
+      `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
+    );
+    expect(
+      console.log.calledWith('BP command issued by AB.')
+    ).to.be.true;
   });
 
   it('bahaimedia (random)', async function () {
@@ -1090,35 +1010,29 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          console.log.calledWith('Query completed.')
-        ).to.be.true;
+    await commandFinished(client);
+    expect(
+      console.log.calledWith('Query completed.')
+    ).to.be.true;
 
-        expect(
-          message.channel.send.firstCall.firstArg.content
-        ).to.equal(
-          'Here is the result of your query.'
-        );
+    expect(
+      message.channel.send.firstCall.firstArg.content
+    ).to.equal(
+      'Here is the result of your query.'
+    );
 
-        expect(
-          message.channel.send.firstCall.firstArg.embed.description
-        ).to.have.string(
-          'Bahaimedia has returned the following random page, AB:\n\n **'
-        ).and.to.have.string(
-          '(https://bahai.media/File%3A'
-        ).and.to.have.string(
-          `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
-        );
-        expect(
-          console.log.calledWith('BP command issued by AB.')
-        ).to.be.true;
-
-        resolve();
-      }, 4000);
-    });
+    expect(
+      message.channel.send.firstCall.firstArg.embed.description
+    ).to.have.string(
+      'Bahaimedia has returned the following random page, AB:\n\n **'
+    ).and.to.have.string(
+      '(https://bahai.media/File%3A'
+    ).and.to.have.string(
+      `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
+    );
+    expect(
+      console.log.calledWith('BP command issued by AB.')
+    ).to.be.true;
   });
 
   it('b9 (random) with network problem', async function () {
@@ -1172,29 +1086,23 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          console.error.calledWith('Error retrieving random wiki URL')
-        ).to.be.true;
+    await commandFinished(client);
+    expect(
+      console.error.calledWith('Error retrieving random wiki URL')
+    ).to.be.true;
 
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.deep.include({
-          content: `Here is the result of your query.`,
-          embed: {
-            color: 3447003,
-            description: `<:bstar:327468698032013312> Bahai9 did not ` +
-              `return any results for your query, AB. ` +
-              `There may have been a network problem. If you think ` +
-              `you're getting this message in error, you may want to ` +
-              `try again later.`
-          }
-        });
-
-        resolve();
-      }, 4000);
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.deep.include({
+      content: `Here is the result of your query.`,
+      embed: {
+        color: 3447003,
+        description: `<:bstar:327468698032013312> Bahai9 did not ` +
+          `return any results for your query, AB. ` +
+          `There may have been a network problem. If you think ` +
+          `you're getting this message in error, you may want to ` +
+          `try again later.`
+      }
     });
   });
 
@@ -1245,34 +1153,28 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          console.log.calledWith('Search completed: God => God')
-        ).to.be.true;
+    await commandFinished(client);
+    expect(
+      console.log.calledWith('Search completed: God => God')
+    ).to.be.true;
 
-        expect(
-          message.channel.send.firstCall.firstArg.content
-        ).to.equal(
-          'Here is the result of your search.'
-        );
+    expect(
+      message.channel.send.firstCall.firstArg.content
+    ).to.equal(
+      'Here is the result of your search.'
+    );
 
-        expect(
-          message.channel.send.firstCall.firstArg.embed.description
-        ).to.have.string(
-          'has returned the following page as the top result ' +
-            'for your search, AB:\n\n **[God](https://bahai9.com/wiki/God)**\n\n'
-        ).and.to.have.string(
-          `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
-        );
-        expect(
-          console.log.calledWith('BP command issued by AB.')
-        ).to.be.true;
-
-        resolve();
-      }, 4000);
-    });
+    expect(
+      message.channel.send.firstCall.firstArg.embed.description
+    ).to.have.string(
+      'has returned the following page as the top result ' +
+        'for your search, AB:\n\n **[God](https://bahai9.com/wiki/God)**\n\n'
+    ).and.to.have.string(
+      `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
+    );
+    expect(
+      console.log.calledWith('BP command issued by AB.')
+    ).to.be.true;
   });
 
   it('bahaimedia (search)', async function () {
@@ -1322,38 +1224,32 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          console.log.calledWith(
-            'Search completed: ‘Abdu’l-Bahá => File:‘Abdu’l-Bahá ' +
-              'at Berkeley.jpg'
-          )
-        ).to.be.true;
+    await commandFinished(client);
+    expect(
+      console.log.calledWith(
+        'Search completed: ‘Abdu’l-Bahá => File:‘Abdu’l-Bahá ' +
+          'at Berkeley.jpg'
+      )
+    ).to.be.true;
 
-        expect(
-          message.channel.send.firstCall.firstArg.content
-        ).to.equal(
-          'Here is the result of your search.'
-        );
+    expect(
+      message.channel.send.firstCall.firstArg.content
+    ).to.equal(
+      'Here is the result of your search.'
+    );
 
-        expect(
-          message.channel.send.firstCall.firstArg.embed.description
-        ).to.have.string(
-          'has returned the following page as the top result ' +
-            'for your search, AB:\n\n **[File:‘Abdu’l-Bahá at ' +
-            'Berkeley.jpg](https://bahai.media/File%3A%E2%80%98Abdu%E2%80%99l-Bah%C3%A1%20at%20Berkeley.jpg)**\n\n'
-        ).and.to.have.string(
-          `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
-        );
-        expect(
-          console.log.calledWith('BP command issued by AB.')
-        ).to.be.true;
-
-        resolve();
-      }, 4000);
-    });
+    expect(
+      message.channel.send.firstCall.firstArg.embed.description
+    ).to.have.string(
+      'has returned the following page as the top result ' +
+        'for your search, AB:\n\n **[File:‘Abdu’l-Bahá at ' +
+        'Berkeley.jpg](https://bahai.media/File%3A%E2%80%98Abdu%E2%80%99l-Bah%C3%A1%20at%20Berkeley.jpg)**\n\n'
+    ).and.to.have.string(
+      `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
+    );
+    expect(
+      console.log.calledWith('BP command issued by AB.')
+    ).to.be.true;
   });
 
   it('bahaipedia (search)', async function () {
@@ -1403,34 +1299,28 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          console.log.calledWith('Search completed: God => God')
-        ).to.be.true;
+    await commandFinished(client);
+    expect(
+      console.log.calledWith('Search completed: God => God')
+    ).to.be.true;
 
-        expect(
-          message.channel.send.firstCall.firstArg.content
-        ).to.equal(
-          'Here is the result of your search.'
-        );
+    expect(
+      message.channel.send.firstCall.firstArg.content
+    ).to.equal(
+      'Here is the result of your search.'
+    );
 
-        expect(
-          message.channel.send.firstCall.firstArg.embed.description
-        ).to.have.string(
-          'has returned the following page as the top result ' +
-            'for your search, AB:\n\n **[God](https://bahaipedia.org/God)**\n\n'
-        ).and.to.have.string(
-          `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
-        );
-        expect(
-          console.log.calledWith('BP command issued by AB.')
-        ).to.be.true;
-
-        resolve();
-      }, 4000);
-    });
+    expect(
+      message.channel.send.firstCall.firstArg.embed.description
+    ).to.have.string(
+      'has returned the following page as the top result ' +
+        'for your search, AB:\n\n **[God](https://bahaipedia.org/God)**\n\n'
+    ).and.to.have.string(
+      `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
+    );
+    expect(
+      console.log.calledWith('BP command issued by AB.')
+    ).to.be.true;
   });
 
   it("bahaipedia (search) (no Bahá'í star)", async function () {
@@ -1476,34 +1366,28 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          console.log.calledWith('Search completed: God => God')
-        ).to.be.true;
+    await commandFinished(client);
+    expect(
+      console.log.calledWith('Search completed: God => God')
+    ).to.be.true;
 
-        expect(
-          message.channel.send.firstCall.firstArg.content
-        ).to.equal(
-          'Here is the result of your search.'
-        );
+    expect(
+      message.channel.send.firstCall.firstArg.content
+    ).to.equal(
+      'Here is the result of your search.'
+    );
 
-        expect(
-          message.channel.send.firstCall.firstArg.embed.description
-        ).to.have.string(
-          'has returned the following page as the top result ' +
-            'for your search, AB:\n\n **[God](https://bahaipedia.org/God)**\n\n'
-        ).and.to.not.have.string(
-          `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
-        );
-        expect(
-          console.log.calledWith('BP command issued by AB.')
-        ).to.be.true;
-
-        resolve();
-      }, 4000);
-    });
+    expect(
+      message.channel.send.firstCall.firstArg.embed.description
+    ).to.have.string(
+      'has returned the following page as the top result ' +
+        'for your search, AB:\n\n **[God](https://bahaipedia.org/God)**\n\n'
+    ).and.to.not.have.string(
+      `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
+    );
+    expect(
+      console.log.calledWith('BP command issued by AB.')
+    ).to.be.true;
   });
 
   it('bahaipedia (search) with word removal', async function () {
@@ -1553,34 +1437,28 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          console.log.calledWith('Search completed: God is great -2 => Canada')
-        ).to.be.true;
+    await commandFinished(client);
+    expect(
+      console.log.calledWith('Search completed: God is great -2 => Canada')
+    ).to.be.true;
 
-        expect(
-          message.channel.send.firstCall.firstArg.content
-        ).to.equal(
-          'Here is the result of your search.'
-        );
+    expect(
+      message.channel.send.firstCall.firstArg.content
+    ).to.equal(
+      'Here is the result of your search.'
+    );
 
-        expect(
-          message.channel.send.firstCall.firstArg.embed.description
-        ).to.have.string(
-          'has returned the following page as the top result ' +
-            'for your search, AB:\n\n **[Canada](https://bahaipedia.org/Canada)**\n\n'
-        ).and.to.have.string(
-          `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
-        );
-        expect(
-          console.log.calledWith('BP command issued by AB.')
-        ).to.be.true;
-
-        resolve();
-      }, 4000);
-    });
+    expect(
+      message.channel.send.firstCall.firstArg.embed.description
+    ).to.have.string(
+      'has returned the following page as the top result ' +
+        'for your search, AB:\n\n **[Canada](https://bahaipedia.org/Canada)**\n\n'
+    ).and.to.have.string(
+      `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
+    );
+    expect(
+      console.log.calledWith('BP command issued by AB.')
+    ).to.be.true;
   });
 
   it('bahaipedia (search) - no results', async function () {
@@ -1630,37 +1508,31 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          console.log.firstCall.firstArg
-        ).to.equal('Result:');
+    await commandFinished(client);
+    expect(
+      console.log.firstCall.firstArg
+    ).to.equal('Result:');
 
-        expect(
-          message.channel.send.firstCall.firstArg.content
-        ).to.equal(
-          'Here is the result of your search.'
-        );
+    expect(
+      message.channel.send.firstCall.firstArg.content
+    ).to.equal(
+      'Here is the result of your search.'
+    );
 
-        expect(
-          message.channel.send.firstCall.firstArg.embed.description
-        ).to.have.string(
-          'did not return any results for your search, AB. ' +
-            `Did you spell your search terms correctly?\n\n` +
-            `There may also have been a network problem. ` +
-            `If you think you're getting this message in ` +
-            `error, you may want to try again later.`
-        ).and.to.have.string(
-          `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
-        );
-        expect(
-          console.log.calledWith('BP command issued by AB.')
-        ).to.be.true;
-
-        resolve();
-      }, 4000);
-    });
+    expect(
+      message.channel.send.firstCall.firstArg.embed.description
+    ).to.have.string(
+      'did not return any results for your search, AB. ' +
+        `Did you spell your search terms correctly?\n\n` +
+        `There may also have been a network problem. ` +
+        `If you think you're getting this message in ` +
+        `error, you may want to try again later.`
+    ).and.to.have.string(
+      `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
+    );
+    expect(
+      console.log.calledWith('BP command issued by AB.')
+    ).to.be.true;
   });
 
   it('b9 (search) with network problem', async function () {
@@ -1714,30 +1586,24 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          console.error.calledWith('Error retrieving wiki search URL')
-        ).to.be.true;
+    await commandFinished(client);
+    expect(
+      console.error.calledWith('Error retrieving wiki search URL')
+    ).to.be.true;
 
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.deep.include({
-          content: `Here is the result of your search.`,
-          embed: {
-            color: 3447003,
-            description: `<:bstar:327468698032013312> Bahai9 did not ` +
-              `return any results for your search, AB. ` +
-              `Did you spell your search terms correctly?\n\n` +
-                `There may also have been a network problem. ` +
-                `If you think you're getting this message in ` +
-                `error, you may want to try again later.`
-          }
-        });
-
-        resolve();
-      }, 4000);
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.deep.include({
+      content: `Here is the result of your search.`,
+      embed: {
+        color: 3447003,
+        description: `<:bstar:327468698032013312> Bahai9 did not ` +
+          `return any results for your search, AB. ` +
+          `Did you spell your search terms correctly?\n\n` +
+            `There may also have been a network problem. ` +
+            `If you think you're getting this message in ` +
+            `error, you may want to try again later.`
+      }
     });
   });
 
@@ -1792,29 +1658,24 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          console.error.calledWith('Error retrieving JSON for today URL')
-        ).to.be.true;
+    await commandFinished(client);
 
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.deep.include({
-          content: `Here is the result of your query.`,
-          embed: {
-            color: 3447003,
-            description: `<:bstar:327468698032013312> Bahaipedia did not ` +
-              `return any results for your query, AB. ` +
-              `There may have been a network problem. If you think ` +
-                `you're getting this message in error, you may want to ` +
-                `try again later.`
-          }
-        });
+    expect(
+      console.error.calledWith('Error retrieving JSON for today URL')
+    ).to.be.true;
 
-        resolve();
-      }, 4000);
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.deep.include({
+      content: `Here is the result of your query.`,
+      embed: {
+        color: 3447003,
+        description: `<:bstar:327468698032013312> Bahaipedia did not ` +
+          `return any results for your query, AB. ` +
+          `There may have been a network problem. If you think ` +
+            `you're getting this message in error, you may want to ` +
+            `try again later.`
+      }
     });
   });
 
@@ -1865,30 +1726,24 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          console.log.calledWith('Query completed.')
-        ).to.be.true;
+    await commandFinished(client);
+    expect(
+      console.log.calledWith('Query completed.')
+    ).to.be.true;
 
-        expect(
-          message.channel.send.firstCall.firstArg.content
-        ).to.equal(
-          'Here is the result of your query.'
-        );
+    expect(
+      message.channel.send.firstCall.firstArg.content
+    ).to.equal(
+      'Here is the result of your query.'
+    );
 
-        expect(
-          message.channel.send.firstCall.firstArg.embed.description
-        ).to.have.string(
-          "Here's Bahaipedia's Today in History entry for"
-        ).and.to.have.string(
-          `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
-        );
-
-        resolve();
-      }, 4000);
-    });
+    expect(
+      message.channel.send.firstCall.firstArg.embed.description
+    ).to.have.string(
+      "Here's Bahaipedia's Today in History entry for"
+    ).and.to.have.string(
+      `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
+    );
   });
 
   it('echo (non-admin attempt)', async function () {
@@ -2050,19 +1905,13 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          console.log.calledWith('Checkin command issued by AB.')
-        ).to.be.true;
-        expect(
-          console.log.calledWith("Checking in on Bahá'í.FYI.")
-        ).to.be.true;
-
-        resolve();
-      }, 2000);
-    });
+    await commandFinished(client);
+    expect(
+      console.log.calledWith('Checkin command issued by AB.')
+    ).to.be.true;
+    expect(
+      console.log.calledWith("Checking in on Bahá'í.FYI.")
+    ).to.be.true;
   });
 
   it('ping', async function () {
@@ -2164,37 +2013,31 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const {
-          find: {
-            argSpies: [[emojisFinderSpy]],
-            childSpies: [emojisFindResultToStringSpy]
-          }
-        } = clientEmojisCache;
+    await commandFinished(client);
+    const {
+      find: {
+        argSpies: [[emojisFinderSpy]],
+        childSpies: [emojisFindResultToStringSpy]
+      }
+    } = clientEmojisCache;
 
-        expect(emojisFinderSpy.firstCall.firstArg.name).to.equal('9star');
-        expect(emojisFinderSpy.firstCall.returnValue).to.equal(true);
+    expect(emojisFinderSpy.firstCall.firstArg.name).to.equal('9star');
+    expect(emojisFinderSpy.firstCall.returnValue).to.equal(true);
 
-        expect(emojisFindResultToStringSpy.returnValues[0]).to.equal(
-          `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
-        );
+    expect(emojisFindResultToStringSpy.returnValues[0]).to.equal(
+      `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
+    );
 
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.have.string('Alláh-u-Abhá').and.to.have.string(
-          'user username'
-        ).and.to.have.string(
-          `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
-        );
-        expect(
-          message.react.firstCall.firstArg.name
-        ).to.equal('9star');
-
-        resolve();
-      });
-    });
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.have.string('Alláh-u-Abhá').and.to.have.string(
+      'user username'
+    ).and.to.have.string(
+      `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
+    );
+    expect(
+      message.react.firstCall.firstArg.name
+    ).to.equal('9star');
   });
 
   it('abha (no 9star)', async function () {
@@ -2237,23 +2080,17 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.have.string('Alláh-u-Abhá').and.to.have.string(
-          'user username'
-        ).and.not.to.have.string(
-          `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
-        );
-        expect(
-          message.react.firstCall
-        ).to.be.null;
-
-        resolve();
-      });
-    });
+    await commandFinished(client);
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.have.string('Alláh-u-Abhá').and.to.have.string(
+      'user username'
+    ).and.not.to.have.string(
+      `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
+    );
+    expect(
+      message.react.firstCall
+    ).to.be.null;
   });
 
   it('abha (not mentioned)', async function () {
@@ -2324,25 +2161,19 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const {
-          find: {
-            argSpies: [[emojisFinderSpy]]
-          }
-        } = clientEmojisCache;
+    await commandFinished(client);
+    const {
+      find: {
+        argSpies: [[emojisFinderSpy]]
+      }
+    } = clientEmojisCache;
 
-        expect(emojisFinderSpy.firstCall.firstArg.name).to.equal('9star');
-        expect(emojisFinderSpy.firstCall.returnValue).to.equal(true);
+    expect(emojisFinderSpy.firstCall.firstArg.name).to.equal('9star');
+    expect(emojisFinderSpy.firstCall.returnValue).to.equal(true);
 
-        expect(
-          message.react.firstCall.firstArg.name
-        ).to.equal('9star');
-
-        resolve();
-      });
-    });
+    expect(
+      message.react.firstCall.firstArg.name
+    ).to.equal('9star');
   });
 
   it('badi', async function () {
@@ -2389,38 +2220,32 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const {
-          find: {
-            argSpies: [[emojisFinderSpy]],
-            childSpies: [emojisFindResultToStringSpy]
-          }
-        } = clientEmojisCache;
+    await commandFinished(client);
+    const {
+      find: {
+        argSpies: [[emojisFinderSpy]],
+        childSpies: [emojisFindResultToStringSpy]
+      }
+    } = clientEmojisCache;
 
-        expect(emojisFinderSpy.firstCall.firstArg.name).to.equal('9star');
-        expect(emojisFinderSpy.firstCall.returnValue).to.equal(true);
+    expect(emojisFinderSpy.firstCall.firstArg.name).to.equal('9star');
+    expect(emojisFinderSpy.firstCall.returnValue).to.equal(true);
 
-        expect(emojisFindResultToStringSpy.returnValues[0]).to.equal(
-          `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
-        );
+    expect(emojisFindResultToStringSpy.returnValues[0]).to.equal(
+      `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
+    );
 
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.have.string(
-          'OK'
-        ).and.to.have.string(
-          'here you go. https://bahaipedia.org/Badí‘'
-        ).and.to.have.string(
-          'user username'
-        ).and.to.have.string(
-          `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
-        );
-
-        resolve();
-      });
-    });
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.have.string(
+      'OK'
+    ).and.to.have.string(
+      'here you go. https://bahaipedia.org/Badí‘'
+    ).and.to.have.string(
+      'user username'
+    ).and.to.have.string(
+      `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
+    );
   });
 
   it('badi (no 9-pointed star)', async function () {
@@ -2454,24 +2279,18 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.have.string(
-          'OK'
-        ).and.to.have.string(
-          'here you go. https://bahaipedia.org/Badí‘'
-        ).and.to.have.string(
-          'user username'
-        ).and.to.not.have.string(
-          `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
-        );
-
-        resolve();
-      });
-    });
+    await commandFinished(client);
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.have.string(
+      'OK'
+    ).and.to.have.string(
+      'here you go. https://bahaipedia.org/Badí‘'
+    ).and.to.have.string(
+      'user username'
+    ).and.to.not.have.string(
+      `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
+    );
   });
 
   it('nawruz', async function () {
@@ -2531,46 +2350,40 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const {
-          find: {
-            argSpies: [[emojisFinderSpy], [emojisFinderSpy2]],
-            childSpies: [
-              emojisFindResultToStringSpy, emojisFindResultToStringSpy2
-            ]
-          }
-        } = clientEmojisCache;
+    await commandFinished(client);
+    const {
+      find: {
+        argSpies: [[emojisFinderSpy], [emojisFinderSpy2]],
+        childSpies: [
+          emojisFindResultToStringSpy, emojisFindResultToStringSpy2
+        ]
+      }
+    } = clientEmojisCache;
 
-        expect(emojisFinderSpy.firstCall.firstArg.name).to.equal('9star');
-        expect(emojisFinderSpy.firstCall.returnValue).to.equal(true);
+    expect(emojisFinderSpy.firstCall.firstArg.name).to.equal('9star');
+    expect(emojisFinderSpy.firstCall.returnValue).to.equal(true);
 
-        expect(emojisFinderSpy2.lastCall.firstArg.name).to.equal('sabzi');
-        expect(emojisFinderSpy2.lastCall.returnValue).to.equal(true);
+    expect(emojisFinderSpy2.lastCall.firstArg.name).to.equal('sabzi');
+    expect(emojisFinderSpy2.lastCall.returnValue).to.equal(true);
 
-        expect(emojisFindResultToStringSpy.returnValues[0]).to.equal(
-          `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
-        );
+    expect(emojisFindResultToStringSpy.returnValues[0]).to.equal(
+      `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
+    );
 
-        expect(emojisFindResultToStringSpy2.returnValues[0]).to.equal(
-          `<:sabzi:${DiscordConstants.SABZI_EMOJI_ID_FYI}>`
-        );
+    expect(emojisFindResultToStringSpy2.returnValues[0]).to.equal(
+      `<:sabzi:${DiscordConstants.SABZI_EMOJI_ID_FYI}>`
+    );
 
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.have.string('Happy Naw-Rúz!').and.to.have.string(
-          `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
-        ).and.to.have.string(
-          `<:sabzi:${DiscordConstants.SABZI_EMOJI_ID_FYI}>`
-        );
-        expect(
-          message.react.firstCall.firstArg.name
-        ).to.equal('9star');
-
-        resolve();
-      });
-    });
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.have.string('Happy Naw-Rúz!').and.to.have.string(
+      `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
+    ).and.to.have.string(
+      `<:sabzi:${DiscordConstants.SABZI_EMOJI_ID_FYI}>`
+    );
+    expect(
+      message.react.firstCall.firstArg.name
+    ).to.equal('9star');
   });
 
   it('nawruz (no 9star)', async function () {
@@ -2617,23 +2430,17 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.have.string('Happy Naw-Rúz!').and.to.have.string(
-          `<:sabzi:${DiscordConstants.SABZI_EMOJI_ID_FYI}>`
-        ).and.to.not.have.string(
-          `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
-        );
-        expect(
-          message.react.firstCall
-        ).to.be.null;
-
-        resolve();
-      });
-    });
+    await commandFinished(client);
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.have.string('Happy Naw-Rúz!').and.to.have.string(
+      `<:sabzi:${DiscordConstants.SABZI_EMOJI_ID_FYI}>`
+    ).and.to.not.have.string(
+      `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
+    );
+    expect(
+      message.react.firstCall
+    ).to.be.null;
   });
 
   it('nawruz (no sabzi)', async function () {
@@ -2689,43 +2496,37 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const {
-          find: {
-            argSpies: [[emojisFinderSpy], [emojisFinderSpy2]],
-            childSpies: [
-              emojisFindResultToStringSpy, emojisFindResultToStringSpy2
-            ]
-          }
-        } = clientEmojisCache;
+    await commandFinished(client);
+    const {
+      find: {
+        argSpies: [[emojisFinderSpy], [emojisFinderSpy2]],
+        childSpies: [
+          emojisFindResultToStringSpy, emojisFindResultToStringSpy2
+        ]
+      }
+    } = clientEmojisCache;
 
-        expect(emojisFinderSpy.firstCall.firstArg.name).to.equal('9star');
-        expect(emojisFinderSpy.firstCall.returnValue).to.equal(true);
+    expect(emojisFinderSpy.firstCall.firstArg.name).to.equal('9star');
+    expect(emojisFinderSpy.firstCall.returnValue).to.equal(true);
 
-        expect(emojisFinderSpy2.secondCall).to.equal(null);
+    expect(emojisFinderSpy2.secondCall).to.equal(null);
 
-        expect(emojisFindResultToStringSpy.returnValues[0]).to.equal(
-          `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
-        );
+    expect(emojisFindResultToStringSpy.returnValues[0]).to.equal(
+      `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
+    );
 
-        expect(emojisFindResultToStringSpy2).to.be.undefined;
+    expect(emojisFindResultToStringSpy2).to.be.undefined;
 
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.have.string('Happy Naw-Rúz!').and.to.have.string(
-          `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
-        ).and.to.not.have.string(
-          `<:sabzi:${DiscordConstants.SABZI_EMOJI_ID_FYI}>`
-        );
-        expect(
-          message.react.firstCall.firstArg.name
-        ).to.equal('9star');
-
-        resolve();
-      });
-    });
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.have.string('Happy Naw-Rúz!').and.to.have.string(
+      `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
+    ).and.to.not.have.string(
+      `<:sabzi:${DiscordConstants.SABZI_EMOJI_ID_FYI}>`
+    );
+    expect(
+      message.react.firstCall.firstArg.name
+    ).to.equal('9star');
   });
 
   it('ridvan', async function () {
@@ -2781,35 +2582,29 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const {
-          find: {
-            argSpies: [[emojisFinderSpy]],
-            childSpies: [emojisFindResultToStringSpy]
-          }
-        } = clientEmojisCache;
+    await commandFinished(client);
+    const {
+      find: {
+        argSpies: [[emojisFinderSpy]],
+        childSpies: [emojisFindResultToStringSpy]
+      }
+    } = clientEmojisCache;
 
-        expect(emojisFinderSpy.firstCall.firstArg.name).to.equal('9star');
-        expect(emojisFinderSpy.firstCall.returnValue).to.equal(true);
+    expect(emojisFinderSpy.firstCall.firstArg.name).to.equal('9star');
+    expect(emojisFinderSpy.firstCall.returnValue).to.equal(true);
 
-        expect(emojisFindResultToStringSpy.returnValues[0]).to.equal(
-          `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
-        );
+    expect(emojisFindResultToStringSpy.returnValues[0]).to.equal(
+      `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
+    );
 
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.have.string('Happy Ridván!').and.to.have.string(
-          `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
-        );
-        expect(
-          message.react.firstCall.firstArg.name
-        ).to.equal('9star');
-
-        resolve();
-      });
-    });
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.have.string('Happy Ridván!').and.to.have.string(
+      `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
+    );
+    expect(
+      message.react.firstCall.firstArg.name
+    ).to.equal('9star');
   });
 
   it('ridvan', async function () {
@@ -2852,21 +2647,15 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          message.channel.send.firstCall.firstArg
-        ).to.have.string('Happy Ridván!').and.to.not.have.string(
-          `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
-        );
-        expect(
-          message.react.firstCall
-        ).to.be.null;
-
-        resolve();
-      });
-    });
+    await commandFinished(client);
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.have.string('Happy Ridván!').and.to.not.have.string(
+      `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
+    );
+    expect(
+      message.react.firstCall
+    ).to.be.null;
   });
 
   it('morning', async function () {
@@ -3003,16 +2792,10 @@ describe('Commands', function () {
 
     client.emit('message', message);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(
-          message.react.firstCall.firstArg
-        ).to.equal('👋');
-
-        resolve();
-      });
-    });
+    await commandFinished(client);
+    expect(
+      message.react.firstCall.firstArg
+    ).to.equal('👋');
   });
 
   it(
@@ -3059,16 +2842,10 @@ describe('Commands', function () {
 
       client.emit('message', message);
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(
-            message.react.firstCall
-          ).to.be.null;
-
-          resolve();
-        });
-      });
+      await commandFinished(client);
+      expect(
+        message.react.firstCall
+      ).to.be.null;
     }
   );
 

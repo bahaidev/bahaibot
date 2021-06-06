@@ -260,10 +260,12 @@ const bot = async ({
                 message.content, err
               );
             }
+            client.emit('bahaibot:command-finished');
             /* c8 ignore stop */
             break;
           }
         }
+        client.emit('bahaibot:command-finished');
       } else if (!disableNotMentioned) { // If the Bot is NOT Mentioned
         const notMentionedCommands = Object.values(
           botCommands
@@ -279,9 +281,11 @@ const bot = async ({
             // eslint-disable-next-line max-len -- Long
             // eslint-disable-next-line no-await-in-loop -- Needs to be in series
             await notMentioned.action(message);
+            client.emit('bahaibot:command-finished');
             break;
           }
         }
+        client.emit('bahaibot:command-finished');
       }
     }
   );

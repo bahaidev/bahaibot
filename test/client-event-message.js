@@ -2,6 +2,7 @@
 import sinon from 'sinon';
 
 import MockDiscord from './helpers/MockDiscord.js';
+import commandFinished from './helpers/commandFinished.js';
 
 import bot from '../src/discordBot.js';
 
@@ -28,13 +29,7 @@ describe('Client event (message)', function () {
 
       this.sinon.spy(console, 'log');
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(console.log.firstCall).to.equal(null);
-          resolve();
-        });
-      });
+      expect(console.log.firstCall).to.equal(null);
     }
   );
 
@@ -57,18 +52,14 @@ describe('Client event (message)', function () {
 
       this.sinon.spy(console, 'log');
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(message.channel.send.firstCall.firstArg).to.have.string(
-            "The Bahá'í Faith is an independent world religion"
-          );
-          expect(console.log.calledWith(
-            'Router response:'
-          )).to.be.true;
-          resolve();
-        }, 5000);
-      });
+      await commandFinished(client);
+
+      expect(message.channel.send.firstCall.firstArg).to.have.string(
+        "The Bahá'í Faith is an independent world religion"
+      );
+      expect(console.log.calledWith(
+        'Router response:'
+      )).to.be.true;
     }
   );
 
@@ -94,18 +85,13 @@ describe('Client event (message)', function () {
 
       this.sinon.spy(console, 'log');
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(message.channel.send.firstCall.firstArg).to.have.string(
-            "The Bahá'í Faith is an independent world religion"
-          );
-          expect(console.log.calledWith(
-            'Router response:'
-          )).to.be.true;
-          resolve();
-        }, 5000);
-      });
+      await commandFinished(client);
+      expect(message.channel.send.firstCall.firstArg).to.have.string(
+        "The Bahá'í Faith is an independent world religion"
+      );
+      expect(console.log.calledWith(
+        'Router response:'
+      )).to.be.true;
     }
   );
 
@@ -136,18 +122,14 @@ describe('Client event (message)', function () {
 
       this.sinon.spy(console, 'log');
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(message.channel.send.firstCall.firstArg).to.match(
-            /understand your question|know enough to answer/u
-          );
-          expect(console.log.calledWith(
-            'Router response:'
-          )).to.be.true;
-          resolve();
-        }, 5000);
-      });
+      await commandFinished(client);
+
+      expect(message.channel.send.firstCall.firstArg).to.match(
+        /understand your question|know enough to answer/u
+      );
+      expect(console.log.calledWith(
+        'Router response:'
+      )).to.be.true;
     }
   );
 
@@ -179,18 +161,13 @@ describe('Client event (message)', function () {
 
       this.sinon.spy(console, 'log');
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(message.channel.send.firstCall.firstArg).to.match(
-            /understand your question|know enough to answer/u
-          );
-          expect(console.log.calledWith(
-            'Router response:'
-          )).to.be.true;
-          resolve();
-        }, 5000);
-      });
+      await commandFinished(client);
+      expect(message.channel.send.firstCall.firstArg).to.match(
+        /understand your question|know enough to answer/u
+      );
+      expect(console.log.calledWith(
+        'Router response:'
+      )).to.be.true;
     }
   );
 
@@ -213,18 +190,14 @@ describe('Client event (message)', function () {
 
       this.sinon.spy(console, 'log');
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(message.channel.send.firstCall.firstArg).to.match(
-            /understand your question|know enough to answer/u
-          );
-          expect(console.log.calledWith(
-            'Router response:'
-          )).to.be.true;
-          resolve();
-        }, 5000);
-      });
+      await commandFinished(client);
+
+      expect(message.channel.send.firstCall.firstArg).to.match(
+        /understand your question|know enough to answer/u
+      );
+      expect(console.log.calledWith(
+        'Router response:'
+      )).to.be.true;
     }
   );
 
@@ -297,20 +270,15 @@ describe('Client event (message)', function () {
 
     this.sinon.spy(console, 'error');
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(channelSpy.firstCall.firstArg).to.have.string(
-          "<@abc>, I couldn't process your question at the moment."
-        );
-        expect(console.error.firstCall.firstArg).to.equal(
-          'Error executing command with message'
-        );
-        expect(console.error.secondCall.lastArg.message).to.have.string(
-          'Input text not set'
-        );
-        resolve();
-      }, 5000);
-    });
+    await commandFinished(client);
+    expect(channelSpy.firstCall.firstArg).to.have.string(
+      "<@abc>, I couldn't process your question at the moment."
+    );
+    expect(console.error.firstCall.firstArg).to.equal(
+      'Error executing command with message'
+    );
+    expect(console.error.secondCall.lastArg.message).to.have.string(
+      'Input text not set'
+    );
   });
 });
