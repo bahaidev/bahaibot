@@ -3128,6 +3128,43 @@ describe('Commands', function () {
     ).to.equal('🍵');
   });
 
+  it('popcorn', async function () {
+    const discord = new MockDiscord({
+      mentionEveryone: true,
+      messageContent: '\u{1F37F}'
+    });
+
+    const {client} = await bot({client: discord.getClient()});
+
+    const message = discord.getMessage();
+
+    this.sinon.spy(message.channel, 'send');
+
+    client.emit('message', message);
+
+    expect(
+      message.channel.send.firstCall.firstArg
+    ).to.have.string(':popcorn:');
+  });
+
+  it('popcorn (not mentioned)', async function () {
+    const discord = new MockDiscord({
+      messageContent: '\u{1F37F}'
+    });
+
+    const {client} = await bot({client: discord.getClient()});
+
+    const message = discord.getMessage();
+
+    this.sinon.spy(message, 'react');
+
+    client.emit('message', message);
+
+    expect(
+      message.react.firstCall.firstArg
+    ).to.equal('🍿');
+  });
+
   it('unladen', async function () {
     const discord = new MockDiscord({
       mentionEveryone: true,
