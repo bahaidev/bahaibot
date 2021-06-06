@@ -92,7 +92,9 @@ const getSocialInfo = ({
           );
           const lastseen = new Date(user.lastMessage.createdAt);
           const now = new Date();
-          const timedelta = now - lastseen;
+          const timedelta = (now > lastseen)
+            ? now - lastseen
+            : 0;
           replies.push(
             `${sname} is now ${stat}, and was last seen in ${
               lastchan
