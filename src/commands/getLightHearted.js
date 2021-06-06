@@ -44,6 +44,26 @@ const getLightHearted = () => {
         }
       }
     },
+    popcorn: {
+      re: /\u{1F37F}/u,
+      /**
+       * Popcorn (should be at the end so everything else is processed first).
+       * @param {DiscordMessage} message
+       * @returns {void}
+       */
+      action (message) {
+        message.channel.send(':popcorn:');
+      },
+      notMentioned: {
+        /**
+         * @param {DiscordMessage} message
+         * @returns {void}
+         */
+        action (message) {
+          message.react('🍿');
+        }
+      }
+    },
     // Lulz (should be at the end so everything else is processed first).
     unladen: {
       re: /\bunladen\sswallow\b/iu,
