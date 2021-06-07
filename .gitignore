@@ -99,6 +99,10 @@ typings/
 /Dockerfile
 /.dockerignore
 
+# Ideas
+
+.idea
+
 # Our own settings
 settings.json
 /today.studyhall
