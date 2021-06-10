@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@discordjs/opus": "^0.5.0",
+    "@discordjs/voice": "^0.3.0",
     "@google-cloud/dialogflow": "^3.5.0",
     "discord-tts": "^1.1.0",
     "discord.js": "^12.5.3",
