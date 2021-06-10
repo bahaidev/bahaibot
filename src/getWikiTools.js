@@ -51,7 +51,8 @@ function getWikiTools ({fetch, striptags, _}) {
 
       try {
         const tResponse = await (await fetch(tUrl)).json();
-        const text = striptags(tResponse.parse.text['*']);
+        const rawText = tResponse.parse.text['*'].split('</center>\n');
+        const text = striptags(rawText.length > 1 ? rawText[1] : rawText[0]);
         // console.log(text);
         // console.log(uUrl);
         return text;

@@ -39,7 +39,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
           color: 3447003,
           description: `${
             bstarString
-          }}Here's Bahaipedia's Today in History entry for ${
+          }Here's Bahaipedia's Today in History entry for ${
             md
           }, ${message.author.username}:\n\n ${res}`
         }
