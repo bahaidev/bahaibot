@@ -57,7 +57,7 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
  * @param {FileSystem} cfg.fs
  * @param {Settings} cfg.settings
  * @param {DiscordTTS} cfg.discordTTS
- * @returns {BotCommands}
+ * @returns {Promise<BotCommands>}
  */
 const getCommands = async function ({
   app, router, Discord,
