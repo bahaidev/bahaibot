@@ -144,12 +144,6 @@ describe('ready event', function () {
 
         simulatedTimestamp += delay;
 
-        if (delay === fiftyMinutesInMilliseconds) {
-          timeout.wrappedMethod(fn);
-          return;
-        }
-
-        // Use a higher timouet to witness the changes
         timeout.wrappedMethod(fn, 0);
       }
     );
