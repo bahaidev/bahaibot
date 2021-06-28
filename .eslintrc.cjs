@@ -87,6 +87,9 @@ module.exports = {
     'compat/compat': 0,
 
     // Allow for extensibility/clarity
-    'no-lonely-if': 0
+    'no-lonely-if': 0,
+
+    // A bit oppressive
+    'unicorn/prefer-prototype-methods': 0
   }
 };

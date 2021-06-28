@@ -1,7 +1,6 @@
 /* READER AND LIBRARY FILE */
 
-/* eslint-disable no-use-extend-native/no-use-extend-native,
-  node/file-extension-in-import -- Polyfill */
+/* eslint-disable no-use-extend-native/no-use-extend-native -- Polyfill */
 import 'object.hasown/auto';
 
 /**

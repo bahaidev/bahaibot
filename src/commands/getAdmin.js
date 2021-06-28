@@ -85,7 +85,7 @@ const getAdmin = ({
           console.log('Message member not in a voice channel with `channelID`');
         }
         const channel = client.channels.cache.get(channelId);
-        const connection = await channel.join();
+        const connection = await channel.join('');
         broadcast.play(discordTTS.getVoiceStream(words));
         const dispatcher = connection.play(broadcast);
         /* c8 ignore next 9 */

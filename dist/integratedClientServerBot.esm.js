@@ -2498,6 +2498,10 @@ var striptags$1 = {exports: {}};
     }
 
     function striptags_internal(html, context) {
+        if (typeof html != "string") {
+            throw new TypeError("'html' parameter must be a string");
+        }
+
         let allowable_tags  = context.allowable_tags;
         let tag_replacement = context.tag_replacement;
 
@@ -3166,7 +3170,8 @@ function getWikiTools ({fetch, striptags, _}) {
 
       try {
         const tResponse = await (await fetch(tUrl)).json();
-        const text = striptags(tResponse.parse.text['*']);
+        const rawText = tResponse.parse.text['*'].split('</center>\n');
+        const text = striptags(rawText.length > 1 ? rawText[1] : rawText[0]);
         // console.log(text);
         // console.log(uUrl);
         return text;
@@ -3527,7 +3532,10 @@ const getSocialInfo = ({
        * @returns {void}
        */
       action (message) {
-        const words = message.content.split(' ').slice(1);
+        const sname = message.content.split(' ').filter(
+          (word) => !(word.includes('391405681795923968') ||
+            word.includes('847456996738334730') || word === '!seen')
+        ).join(' ');
 
         // const {guild} = message;
         // const userOnline = guild.members.cache.filter(
@@ -3535,40 +3543,40 @@ const getSocialInfo = ({
         // let userStatus = '';
         const replies = [];
 
-        words.forEach(function (item, index, array) {
-          const user = client.users.cache.find((val) => {
-            return val.username === item;
-          });
-          if (!user) {
-            replies.push(`I haven't seen ${item} lately.`);
-            return;
-          }
-          // userStatus = user.presence.status;
-
-          // Todo: Stop ignoring this once test in place.
-          /* c8 ignore next 13 */
-          if (user.lastMessage) {
-            const lastchan = user.lastMessage.channel;
-            const stat = (
-              user.presence.status === 'dnd' ? 'busy' : user.presence.status
-            );
-            const lastseen = new Date(user.lastMessage.createdAt);
-            const now = new Date();
-            const timedelta = now - lastseen;
-            replies.push(
-              `${item} is now ${stat}, and was last seen in ${
-                lastchan
-              } ${istr(timedelta / 1000)} ago.`
-            );
-          } else {
-            const stat = (
-              user.presence.status === 'dnd' ? 'busy' : user.presence.status
-            );
-            replies.push(
-              `${item} is now ${stat}; I haven't seen them lately.`
-            );
-          }
+        const user = client.users.cache.find((val) => {
+          return val.username === sname;
         });
+        if (!user) {
+          replies.push(`I haven't seen ${sname} lately.`);
+          return;
+        }
+        // userStatus = user.presence.status;
+
+        // Todo: Stop ignoring this once test in place.
+        /* c8 ignore next 13 */
+        if (user.lastMessage) {
+          const lastchan = user.lastMessage.channel;
+          const stat = (
+            user.presence.status === 'dnd' ? 'busy' : user.presence.status
+          );
+          const lastseen = new Date(user.lastMessage.createdAt);
+          const now = new Date();
+          const timedelta = (now > lastseen)
+            ? now - lastseen
+            : 0;
+          replies.push(
+            `${sname} is now ${stat}, and was last seen in ${
+              lastchan
+            } ${istr(timedelta / 1000)} ago.`
+          );
+        } else {
+          const stat = (
+            user.presence.status === 'dnd' ? 'busy' : user.presence.status
+          );
+          replies.push(
+            `${sname} is now ${stat}; I haven't seen them lately.`
+          );
+        }
 
         message.channel.send(replies.join('\n'));
 
@@ -5094,7 +5102,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
           color: 3447003,
           description: `${
             bstarString
-          }}Here's Bahaipedia's Today in History entry for ${
+          }Here's Bahaipedia's Today in History entry for ${
             md
           }, ${message.author.username}:\n\n ${res}`
         }
@@ -5531,7 +5539,7 @@ const getAdmin = ({
           console.log('Message member not in a voice channel with `channelID`');
         }
         const channel = client.channels.cache.get(channelId);
-        const connection = await channel.join();
+        const connection = await channel.join('');
         broadcast.play(discordTTS.getVoiceStream(words));
         const dispatcher = connection.play(broadcast);
         /* c8 ignore next 9 */
@@ -5849,7 +5857,7 @@ const getSalutations = () => {
       }
     },
     welcome: {
-      re: /^(?:[\s\W]*welcome|.*>+[\s\W]*welcome\b|.*\bwb\b)/iu,
+      re: /^(?:everyone|everybody)?[!:,\s\W]*(?:please|pleez|pls|plz)?[\s\W]*(?:[\s\W]*welcome|.*>+[\s\W]*welcome\b|.*\bwb\b)/iu,
       /**
        * Welcome.
        * @param {DiscordMessage} message
@@ -5923,6 +5931,26 @@ const getLightHearted = () => {
          */
         action (message) {
           message.react('🍵');
+        }
+      }
+    },
+    popcorn: {
+      re: /\u{1F37F}/u,
+      /**
+       * Popcorn (should be at the end so everything else is processed first).
+       * @param {DiscordMessage} message
+       * @returns {void}
+       */
+      action (message) {
+        message.channel.send(':popcorn:');
+      },
+      notMentioned: {
+        /**
+         * @param {DiscordMessage} message
+         * @returns {void}
+         */
+        action (message) {
+          message.react('🍿');
         }
       }
     },
@@ -6247,7 +6275,7 @@ const ADMIN_PERMISSION = 'ADMINISTRATOR';
  * @param {FileSystem} cfg.fs
  * @param {Settings} cfg.settings
  * @param {DiscordTTS} cfg.discordTTS
- * @returns {BotCommands}
+ * @returns {Promise<BotCommands>}
  */
 const getCommands = async function ({
   app, router, Discord,
@@ -6890,10 +6918,12 @@ const bot = async ({
                 message.content, err
               );
             }
+            client.emit('bahaibot:command-finished');
             /* c8 ignore stop */
             break;
           }
         }
+        client.emit('bahaibot:command-finished');
       } else if (!disableNotMentioned) { // If the Bot is NOT Mentioned
         const notMentionedCommands = Object.values(
           botCommands
@@ -6909,9 +6939,11 @@ const bot = async ({
             // eslint-disable-next-line max-len -- Long
             // eslint-disable-next-line no-await-in-loop -- Needs to be in series
             await notMentioned.action(message);
+            client.emit('bahaibot:command-finished');
             break;
           }
         }
+        client.emit('bahaibot:command-finished');
       }
     }
   );

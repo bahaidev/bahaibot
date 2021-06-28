@@ -66,7 +66,10 @@ const getSocialInfo = ({
        * @returns {void}
        */
       action (message) {
-        const sname = message.content.split(' ').filter((word) => !(word.includes('391405681795923968') || word.includes('847456996738334730') || word === '!seen')).join(' ');
+        const sname = message.content.split(' ').filter(
+          (word) => !(word.includes('391405681795923968') ||
+            word.includes('847456996738334730') || word === '!seen')
+        ).join(' ');
 
         // const {guild} = message;
         // const userOnline = guild.members.cache.filter(

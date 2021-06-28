@@ -1,5 +1,13 @@
 # CHANGES for `bahaibot`
 
+## 0.4.0 (Unreleased)
+
+- Build: Update
+- Linting: As per latest ash-nazg
+- npm: Update `@discordjs/opus` (patch), `@google-cloud/dialogflow` (major),
+  `discord-tts` (minor), `file-fetch` (minor), striptags (minor)
+- npm: Update devDeps.
+
 ## 0.3.0
 
 - See `0.2.0`.
