@@ -5,7 +5,8 @@
 - Build: Update
 - Linting: As per latest ash-nazg
 - npm: Update `@discordjs/opus` (patch), `@google-cloud/dialogflow` (major),
-  `discord-tts` (minor), `file-fetch` (minor), striptags (minor)
+  `discord-tts` (minor), `file-fetch` (minor), `striptags` (minor),
+  `discord.js-rate-limiter` (minor)
 - npm: Update devDeps.
 
 ## 0.3.0
