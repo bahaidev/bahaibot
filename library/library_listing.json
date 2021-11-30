@@ -13,7 +13,7 @@
 			"title": "The Arabic Hidden Words",
 			"author": "Bahá’u’lláh",
 			"filename": "hw_arabic.json",
-			"url": "http://www.bahai.org/library/authoritative-texts/bahaullah/hidden-words/#r=hw_en-1"
+			"url": "https://www.bahai.org/library/authoritative-texts/bahaullah/hidden-words/#r=hw_en-1"
 		},
 		{
 			"id": 1,
@@ -22,7 +22,7 @@
 			"title": "The Persian Hidden Words",
 			"author": "Bahá’u’lláh",
 			"filename": "hw_persian.json",
-			"url": "http://www.bahai.org/library/authoritative-texts/bahaullah/hidden-words/#r=hw_en-2"
+			"url": "https://www.bahai.org/library/authoritative-texts/bahaullah/hidden-words/#r=hw_en-2"
 		}
 	]
 }
