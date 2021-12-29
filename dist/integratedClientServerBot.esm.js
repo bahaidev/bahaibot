@@ -4105,7 +4105,7 @@ var tryFunctionObject = function tryFunctionToStr(value) {
 var toStr$5 = Object.prototype.toString;
 var fnClass = '[object Function]';
 var genClass = '[object GeneratorFunction]';
-var hasToStringTag$1 = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
+var hasToStringTag$1 = typeof Symbol === 'function' && !!Symbol.toStringTag; // better: use `has-tostringtag`
 /* globals document: false */
 var documentDotAll = typeof document === 'object' && typeof document.all === 'undefined' && document.all !== undefined ? document.all : {};
 
@@ -7090,4 +7090,4 @@ function discordBot (args) {
   });
 }
 
-export default discordBot;
+export { discordBot as default };

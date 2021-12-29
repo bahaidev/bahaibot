@@ -37,7 +37,7 @@ function getDialogflowAdapter ({
       * @param {string} sessionID
       * @returns {string}
       */
-      [projectAgentSessionPath]
+      [projectAgentSessionPath];
 
       // Reenable when ready to test
       /* c8 ignore next 34 */

@@ -1,5 +1,5 @@
 /* eslint-disable no-console -- Testing console */
-import sinon from 'sinon';
+import {createSandbox} from 'sinon';
 
 import MockDiscord from './helpers/MockDiscord.js';
 import commandFinished from './helpers/commandFinished.js';
@@ -11,7 +11,7 @@ import spyOnGetterResults from './helpers/spyOnGetterResults.js';
 
 describe('Commands', function () {
   beforeEach(function () {
-    this.sinon = sinon.createSandbox();
+    this.sinon = createSandbox();
     this.sinon.spyOnGetterResults = spyOnGetterResults;
     this.sinon.spy(console, 'log');
   });
@@ -1439,7 +1439,7 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
-      console.log.calledWith('Search completed: God is great -2 => Canada')
+      console.log.calledWith('Search completed: God is great -2 => Nabíl-i-A‘ẓam')
     ).to.be.true;
 
     expect(

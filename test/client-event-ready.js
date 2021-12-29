@@ -1,5 +1,5 @@
 /* eslint-disable no-console -- Testing console */
-import sinon from 'sinon';
+import {createSandbox} from 'sinon';
 import MockDiscord from './helpers/MockDiscord.js';
 
 import bot from '../src/discordBot.js';
@@ -14,7 +14,7 @@ const sufficientDelay = 800;
 describe('ready event', function () {
   const _Date = Date;
   beforeEach(function () {
-    this.sinon = sinon.createSandbox();
+    this.sinon = createSandbox();
     this.sinon.spyOnGetterResults = spyOnGetterResults;
   });
   afterEach(function () {

@@ -1,5 +1,5 @@
 /* eslint-disable no-console -- Testing console */
-import sinon from 'sinon';
+import {createSandbox} from 'sinon';
 
 import MockDiscord from './helpers/MockDiscord.js';
 import commandFinished from './helpers/commandFinished.js';
@@ -10,7 +10,7 @@ import * as DiscordConstants from '../src/messages/DiscordConstants.js';
 
 describe('Client event (message)', function () {
   beforeEach(function () {
-    this.sinon = sinon.createSandbox();
+    this.sinon = createSandbox();
   });
   afterEach(function () {
     this.sinon.restore();

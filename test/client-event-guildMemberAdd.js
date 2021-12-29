@@ -1,4 +1,4 @@
-import sinon from 'sinon';
+import {createSandbox} from 'sinon';
 import MockDiscord from './helpers/MockDiscord.js';
 
 import bot from '../src/discordBot.js';
@@ -9,7 +9,7 @@ import spyOnGetterResults from './helpers/spyOnGetterResults.js';
 describe('guildMemberAdd event', function () {
   const _random = Math.random;
   beforeEach(function () {
-    this.sinon = sinon.createSandbox();
+    this.sinon = createSandbox();
     this.sinon.spyOnGetterResults = spyOnGetterResults;
   });
   afterEach(function () {
