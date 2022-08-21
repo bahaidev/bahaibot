@@ -70,7 +70,7 @@ const bot = async ({
    * @type {GetSettings}
    */
   getSettings: defaultGetSettings,
-  getPath,
+  getPath = (path) => path,
   numberOfCommands = 1,
   commandInterval = 2000,
   rateLimiter = new RateLimiter(1, commandInterval),
