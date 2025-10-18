@@ -21,7 +21,8 @@ import dialogflow from '@google-cloud/dialogflow';
 import {i18n, setFetch} from 'intl-dom';
 import fileFetch from 'file-fetch'; // For `intl-dom`
 import fetch from 'node-fetch';
-import striptags from 'striptags';
+// eslint-disable-next-line import/no-unresolved -- Bug
+import {stripHtml} from 'string-strip-html';
 
 import bot from './bot.js';
 
@@ -79,7 +80,7 @@ function discordBot (args) {
     getPath,
     dialogflow,
     i18n,
-    striptags,
+    striptags: (str) => stripHtml(str).result,
     fetch,
     Discord,
     discordTTS,

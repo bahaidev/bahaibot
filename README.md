@@ -105,7 +105,7 @@ buildBahaiBot({
   i18n, // Defaults to `window.intlDom.i18n`, assuming UMD of
   //       `intl-dom` dep. used
   striptags, // Defaults to `window.striptags`, assuming UMD of `striptags`
-  //       dep. used
+  //       exists
 
   Discord, // A Discord implementation
   client, // A Discord.Client implementation (defaults to `new Discord.Client`)

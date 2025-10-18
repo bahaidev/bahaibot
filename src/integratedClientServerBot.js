@@ -5,7 +5,8 @@
 //  baking in these two modules, but they would be forced to non-modularly
 //  add script tags and rely on globals.
 import {i18n} from 'intl-dom';
-import striptags from 'striptags';
+// eslint-disable-next-line import/no-unresolved -- Bug
+import {stripHtml} from 'string-strip-html';
 
 import bot from './bot.js';
 
@@ -77,7 +78,7 @@ function discordBot (args) {
     fs,
     fetch,
     i18n,
-    striptags,
+    striptags: (str) => stripHtml(str).result,
     // Todo: See about using https://github.com/mishushakov/dialogflow-web-v2
     //   to pass in as is (or with an adapter as needed) for our `apiai`
     //   argument, allowing the user to only neeed to pass in their own

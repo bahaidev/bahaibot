@@ -5,7 +5,8 @@ import Discord from 'discord.js';
 import fetch from 'node-fetch';
 import {i18n, setFetch} from 'intl-dom';
 import fileFetch from 'file-fetch'; // For `intl-dom`
-import striptags from 'striptags';
+// eslint-disable-next-line import/no-unresolved -- Bug
+import {stripHtml} from 'string-strip-html';
 
 import getDialogflowAdapter from '../src/getDialogflowAdapter.js';
 import bot from '../src/bot.js';
@@ -25,7 +26,7 @@ describe('Bot', function () {
     const {system, getSettings} = await bot({
       fetch,
       i18n,
-      striptags,
+      striptags: (str) => stripHtml(str).result,
       Discord,
       fs,
       getPath,

@@ -23,8 +23,7 @@
     "file-fetch": "^2.0.1",
     "intl-dom": "^0.20.0",
     "node-fetch": "^3.3.2",
-    "set-safer-interval": "^0.3.0",
-    "striptags": "^3.2.0"
+    "set-safer-interval": "^0.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.4",
@@ -43,7 +42,8 @@
     "mocha": "^11.7.4",
     "nodemon": "^3.1.10",
     "rollup": "^4.52.5",
-    "sinon": "^21.0.0"
+    "sinon": "^21.0.0",
+    "string-strip-html": "^13.5.0"
   },
   "engines": {
     "node": ">=14.8.0"
