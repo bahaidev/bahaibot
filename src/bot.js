@@ -14,12 +14,12 @@ import * as DiscordConstants from './messages/DiscordConstants.js';
 /**
  * This lets us also update the `client` value and dependent code against
  * a unit testing mock client.
- * @typedef {PlainObject} BotOptions
+ * @typedef {object} BotOptions
  * @property {boolean} [checkins=false]
  * @property {string[]} [locales=["en-US"]]
- * @property {window.fetch} [fetch=window.fetch]
- * @property {IntlDomI18N} [i18n=window?.intlDom?.i18n]
- * @property {striptags} [striptags=window.striptags]
+ * @property {globalThis.fetch} [fetch=globalThis.fetch]
+ * @property {IntlDomI18N} [i18n=globalThis?.intlDom?.i18n]
+ * @property {striptags} [striptags=globalThis.striptags]
  * @property {DiscordClient} [client=new Discord.Client()]
  * @property {Discord} Discord
  * @property {dialogflow} dialogflow
@@ -41,7 +41,7 @@ const supportedLocales = [
 
 /**
  * @callback GetSettings
- * @returns {Object<string,any>}
+ * @returns {Object<string,anything>}
  */
 
 /**
@@ -56,11 +56,12 @@ const bot = async ({
     : [...navigator.languages.filter((locale) => {
       return supportedLocales.includes(locale);
     }), defaultLocale],
-  fetch = window.fetch,
+  // eslint-disable-next-line no-shadow -- Familiar
+  fetch = globalThis.fetch,
   // Default to dependencies' globals in case using UMD files and user not
   //  supplying own modular versions
-  i18n = window?.intlDom?.i18n,
-  striptags = window.striptags,
+  i18n = globalThis?.intlDom?.i18n,
+  striptags = globalThis.striptags,
   client: cl,
   Discord,
   discordTTS, // `speak` admin command
@@ -71,13 +72,13 @@ const bot = async ({
    */
   getSettings: defaultGetSettings,
   getPath = (path) => path,
-  numberOfCommands = 1,
+  // numberOfCommands = 1,
   commandInterval = 2000,
   rateLimiter = new RateLimiter(1, commandInterval),
   exitNoThrow = false
 } = {}) => {
   /**
-  * @param {external:DiscordMessage} message
+  * @param {DiscordMessage} message
   * @returns {boolean}
   */
   const isUserAbusive = (message) => {
@@ -131,7 +132,7 @@ const bot = async ({
   * @see {@link https://github.com/brettz9/intl-dom}
   */
   /**
-  * @type {external:IntlDOMInternationalizer}
+  * @type {IntlDOMInternationalizer}
   */
   const _ = await i18n({
     localesBasePath: 'src',
@@ -141,9 +142,9 @@ const bot = async ({
   /**
    * @callback GetLocalizedSetting
    * @param {string} key
-   * @param {PlainObject} cfg
+   * @param {object} cfg
    * @param {boolean} cfg.noDefaults
-   * @returns {any}
+   * @returns {anything}
    */
 
   /**
@@ -226,7 +227,7 @@ const bot = async ({
 
   /**
   * @callback MessageListener
-  * @param {external:DiscordMessage} message
+  * @param {DiscordMessage} message
   * @returns {void}
   */
 
@@ -246,7 +247,7 @@ const bot = async ({
           // );
           if (command.re.test(message.content)) {
             try {
-              // eslint-disable-next-line max-len -- Long
+              // eslint-disable-next-line @stylistic/max-len -- Long
               // eslint-disable-next-line no-await-in-loop -- Needs to be in series
               await command.action(message);
             /* c8 ignore start */
@@ -278,7 +279,7 @@ const bot = async ({
               // Any extra checks
               notMentioned.check(message))
           ) {
-            // eslint-disable-next-line max-len -- Long
+            // eslint-disable-next-line @stylistic/max-len -- Long
             // eslint-disable-next-line no-await-in-loop -- Needs to be in series
             await notMentioned.action(message);
             client.emit('bahaibot:command-finished');

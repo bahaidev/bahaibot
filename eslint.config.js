@@ -71,6 +71,11 @@ export default [
         fetch: 'readonly',
         i18n: 'readonly',
         striptags: 'readonly',
+        dialogflow: 'readonly',
+        getPath: 'readonly',
+        bot: 'readonly',
+        settings: 'readonly',
+        languageCode: 'readonly',
         Discord: 'readonly',
         client: 'readonly',
         fs: 'readonly',
@@ -87,7 +92,7 @@ export default [
         ignore: ['bahaibot']
       }],
       'no-unused-vars': ['error', {
-        varsIgnorePattern: 'commands|buildBahaiBot|bahaibot',
+        varsIgnorePattern: 'commands|buildBahaiBot|bahaibot|fulfillmentText',
         argsIgnorePattern: 'message'
       }]
     }

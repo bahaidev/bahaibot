@@ -4,7 +4,7 @@ const _Date = Date;
  * @todo See about replacing with `mockdate` if it exports its own `MockDate`
  * class for purposes of our overwriting `global.Date`:
  * {@link https://github.com/boblauer/MockDate/issues/46}
- * @param {PlainObject} cfg
+ * @param {object} cfg
  * @param {string} cfg.date
  * @param {string} cfg.now
  * @returns {MockDate}

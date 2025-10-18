@@ -1,5 +1,5 @@
 /**
- * @param {PlainObject} cfg
+ * @param {object} cfg
  * @param {DiscordClient} cfg.client
  * @param {Discord} cfg.Discord
  * @returns {BotCommands}
@@ -8,14 +8,14 @@ const getBahaiInfo = ({client, Discord}) => {
   return {
     /*
       question: {
-        re: /\b(?:question|q):.*\b/iu,
+        re: /\b(?:question|q):.*\b/iv,
         action (message) {
 
         }
       },
     */
     info: {
-      re: /!info/iu,
+      re: /!info/iv,
       /**
        * @param {DiscordMessage} message
        * @returns {void}
@@ -40,7 +40,7 @@ const getBahaiInfo = ({client, Discord}) => {
       }
     },
     badi: {
-      re: /\bbad[íi]\b/iu,
+      re: /\bbad[íi]\b/iv,
       /**
        * @param {DiscordMessage} message
        * @returns {void}

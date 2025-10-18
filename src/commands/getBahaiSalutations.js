@@ -1,5 +1,5 @@
 /**
- * @param {PlainObject} cfg
+ * @param {object} cfg
  * @param {DiscordClient} cfg.client
  * @returns {BotCommands}
  */
@@ -18,7 +18,7 @@ const getBahaiSalutations = ({client}) => {
   return {
     // GREETINGS //
     abha: {
-      re: /\b(?:all[aá]h['’´-]?[uo]?['’´-]?abh[aá]|abh[aá])/iu,
+      re: /\b(?:all[aá]h['’´\-]?[uo]?['’´\-]?abh[aá]|abh[aá])/iv,
       /**
        * Alláh-u-Abhá!
        * @param {DiscordMessage} message
@@ -52,7 +52,7 @@ const getBahaiSalutations = ({client}) => {
       }
     },
     nawruz: {
-      re: /\b(?:(?:happy|joyous)\s?n[ao]w[- ]?ro?[uú]z|n[ao]w[- ]?ro?[uú]z\s?(?:m[uo]b[aá]r[aá]k))\b/iu,
+      re: /\b(?:(?:happy|joyous)\s?n[ao]w[\- ]?ro?[uú]z|n[ao]w[\- ]?ro?[uú]z\s?(?:m[uo]b[aá]r[aá]k))\b/iv,
       /**
        * @param {DiscordMessage} message
        * @returns {void}
@@ -70,7 +70,7 @@ const getBahaiSalutations = ({client}) => {
       }
     },
     ridvan: {
-      re: /\b(?:(?:happy|joyous)\s?r[ie][ḍdz][vw][aá]n|r[ie][ḍdz][vw][aá]n\s?(?:m[uo]b[aá]r[aá]k))\b/iu,
+      re: /\b(?:(?:happy|joyous)\s?r[ie][ḍdz][vw][aá]n|r[ie][ḍdz][vw][aá]n\s?(?:m[uo]b[aá]r[aá]k))\b/iv,
       /**
        * @param {DiscordMessage} message
        * @returns {void}

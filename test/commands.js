@@ -694,8 +694,8 @@ describe('Commands', function () {
 
         if (statAB !== 'dnd') {
           expect(
-            clientUsersFindResultPresenceSpy2
-              .get.secondCall.returnValue.status
+            clientUsersFindResultPresenceSpy2.
+              get.secondCall.returnValue.status
           ).to.equal('offline');
         }
       }
@@ -1866,7 +1866,7 @@ describe('Commands', function () {
     ).to.be.true;
   });
 
-  it('checkin (admin user)', async function () {
+  it('checkin (admin user) 2', async function () {
     const discord = new MockDiscord({
       mentionEveryone: true,
       messageContent: '!checkin',
@@ -2609,7 +2609,7 @@ describe('Commands', function () {
     ).to.equal('9star');
   });
 
-  it('ridvan', async function () {
+  it('ridvan 2', async function () {
     const discord = new MockDiscord({
       mentionEveryone: true,
       messageContent: 'happy Ridvan',
@@ -3044,7 +3044,7 @@ describe('Commands', function () {
     expect(
       message.channel.send.firstCall.firstArg
     ).to.satisfy((val) => {
-      return (/sorry|oops/u).test(val) ||
+      return (/sorry|oops/v).test(val) ||
         val.includes('chatbot') ||
         val.includes('happen a lot') ||
         val.includes('tend to do that');

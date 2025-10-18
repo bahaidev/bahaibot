@@ -60,7 +60,7 @@ class MockDiscord {
    * @param {boolean} guildChannels
    * @param {string} type
    * @param {string} [channelID]
-   * @param {boolean} [clear=true]
+   * @param {boolean} [clear]
    * @returns {DiscordGuildChannel}
    */
   static createGuildChannel (
@@ -98,7 +98,7 @@ class MockDiscord {
   }
 
   /**
-  * @typedef {PlainObject} NameID
+  * @typedef {object} NameID
   * @property {string} id
   * @property {string} name
   */
@@ -118,7 +118,7 @@ class MockDiscord {
   */
 
   /**
-   * @param {PlainObject} opts
+   * @param {object} opts
    * @param {Guild[]} [opts.guilds]
    * @param {boolean} [opts.guildChannels]
    * @param {boolean} [opts.mentionEveryone]
@@ -212,13 +212,13 @@ class MockDiscord {
     return this.guildMember;
   }
   /**
-   * @returns {external:DiscordMessage}
+   * @returns {DiscordMessage}
    */
   getMessage () {
     return this.message;
   }
   /**
-   * @param {PlainObject} cfg
+   * @param {object} cfg
    * @param {string} cfg.name
    * @param {Guild[]} cfg.guilds
    * @param {string} cfg.roleID
@@ -283,7 +283,7 @@ class MockDiscord {
 
   /* eslint-disable class-methods-use-this -- Consistent */
   /**
-  * @param {PlainObject} cfg
+  * @param {object} cfg
   * @param {DiscordClient} cfg.client
   * @param {string} cfg.roleID
   * @param {string} cfg.name
@@ -347,7 +347,7 @@ class MockDiscord {
   }
 
   /**
-   * @param {PlainObject} cfg
+   * @param {object} cfg
    * @param {DiscordUser} cfg.user
    * @param {string} cfg.status
    * @returns {DiscordPresence}
@@ -360,7 +360,7 @@ class MockDiscord {
   }
 
   /**
-   * @param {PlainObject} cfg
+   * @param {object} cfg
    * @param {string} cfg.userID
    * @param {string} cfg.userName
    * @param {DiscordGuild} cfg.guild
@@ -414,7 +414,7 @@ class MockDiscord {
   }
 
   /**
-   * @param {PlainObject} cfg
+   * @param {object} cfg
    * @param {DiscordUser} cfg.user
    * @param {DiscordRole[]} cfg.roles
    * @returns {DiscordGuildMember}
@@ -434,12 +434,12 @@ class MockDiscord {
     }, this.clientGuild || this.guild);
   }
   /**
-   * @param {PlainObject} cfg
+   * @param {object} cfg
    * @param {string} cfg.content
    * @param {boolean} cfg.mentionEveryone
    * @param {DiscordUser} cfg.user
    * @param {DiscordMessageMentions[]} cfg.mentions
-   * @returns {external:DiscordMessage}
+   * @returns {DiscordMessage}
    */
   mockMessage ({content, mentionEveryone, user, mentions}) {
     return new Discord.Message(this.client, {
@@ -470,7 +470,7 @@ class MockDiscord {
 
   /* eslint-disable class-methods-use-this -- Consistent */
   /**
-   * @param {PlainObject} cfg
+   * @param {object} cfg
    * @param {DiscordMessage} cfg.message
    * @param {DiscordCollection<Snowflake,DiscordUser>} cfg.users
    * @param {DiscordCollection<Snowflake,DiscordRole>} cfg.roles

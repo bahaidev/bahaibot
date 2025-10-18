@@ -1,7 +1,7 @@
 /* READER AND LIBRARY FILE */
 
 /**
- * @param {PlainObject} cfg
+ * @param {object} cfg
  * @param {FileSystem} cfg.fs
  * @param {Settings} cfg.settings
  * @returns {Reader}
@@ -10,7 +10,7 @@ async function getReader ({fs, settings}) {
   // IMPORT FILES
 
   /**
-   * @typedef {PlainObject} ListingEntry
+   * @typedef {object} ListingEntry
    * @property {string} title
    * @property {string} author
    * @property {string} filename
@@ -18,7 +18,7 @@ async function getReader ({fs, settings}) {
    */
 
   /**
-   * @typedef {PlainObject<string,ListingEntry>} LibraryListing
+   * @typedef {Object<string,ListingEntry>} LibraryListing
    */
 
   /**
@@ -37,18 +37,18 @@ async function getReader ({fs, settings}) {
 
   const availableRandomOptions = Object.keys(library.index);
 
-  const fileRegex = /\bread (?<refName>\S.+) (?<index>[-.\d]+)\b/iu;
+  const fileRegex = /\bread (?<refName>\S.+) (?<index>[\-.\d]+)\b/iv;
 
   // FUNCTIONS
 
   /**
-  * @typedef {PlainObject} Footnote
+  * @typedef {object} Footnote
   * @property {string} fn
   * @property {string} note
   */
 
   /**
-  * @typedef {PlainObject} LibraryFileEntry
+  * @typedef {object} LibraryFileEntry
   * @property {string} title
   * @property {string} text
   * @property {Footnote[]} notes
@@ -113,7 +113,9 @@ async function getReader ({fs, settings}) {
       let i = str.indexOf(' ', pos) + 1;
 
       // Make sure it's not the last position
-      if (i < pos || i > pos + l) i = pos;
+      if (i < pos || i > pos + l) {
+        i = pos;
+      }
 
       // Recreate the full text as str, and repeat
       str = str.slice(Math.max(0, i));
@@ -128,9 +130,9 @@ async function getReader ({fs, settings}) {
 
   /**
    * Embed creator for the reader function.
-   * @param {external:DiscordModule} Discord
+   * @param {DiscordModule} Discord
    * @param {string} avatar
-   * @param {external:DiscordMessage} message
+   * @param {DiscordMessage} message
    * @param {Integer} refNumber
    * @param {string} refName
    * @param {LibraryFileEntry|string} content
@@ -245,7 +247,7 @@ async function getReader ({fs, settings}) {
 
   /**
    *
-   * @param {external:DiscordMessage} message
+   * @param {DiscordMessage} message
    * @returns {void}
    */
   function showList (message) {
@@ -271,9 +273,9 @@ async function getReader ({fs, settings}) {
 
   /**
    *
-   * @param {external:DiscordMessage} message
+   * @param {DiscordMessage} message
    * @param {string} avatar
-   * @param {external:DiscordModule} Discord
+   * @param {DiscordModule} Discord
    * @returns {Promise<void>}
    */
   async function readBook (message, avatar, Discord) {
@@ -281,7 +283,10 @@ async function getReader ({fs, settings}) {
     const userInput = message.content;
 
     // Pull the relevant data from the regex
-    let {refName, index} = userInput.match(fileRegex).groups;
+    const {groups} = userInput.match(fileRegex);
+
+    let {refName} = groups;
+    const {index} = groups;
 
     // Make sure the file exists
     if (!Object.hasOwn(library.index, refName.toLowerCase())) {
@@ -314,9 +319,9 @@ async function getReader ({fs, settings}) {
 
   /**
    *
-   * @param {external:DiscordMessage} message
+   * @param {DiscordMessage} message
    * @param {string} avatar
-   * @param {external:DiscordModule} Discord
+   * @param {DiscordModule} Discord
    * @returns {Promise<void>}
    */
   async function readRandom (message, avatar, Discord) {
@@ -341,7 +346,7 @@ async function getReader ({fs, settings}) {
 
   /**
    *
-   * @param {external:DiscordMessage} message
+   * @param {DiscordMessage} message
    * @returns {void}
    */
   function reader (message) {

@@ -28,13 +28,13 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
 */
 
 /**
-* @typedef {PlainObject} NotMentionedCommand
+* @typedef {object} NotMentionedCommand
 * @property {ActionBehavior} action
 * @property {ActionCheck} [check]
 */
 
 /**
-* @typedef {PlainObject} BotCommand
+* @typedef {object} BotCommand
 * @property {RegExp} re
 * @property {ActionBehavior} action
 * @property {NotMentionedCommand} [notMentioned]
@@ -45,14 +45,14 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
 */
 
 /**
- * @param {PlainObject} cfg
+ * @param {object} cfg
  * @param {DialogflowApp} cfg.app
  * @param {Router} cfg.router
  * @param {Discord} cfg.Discord
  * @param {BotWikiTools} cfg.wikiTools
  * @param {DiscordClient} cfg.client
  * @param {GuildCheckin} cfg.guildCheckin
- * @param {external:IntlDom} cfg._
+ * @param {IntlDom} cfg._
  * @param {GetLocalizedSetting} cfg.getLocalizedSetting
  * @param {FileSystem} cfg.fs
  * @param {Settings} cfg.settings
@@ -62,7 +62,9 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
 const getCommands = async function ({
   app, router, Discord,
   wikiTools, client, guildCheckin,
-  _, getLocalizedSetting,
+  _,
+  // eslint-disable-next-line no-unused-vars -- Not currently in use
+  getLocalizedSetting,
   fs, settings,
   discordTTS
 }) {

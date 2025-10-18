@@ -4,7 +4,7 @@
 const getSalutations = () => {
   return {
     sup: {
-      re: /\b(?:su+p|wh[au]+[sz]+[au]+p|(?:(?:what|wut)['’´]?s (?:up|new|good|gud|cookin[g'’´])))\b/iu,
+      re: /\b(?:su+p|wh[au]+[sz]+[au]+p|(?:(?:what|wut)['’´]?s (?:up|new|good|gud|cookin[g'’´])))\b/iv,
       /**
        * What's up?
        * @param {DiscordMessage} message
@@ -33,7 +33,7 @@ const getSalutations = () => {
       }
     },
     morning: {
-      re: /\bgood morning\b/iu,
+      re: /\bgood morning\b/iv,
       /**
        * Good morning.
        * @param {DiscordMessage} message
@@ -46,7 +46,7 @@ const getSalutations = () => {
       }
     },
     afternoon: {
-      re: /\bgood afternoon\b/iu,
+      re: /\bgood afternoon\b/iv,
       /**
        * Good afternoon.
        * @param {DiscordMessage} message
@@ -57,7 +57,7 @@ const getSalutations = () => {
       }
     },
     evening: {
-      re: /\bgood evening\b/iu,
+      re: /\bgood evening\b/iv,
       /**
        * Good evening.
        * @param {DiscordMessage} message
@@ -68,7 +68,7 @@ const getSalutations = () => {
       }
     },
     hello: {
-      re: /\b(?:h[uea]llo|hi|hi there|howdy|yo|heya|sal[aá]{1,2}m)\b/iu,
+      re: /\b(?:h[uea]llo|hi|hi there|howdy|yo|heya|sal[aá]{1,2}m)\b/iv,
       /**
        * Hello.
        * @param {DiscordMessage} message
@@ -79,7 +79,7 @@ const getSalutations = () => {
       }
     },
     welcome: {
-      re: /^(?:everyone|everybody)?[!:,\s\W]*(?:please|pleez|pls|plz)?[\s\W]*(?:[\s\W]*welcome|.*>+[\s\W]*welcome\b|.*\bwb\b)/iu,
+      re: /^(?:everyone|everybody)?\W*(?:please|pleez|pls|plz)?\W*(?:\W*welcome|.*>+\W*welcome\b|.*\bwb\b)/iv,
       /**
        * Welcome.
        * @param {DiscordMessage} message

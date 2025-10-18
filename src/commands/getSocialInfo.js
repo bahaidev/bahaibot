@@ -1,7 +1,7 @@
 import istr from '../utils/istr.js';
 
 /**
-* @param {PlainObject} cfg
+* @param {object} cfg
 * @param {string[]} cfg.ADMIN_ROLES
 * @param {DiscordClient} cfg.client
 * @returns {BotCommands}
@@ -11,7 +11,7 @@ const getSocialInfo = ({
 }) => {
   return {
     users: {
-      re: /!users\b/iu,
+      re: /!users\b/iv,
       // helpInfo: {
       //  name: '!users',
       //  value: 'Displays a count of online users.'
@@ -55,7 +55,7 @@ const getSocialInfo = ({
       }
     },
     seen: {
-      re: /!seen\b/iu,
+      re: /!seen\b/iv,
       // helpInfo: {
       //  name: '!seen',
       //  value: 'Displays the last time a user was seen online.'

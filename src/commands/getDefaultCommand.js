@@ -1,11 +1,11 @@
 /**
-* @param {PlainObject} cfg
+* @param {object} cfg
 * @param {DialogflowApp} cfg.app
 * @param {Router} cfg.router
 * @param {DiscordClient} cfg.client
 * @param {Discord} cfg.Discord
-* @param {external:IntlDom} cfg._
-* @param {external:settings} cfg.settings
+* @param {IntlDom} cfg._
+* @param {settings} cfg.settings
 * @returns {BotCommand}
 */
 const getDefaultCommand = ({
@@ -26,8 +26,8 @@ const getDefaultCommand = ({
 
       // Trim is necessary to ensure the `offset` can be 0 when matching
       //   snowflake at beginning
-      const userInput = message.content.trimStart().replace(
-        /<@!?(?<snowflake>\d+)>/gu,
+      const userInput = message.content.trimStart().replaceAll(
+        /<@!?(?<snowflake>\d+)>/gv,
         (__, n1, offset, wholeStr, {snowflake}) => {
           if (snowflake === client.user.id) {
             // Re-add this condition if the intents are ever modified to take
@@ -66,7 +66,7 @@ const getDefaultCommand = ({
 
       /**
       * @throws {DialogflowError}
-      * @returns {Promise<external:DialogflowResponse[]>} responses
+      * @returns {Promise<DialogflowResponse[]>} responses
       */
       async function dialogflowCall () {
         // Send request and log result

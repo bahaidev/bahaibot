@@ -66,7 +66,7 @@ const getLightHearted = () => {
     },
     // Lulz (should be at the end so everything else is processed first).
     unladen: {
-      re: /\bunladen\sswallow\b/iu,
+      re: /\bunladen\sswallow\b/iv,
       /**
        * @param {DiscordMessage} message
        * @returns {void}
@@ -78,7 +78,7 @@ const getLightHearted = () => {
       }
     },
     bruh: {
-      re: /\bbruh\b/iu,
+      re: /\bbruh\b/iv,
       /**
        * @param {DiscordMessage} message
        * @returns {void}
@@ -88,7 +88,7 @@ const getLightHearted = () => {
       }
     },
     goodbot: {
-      re: /\bgood\s?bot\b/iu,
+      re: /\bgood\s?bot\b/iv,
       /**
        * @param {DiscordMessage} message
        * @returns {void}
@@ -99,7 +99,7 @@ const getLightHearted = () => {
       }
     },
     badbot: {
-      re: /\bbad\s?bot\b/iu,
+      re: /\bbad\s?bot\b/iv,
       /**
        * @param {DiscordMessage} message
        * @returns {void}
@@ -110,7 +110,7 @@ const getLightHearted = () => {
       }
     },
     repeating: {
-      re: /\brepeating yourself\b/iu,
+      re: /\brepeating yourself\b/iv,
       /**
        * Repeating.
        * @param {DiscordMessage} message
@@ -139,7 +139,7 @@ const getLightHearted = () => {
       }
     },
     santacat: {
-      re: /\b(?:my|santa['’´]?s)\scat\b/iu,
+      re: /\b(?:my|santa['’´]?s)\scat\b/iv,
       /**
        * @param {DiscordMessage} message
        * @returns {void}
@@ -158,7 +158,7 @@ const getLightHearted = () => {
       }
     },
     ping: {
-      re: /\bping\b/iu,
+      re: /\bping\b/iv,
       /**
        * Ping message.
        * @param {DiscordMessage} message

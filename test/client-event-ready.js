@@ -19,7 +19,7 @@ describe('ready event', function () {
     this.sinon.spyOnGetterResults = spyOnGetterResults;
   });
   afterEach(function () {
-    global.Date = _Date;
+    globalThis.Date = _Date;
     this.sinon.restore();
   });
 
@@ -42,7 +42,7 @@ describe('ready event', function () {
     // This item on `global` is not getting logged by sinon, so we
     //  track with our own spy.
     const timeoutSpy = this.sinon.spy();
-    const timeout = this.sinon.stub(global, 'setTimeout').value(
+    const timeout = this.sinon.stub(globalThis, 'setTimeout').value(
       (fn, delay) => {
         timeoutSpy(fn, delay);
 
@@ -85,7 +85,7 @@ describe('ready event', function () {
       ]
     });
 
-    global.Date = mockDate({
+    globalThis.Date = mockDate({
       /**
        * @returns {Integer}
        */
@@ -103,7 +103,7 @@ describe('ready event', function () {
     client.emit('ready');
 
     // eslint-disable-next-line promise/avoid-new -- Impose delay
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       timeout.wrappedMethod(() => {
         expect(timeoutSpy.firstCall.args[1]).to.equal(
           fiftyMinutesInMilliseconds
@@ -139,7 +139,7 @@ describe('ready event', function () {
     // This item on `global` is not getting logged by sinon, so we
     //  track with our own spy.
     const timeoutSpy = this.sinon.spy();
-    const timeout = this.sinon.stub(global, 'setTimeout').value(
+    const timeout = this.sinon.stub(globalThis, 'setTimeout').value(
       (fn, delay) => {
         timeoutSpy(fn, delay);
 
@@ -173,7 +173,7 @@ describe('ready event', function () {
       ]
     });
 
-    global.Date = mockDate({
+    globalThis.Date = mockDate({
       /**
        * @returns {Integer}
        */
@@ -191,7 +191,7 @@ describe('ready event', function () {
     client.emit('ready');
 
     // eslint-disable-next-line promise/avoid-new -- Impose delay
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       timeout.wrappedMethod(() => {
         expect(timeoutSpy.firstCall.args[1]).to.equal(
           fiftyMinutesInMilliseconds

@@ -14,7 +14,7 @@ describe('guildMemberAdd event', function () {
     this.sinon.spyOnGetterResults = spyOnGetterResults;
   });
   afterEach(function () {
-    global.Math.random = _random;
+    globalThis.Math.random = _random;
     this.sinon.restore();
   });
   it('guildMemberAdd event (non-existing channel)', async function () {
@@ -63,7 +63,7 @@ describe('guildMemberAdd event', function () {
     /**
      * @returns {Float}
      */
-    global.Math.random = () => 0.3;
+    globalThis.Math.random = () => 0.3;
 
     const client = discord.getClient();
 
@@ -153,10 +153,10 @@ describe('guildMemberAdd event', function () {
 
     expect(guildChannelsFindResultSendSpy.firstCall.firstArg).to.match(
       // happy
-      /(?:have you with us|could join us)/u
+      /(?:have you with us|could join us)/v
     ).and.to.match(
       // greet
-      /(?:Hello|Hi|Hey|What's)/u
+      /(?:Hello|Hi|Hey|What's)/v
     ).and.to.have.string(
       'user-id'
     ).and.to.have.string(
@@ -206,7 +206,7 @@ describe('guildMemberAdd event', function () {
     /**
      * @returns {Float}
      */
-    global.Math.random = () => 0.3;
+    globalThis.Math.random = () => 0.3;
 
     const client = discord.getClient();
 
@@ -258,10 +258,10 @@ describe('guildMemberAdd event', function () {
 
     expect(guildChannelsFindResultSendSpy.firstCall.firstArg).to.match(
       // happy
-      /(?:have you with us|could join us)/u
+      /(?:have you with us|could join us)/v
     ).and.to.match(
       // greet
-      /(?:Hello|Hi|Hey|What's)/u
+      /(?:Hello|Hi|Hey|What's)/v
     ).and.to.have.string(
       'user-id'
     ).and.to.have.string(

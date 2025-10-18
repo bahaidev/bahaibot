@@ -1,8 +1,8 @@
 /**
- * @param {PlainObject} cfg
+ * @param {object} cfg
  * @param {BotWikiTools} cfg.wikiTools
  * @param {DiscordClient} cfg.client
- * @param {external:IntlDom} cfg._
+ * @param {IntlDom} cfg._
  * @returns {BotCommand}
  */
 const getBahaiWikis = function ({wikiTools, client, _}) {
@@ -153,8 +153,8 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
     if (res) {
       // eslint-disable-next-line no-console -- CLI
       console.log(`Search completed: ${kw} => ${res.title}`);
-      const regex = /<span class="searchmatch">|<\/span>/gui;
-      const snip = res.snippet.replace(regex, '**');
+      const regex = /<span class="searchmatch">|<\/span>/gvi;
+      const snip = res.snippet.replaceAll(regex, '**');
       message.channel.send({
         content: 'Here is the result of your search.',
         embed: {
@@ -196,13 +196,13 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   // Bp looks up keywords on bahaipedia
   /**
    * @param {DiscordMessage} message
-   * @param {PlainObject} cfg
+   * @param {object} cfg
    * @param {boolean} cfg.forceToday
    * @returns {Promise<void>}
    */
   async function bahaipediaAction (message, {forceToday} = {}) {
-    const bwikiMatch = /!(?:bp|pedia|b9|bahai9|bm|media|img)/gui;
-    // const flag = /-([1-5]|r|rnd|rand|t|tih|today)/gui;
+    const bwikiMatch = /!(?:bp|pedia|b9|bahai9|bm|media|img)/gvi;
+    // const flag = /-([1-5]|r|rnd|rand|t|tih|today)/gvi;
 
     const words = message.content.split(' ');
     // const parsed = false;
@@ -217,12 +217,12 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
 
     // console.log("1: " + words);
 
-    const rndRgx = /-(?:r|rnd|rand)/gui;
-    const tihRgx = /-(?:t|tih|today)/gui;
-    const nrRgx = /-(?<nr>[1-5])/ui;
+    const rndRgx = /-(?:r|rnd|rand)/gvi;
+    const tihRgx = /-(?:t|tih|today)/gvi;
+    const nrRgx = /-(?<nr>[1-5])/vi;
 
     // search
-    const searchRegex = /[\w\s'‘’()-_,.]+/gui;
+    const searchRegex = /[\w\s'‘’\(\)\-,.]+/gvi;
     const keywords = words.join(' ');
     // console.log("3: " + keywords);
 
@@ -252,14 +252,14 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
 
       // find the rand flag
       const rndIdx = words.findIndex((i) => i.match(rndRgx));
-      if (rndIdx >= 0) {
+      if (rndIdx !== -1) {
         rand = true;
         // remove this word
         words.splice(rndIdx, 1);
       } else { // rand supersedes today
         // find the today flag
         const tihIdx = words.findIndex((i) => i.match(tihRgx));
-        if (tihIdx >= 0) {
+        if (tihIdx !== -1) {
           tih = true;
           // remove this word
           words.splice(tihIdx, 1);
@@ -267,7 +267,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
       }
 
       const nrIdx = words.findIndex((i) => i.match(nrRgx));
-      if (nrIdx >= 0) {
+      if (nrIdx !== -1) {
         numResults = Number(words[nrIdx]);
         // remove this word
         words.splice(nrIdx, 1);
@@ -331,7 +331,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   }
 
   const today = {
-    re: /!today\b/iu,
+    re: /!today\b/iv,
     helpInfo: {
       name: '!today',
       value: "Displays a list of events from today's date " +
@@ -347,7 +347,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   };
 
   const b9 = {
-    re: /!(?:b9|bahai9)\b/iu,
+    re: /!(?:b9|bahai9)\b/iv,
     /**
      * @param {DiscordMessage} message
      * @returns {void}
@@ -358,7 +358,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   };
 
   const bm = {
-    re: /!(?:bm|media|img)\b/iu,
+    re: /!(?:bm|media|img)\b/iv,
     /**
      * @param {DiscordMessage} message
      * @returns {Promise<void>}
@@ -369,7 +369,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   };
 
   const bp = {
-    re: /!(?:bp|pedia)\b/iu,
+    re: /!(?:bp|pedia)\b/iv,
     action: bahaipediaAction,
     // This will be reused across several commands
     helpInfo: {

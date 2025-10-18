@@ -26,13 +26,13 @@
 
 /**
  * @callback Router
- * @param {external:DialogflowResponse} response
+ * @param {DialogflowResponse} response
  * NOTE: response.queryResult.fulfillmentMessages is the array (not used)
  * NOTE: response.queryResult.fulfillmentText a string with default response
- * @param {external:DiscordMessage} message
- * @param {external:DiscordClient} client
- * @param {external:DiscordModule} Discord
- * @param {external:IntlDom} _
+ * @param {DiscordMessage} message
+ * @param {DiscordClient} client
+ * @param {DiscordModule} Discord
+ * @param {IntlDom} _
  * @returns {void}
  */
 

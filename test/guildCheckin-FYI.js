@@ -290,11 +290,11 @@ describe('guildCheckin (FYI)', function () {
     });
 
     expect(guildChannelsGetResultSendSpy.firstCall.firstArg).to.match(
-      /everyone|everybody|Alláh|cooking/u
+      /everyone|everybody|Alláh|cooking/v
     );
 
     expect(guildChannelsGetResultSendSpy2.firstCall.firstArg).to.match(
-      /Hello|everyone|everybody|Alláh|cooking/u
+      /Hello|everyone|everybody|Alláh|cooking/v
     );
 
     expect(guildChannelsGetResultSendSpy3.firstCall.firstArg.content).to.equal(

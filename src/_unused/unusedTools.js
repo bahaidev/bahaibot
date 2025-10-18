@@ -1,4 +1,5 @@
-/* eslint-disable import/unambiguous -- Just comments here */
+/* eslint-disable import/unambiguous, unicorn/no-empty-file -- Just
+    comments here */
 /*
 // Return DB based on the reference r
 db (r) {
@@ -53,7 +54,7 @@ async findID (id, db) {
 },
 */
 /**
- * @param {external:DiscordMessage} message
+ * @param {DiscordMessage} message
  * @returns {void}
  */
 /*

@@ -1,14 +1,14 @@
 /**
  * Puppet Function.
  * @callback PuppetTool
- * @param {external:DiscordMessage} message
+ * @param {DiscordMessage} message
  * @param {{authorID: number, permission: string}} permissions
  * @returns {void}
  */
 /**
  * @type {PuppetTool}
  */
-function puppet ({content, guild, author, member, channel}, permissions) {
+function puppet ({content, guild, author, /* member, */ channel}, permissions) {
   // Transmit message as:
   // !puppet <CHANNEL> | <MESSAGE>
   if (
@@ -18,7 +18,7 @@ function puppet ({content, guild, author, member, channel}, permissions) {
   // or are using this file elsewhere
   // || member.permissions.has(permissions.permission)
   ) {
-    const regex = /!puppet (?<userChannel>\S.+) \| (?<msg>\S.+)/iu;
+    const regex = /!puppet (?<userChannel>\S.+) \| (?<msg>\S.+)/iv;
     const echo = content.match(regex);
 
     // Did regex pass
@@ -40,12 +40,12 @@ function puppet ({content, guild, author, member, channel}, permissions) {
 }
 
 /**
- * @param {PlainObject} cfg
+ * @param {object} cfg
  * @param {string[]} cfg.ADMIN_IDS
  * @param {string} cfg.ADMIN_PERMISSION
  * @param {string} cfg.PUPPET_AUTHOR
  * @param {GuildCheckin} cfg.guildCheckin
- * @param {external:IntlDom} cfg._
+ * @param {IntlDom} cfg._
  * @param {DiscordClient} cfg.client
  * @param {DiscordTTS} cfg.discordTTS
  * @returns {BotCommands}
@@ -56,7 +56,7 @@ const getAdmin = ({
 }) => {
   return {
     speak: {
-      re: /!speak/iu,
+      re: /!speak/iv,
       /*
       helpInfo: {
         name: '!speak some words',
@@ -106,7 +106,7 @@ const getAdmin = ({
       }
     },
     puppet: {
-      re: /!puppet (?:\S.+) \| (?:\S.+)/iu,
+      re: /!puppet (?:\S.+) \| (?:\S.+)/iv,
       /**
        * Puppet enables the administrators + bot developers to puppeteer a bot
        * Must be positioned on top so it can handle sub requests listed below.
@@ -129,7 +129,7 @@ const getAdmin = ({
       }
     },
     echo: {
-      re: /!echo\b/iu,
+      re: /!echo\b/iv,
       /**
        * Echo what was said.
        * @param {DiscordMessage} message
@@ -151,7 +151,7 @@ const getAdmin = ({
       }
     },
     checkin: {
-      re: /!checkin\b/iu,
+      re: /!checkin\b/iv,
       /**
        * @param {DiscordMessage} message
        * @returns {Promise<void>}

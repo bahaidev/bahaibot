@@ -1,6 +1,6 @@
 /**
  * Note: Only destructure the results after running your code.
- * @param {any} ancestor
+ * @param {anything} ancestor
  * @param {string} descendants Dot-separated
  * @param {Object<string,Object<(
  * "argSpies"|"childSpies"|"childAccessorSpies"|"simpleSpy"),
@@ -61,8 +61,8 @@ function spyOnGetterResults (ancestor, descendants, config) {
     //   add a different spy for at least the children so different
     //   results may allow different expectations
     /**
-     * @param {...any} args
-     * @returns {any}
+     * @param {...anything} args
+     * @returns {anything}
      */
     grandchildren[grandchild][method] = (...args) => {
       let result;

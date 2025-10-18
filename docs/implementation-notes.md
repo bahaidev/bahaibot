@@ -45,6 +45,7 @@ The items that will be passed to your `doAIProcessing` will be as follows:
 // 1. Will first have `SessionsClient` property instantiated
 const keyFilename = getPath(settings.PROJECT_JSON);
 
+// eslint-disable-next-line new-cap -- API
 const app = dialogflow.SessionsClient({
   keyFilename
 });
@@ -109,7 +110,7 @@ mentioned in the "Required by" column.
 | `guildMemberAddEvent` | `guild.channels.cache.find({name})` | Uses `channel.send(string)` | (Called in main bot code)
 | `guildMemberAddEvent` | `guild.channels.cache.get(rulesChannel).toString()` | Uses `channel.send(string)` | (Called in main bot code)
 | `guildMemberAddEvent` | `user.id` | String | (Called in main bot code)
-| `message`| | Tracks a subset of `Discord.Message`; may be a string or an object | See table below and "Building one's own `apiai` implementation" section
+| `message`| | Tracks a subset of `Discord.Message`; may be a string or an object | See table below and "Building one's own `dialogflow` implementation" section
 | `guild` | `.channels.cache.get(guildChannelID)` | Returns a channel object | (Called in main bot code if `checkins` flag passed; also in Admin (`checkin` command); see also `channel` for the returned object)
 | `broadcast` | `play` | Will be passed `discordTTS.getVoiceStream(words)` | Admin (`speak` command)
 | `channel` | `.name` | A string | (Accessed in main bot code if `checkins` flag passed); also in Admin (`checkin` command))
@@ -125,8 +126,8 @@ mentioned in the "Required by" column.
 | `content` | String | Accessed by default command, Bahá'í Writings (`readBook` command), Admin (`speak`, `echo`, `puppet` commands); Social Info (`seen` command); Bahá'í Wikis (`bp`, `today`, `b9`, `bm` commands)
 | `author.id` | String | Accessed by default command; Admin (`speak`, `puppet`, `echo`, `checkin` command)
 | `author.username` | String | Accessed by Help (`help` command), Bahá'í Writings (`showList` command); Admin (`puppet`, `echo`, and `checkin` commands); Bahá'í Salutations (`abha` command); Salutations (`sup`, `morning`, `afternoon`, `evening`, `hello`, `welcome` commands); Social Info (`users` and `seen` commands); Bahá'í Wikis (`bp`, `today`, `b9`, `bm` commands)
-| `channel.send(string)` | See also the object signature | Called by default command (and possibly in apiai router); Bahá'í Writings (`readBook` and default `reader` fallback commands); Admin (`echo`, `puppet` command); Bahá'í Info (`badi` command); Bahá'í Salutations (`abha`, `nawruz`, and `ridvan` commands); Salutations (`sup`, `morning`, `afternoon`, `evening`, `hello`, `welcome` commands); Light-hearted (`coffee`, `tea`, `unladen`, `bruh`, `goodbot`, `badbot`, `repeating`, `santacat`, `ping` commands); Social Info (`users` and `seen` commands)
-| `channel.send(object)` | Like the `channel.send` above | Bahá'í Writings (`readBook` and `readRandom` commands); possibly in apiai router (via default command)
+| `channel.send(string)` | See also the object signature | Called by default command (and possibly in dialogflow router); Bahá'í Writings (`readBook` and default `reader` fallback commands); Admin (`echo`, `puppet` command); Bahá'í Info (`badi` command); Bahá'í Salutations (`abha`, `nawruz`, and `ridvan` commands); Salutations (`sup`, `morning`, `afternoon`, `evening`, `hello`, `welcome` commands); Light-hearted (`coffee`, `tea`, `unladen`, `bruh`, `goodbot`, `badbot`, `repeating`, `santacat`, `ping` commands); Social Info (`users` and `seen` commands)
+| `channel.send(object)` | Like the `channel.send` above | Bahá'í Writings (`readBook` and `readRandom` commands); possibly in dialogflow router (via default command)
 | `channel.send(object)` | Like the `channel.send` above though also has `fields` on `embed` which is an array of `{name: string, value: string}` objects (the command and help text for it) | Help (`help` command), Bahá'í Writings (`showList` command); Bahá'í Info (`info` command)
 | `channel.send(object)` | Like the `channel.send` above though also has `image: {url: string}` on `embed` | Bahá'í Wikis (`bp`, `today`, `b9`, `bm` commands)
 | `guild.members.cache.filter({presence: {status}, roles: {cache: {some}}})` | `some` will check against a role `name` property | Social Info (`users` and `seen` commands)

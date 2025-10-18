@@ -26,7 +26,7 @@ function getDialogflowAdapter ({
      */
     SessionsClient: class {
       /**
-       * @param {PlainObject} cfg
+       * @param {object} cfg
        * @param {string} cfg.keyFilename
        */
       constructor ({keyFilename}) {
@@ -43,13 +43,13 @@ function getDialogflowAdapter ({
       /* c8 ignore next 34 */
       /**
        *
-       * @param {PlainObject} cfg
+       * @param {object} cfg
        * @param {string} cfg.session
-       * @param {PlainObject} cfg.queryInput
-       * @param {PlainObject} cfg.queryInput.text
+       * @param {object} cfg.queryInput
+       * @param {object} cfg.queryInput.text
        * @param {string} cfg.queryInput.text.text
        * @param {string} cfg.queryInput.text.languageCode
-       * @returns {Promise<external:DialogflowResponse[]>} Resolved value not
+       * @returns {Promise<DialogflowResponse[]>} Resolved value not
        * used internally.
        */
       async detectIntent ({

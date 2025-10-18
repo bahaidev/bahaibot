@@ -1,22 +1,22 @@
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 
-import {terser} from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 // import babel from '@rollup/plugin-babel';
 // import packageJson from './package.json';
 
 /**
  * @external RollupConfig
- * @type {PlainObject}
+ * @type {object}
  * @see {@link https://rollupjs.org/guide/en#big-list-of-options}
  */
 
 /**
- * @param {PlainObject} [config={}]
- * @param {boolean} [config.minifying=false]
- * @param {string} [config.format="umd"]
- * @param {boolean} [config.lite=false]
- * @returns {external:RollupConfig}
+ * @param {object} [config]
+ * @param {boolean} [config.minifying]
+ * @param {string} [config.format]
+ * @param {boolean} [config.lite]
+ * @returns {RollupConfig}
  */
 function getRollupObject ({
   minifying = false, format = 'umd', lite = false

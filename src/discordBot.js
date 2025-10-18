@@ -1,4 +1,3 @@
-/* eslint-env node -- This file *is* Node only */
 // API: https://discord.js.org/#/docs/main/stable/general/welcome
 // Reference: If any bugs remaining from v11, see
 //   https://discordjs.guide/additional-info/changes-in-v12.html
@@ -20,6 +19,7 @@ import dialogflow from '@google-cloud/dialogflow';
 
 import {i18n, setFetch} from 'intl-dom';
 import fileFetch from 'file-fetch'; // For `intl-dom`
+// eslint-disable-next-line no-shadow -- Familiar
 import fetch from 'node-fetch';
 // eslint-disable-next-line import/no-unresolved -- Bug
 import {stripHtml} from 'string-strip-html';
@@ -32,7 +32,7 @@ const localeIndex = process.argv.indexOf('--locales');
 // Ignoring flag coverage as seem unable to override even `global.process`
 //   during unit testing
 /* c8 ignore next 3 */
-if (localeIndex >= 0) {
+if (localeIndex !== -1) {
   locales = [process.argv[localeIndex + 1]];
 }
 

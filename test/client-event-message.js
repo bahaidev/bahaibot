@@ -126,7 +126,7 @@ describe('Client event (message)', function () {
       await commandFinished(client);
 
       expect(message.channel.send.firstCall.firstArg).to.match(
-        /understand your question|know enough to answer/u
+        /understand your question|know enough to answer/v
       );
       expect(console.log.calledWith(
         'Router response:'
@@ -164,7 +164,7 @@ describe('Client event (message)', function () {
 
       await commandFinished(client);
       expect(message.channel.send.firstCall.firstArg).to.match(
-        /understand your question|know enough to answer/u
+        /understand your question|know enough to answer/v
       );
       expect(console.log.calledWith(
         'Router response:'
@@ -194,7 +194,7 @@ describe('Client event (message)', function () {
       await commandFinished(client);
 
       expect(message.channel.send.firstCall.firstArg).to.match(
-        /understand your question|know enough to answer/u
+        /understand your question|know enough to answer/v
       );
       expect(console.log.calledWith(
         'Router response:'

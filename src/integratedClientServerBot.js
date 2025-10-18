@@ -1,6 +1,3 @@
-// eslint-disable-next-line max-len -- Long
-/* eslint-env browser -- Though not a standard browser-server app, this runs in a browser context */
-
 // We could let the user rely on the (global) defaults for these instead of
 //  baking in these two modules, but they would be forced to non-modularly
 //  add script tags and rely on globals.
@@ -28,7 +25,7 @@ const checkins = new URLSearchParams(hashParams).get('checkins') ||
  * @returns {string}
  */
 const getPath = (path) => {
-  return `${location.href.replace(/\/$/u, '')}/${path}`;
+  return `${location.href.replace(/\/$/v, '')}/${path}`;
 };
 
 // Note: These implementations are specific to our needs
@@ -80,7 +77,7 @@ function discordBot (args) {
     i18n,
     striptags: (str) => stripHtml(str).result,
     // Todo: See about using https://github.com/mishushakov/dialogflow-web-v2
-    //   to pass in as is (or with an adapter as needed) for our `apiai`
+    //   to pass in as is (or with an adapter as needed) for our `dialogflow`
     //   argument, allowing the user to only neeed to pass in their own
     //   `Discord`
     ...args

@@ -1,5 +1,5 @@
 /**
-* @typedef {PlainObject} BotWikiTools
+* @typedef {object} BotWikiTools
 * @property {PuppetTool} puppet
 * @property {BpGetTodayTool} bpGetToday
 * @property {WikiGetRandomTool} wikiGetRandom
@@ -7,13 +7,18 @@
 */
 
 /**
- * @param {PlainObject} cfg
- * @param {window.fetch} cfg.fetch
- * @param {external:IntlDom} cfg._
+ * @param {object} cfg
+ * @param {globalThis.fetch} cfg.fetch
+ * @param {IntlDom} cfg._
  * @param {striptags} cfg.striptags
  * @returns {BotWikiTools}
  */
-function getWikiTools ({fetch, striptags, _}) {
+function getWikiTools ({
+  // eslint-disable-next-line no-shadow -- Familiar
+  fetch,
+  striptags,
+  _
+}) {
   // Modules
   /**
    * @type {BotWikiTools}
@@ -261,7 +266,7 @@ function getWikiTools ({fetch, striptags, _}) {
     */
 
     /**
-     * @typedef {PlainObject} PageInfo
+     * @typedef {object} PageInfo
      * @property {string} url
      * @property {string} title
      * @property {string} snippet

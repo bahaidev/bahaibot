@@ -35,6 +35,9 @@ importers:
       set-safer-interval:
         specifier: ^0.3.0
         version: 0.3.0
+      string-strip-html:
+        specifier: ^13.5.0
+        version: 13.5.0
     devDependencies:
       '@babel/core':
         specifier: ^7.28.4
@@ -87,9 +90,6 @@ importers:
       sinon:
         specifier: ^21.0.0
         version: 21.0.0
-      string-strip-html:
-        specifier: ^13.5.0
-        version: 13.5.0
 
 packages:
 

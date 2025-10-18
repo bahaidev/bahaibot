@@ -1,5 +1,5 @@
 /**
- * @param {PlainObject} cfg
+ * @param {object} cfg
  * @param {BotCommands} cfg.commands
  */
 const addHelp = ({commands}) => {
@@ -8,7 +8,7 @@ const addHelp = ({commands}) => {
   */
 
   const help = {
-    re: /!help\b/iu,
+    re: /!help\b/iv,
     helpInfo: {
       name: '!help',
       value: 'Displays help text.'
@@ -38,11 +38,9 @@ const addHelp = ({commands}) => {
   /**
    * @type {BotHelpField[]}
    */
-  const fields = [
-    ...Object.values(commands).map(({helpInfo}) => {
-      return helpInfo;
-    }).filter((info) => info)
-  ];
+  const fields = Object.values(commands).map(({helpInfo}) => {
+    return helpInfo;
+  }).filter(Boolean);
 };
 
 export default addHelp;

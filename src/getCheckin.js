@@ -6,13 +6,13 @@ import {greets} from './messages/messages.js';
 const readytime = Date.now();
 
 /**
- * @param {PlainObject} cfg
+ * @param {object} cfg
  * @param {DiscordClient} [cfg.client]
  * @param {FileSystem} cfg.fs
  * @param {BotWikiTools} cfg.wikiTools
  * @param {Settings} cfg.settings
  * @param {GetLocalizedSetting} cfg.getLocalizedSetting
- * @param {external:IntlDOMInternationalizer} cfg._
+ * @param {IntlDOMInternationalizer} cfg._
  * @returns {GuildCheckin}
  */
 function getCheckin ({

@@ -1,7 +1,7 @@
 import getReader from './getReader.js';
 
 /**
- * @param {PlainObject} cfg
+ * @param {object} cfg
  * @param {FileSystem} cfg.fs
  * @param {Settings} cfg.settings
  * @param {DiscordClient} cfg.client
@@ -13,7 +13,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
 
   return {
     readBook: {
-      re: /\bread (?<refName>\S.+) (?<index>[-.\d]+)\b/iu,
+      re: /\bread (?<refName>\S.+) (?<index>[\-.\d]+)\b/iv,
       /**
        * Reads some scripture.
        * @param {DiscordMessage} message
@@ -26,7 +26,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       }
     },
     showList: {
-      re: /\bread list$/iu,
+      re: /\bread list$/iv,
       /**
        *
        * @param {DiscordMessage} message
@@ -37,7 +37,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       }
     },
     readRandom: {
-      re: /\bread random$/iu,
+      re: /\bread random$/iv,
       /**
        *
        * @param {DiscordMessage} message
@@ -50,7 +50,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       }
     },
     read: {
-      re: /!read\b/iu,
+      re: /!read\b/iv,
       // This is reused for the other commands
       helpInfo: {
         name: '!read [list | random | *‹text›* *‹chapter›*]',

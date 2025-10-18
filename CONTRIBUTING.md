@@ -14,7 +14,7 @@ const commands = {
   commandKey: {
 
     // The regex expression you wish to examine in a text from a user
-    re: /(?:regexToMatchYourCommandHere)/iu,
+    re: /(?:regexToMatchYourCommandHere)/iv,
 
     // The action you wish the bot to take given satisfaction of regex
     //   condition
@@ -30,7 +30,7 @@ Here's an example:
 ```js
 const commands = {
   morning: {
-    re: /\bgood morning\b/iu,
+    re: /\bgood morning\b/iv,
     // Good morning
     action (message) {
       message.channel.send(

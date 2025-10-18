@@ -231,7 +231,7 @@ describe('guildCheckin (Lab)', function () {
     ).to.equal(DiscordConstants.BAHAI_LAB_GUILD_ID);
 
     expect(guildChannelsGetResultSendSpy.firstCall.firstArg).to.match(
-      /just checking in/u
+      /just checking in/v
     );
 
     expect(console.log.calledWith(
@@ -302,7 +302,7 @@ describe('guildCheckin (Lab)', function () {
       ).to.equal(DiscordConstants.BAHAI_LAB_GUILD_ID);
 
       expect(guildChannelsGetResultSendSpy.firstCall.firstArg).to.match(
-        /just checking in/u
+        /just checking in/v
       );
 
       expect(console.log.calledWith(

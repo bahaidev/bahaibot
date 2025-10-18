@@ -99,12 +99,12 @@ buildBahaiBot({
   // THESE ARE REQUIRED FOR NON-NODE IMPLEMENTATIONS (Node will auto-supply
   //  all of the following)
 
-  fetch, // Defaults to `window.fetch` for non-Node; Node auto-supplies
+  fetch, // Defaults to `globalThis.fetch` for non-Node; Node auto-supplies
   // These can either be imported as global values or supplied via a direct
   //  ESM `/node_modules` import (or build step).
-  i18n, // Defaults to `window.intlDom.i18n`, assuming UMD of
+  i18n, // Defaults to `globalThis.intlDom.i18n`, assuming UMD of
   //       `intl-dom` dep. used
-  striptags, // Defaults to `window.striptags`, assuming UMD of `striptags`
+  striptags, // Defaults to `globalThis.striptags`, assuming UMD of `striptags`
   //       exists
 
   Discord, // A Discord implementation
