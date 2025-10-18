@@ -1,3 +1,4 @@
+/* eslint-disable camelcase -- Actual API */
 /**
  * @see https://github.com/discordjs/discord.js/issues/3576#issuecomment-589673184
  */

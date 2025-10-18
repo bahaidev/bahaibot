@@ -1,6 +1,6 @@
 /* eslint-disable no-console -- Testing console */
 import {createSandbox} from 'sinon';
-
+import {expect} from 'chai';
 import MockDiscord from './helpers/MockDiscord.js';
 import commandFinished from './helpers/commandFinished.js';
 
@@ -885,10 +885,10 @@ describe('Commands', function () {
     ).to.be.undefined;
     expect(
       message.channel.send.firstCall.firstArg.author.name
-    ).to.be.a.string;
+    ).to.be.a('string');
     expect(
       message.channel.send.firstCall.firstArg.description
-    ).to.be.a.string;
+    ).to.be.a('string');
   });
 
   it('b9 (random)', async function () {
@@ -1227,8 +1227,8 @@ describe('Commands', function () {
     await commandFinished(client);
     expect(
       console.log.calledWith(
-        'Search completed: ‘Abdu’l-Bahá => File:‘Abdu’l-Bahá ' +
-          'at Berkeley.jpg'
+        'Search completed: ‘Abdu’l-Bahá => File:Abdul-Baha, taken ' +
+          'in Paris.jpg'
       )
     ).to.be.true;
 
@@ -1242,8 +1242,8 @@ describe('Commands', function () {
       message.channel.send.firstCall.firstArg.embed.description
     ).to.have.string(
       'has returned the following page as the top result ' +
-        'for your search, AB:\n\n **[File:‘Abdu’l-Bahá at ' +
-        'Berkeley.jpg](https://bahai.media/File%3A%E2%80%98Abdu%E2%80%99l-Bah%C3%A1%20at%20Berkeley.jpg)**\n\n'
+      'for your search, AB:\n\n **[File:Abdul-Baha, taken in ' +
+      'Paris.jpg](https://bahai.media/File%3AAbdul-Baha%2C%20taken%20in%20Paris.jpg)**\n\n'
     ).and.to.have.string(
       `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
     );
@@ -1439,7 +1439,9 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
-      console.log.calledWith('Search completed: God is great -2 => Nabíl-i-A‘ẓam')
+      console.log.calledWith(
+        'Search completed: God is great -2 => Manifestation of God'
+      )
     ).to.be.true;
 
     expect(
@@ -1452,7 +1454,7 @@ describe('Commands', function () {
       message.channel.send.firstCall.firstArg.embed.description
     ).to.have.string(
       'has returned the following page as the top result ' +
-        'for your search, AB:\n\n **[Canada](https://bahaipedia.org/Canada)**\n\n'
+        'for your search, AB:\n\n **[Manifestation of God](https://bahaipedia.org/Manifestation%20of%20God)**\n\n'
     ).and.to.have.string(
       `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
     );

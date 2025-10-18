@@ -1,6 +1,6 @@
 import * as fs from 'fs/promises';
 import {join} from 'path';
-
+import {expect} from 'chai';
 import Discord from 'discord.js';
 import fetch from 'node-fetch';
 import {i18n, setFetch} from 'intl-dom';

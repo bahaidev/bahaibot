@@ -1,3 +1,4 @@
+import {expect} from 'chai';
 import istr from '../src/utils/istr.js';
 
 describe('istr utility', function () {

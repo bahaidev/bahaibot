@@ -1,4 +1,5 @@
 /* eslint-disable no-console -- Testing console */
+import {expect} from 'chai';
 import {createSandbox} from 'sinon';
 
 import MockDiscord from './helpers/MockDiscord.js';

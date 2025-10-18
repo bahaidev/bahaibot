@@ -1,8 +1,5 @@
 /* READER AND LIBRARY FILE */
 
-/* eslint-disable no-use-extend-native/no-use-extend-native -- Polyfill */
-import 'object.hasown/auto';
-
 /**
  * @param {PlainObject} cfg
  * @param {FileSystem} cfg.fs

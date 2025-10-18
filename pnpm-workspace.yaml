@@ -1,0 +1,4 @@
+onlyBuiltDependencies:
+  - '@discordjs/opus'
+  - protobufjs
+  - unrs-resolver
