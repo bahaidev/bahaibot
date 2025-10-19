@@ -74,14 +74,12 @@ function getDialogflowAdapter ({
         // Supply a one-item responses array as follows:
         return [{
           queryResult: {
-            fulfillmentText
+            fulfillmentMessages: [{
+              text: {
+                text: [fulfillmentText]
+              }
+            }]
           }
-          // Try this to avoid deprecated above:
-          // queryResult: {
-          //   fulfillmentMessages: [{
-          //     text: [fulfillmentText]
-          //   }]
-          // }
         }];
       }
     }

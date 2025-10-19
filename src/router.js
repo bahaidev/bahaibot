@@ -27,7 +27,8 @@
 const router = (response, message, client, Discord, _) => {
   // eslint-disable-next-line no-console -- CLI
   console.log(_('routerResponse'), response);
-  const speech = response.queryResult?.fulfillmentText;
+  // eslint-disable-next-line @stylistic/max-len -- Long
+  const speech = response.queryResult?.fulfillmentMessages?.[0]?.text?.text?.[0];
   message.channel.send(/** @type {string} */ (speech));
 };
 
