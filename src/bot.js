@@ -93,7 +93,7 @@ const bot = async ({
   // Import the .json settings (use this when JSON importing is standard in
   //   Node and the browser)
   // // eslint-disable-next-line node/no-unpublished-import -- User must set
-  // import system from '../settings.json';
+  // const system = (await import('../settings.json', {with: {type: 'json'}})).default;
 
   const system = JSON.parse(
     await fs.readFile(getPath('settings.json'), 'utf8')
