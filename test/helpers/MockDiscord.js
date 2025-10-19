@@ -3,7 +3,7 @@
  * @see https://github.com/discordjs/discord.js/issues/3576#issuecomment-589673184
  */
 
-import Discord from 'discord.js';
+import * as Discord from 'discord.js';
 
 /**
  *
@@ -13,8 +13,8 @@ class MockDiscord {
    * @param {import('discord.js').Client} client
    * @param {string} guildName
    * @param {string} guildID
-   * @param {DiscordRole} role
-   * @returns {DiscordGuild}
+   * @param {import('discord.js').Role} role
+   * @returns {import('discord.js').Guild}
    */
   static createGuild (client, guildName, guildID, role) {
     const guild = new Discord.Guild(client, {
@@ -55,16 +55,17 @@ class MockDiscord {
 
   /**
    * @param {MockDiscord} discord
-   * @param {DiscordGuild} guild
+   * @param {import('discord.js').Guild} guild
    * @param {string} name
    * @param {boolean} guildChannels
    * @param {string} type
+   * @param {import('discord.js').Client} client
    * @param {string} [channelID]
    * @param {boolean} [clear]
-   * @returns {DiscordGuildChannel}
+   * @returns {import('discord.js').GuildChannel}
    */
   static createGuildChannel (
-    discord, guild, name, guildChannels, type, channelID, clear = true
+    discord, guild, name, guildChannels, type, client, channelID, clear = true
   ) {
     const guildChannel = new Discord[
       type === 'text' ? 'TextChannel' : 'GuildChannel'
@@ -78,7 +79,8 @@ class MockDiscord {
         parent_id: '123456789',
         permission_overwrites: [],
         ...(type === 'text' ? {messages: []} : {})
-      }
+      },
+      client
     );
 
     // This is part of Guild, but wait until guild channel available to add
@@ -90,7 +92,7 @@ class MockDiscord {
         guild.channels.cache.clear();
       }
       for (const rawChannel of channels) {
-        guild.channels.add(rawChannel);
+        guild.channels.create(rawChannel);
       }
     }
 
@@ -122,11 +124,11 @@ class MockDiscord {
    * @param {Guild[]} [opts.guilds]
    * @param {boolean} [opts.guildChannels]
    * @param {boolean} [opts.mentionEveryone]
-   * @param {boolean} [opts.messageContent]
+   * @param {string} [opts.messageContent]
    * @param {string} [opts.userID]
    * @param {string} [opts.userName]
    * @param {string} [opts.clientName]
-   * @param {DiscordUser} [opts.messageUser]
+   * @param {import('discord.js').User} [opts.messageUser]
    * @param {boolean} [opts.addClientUser]
    */
   constructor (opts = {}) {
@@ -176,31 +178,31 @@ class MockDiscord {
     return this.client;
   }
   /**
-   * @returns {DiscordGuild}
+   * @returns {import('discord.js').Guild}
    */
   getGuild () {
     return this.guild;
   }
   /**
-   * @returns {DiscordChannel}
+   * @returns {import('discord.js').Channel}
    */
   getChannel () {
     return this.channel;
   }
   /**
-   * @returns {DiscordGuildChannel}
+   * @returns {import('discord.js').GuildChannel}
    */
   getGuildChannel () {
     return this.guildChannel;
   }
   /**
-   * @returns {DiscordTextChannel}
+   * @returns {import('discord.js').TextChannel}
    */
   getTextChannel () {
     return this.textChannel;
   }
   /**
-   * @returns {DiscordUser}
+   * @returns {import('discord.js').User}
    */
   getUser () {
     return this.user;
@@ -225,7 +227,14 @@ class MockDiscord {
    * @returns {{client: Client, role: Role}}
    */
   mockClient ({name, guilds, roleID}) {
-    const client = new Discord.Client();
+    const client = new Discord.Client({
+      intents: [
+        Discord.GatewayIntentBits.Guilds,
+        Discord.GatewayIntentBits.GuildMessages,
+        Discord.GatewayIntentBits.MessageContent
+        // Discord.GatewayIntentBits.GuildPresences
+      ]
+    });
 
     const role = this.mockRole({client, name, roleID});
 
@@ -266,7 +275,7 @@ class MockDiscord {
       if (channels) {
         channels.forEach(({id, name}, idx) => {
           const channel = MockDiscord.createGuildChannel(
-            this, guild, name, true, 'text', id, idx === 0
+            this, guild, name, true, 'text', client, id, idx === 0
           );
           guildChannels.push(channel);
           // console.log('channel2', channel, channelName);
@@ -287,7 +296,7 @@ class MockDiscord {
   * @param {import('discord.js').Client} cfg.client
   * @param {string} cfg.roleID
   * @param {string} cfg.name
-  * @returns {DiscordRole}
+  * @returns {import('discord.js').Role}
   */
   mockRole ({client, roleID, name}) {
     return new Discord.Role(client, {
@@ -313,7 +322,7 @@ class MockDiscord {
    * @returns {Channel}
    */
   mockChannel (id) {
-    return new Discord.Channel(this.client, {
+    return new Discord.GuildChannel(this.client, {
       id: id || 'channel-id'
     });
   }
@@ -325,7 +334,7 @@ class MockDiscord {
    */
   mockGuildChannel (name, guildChannels, type) {
     this.guildChannel = MockDiscord.createGuildChannel(
-      this, this.guild, name, guildChannels, type
+      this, this.guild, name, guildChannels, type, this.client
     );
   }
   /**
@@ -348,9 +357,9 @@ class MockDiscord {
 
   /**
    * @param {object} cfg
-   * @param {DiscordUser} cfg.user
+   * @param {import('discord.js').User} cfg.user
    * @param {string} cfg.status
-   * @returns {DiscordPresence}
+   * @returns {import('discord.js').Presence}
    */
   mockPresence ({user, status}) {
     return new Discord.Presence(this.client, {
@@ -363,9 +372,9 @@ class MockDiscord {
    * @param {object} cfg
    * @param {string} cfg.userID
    * @param {string} cfg.userName
-   * @param {DiscordGuild} cfg.guild
+   * @param {import('discord.js').Guild} cfg.guild
    * @param {string} cfg.status
-   * @param {DiscordRole[]} cfg.roles
+   * @param {import('discord.js').Role[]} cfg.roles
    * @param {boolean} cfg.hideUserStatus
    * @param {import('discord.js').Client} cfg.client
    * @returns {ClientUser}
@@ -415,8 +424,8 @@ class MockDiscord {
 
   /**
    * @param {object} cfg
-   * @param {DiscordUser} cfg.user
-   * @param {DiscordRole[]} cfg.roles
+   * @param {import('discord.js').User} cfg.user
+   * @param {import('discord.js').Role[]} cfg.roles
    * @returns {import('discord.js').GuildMember}
    */
   mockGuildMember ({user, roles} = {}) {
@@ -437,8 +446,8 @@ class MockDiscord {
    * @param {object} cfg
    * @param {string} cfg.content
    * @param {boolean} cfg.mentionEveryone
-   * @param {DiscordUser} cfg.user
-   * @param {DiscordMessageMentions[]} cfg.mentions
+   * @param {import('discord.js').User} cfg.user
+   * @param {import('discord.js').MessageMentions[]} cfg.mentions
    * @returns {import('discord.js').Message<true>}
    */
   mockMessage ({content, mentionEveryone, user, mentions}) {
@@ -472,13 +481,15 @@ class MockDiscord {
   /**
    * @param {object} cfg
    * @param {import('discord.js').Message<true>} cfg.message
-   * @param {DiscordCollection<Snowflake,DiscordUser>} cfg.users
-   * @param {DiscordCollection<Snowflake,DiscordRole>} cfg.roles
+   * @param {import('discord.js').Collection<import('discord.js').Snowflake,
+   *   import('discord.js').User>} cfg.users
+   * @param {import('discord.js').Collection<import('discord.js').Snowflake,
+   *   import('discord.js').Role>} cfg.roles
    * @param {boolean} cfg.everyone
-   * @param {DiscordCollection<Snowflake,
-   *  DiscordCrosspostedChannel
+   * @param {import('discord.js').Collection<import('discord.js').Snowflake,
+   *  import('discord.js').CrosspostedChannel
    * >} cfg.crosspostedChannels
-   * @returns {DiscordMessageMentions}
+   * @returns {import('discord.js').MessageMentions}
    */
   mockMessageMentions ({
     message, users, roles, everyone, crosspostedChannels

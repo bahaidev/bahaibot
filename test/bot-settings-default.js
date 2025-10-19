@@ -1,7 +1,7 @@
 import * as fs from 'fs/promises';
 import {join} from 'path';
 import {expect} from 'chai';
-import Discord from 'discord.js';
+import * as Discord from 'discord.js';
 // eslint-disable-next-line no-shadow -- Familiar
 import fetch from 'node-fetch';
 import {i18n, setFetch} from 'intl-dom';
@@ -38,7 +38,7 @@ describe('Bot', function () {
       })
     });
 
-    const settings = getSettings(system);
+    const settings = getSettings?.(system);
     expect(settings).to.have.property('token');
   });
 });
