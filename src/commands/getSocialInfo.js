@@ -18,7 +18,7 @@ const getSocialInfo = ({
       // }
       /**
        * Users gives the number of online users.
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {void}
        */
       action (message) {
@@ -62,10 +62,10 @@ const getSocialInfo = ({
       // },
       /**
        * Seen returns the last time a user sent a message.
-       * @param {import('discord.js').Message} message
-       * @returns {void}
+       * @param {import('discord.js').Message<true>} message
+       * @returns {Promise<void>}
        */
-      action (message) {
+      async action (message) {
         const sname = message.content.split(' ').filter(
           (word) => !(word.includes('391405681795923968') ||
             word.includes('847456996738334730') || word === '!seen')
@@ -86,26 +86,33 @@ const getSocialInfo = ({
         }
         // userStatus = user.presence.status;
 
+        const member = await message.guild.members.fetch(user);
+        const {channel} = message;
+        const messages = await channel.messages.fetch({limit: 100});
+        const userMessages = messages.filter(
+          (msg) => msg.author.id === user.id
+        );
+        const lastUserMessage = userMessages.first();
+
         // Todo: Stop ignoring this once test in place.
-        /* c8 ignore next 13 */
-        if (user.lastMessage) {
-          const lastchan = user.lastMessage.channel;
+        /* c8 ignore next 16 */
+        if (lastUserMessage) {
           const stat = (
-            user.presence.status === 'dnd' ? 'busy' : user.presence.status
+            member.presence?.status === 'dnd' ? 'busy' : member.presence?.status
           );
-          const lastseen = new Date(user.lastMessage.createdAt);
+          const lastseen = new Date(lastUserMessage.createdAt);
           const now = new Date();
           const timedelta = (now > lastseen)
             ? Number(now) - Number(lastseen)
             : 0;
           replies.push(
             `${sname} is now ${stat}, and was last seen in ${
-              lastchan
+              channel
             } ${istr(timedelta / 1000)} ago.`
           );
         } else {
           const stat = (
-            user.presence.status === 'dnd' ? 'busy' : user.presence.status
+            member.presence?.status === 'dnd' ? 'busy' : member.presence?.status
           );
           replies.push(
             `${sname} is now ${stat}; I haven't seen them lately.`

@@ -1,7 +1,12 @@
+import {
+  joinVoiceChannel, createAudioPlayer, createAudioResource
+} from '@discordjs/voice';
+
+
 /**
  * Puppet Function.
  * @callback PuppetTool
- * @param {import('discord.js').Message} message
+ * @param {import('discord.js').Message<true>} message
  * @param {{authorID: string, permission: string}} permissions
  * @returns {void}
  */
@@ -33,7 +38,7 @@ function puppet ({content, guild, author, /* member, */ channel}, permissions) {
       );
 
       // Does the channel exist?
-      if (destination) {
+      if (destination && destination.isTextBased()) {
         destination.send(msg);
       } else {
         channel.send(`Channel ${userChannel} does not exist!`);
@@ -50,14 +55,13 @@ function puppet ({content, guild, author, /* member, */ channel}, permissions) {
  * @param {string} cfg.PUPPET_AUTHOR
  * @param {import('../getCheckin.js').GuildCheckin} cfg.guildCheckin
  * @param {import('intl-dom').I18NCallback} cfg._
- * @param {import('discord.js').Client} cfg.client
  * @param {import('discord-tts')} cfg.discordTTS
  * @returns {import('./getCommands.js').BotCommands}
  */
 const getAdmin = ({
   /* eslint-enable jsdoc/imports-as-dependencies -- Bug */
   ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR,
-  discordTTS, guildCheckin, _, client
+  discordTTS, guildCheckin, _
 }) => {
   return {
     speak: {
@@ -69,12 +73,14 @@ const getAdmin = ({
       },
       */
       /* c8 ignore next 39 */
+      /* eslint-disable require-await -- Easier */
       /**
        * Reads some scripture.
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {Promise<void>}
        */
       async action (message) {
+        /* eslint-enable require-await -- Easier */
         // Todo: Needs testing
         if (!ADMIN_IDS.includes(message.author.id)) {
           return;
@@ -83,39 +89,27 @@ const getAdmin = ({
         const words = message.content.split(' ').slice(2).join(' ');
 
         // Todo: Abstract out code so browser can instead use `SpeechSynthesis`
-        const broadcast = client.voice.createBroadcast();
-        const channelId = message.member?.voice.channelID;
-        if (!channelId) {
-          // eslint-disable-next-line no-console -- Debug
-          console.log('Message member not in a voice channel with `channelID`');
+        const channel = message.member?.voice.channel;
+        if (!channel) {
+          // eslint-disable-next-line no-console -- Debugging
+          console.log('Message member not in a voice channel with `channel`');
+          return;
         }
-        const channel = client.channels.cache.get(channelId);
-        const connection = await channel?.join('');
-        broadcast.play(discordTTS.getVoiceStream(words));
-        const dispatcher = connection.play(broadcast);
-        /* c8 ignore next 17 */
-        // Would seem difficult to simulate this.
-        dispatcher.on(
-          'error',
-          /** @type {(err: Error) => void} */
-          (err) => {
-            // eslint-disable-next-line no-console -- Debug
-            console.error(_('speechError'), err);
-          }
-        );
-        dispatcher.on(
-          'debug',
-          /** @type {(err: Error) => void} */
-          (err) => {
-            // eslint-disable-next-line no-console -- Debug
-            console.log(err);
-          }
-        );
-        /* c8 ignore next 5 */
-        dispatcher.on('start', () => {
-          // eslint-disable-next-line no-console -- Debug
-          console.log(_('speakingBegun'));
+        const connection = joinVoiceChannel({
+          channelId: channel.id,
+          guildId: channel.guild.id,
+          adapterCreator: channel.guild.voiceAdapterCreator
         });
+
+        const player = createAudioPlayer();
+
+        player.play(createAudioResource(discordTTS.getVoiceStream(words)));
+        connection.subscribe(player);
+
+        // console.error(_('speechError'), err);
+
+        // eslint-disable-next-line no-console -- Debugging
+        console.log(_('speakingBegun'));
       }
     },
     puppet: {
@@ -123,7 +117,7 @@ const getAdmin = ({
       /**
        * Puppet enables the administrators + bot developers to puppeteer a bot
        * Must be positioned on top so it can handle sub requests listed below.
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {void}
        */
       action (message) {
@@ -145,7 +139,7 @@ const getAdmin = ({
       re: /!echo\b/iv,
       /**
        * Echo what was said.
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {void}
        */
       action (message) {
@@ -166,7 +160,7 @@ const getAdmin = ({
     checkin: {
       re: /!checkin\b/iv,
       /**
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {Promise<void>}
        */
       async action (message) {

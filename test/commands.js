@@ -837,7 +837,7 @@ describe('Commands', function () {
     ).to.deep.include({
       content: `The following texts are available in my ` +
                       `library, user username.`,
-      embed: {
+      embeds: [{
         color: 8359053,
         description: '\nTo read from one of these texts, mention the ' +
             "book name and the section you're interested in. For " +
@@ -850,7 +850,7 @@ describe('Commands', function () {
               '**HWP**: The Persian Hidden Words (Bahá’u’lláh)\n'
           }
         ]
-      }
+      }]
     });
   });
 
@@ -1095,14 +1095,14 @@ describe('Commands', function () {
       message.channel.send.firstCall.firstArg
     ).to.deep.include({
       content: `Here is the result of your query.`,
-      embed: {
+      embeds: [{
         color: 3447003,
         description: `<:bstar:327468698032013312> Bahai9 did not ` +
           `return any results for your query, AB. ` +
           `There may have been a network problem. If you think ` +
           `you're getting this message in error, you may want to ` +
           `try again later.`
-      }
+      }]
     });
   });
 
@@ -1597,7 +1597,7 @@ describe('Commands', function () {
       message.channel.send.firstCall.firstArg
     ).to.deep.include({
       content: `Here is the result of your search.`,
-      embed: {
+      embeds: [{
         color: 3447003,
         description: `<:bstar:327468698032013312> Bahai9 did not ` +
           `return any results for your search, AB. ` +
@@ -1605,7 +1605,7 @@ describe('Commands', function () {
             `There may also have been a network problem. ` +
             `If you think you're getting this message in ` +
             `error, you may want to try again later.`
-      }
+      }]
     });
   });
 
@@ -1670,14 +1670,14 @@ describe('Commands', function () {
       message.channel.send.firstCall.firstArg
     ).to.deep.include({
       content: `Here is the result of your query.`,
-      embed: {
+      embeds: [{
         color: 3447003,
         description: `<:bstar:327468698032013312> Bahaipedia did not ` +
           `return any results for your query, AB. ` +
           `There may have been a network problem. If you think ` +
             `you're getting this message in error, you may want to ` +
             `try again later.`
-      }
+      }]
     });
   });
 

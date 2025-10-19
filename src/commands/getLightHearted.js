@@ -8,7 +8,7 @@ const getLightHearted = () => {
       re: /\u{2615}/u,
       /**
        * Coffee (should be at the end so everything else is processed first).
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {void}
        */
       action (message) {
@@ -16,7 +16,7 @@ const getLightHearted = () => {
       },
       notMentioned: {
         /**
-         * @param {import('discord.js').Message} message
+         * @param {import('discord.js').Message<true>} message
          * @returns {void}
          */
         action (message) {
@@ -28,7 +28,7 @@ const getLightHearted = () => {
       re: /\u{1F375}/u,
       /**
        * Tea (should be at the end so everything else is processed first).
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {void}
        */
       action (message) {
@@ -36,7 +36,7 @@ const getLightHearted = () => {
       },
       notMentioned: {
         /**
-         * @param {import('discord.js').Message} message
+         * @param {import('discord.js').Message<true>} message
          * @returns {void}
          */
         action (message) {
@@ -48,7 +48,7 @@ const getLightHearted = () => {
       re: /\u{1F37F}/u,
       /**
        * Popcorn (should be at the end so everything else is processed first).
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {void}
        */
       action (message) {
@@ -56,7 +56,7 @@ const getLightHearted = () => {
       },
       notMentioned: {
         /**
-         * @param {import('discord.js').Message} message
+         * @param {import('discord.js').Message<true>} message
          * @returns {void}
          */
         action (message) {
@@ -68,7 +68,7 @@ const getLightHearted = () => {
     unladen: {
       re: /\bunladen\sswallow\b/iv,
       /**
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {void}
        */
       action (message) {
@@ -80,7 +80,7 @@ const getLightHearted = () => {
     bruh: {
       re: /\bbruh\b/iv,
       /**
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {void}
        */
       action (message) {
@@ -90,7 +90,7 @@ const getLightHearted = () => {
     goodbot: {
       re: /\bgood\s?bot\b/iv,
       /**
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {void}
        */
       action (message) {
@@ -101,7 +101,7 @@ const getLightHearted = () => {
     badbot: {
       re: /\bbad\s?bot\b/iv,
       /**
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {void}
        */
       action (message) {
@@ -113,7 +113,7 @@ const getLightHearted = () => {
       re: /\brepeating yourself\b/iv,
       /**
        * Repeating.
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {void}
        */
       action (message) {
@@ -141,7 +141,7 @@ const getLightHearted = () => {
     santacat: {
       re: /\b(?:my|santa['’´]?s)\scat\b/iv,
       /**
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {void}
        */
       action (message) {
@@ -161,7 +161,7 @@ const getLightHearted = () => {
       re: /\bping\b/iv,
       /**
        * Ping message.
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {void}
        */
       action (message) {

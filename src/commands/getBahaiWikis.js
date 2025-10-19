@@ -9,7 +9,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   // Private methods
 
   /**
-   * @param {import('discord.js').Message} message
+   * @param {import('discord.js').Message<true>} message
    * @param {string} bstarString
    * @returns {Promise<void>}
    */
@@ -36,20 +36,20 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
       ).format(date);
       message.channel.send({
         content: 'Here is the result of your query.',
-        embed: {
+        embeds: [{
           color: 3447003,
           description: `${
             bstarString
           }Here's Bahaipedia's Today in History entry for ${
             md
           }, ${message.author.username}:\n\n ${res}`
-        }
+        }]
       });
       return;
     }
     message.channel.send({
       content: 'Here is the result of your query.',
-      embed: {
+      embeds: [{
         color: 3447003,
         description: `${
           bstarString
@@ -58,12 +58,12 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
         }. There may have been a network problem. If you think ` +
           `you're getting this message in error, you may want to ` +
           `try again later.`
-      }
+      }]
     });
   };
 
   /**
-   * @param {import('discord.js').Message} message
+   * @param {import('discord.js').Message<true>} message
    * @param {import('../getWikiTools.js').Integer} numResults
    * @param {string} host
    * @param {string} bstarString
@@ -91,7 +91,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
       console.log('Query completed.');
       message.channel.send({
         content: 'Here is the result of your query.',
-        embed: {
+        embeds: [{
           color: 3447003,
           description: `${bstarString}${
             sitename
@@ -106,13 +106,13 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
               ? res.img
               : ''
           }
-        }
+        }]
       });
       return;
     }
     message.channel.send({
       content: 'Here is the result of your query.',
-      embed: {
+      embeds: [{
         color: 3447003,
         description: `${bstarString}${
           sitename
@@ -121,12 +121,12 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
         }. There may have been a network problem. If you think ` +
           `you're getting this message in error, you may want to ` +
           `try again later.`
-      }
+      }]
     });
   };
 
   /**
-   * @param {import('discord.js').Message} message
+   * @param {import('discord.js').Message<true>} message
    * @param {string} kw
    * @param {import('../getWikiTools.js').Integer} numResults
    * @param {string} host
@@ -158,7 +158,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
       const snip = res.snippet?.replaceAll(regex, '**');
       message.channel.send({
         content: 'Here is the result of your search.',
-        embed: {
+        embeds: [{
           color: 3447003,
           description: `${bstarString}${
             sitename
@@ -174,13 +174,13 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
               ? res.img
               : ''
           }
-        }
+        }]
       });
       return;
     }
     message.channel.send({
       content: 'Here is the result of your search.',
-      embed: {
+      embeds: [{
         color: 3447003,
         description: `${bstarString}${
           sitename
@@ -190,13 +190,13 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
           `There may also have been a network problem. ` +
           `If you think you're getting this message in ` +
           `error, you may want to try again later.`
-      }
+      }]
     });
   };
 
   // Bp looks up keywords on bahaipedia
   /**
-   * @param {import('discord.js').Message} message
+   * @param {import('discord.js').Message<true>} message
    * @param {object} cfg
    * @param {boolean} [cfg.forceToday]
    * @returns {Promise<void>}
@@ -339,7 +339,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
           'in history, via Bahaipedia.'
     },
     /**
-     * @param {import('discord.js').Message} message
+     * @param {import('discord.js').Message<true>} message
      * @returns {Promise<void>}
      */
     async action (message) {
@@ -350,7 +350,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   const b9 = {
     re: /!(?:b9|bahai9)\b/iv,
     /**
-     * @param {import('discord.js').Message} message
+     * @param {import('discord.js').Message<true>} message
      * @returns {Promise<void>}
      */
     async action (message) {
@@ -361,7 +361,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   const bm = {
     re: /!(?:bm|media|img)\b/iv,
     /**
-     * @param {import('discord.js').Message} message
+     * @param {import('discord.js').Message<true>} message
      * @returns {Promise<void>}
      */
     async action (message) {

@@ -2,7 +2,7 @@ import getReader from './getReader.js';
 
 /**
  * @param {object} cfg
- * @param {import('node:fs/promises')} cfg.fs
+ * @param {import('../integratedClientServerBot.js').LimitedFs} cfg.fs
  * @param {import('../discordBot.js').Settings} cfg.settings
  * @param {import('discord.js').Client} cfg.client
  * @param {import('discord.js')} cfg.Discord
@@ -16,7 +16,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       re: /\bread (?<refName>\S.+) (?<index>[\-.\d]+)\b/iv,
       /**
        * Reads some scripture.
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {Promise<void>}
        */
       async action (message) {
@@ -31,7 +31,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       re: /\bread list$/iv,
       /**
        *
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {Promise<void>}
        */
       async action (message) {
@@ -42,7 +42,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       re: /\bread random$/iv,
       /**
        *
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {Promise<void>}
        */
       async action (message) {
@@ -67,7 +67,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       },
       /**
        * A fallback if the user fails to provide an argument.
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {void}
        */
       action (message) {

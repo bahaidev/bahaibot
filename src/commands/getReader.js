@@ -2,27 +2,27 @@
 
 /**
  * @callback ShowList
- * @param {import('discord.js').Message} message
+ * @param {import('discord.js').Message<true>} message
  * @returns {void}
  */
 
 /**
  * @callback ReadBook
- * @param {import('discord.js').Message} message
+ * @param {import('discord.js').Message<true>} message
  * @param {string|null} avatar
  * @param {import('discord.js')} Discord
  * @returns {Promise<void>}
  */
 /**
  * @callback ReadRandom
- * @param {import('discord.js').Message} message
+ * @param {import('discord.js').Message<true>} message
  * @param {string|null} avatar
  * @param {import('discord.js')} Discord
  * @returns {Promise<void>}
  */
 /**
  * @callback Reader
- * @param {import('discord.js').Message} message
+ * @param {import('discord.js').Message<true>} message
  * @returns {void}
  */
 /**
@@ -74,7 +74,7 @@
 
 /**
  * @param {object} cfg
- * @param {import('node:fs/promises')} cfg.fs
+ * @param {import('../integratedClientServerBot.js').LimitedFs} cfg.fs
  * @param {import('../discordBot.js').Settings} cfg.settings
  * @returns {Promise<ReaderInfo>}
  */
@@ -194,7 +194,7 @@ async function getReader ({fs, settings}) {
    * Embed creator for the reader function.
    * @param {import('discord.js')} Discord
    * @param {string|null} avatar
-   * @param {import('discord.js').Message} message
+   * @param {import('discord.js').Message<true>} message
    * @param {import('../getWikiTools.js').Integer} refNumber
    * @param {string} refName
    * @param {Chapter} content
@@ -221,15 +221,15 @@ async function getReader ({fs, settings}) {
     // Process the embed data based on the size of the text
     textDescriptionSplit.forEach((textDesc, i) => {
       // Re-create a new object for the next round of embed for super long text
-      const embed = new Discord.MessageEmbed();
+      const embed = new Discord.EmbedBuilder();
 
       // Set colors and data
-      embed.setColor(colorBorder);
-      embed.setAuthor(
-        `${library.list[library.index[refName]].title} by ` +
+      embed.setColor(colorBorder ?? null);
+      embed.setAuthor({
+        name: `${library.list[library.index[refName]].title} by ` +
         `${library.list[library.index[refName]].author}`,
-        avatar
-      );
+        iconURL: avatar ?? undefined
+      });
 
       // Append new information
       embedDescription += textDesc;
@@ -250,13 +250,17 @@ async function getReader ({fs, settings}) {
           }
 
           if (ntext !== '') {
-            embed.addField('Notes', ntext);
+            embed.addFields({
+              name: 'Notes',
+              value: ntext,
+              inline: false
+            });
           }
         }
       }
 
       // Publish message
-      message.channel.send(embed);
+      message.channel.send({embeds: [embed]});
 
       // Reset the text info
       embedDescription = '';
@@ -314,7 +318,7 @@ async function getReader ({fs, settings}) {
     message.channel.send({
       content: `The following texts are available in my ` +
                       `library, ${message.author.username}.`,
-      embed: {
+      embeds: [{
         color: 8359053,
         description: '\nTo read from one of these texts, mention the ' +
             "book name and the section you're interested in. For example, " +
@@ -325,7 +329,7 @@ async function getReader ({fs, settings}) {
             value: content
           }
         ]
-      }
+      }]
     });
   }
 

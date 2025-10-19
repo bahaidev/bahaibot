@@ -5,7 +5,7 @@
 * @param {string} cfg.sessionId
 * @param {string} cfg.languageCode
 * @param {string} cfg.keyFilename
-* @returns {void}
+* @returns {string}
 */
 
 /**
@@ -49,7 +49,8 @@ function getDialogflowAdapter ({
        * @param {string} cfg.queryInput.text.text
        * @param {string} cfg.queryInput.text.languageCode
        * @returns {Promise<
-       *   import('@google-cloud/dialogflow').Response[]
+       *   import('@google-cloud/dialogflow').protos.google.
+      *     cloud.dialogflow.v2.IDetectIntentResponse[]
        * >} Resolved value not
        * used internally.
        */
@@ -75,6 +76,12 @@ function getDialogflowAdapter ({
           queryResult: {
             fulfillmentText
           }
+          // Try this to avoid deprecated above:
+          // queryResult: {
+          //   fulfillmentMessages: [{
+          //     text: [fulfillmentText]
+          //   }]
+          // }
         }];
       }
     }

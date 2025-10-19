@@ -59,14 +59,14 @@ async findID (id, db) {
 },
 */
 /**
- * @param {import('discord.js').Message} message
+ * @param {import('discord.js').Message<true>} message
  * @returns {void}
  */
 /*
 helpCmd (message) {
   // Help Message
   message.channel.send({
-    embed: {
+    embeds: [{
       color: 8359053,
       title: `Here are the instructions you need, ${
         message.author.username
@@ -85,7 +85,7 @@ helpCmd (message) {
             "does the Bahá'í Faith say about education?`"
         }
       ]
-    }
+    }]
   });
 }
 */

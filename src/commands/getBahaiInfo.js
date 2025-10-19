@@ -17,32 +17,39 @@ const getBahaiInfo = ({client, Discord}) => {
     info: {
       re: /!info/iv,
       /**
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {void}
        */
       action (message) {
         // Define the embed features
-        const embed = new Discord.MessageEmbed();
+        const embed = new Discord.EmbedBuilder();
 
         // Initialize output
         const embedDescription = "Bahá'í Bot for Discord\n";
 
         // Add data
-        embed.setAuthor('BahaiBot', client.user?.avatarURL());
+        embed.setAuthor({
+          name: 'BahaiBot',
+          iconURL: client.user?.avatarURL() ?? undefined
+        });
 
         embed.setDescription(embedDescription);
 
-        embed.addField(
-          'Support Server', '[Invite link](https://discord.gg/NE6dJaw)'
-        );
+        embed.addFields([
+          {
+            name: 'Support Server',
+            value: '[Invite link](https://discord.gg/NE6dJaw)',
+            inline: false
+          }
+        ]);
 
-        message.channel.send(embed);
+        message.channel.send({embeds: [embed]});
       }
     },
     badi: {
       re: /\bbad[íi]\b/iv,
       /**
-       * @param {import('discord.js').Message} message
+       * @param {import('discord.js').Message<true>} message
        * @returns {void}
        */
       action (message) {

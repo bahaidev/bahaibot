@@ -1,3 +1,3 @@
 declare module 'discord-tts' {
-  const getVoiceStream: (str: string) => void
+  const getVoiceStream: (str: string) => PassThrough
 }

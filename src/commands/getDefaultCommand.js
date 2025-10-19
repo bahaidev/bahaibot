@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
 * @param {object} cfg
-* @param {import('@google-cloud/dialogflow').App} cfg.app
+* @param {import('@google-cloud/dialogflow').SessionsClient} cfg.app
 * @param {import('../router.js').Router} cfg.router
 * @param {import('discord.js').Client} cfg.client
 * @param {import('discord.js')} cfg.Discord
@@ -16,7 +16,7 @@ const getDefaultCommand = ({
   return {
     re: /[\s\S]*/u, // Should always match
     /**
-     * @param {import('discord.js').Message} message
+     * @param {import('discord.js').Message<true>} message
      * @returns {Promise<void>}
      */
     async action (message) {
@@ -49,7 +49,7 @@ const getDefaultCommand = ({
       // Creates a new session, using original Discord-bot-defined sessionID
       const sessionID = message.author.id;
       const sessionPath = app.projectAgentSessionPath(
-        settings.PROJECT_ID,
+        /** @type {string} */ (settings.PROJECT_ID),
         sessionID
       );
 
@@ -70,7 +70,8 @@ const getDefaultCommand = ({
       /**
       * @throws {DialogflowError}
       * @returns {Promise<
-      *   import('@google-cloud/dialogflow').Response[]
+      *   import('@google-cloud/dialogflow').protos.google.
+      *     cloud.dialogflow.v2.IDetectIntentResponse
       * >} responses
       */
       async function dialogflowCall () {

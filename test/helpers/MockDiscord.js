@@ -212,7 +212,7 @@ class MockDiscord {
     return this.guildMember;
   }
   /**
-   * @returns {import('discord.js').Message}
+   * @returns {import('discord.js').Message<true>}
    */
   getMessage () {
     return this.message;
@@ -439,7 +439,7 @@ class MockDiscord {
    * @param {boolean} cfg.mentionEveryone
    * @param {DiscordUser} cfg.user
    * @param {DiscordMessageMentions[]} cfg.mentions
-   * @returns {import('discord.js').Message}
+   * @returns {import('discord.js').Message<true>}
    */
   mockMessage ({content, mentionEveryone, user, mentions}) {
     return new Discord.Message(this.client, {
@@ -471,7 +471,7 @@ class MockDiscord {
   /* eslint-disable class-methods-use-this -- Consistent */
   /**
    * @param {object} cfg
-   * @param {import('discord.js').Message} cfg.message
+   * @param {import('discord.js').Message<true>} cfg.message
    * @param {DiscordCollection<Snowflake,DiscordUser>} cfg.users
    * @param {DiscordCollection<Snowflake,DiscordRole>} cfg.roles
    * @param {boolean} cfg.everyone

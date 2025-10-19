@@ -115,7 +115,7 @@ const bot = async ({
   exitNoThrow = false
 }) => {
   /**
-  * @param {import('discord.js').Message} message
+  * @param {import('discord.js').Message<true>} message
   * @returns {boolean}
   */
   const isUserAbusive = (message) => {
@@ -125,7 +125,14 @@ const bot = async ({
 
   // Update local copy
   // Create an instance of a Discord client
-  const client = cl || /* c8 ignore next */ new Discord.Client({});
+  const client = cl || /* c8 ignore next */ new Discord.Client({
+    intents: [
+      Discord.GatewayIntentBits.Guilds,
+      Discord.GatewayIntentBits.GuildMessages,
+      Discord.GatewayIntentBits.MessageContent,
+      Discord.GatewayIntentBits.GuildPresences
+    ]
+  });
 
   // Import the .json settings (use this when JSON importing is standard in
   //   Node and the browser)
@@ -216,7 +223,9 @@ const bot = async ({
     // Set presence to show help syntax
 
     client.user?.setPresence({
-      activity: {name: '@BahaiBot !help', type: 'PLAYING'}
+      activities: [{
+        name: '@BahaiBot !help', type: 0 // 'PLAYING'
+      }]
     });
 
     setSaferInterval((interval) => {
@@ -251,7 +260,7 @@ const bot = async ({
 
   /**
   * @callback MessageListener
-  * @param {import('discord.js').Message} message
+  * @param {import('discord.js').Message<true>} message
   * @returns {Promise<void>}
   */
 
@@ -329,7 +338,7 @@ const bot = async ({
     const wcChannel = ev.guild.channels.cache.find(
       (val) => val.name === welcomeChannel
     );
-    if (!wcChannel) {
+    if (!wcChannel || !wcChannel.isTextBased()) {
       return;
     }
     const awesome = client.emojis.cache.find(
@@ -366,7 +375,7 @@ const bot = async ({
     ]; // Pick a random greeting
 
     wcChannel.send(
-      _('guildMemberAddWelcome', {
+      /** @type {string} */ (_('guildMemberAddWelcome', {
         userID: `<@!${ev.user.id}>`,
         greet,
         happy,
@@ -376,7 +385,7 @@ const bot = async ({
         helpTeam: `<@&${helpTeam}>`,
         // eslint-disable-next-line @stylistic/max-len -- Long
         rulesChannel: ev.guild.channels.cache.get(rulesChannel)?.toString() ?? ''
-      })
+      }))
     );
   });
 

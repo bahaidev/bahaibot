@@ -17,13 +17,13 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
 
 /**
 * @callback ActionBehavior
-* @param {import('discord.js').Message} message
+* @param {import('discord.js').Message<true>} message
 * @returns {Promise<void>|void}
 */
 
 /**
 * @callback ActionCheck
-* @param {import('discord.js').Message} message
+* @param {import('discord.js').Message<true>} message
 * @returns {boolean}
 */
 
@@ -48,7 +48,7 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
 /* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
  * @param {object} cfg
- * @param {import('@google-cloud/dialogflow').App} cfg.app
+ * @param {import('@google-cloud/dialogflow').SessionsClient} cfg.app
  * @param {import('../router.js').Router} cfg.router
  * @param {import('discord.js')} cfg.Discord
  * @param {import('../getWikiTools.js').BotWikiTools} cfg.wikiTools
@@ -56,7 +56,7 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
  * @param {import('../getCheckin.js').GuildCheckin} cfg.guildCheckin
  * @param {import('intl-dom').I18NCallback} cfg._
  * @param {import('../bot.js').GetLocalizedSetting} cfg.getLocalizedSetting
- * @param {import('./integratedClientServerBot.js').LimitedFs} cfg.fs
+ * @param {import('../integratedClientServerBot.js').LimitedFs} cfg.fs
  * @param {import('../discordBot.js').Settings} cfg.settings
  * @param {import('discord-tts')} cfg.discordTTS
  * @returns {Promise<import('./getCommands.js').BotCommands>}
@@ -91,7 +91,7 @@ const getCommands = async function ({
     ],
     ['bahaiWikis', () => getBahaiWikis({wikiTools, client, _})],
     ['admin', () => getAdmin({
-      ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR, guildCheckin, _, client,
+      ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR, guildCheckin, _,
       discordTTS
     })],
     ['bahaiInfo', () => getBahaiInfo({client, Discord})],

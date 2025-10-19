@@ -98,7 +98,9 @@ function getCheckin ({
           bpToday,
           greetings,
           reportUptime,
-          channel: guild.channels.cache.get(guildChannelID)
+          channel: /** @type {import('discord.js').TextChannel} */ (
+            guild.channels.cache.get(guildChannelID)
+          )
         };
       }).filter(({channel}) => {
         return channel;
@@ -174,11 +176,11 @@ function getCheckin ({
           const now = new Date();
           const uptime = nowtime - readytime;
           channel?.send(
-            _('uptimeGreet', {
+            /** @type {string} */ (_('uptimeGreet', {
               greet,
               now: now.toString(),
               uptime: istr(Math.floor(uptime / 1000))
-            })
+            }))
           ); // Check in
         } else {
           channel?.send(greet); // Greet everyone
@@ -198,10 +200,10 @@ function getCheckin ({
       console.log(_('postingTodayInHistory'));
 
       channel?.send({
-        content: _('hereIsQueryResult'),
-        embed: {
+        content: /** @type {string} */ (_('hereIsQueryResult')),
+        embeds: [{
           color: 3447003,
-          description: _('todayInHistoryResult', {
+          description: /** @type {string} */ (_('todayInHistoryResult', {
             today: {
               date: [
                 Date.now(),
@@ -210,8 +212,8 @@ function getCheckin ({
             },
             bstar: bstar?.toString() ?? '',
             todayInHistoryResult
-          })
-        }
+          }))
+        }]
       });
     }
 
