@@ -7,9 +7,9 @@ import * as fs from 'fs/promises';
 import {join} from 'path';
 
 // Import the discord.js module
-import Discord from 'discord.js';
+import * as Discord from 'discord.js';
 
-import discordTTS from 'discord-tts';
+import * as discordTTS from 'discord-tts';
 
 // ChatBot functions
 // Require Modules and settings for AI
@@ -26,7 +26,50 @@ import {stripHtml} from 'string-strip-html';
 
 import bot from './bot.js';
 
+/**
+ * @typedef {{
+ *   PROJECT_JSON?: string,
+ *   PROJECT_ID?: string,
+ *   PUPPET_AUTHOR?: string,
+ *   ADMIN_PERMISSION?: string,
+ *   ADMIN_IDS?: string[],
+ *   ADMIN_ROLES?: string[],
+ *   enabledCommandGroups?: string[],
+ *   disabledCommandGroups?: string[],
+ *   token?: string,
+ *   disableNotMentioned?: boolean,
+ *   welcomeChannel?: string,
+ *   awesomeEmoji?: string,
+ *   helpTeam?: string,
+ *   rulesChannel?: string,
+ *   embedColor?: number,
+ *   embedTextLimit?: number,
+ *   bstarEmoji?: string,
+ *   locales?: Record<string, Record<string, string | {
+ *     guildMemberAdd: (str: string) => string[]
+ *   }>>
+ *   checkinGuilds?: {
+ *     guildID: string,
+ *     guildName: string,
+ *     guildChannels: {
+ *       id: string,
+ *       greetings?: string,
+ *       bpToday?: boolean
+ *     }[]
+ *   }[]
+ * }} Settings
+ */
+
+/**
+ * @typedef {{
+ *   production: Settings
+ *   development: Settings
+ * }} SettingsFile
+ */
+
 // GET LOCALE
+
+/** @type {string[]} */
 let locales;
 const localeIndex = process.argv.indexOf('--locales');
 // Ignoring flag coverage as seem unable to override even `global.process`
@@ -56,7 +99,7 @@ const getPath = (path) => {
 };
 
 /**
-* @param {Settings} sys
+* @param {SettingsFile} sys
 */
 const getSettings = (sys) => {
   return process.argv.includes('--production')
@@ -68,8 +111,8 @@ const getSettings = (sys) => {
 /**
  * This is created separately from `index.js` so as to allow testing files to
  * have Discord conveniently baked in, requiring case-by-case overrides only.
- * @param {BotOptions} args
- * @returns {Promise<void>}
+ * @param {import('./bot.js').BotOptions} [args]
+ * @returns {Promise<import('./bot.js').BotResponse>}
  */
 function discordBot (args) {
   return bot({

@@ -2,17 +2,23 @@ import istr from './utils/istr.js';
 import * as DiscordConstants from './messages/DiscordConstants.js';
 import {greets} from './messages/messages.js';
 
+/**
+ * @callback GuildCheckin
+ * @param {import('./getWikiTools.js').Integer} [nowtime=Date.now()]
+ * @returns {Promise<void>}
+ */
+
 // Start counting uptime prior to login
 const readytime = Date.now();
 
 /**
  * @param {object} cfg
- * @param {DiscordClient} [cfg.client]
- * @param {FileSystem} cfg.fs
- * @param {BotWikiTools} cfg.wikiTools
- * @param {Settings} cfg.settings
- * @param {GetLocalizedSetting} cfg.getLocalizedSetting
- * @param {IntlDOMInternationalizer} cfg._
+ * @param {import('discord.js').Client} cfg.client
+ * @param {import('./integratedClientServerBot.js').LimitedFs} cfg.fs
+ * @param {import('./getWikiTools.js').BotWikiTools} cfg.wikiTools
+ * @param {import('./discordBot.js').Settings} cfg.settings
+ * @param {import('./bot.js').GetLocalizedSetting} cfg.getLocalizedSetting
+ * @param {import('intl-dom').I18NCallback} cfg._
  * @returns {GuildCheckin}
  */
 function getCheckin ({
@@ -60,12 +66,6 @@ function getCheckin ({
   } = settings;
 
   /**
-   * @callback GuildCheckin
-   * @param {Integer} [nowtime=Date.now()]
-   * @returns {Promise<void>}
-   */
-
-  /**
    * @type {GuildCheckin}
    */
   return async function guildCheckin (nowtime = Date.now()) {
@@ -80,11 +80,19 @@ function getCheckin ({
       // We found our guild (Bahá'í.FYI)
 
       // eslint-disable-next-line no-console -- CLI
-      console.log(_('checkingIn', {guildName}));
+      console.log(_('checkingIn', {
+        // eslint-disable-next-line object-shorthand -- TS
+        guildName: /** @type {string} */ (guildName)
+      }));
 
-      channels = guildChannels.map(({
-        id: guildChannelID, greetings, bpToday, reportUptime
-      }) => {
+      channels = guildChannels.map((guildChannel) => {
+        const {
+          id: guildChannelID, greetings
+        } = guildChannel;
+        const bpToday = 'bpToday' in guildChannel && guildChannel.bpToday;
+        const reportUptime = 'reportUptime' in guildChannel &&
+          guildChannel.reportUptime;
+
         return {
           guildName,
           bpToday,
@@ -106,11 +114,12 @@ function getCheckin ({
     }
 
     const channelList = {
-      list: [
-        channels.map(({channel: {name}}) => {
+      list: /** @type {[string[]]} */ ([
+        channels.map(({channel}) => {
+          const name = channel?.name;
           return `#${name}`;
         })
-      ]
+      ])
     };
 
     const guildFileName = 'greet.guild.txt';
@@ -152,18 +161,19 @@ function getCheckin ({
     } of channels) {
       // eslint-disable-next-line no-console -- CLI
       console.log(_('channelFound', {
-        guildName,
-        channelName: channel.name
+        // eslint-disable-next-line object-shorthand -- TS
+        guildName: /** @type {string} */ (guildName),
+        channelName: /** @type {string} */ (channel?.name)
       }));
 
       if (greetings) {
-        const greet = greetings[
-          Math.floor(Math.random() * greetings.length)
+        const greet = /** @type {string[]} */ (greetings)[
+          Math.floor(Math.random() * /** @type {string[]} */ (greetings).length)
         ]; // Pick a random greeting
         if (reportUptime) {
           const now = new Date();
           const uptime = nowtime - readytime;
-          channel.send(
+          channel?.send(
             _('uptimeGreet', {
               greet,
               now: now.toString(),
@@ -171,7 +181,7 @@ function getCheckin ({
             })
           ); // Check in
         } else {
-          channel.send(greet); // Greet everyone
+          channel?.send(greet); // Greet everyone
         }
       }
 
@@ -187,7 +197,7 @@ function getCheckin ({
       // eslint-disable-next-line no-console -- CLI
       console.log(_('postingTodayInHistory'));
 
-      channel.send({
+      channel?.send({
         content: _('hereIsQueryResult'),
         embed: {
           color: 3447003,

@@ -17,13 +17,13 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
 
 /**
 * @callback ActionBehavior
-* @param {DiscordMessage} message
+* @param {import('discord.js').Message} message
 * @returns {Promise<void>|void}
 */
 
 /**
 * @callback ActionCheck
-* @param {DiscordMessage} message
+* @param {import('discord.js').Message} message
 * @returns {boolean}
 */
 
@@ -38,28 +38,31 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
 * @property {RegExp} re
 * @property {ActionBehavior} action
 * @property {NotMentionedCommand} [notMentioned]
+* @property {{name: string, value: string}} [helpInfo]
 */
 
 /**
 * @typedef {Object<string,BotCommand>} BotCommands
 */
 
+/* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
  * @param {object} cfg
- * @param {DialogflowApp} cfg.app
- * @param {Router} cfg.router
- * @param {Discord} cfg.Discord
- * @param {BotWikiTools} cfg.wikiTools
- * @param {DiscordClient} cfg.client
- * @param {GuildCheckin} cfg.guildCheckin
- * @param {IntlDom} cfg._
- * @param {GetLocalizedSetting} cfg.getLocalizedSetting
- * @param {FileSystem} cfg.fs
- * @param {Settings} cfg.settings
- * @param {DiscordTTS} cfg.discordTTS
- * @returns {Promise<BotCommands>}
+ * @param {import('@google-cloud/dialogflow').App} cfg.app
+ * @param {import('../router.js').Router} cfg.router
+ * @param {import('discord.js')} cfg.Discord
+ * @param {import('../getWikiTools.js').BotWikiTools} cfg.wikiTools
+ * @param {import('discord.js').Client} cfg.client
+ * @param {import('../getCheckin.js').GuildCheckin} cfg.guildCheckin
+ * @param {import('intl-dom').I18NCallback} cfg._
+ * @param {import('../bot.js').GetLocalizedSetting} cfg.getLocalizedSetting
+ * @param {import('./integratedClientServerBot.js').LimitedFs} cfg.fs
+ * @param {import('../discordBot.js').Settings} cfg.settings
+ * @param {import('discord-tts')} cfg.discordTTS
+ * @returns {Promise<import('./getCommands.js').BotCommands>}
  */
 const getCommands = async function ({
+  /* eslint-enable jsdoc/imports-as-dependencies -- Bug */
   app, router, Discord,
   wikiTools, client, guildCheckin,
   _,
@@ -79,7 +82,8 @@ const getCommands = async function ({
 
   const anyCommand = enabledCommandGroups.includes('*');
 
-  const objs = await Promise.all([
+  // eslint-disable-next-line @stylistic/max-len -- Long
+  const objs = await Promise.all(/** @type {([string, () => BotCommands])[]} */ ([
     ['socialInfo', () => getSocialInfo({ADMIN_ROLES, client})],
     [
       'bahaiWritings',
@@ -94,7 +98,7 @@ const getCommands = async function ({
     ['bahaiSalutations', () => getBahaiSalutations({client})],
     ['salutations', () => getSalutations()],
     ['lightHearted', () => getLightHearted()]
-  ].map(async ([name, cmd]) => {
+  ]).map(async ([name, cmd]) => {
     if (
       (anyCommand || enabledCommandGroups.includes(name)) &&
       !disabledCommandGroups.includes(name)
@@ -104,10 +108,12 @@ const getCommands = async function ({
     return null;
   }));
 
-  const commands = objs.reduce((cmds, obj) => {
-    cmds = {...cmds, ...obj};
-    return cmds;
-  }, {});
+  const commands = /** @type {{[x: string]: BotCommand}} */ (
+    objs.reduce((cmds, obj) => {
+      cmds = {...cmds, ...obj};
+      return cmds;
+    }, {})
+  );
 
   addHelp({commands});
 

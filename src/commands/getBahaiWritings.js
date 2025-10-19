@@ -2,11 +2,11 @@ import getReader from './getReader.js';
 
 /**
  * @param {object} cfg
- * @param {FileSystem} cfg.fs
- * @param {Settings} cfg.settings
- * @param {DiscordClient} cfg.client
- * @param {Discord} cfg.Discord
- * @returns {BotCommands}
+ * @param {import('node:fs/promises')} cfg.fs
+ * @param {import('../discordBot.js').Settings} cfg.settings
+ * @param {import('discord.js').Client} cfg.client
+ * @param {import('discord.js')} cfg.Discord
+ * @returns {Promise<import('./getCommands.js').BotCommands>}
  */
 const getBahaiWritings = async ({fs, settings, client, Discord}) => {
   const reader = await getReader({fs, settings});
@@ -16,12 +16,14 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       re: /\bread (?<refName>\S.+) (?<index>[\-.\d]+)\b/iv,
       /**
        * Reads some scripture.
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {Promise<void>}
        */
       async action (message) {
         return await reader.readBook(
-          message, client.user.avatarURL(), Discord
+          message, /** @type {import('discord.js').ClientUser} */ (
+            client.user
+          ).avatarURL(), Discord
         );
       }
     },
@@ -29,7 +31,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       re: /\bread list$/iv,
       /**
        *
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {Promise<void>}
        */
       async action (message) {
@@ -40,12 +42,16 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       re: /\bread random$/iv,
       /**
        *
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {Promise<void>}
        */
       async action (message) {
         return await reader.readRandom(
-          message, client.user.avatarURL(), Discord
+          message,
+          /** @type {import('discord.js').ClientUser} */ (
+            client.user
+          ).avatarURL(),
+          Discord
         );
       }
     },
@@ -61,7 +67,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       },
       /**
        * A fallback if the user fails to provide an argument.
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {void}
        */
       action (message) {

@@ -1,12 +1,12 @@
 /**
  * @param {object} cfg
- * @param {DiscordClient} cfg.client
- * @returns {BotCommands}
+ * @param {import('discord.js').Client} cfg.client
+ * @returns {import('./getCommands.js').BotCommands}
  */
 const getBahaiSalutations = ({client}) => {
   /**
-   * @param {DiscordMessage} message
-   * @returns {DiscordEmoji}
+   * @param {import('discord.js').Message} message
+   * @returns {import('discord.js').GuildEmoji|undefined}
    */
   const reactToStar = (message) => {
     const star = client.emojis.cache.find((val) => val.name === '9star');
@@ -21,7 +21,7 @@ const getBahaiSalutations = ({client}) => {
       re: /\b(?:all[aá]h['’´\-]?[uo]?['’´\-]?abh[aá]|abh[aá])/iv,
       /**
        * Alláh-u-Abhá!
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {void}
        */
       action (message) {
@@ -36,14 +36,14 @@ const getBahaiSalutations = ({client}) => {
       notMentioned: {
         /**
          * If welcome AND a user are mentioned.
-         * @param {DiscordMessage} message
-         * @returns {void}
+         * @param {import('discord.js').Message} message
+         * @returns {boolean}
          */
         check (message) {
-          return Boolean(message.mentions.members.first());
+          return Boolean(message.mentions.members?.first());
         },
         /**
-         * @param {DiscordMessage} message
+         * @param {import('discord.js').Message} message
          * @returns {void}
          */
         action (message) {
@@ -54,7 +54,7 @@ const getBahaiSalutations = ({client}) => {
     nawruz: {
       re: /\b(?:(?:happy|joyous)\s?n[ao]w[\- ]?ro?[uú]z|n[ao]w[\- ]?ro?[uú]z\s?(?:m[uo]b[aá]r[aá]k))\b/iv,
       /**
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {void}
        */
       action (message) {
@@ -72,7 +72,7 @@ const getBahaiSalutations = ({client}) => {
     ridvan: {
       re: /\b(?:(?:happy|joyous)\s?r[ie][ḍdz][vw][aá]n|r[ie][ḍdz][vw][aá]n\s?(?:m[uo]b[aá]r[aá]k))\b/iv,
       /**
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {void}
        */
       action (message) {

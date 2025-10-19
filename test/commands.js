@@ -91,8 +91,8 @@ describe('Commands', function () {
       const {client} = await bot({
         client: discord.getClient(),
         /**
-         * @param {Settings} system
-         * @returns {Settings}
+         * @param {import('../src/discordBot.js').Settings} system
+         * @returns {import('../src/discordBot.js').Settings}
          */
         getSettings (system) {
           const {development} = system;
@@ -126,8 +126,8 @@ describe('Commands', function () {
       const {client} = await bot({
         client: discord.getClient(),
         /**
-         * @param {Settings} system
-         * @returns {Settings}
+         * @param {import('../src/discordBot.js').Settings} system
+         * @returns {import('../src/discordBot.js').Settings}
          */
         getSettings (system) {
           const {development} = system;
@@ -2812,8 +2812,8 @@ describe('Commands', function () {
       const {client} = await bot({
         client: discord.getClient(),
         /**
-         * @param {Settings} system
-         * @returns {Settings}
+         * @param {import('../src/discordBot.js').Settings} system
+         * @returns {import('../src/discordBot.js').Settings}
          */
         getSettings (system) {
           const {development} = system;

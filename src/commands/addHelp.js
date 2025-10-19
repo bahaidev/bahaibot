@@ -1,6 +1,6 @@
 /**
  * @param {object} cfg
- * @param {BotCommands} cfg.commands
+ * @param {import('./getCommands.js').BotCommands} cfg.commands
  */
 const addHelp = ({commands}) => {
   /**
@@ -14,7 +14,7 @@ const addHelp = ({commands}) => {
       value: 'Displays help text.'
     },
     /**
-     * @param {DiscordMessage} message
+     * @param {import('discord.js').Message} message
      * @returns {void}
      */
     action (message) {
@@ -38,9 +38,11 @@ const addHelp = ({commands}) => {
   /**
    * @type {BotHelpField[]}
    */
-  const fields = Object.values(commands).map(({helpInfo}) => {
-    return helpInfo;
-  }).filter(Boolean);
+  const fields = /** @type {BotHelpField[]} */ (
+    Object.values(commands).map(({helpInfo}) => {
+      return helpInfo;
+    }).filter(Boolean)
+  );
 };
 
 export default addHelp;

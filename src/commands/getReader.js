@@ -1,24 +1,102 @@
 /* READER AND LIBRARY FILE */
 
 /**
+ * @callback ShowList
+ * @param {import('discord.js').Message} message
+ * @returns {void}
+ */
+
+/**
+ * @callback ReadBook
+ * @param {import('discord.js').Message} message
+ * @param {string|null} avatar
+ * @param {import('discord.js')} Discord
+ * @returns {Promise<void>}
+ */
+/**
+ * @callback ReadRandom
+ * @param {import('discord.js').Message} message
+ * @param {string|null} avatar
+ * @param {import('discord.js')} Discord
+ * @returns {Promise<void>}
+ */
+/**
+ * @callback Reader
+ * @param {import('discord.js').Message} message
+ * @returns {void}
+ */
+/**
+ * @typedef {{
+ *   showList: ShowList,
+ *   readBook: ReadBook,
+ *   readRandom: ReadRandom,
+ *   reader: Reader
+ * }} ReaderInfo
+ */
+
+/**
+ * @typedef {object} Footnote
+ * @property {string} fn
+ * @property {string} note
+ */
+
+/**
+ * @typedef {object} LibraryFileEntry
+ * @property {string} title
+ * @property {string} text
+ * @property {Footnote[]} notes
+ */
+
+/**
+ * @typedef {LibraryFileEntry[]} LibraryFile
+ */
+
+/**
+ * @typedef {{
+ *   id: number,
+ *   title: string,
+ *   paras: {
+ *     id: number,
+ *     text: string
+ *   }[],
+ *   notes: Footnote[]
+ * }} Chapter
+ */
+
+/**
+ * @typedef {{
+ *   title: string,
+ *   author: string,
+ *   url: string,
+ *   chapters: Chapter[]
+ * }} LibraryFileWithChapters
+ */
+
+/**
  * @param {object} cfg
- * @param {FileSystem} cfg.fs
- * @param {Settings} cfg.settings
- * @returns {Reader}
+ * @param {import('node:fs/promises')} cfg.fs
+ * @param {import('../discordBot.js').Settings} cfg.settings
+ * @returns {Promise<ReaderInfo>}
  */
 async function getReader ({fs, settings}) {
   // IMPORT FILES
 
   /**
    * @typedef {object} ListingEntry
+   * @property {number} id
+   * @property {string[]} aka_codes
    * @property {string} title
    * @property {string} author
    * @property {string} filename
    * @property {string} url
+   * @property {string} code
    */
 
   /**
-   * @typedef {Object<string,ListingEntry>} LibraryListing
+   * @typedef {{
+   *   index: Record<string, number>,
+   *   list: ListingEntry[]
+   * }} LibraryListing
    */
 
   /**
@@ -33,7 +111,7 @@ async function getReader ({fs, settings}) {
 
   // GLOBAL VARIABLES
   const colorBorder = settings.embedColor;
-  const MAX_TEXT_LIMIT = settings.embedTextLimit;
+  const MAX_TEXT_LIMIT = settings.embedTextLimit ?? 2000;
 
   const availableRandomOptions = Object.keys(library.index);
 
@@ -42,27 +120,11 @@ async function getReader ({fs, settings}) {
   // FUNCTIONS
 
   /**
-  * @typedef {object} Footnote
-  * @property {string} fn
-  * @property {string} note
-  */
-
-  /**
-  * @typedef {object} LibraryFileEntry
-  * @property {string} title
-  * @property {string} text
-  * @property {Footnote[]} notes
-  */
-
-  /**
-  * @typedef {LibraryFileEntry[]} LibraryFile
-  */
-
-  /**
    * Checks whether file exists.
-   * @param {LibraryFile} file Name of the file based on the library_listing
-   * @param {Integer} index
-   * @returns {LibraryFileEntry|string}
+   * @param {LibraryFileWithChapters} file Name of the file based on the
+   *   library_listing
+   * @param {import('../getWikiTools.js').Integer} index
+   * @returns {Chapter|string}
    */
   function readFile (file, index) {
     // Collect size of file
@@ -70,7 +132,7 @@ async function getReader ({fs, settings}) {
 
     // Setup index. It's subtracted by 1 due to array listing
     // 0 is the first element, 1 is the second, etc.
-    index = Number.parseInt(index) - 1;
+    index = Number.parseInt(String(index)) - 1;
 
     // If the index value is within the permitted range
     if (index > -1 && index < max) {
@@ -88,7 +150,7 @@ async function getReader ({fs, settings}) {
    * Split large text while maintaining full words (from stackoverflow:
    * {@link https://stackoverflow.com/questions/7624713/js-splitting-a-long-string-into-strings-with-char-limit-while-avoiding-splittin}.
    * @param {string} str
-   * @param {Integer} l
+   * @param {import('../getWikiTools.js').Integer} l
    * @returns {string[]}
    */
   function splitter (str, l) {
@@ -130,12 +192,12 @@ async function getReader ({fs, settings}) {
 
   /**
    * Embed creator for the reader function.
-   * @param {DiscordModule} Discord
-   * @param {string} avatar
-   * @param {DiscordMessage} message
-   * @param {Integer} refNumber
+   * @param {import('discord.js')} Discord
+   * @param {string|null} avatar
+   * @param {import('discord.js').Message} message
+   * @param {import('../getWikiTools.js').Integer} refNumber
    * @param {string} refName
-   * @param {LibraryFileEntry|string} content
+   * @param {Chapter} content
    * @returns {void}
    */
   function embedCreator (
@@ -226,7 +288,7 @@ async function getReader ({fs, settings}) {
   /**
    * Opens the file.
    * @param {string} refName
-   * @returns {LibraryFile}
+   * @returns {Promise<LibraryFileWithChapters>}
    */
   async function openFile (refName) {
     // Retrieve file name
@@ -245,11 +307,7 @@ async function getReader ({fs, settings}) {
 
   // MODULES
 
-  /**
-   *
-   * @param {DiscordMessage} message
-   * @returns {void}
-   */
+  /** @type {ShowList} */
   function showList (message) {
     const content = showListing();
 
@@ -271,22 +329,16 @@ async function getReader ({fs, settings}) {
     });
   }
 
-  /**
-   *
-   * @param {DiscordMessage} message
-   * @param {string} avatar
-   * @param {DiscordModule} Discord
-   * @returns {Promise<void>}
-   */
+  /** @type {ReadBook} */
   async function readBook (message, avatar, Discord) {
     // Collect user input
     const userInput = message.content;
 
     // Pull the relevant data from the regex
-    const {groups} = userInput.match(fileRegex);
+    const {groups} = userInput.match(fileRegex) ?? {};
 
-    let {refName} = groups;
-    const {index} = groups;
+    let {refName} = /** @type {{refName: string}} */ (groups);
+    const {index} = /** @type {{index: string}} */ (groups);
 
     // Make sure the file exists
     if (!Object.hasOwn(library.index, refName.toLowerCase())) {
@@ -300,13 +352,13 @@ async function getReader ({fs, settings}) {
     const file = await openFile(refName);
 
     // Feed into readFile function
-    const content = readFile(file, index);
+    const content = readFile(file, Number(index));
 
     // If condition based on data type returned
     if (typeof content === 'object') {
       // Create the embed
       embedCreator(
-        Discord, avatar, message, index, refName, content
+        Discord, avatar, message, Number(index), refName, content
       );
     /* c8 ignore next 6 */
     // Unless a book has a missing chapter numbering, it seems this will be
@@ -317,13 +369,7 @@ async function getReader ({fs, settings}) {
     }
   }
 
-  /**
-   *
-   * @param {DiscordMessage} message
-   * @param {string} avatar
-   * @param {DiscordModule} Discord
-   * @returns {Promise<void>}
-   */
+  /** @type {ReadRandom} */
   async function readRandom (message, avatar, Discord) {
     // Select a random element
     const refName = availableRandomOptions[
@@ -338,17 +384,13 @@ async function getReader ({fs, settings}) {
 
     // Generate a random number based on the file length and pull content
     //  from file
-    const content = readFile(file, randomNumber);
+    const content = /** @type {Chapter} */ (readFile(file, randomNumber));
 
     // Create the embed
     embedCreator(Discord, avatar, message, randomNumber, refName, content);
   }
 
-  /**
-   *
-   * @param {DiscordMessage} message
-   * @returns {void}
-   */
+  /** @type {Reader} */
   function reader (message) {
     // Inform the user they need to provide the correct input.
     // This is the default false conditions
@@ -360,7 +402,7 @@ async function getReader ({fs, settings}) {
   }
 
   /**
-   * @type {Reader}
+   * @type {ReaderInfo}
    */
   return {
     showList,

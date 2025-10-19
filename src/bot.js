@@ -11,26 +11,52 @@ import getCheckin from './getCheckin.js';
 import {greets, happies} from './messages/messages.js';
 import * as DiscordConstants from './messages/DiscordConstants.js';
 
+/* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
  * This lets us also update the `client` value and dependent code against
  * a unit testing mock client.
  * @typedef {object} BotOptions
  * @property {boolean} [checkins=false]
  * @property {string[]} [locales=["en-US"]]
- * @property {globalThis.fetch} [fetch=globalThis.fetch]
- * @property {IntlDomI18N} [i18n=globalThis?.intlDom?.i18n]
- * @property {striptags} [striptags=globalThis.striptags]
- * @property {DiscordClient} [client=new Discord.Client()]
- * @property {Discord} Discord
- * @property {dialogflow} dialogflow
- * @property {FileSystem} fs
- * @property {GetPath} getPath
+ * @property {globalThis.fetch|import('node-fetch').
+ *   default} [fetch=globalThis.fetch]
+ * @property {typeof import('intl-dom').i18n} [i18n=globalThis?.intlDom?.i18n]
+ * @property {import('./getWikiTools.js').
+ *   StripTags} [striptags=globalThis.striptags]
+ * @property {import('discord.js').Client} [client=new Discord.Client()]
+ * @property {import('discord.js')} Discord
+ * @property {import('discord-tts')} discordTTS
+ * @property {import('@google-cloud/dialogflow')} dialogflow
+ * @property {import('./integratedClientServerBot.js').LimitedFs} fs
+ * @property {import('./discordBot.js').GetPath} getPath
+ * @property {GetSettings} [getSettings]
+ * @property {number} [commandInterval]
+ * @property {import('discord.js-rate-limiter').RateLimiter} [rateLimiter]
  * @property {boolean} [exitNoThrow=false] Set to true for testing
+ */
+/* eslint-enable jsdoc/imports-as-dependencies -- Bug */
+
+/**
+ * @typedef {{
+ *   client: import('discord.js').Client,
+ *   botCommands: import('./commands/getCommands.js').BotCommands,
+ *   guildCheckin: import('./getCheckin.js').GuildCheckin,
+ *   system?: import('./discordBot.js').SettingsFile,
+ *   getSettings?: GetSettings
+ * }} BotResponse
  */
 
 /**
-* @typedef {{client, botCommands, guildCheckin}} BotResponse
-*/
+ * @callback GetLocalizedSetting
+ * @param {string} key
+ * @param {object} [cfg]
+ * @param {string[]|{
+ *   guildMemberAdd: (str: string) => string[]
+ * }} [cfg.defaultValue]
+ * @returns {string|string[]|Text|DocumentFragment|{
+ *   guildMemberAdd: (str: string) => string[]
+ * }}
+ */
 
 const defaultLocale = 'en-US';
 const supportedLocales = [
@@ -40,12 +66,23 @@ const supportedLocales = [
 ];
 
 /**
+ * @template {object} T
+ * @template {keyof T} Keys
+ * @typedef {T & Required<Pick<T, Keys>>} WithRequired
+ */
+
+
+/**
  * @callback GetSettings
- * @returns {Object<string,anything>}
+ * @param {import('./discordBot.js').SettingsFile} settings
+ * @returns {import('./discordBot.js').Settings}
  */
 
 /**
- * @param {BotOptions} cfg
+ * @param {WithRequired<
+ *   Partial<BotOptions>,
+ *   'fs' | 'dialogflow' | 'Discord' | 'discordTTS'
+ * > & Partial<BotOptions>} cfg
  * @returns {Promise<BotResponse>}
  */
 const bot = async ({
@@ -60,7 +97,7 @@ const bot = async ({
   fetch = globalThis.fetch,
   // Default to dependencies' globals in case using UMD files and user not
   //  supplying own modular versions
-  i18n = globalThis?.intlDom?.i18n,
+  i18n = globalThis.intlDom?.i18n,
   striptags = globalThis.striptags,
   client: cl,
   Discord,
@@ -76,9 +113,9 @@ const bot = async ({
   commandInterval = 2000,
   rateLimiter = new RateLimiter(1, commandInterval),
   exitNoThrow = false
-} = {}) => {
+}) => {
   /**
-  * @param {DiscordMessage} message
+  * @param {import('discord.js').Message} message
   * @returns {boolean}
   */
   const isUserAbusive = (message) => {
@@ -88,12 +125,14 @@ const bot = async ({
 
   // Update local copy
   // Create an instance of a Discord client
-  const client = cl || /* c8 ignore next */ new Discord.Client();
+  const client = cl || /* c8 ignore next */ new Discord.Client({});
 
   // Import the .json settings (use this when JSON importing is standard in
   //   Node and the browser)
   // // eslint-disable-next-line node/no-unpublished-import -- User must set
-  // const system = (await import('../settings.json', {with: {type: 'json'}})).default;
+  // const system = (
+  //   await import('../settings.json', {with: {type: 'json'}})
+  // ).default;
 
   const system = JSON.parse(
     await fs.readFile(getPath('settings.json'), 'utf8')
@@ -101,7 +140,7 @@ const bot = async ({
 
   const getSettings = typeof defaultGetSettings === 'function'
     ? defaultGetSettings
-    : (sys) => sys.development;
+    : /** @type {GetSettings} */ (sys) => sys.development;
 
   const settings = getSettings(system);
 
@@ -112,7 +151,7 @@ const bot = async ({
 
   // Dialogflow setup
   const app = new dialogflow.SessionsClient({
-    keyFilename: getPath(settings.PROJECT_JSON)
+    keyFilename: getPath(/** @type {string} */ (settings.PROJECT_JSON))
   });
 
   const {
@@ -127,25 +166,10 @@ const bot = async ({
     rulesChannel = DiscordConstants.BAHAI_FYI_RULES_CHANNEL_ID
   } = settings;
 
-  /**
-  * @external IntlDOMInternationalizer
-  * @see {@link https://github.com/brettz9/intl-dom}
-  */
-  /**
-  * @type {IntlDOMInternationalizer}
-  */
   const _ = await i18n({
     localesBasePath: 'src',
     locales
   });
-
-  /**
-   * @callback GetLocalizedSetting
-   * @param {string} key
-   * @param {object} cfg
-   * @param {boolean} cfg.noDefaults
-   * @returns {anything}
-   */
 
   /**
    * @type {GetLocalizedSetting}
@@ -191,7 +215,7 @@ const bot = async ({
 
     // Set presence to show help syntax
 
-    client.user.setPresence({
+    client.user?.setPresence({
       activity: {name: '@BahaiBot !help', type: 'PLAYING'}
     });
 
@@ -227,8 +251,8 @@ const bot = async ({
 
   /**
   * @callback MessageListener
-  * @param {DiscordMessage} message
-  * @returns {void}
+  * @param {import('discord.js').Message} message
+  * @returns {Promise<void>}
   */
 
   // Create an event listener for messages
@@ -236,7 +260,7 @@ const bot = async ({
     'message', /** @type {MessageListener} */ async (message) => {
       // Collect userID
       // Ensure that the bot is being messaged
-      if (message.mentions.has(client.user)) {
+      if (client.user && message.mentions.has(client.user)) {
         if (isUserAbusive(message)) {
           return;
         }
@@ -275,13 +299,13 @@ const bot = async ({
         });
         for (const {re, notMentioned} of notMentionedCommands) {
           if (re.test(message.content) &&
-            (!notMentioned.check ||
+            (!notMentioned?.check ||
               // Any extra checks
               notMentioned.check(message))
           ) {
             // eslint-disable-next-line @stylistic/max-len -- Long
             // eslint-disable-next-line no-await-in-loop -- Needs to be in series
-            await notMentioned.action(message);
+            await notMentioned?.action(message);
             client.emit('bahaibot:command-finished');
             break;
           }
@@ -297,7 +321,7 @@ const bot = async ({
 
   /**
   * @callback GuildMemberAddListener
-  * @param {DiscordGuildMember} ev
+  * @param {import('discord.js').GuildMember} ev
   * @returns {void}
   */
 
@@ -312,25 +336,30 @@ const bot = async ({
       (val) => val.name === awesomeEmoji
     );
 
-    const greetGuildMemberAdd = getLocalizedSetting(
+    const greetGuildMemberAdd = /** @type {string[]} */ (getLocalizedSetting(
       'greet-guildMemberAdd', {
         defaultValue: greets.guildMemberAdd
       }
-    );
+    ));
 
     const greet = greetGuildMemberAdd[
       Math.floor(Math.random() * greetGuildMemberAdd.length)
     ]; // Pick a random greeting
 
     const happiesObj = getLocalizedSetting(
-      'happies', {
+      'happies',
+      {
         defaultValue: happies
       }
     );
 
     const happiesArray = awesome
-      ? happiesObj.guildMemberAdd(awesome.toString())
-      : happiesObj.guildMemberAdd(':smile:');
+      ? /** @type {{guildMemberAdd: (str: string) => string[]}} */ (
+        happiesObj
+      ).guildMemberAdd(awesome.toString())
+      : /** @type {{guildMemberAdd: (str: string) => string[]}} */ (
+        happiesObj
+      ).guildMemberAdd(':smile:');
 
     const happy = happiesArray[
       Math.floor(Math.random() * happiesArray.length)
@@ -341,15 +370,18 @@ const bot = async ({
         userID: `<@!${ev.user.id}>`,
         greet,
         happy,
-        serverName: getLocalizedSetting('serverName'),
+        serverName: /** @type {string} */ (
+          getLocalizedSetting('serverName')
+        ),
         helpTeam: `<@&${helpTeam}>`,
-        rulesChannel: ev.guild.channels.cache.get(rulesChannel).toString()
+        // eslint-disable-next-line @stylistic/max-len -- Long
+        rulesChannel: ev.guild.channels.cache.get(rulesChannel)?.toString() ?? ''
       })
     );
   });
 
   // Log our bot in
-  client.login(token);
+  client.login(/** @type {string} */ (token));
 
   return {client, botCommands, guildCheckin, system, getSettings};
 };

@@ -3,8 +3,8 @@ import istr from '../utils/istr.js';
 /**
 * @param {object} cfg
 * @param {string[]} cfg.ADMIN_ROLES
-* @param {DiscordClient} cfg.client
-* @returns {BotCommands}
+* @param {import('discord.js').Client} cfg.client
+* @returns {import('./getCommands.js').BotCommands}
 */
 const getSocialInfo = ({
   ADMIN_ROLES, client
@@ -18,22 +18,22 @@ const getSocialInfo = ({
       // }
       /**
        * Users gives the number of online users.
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {void}
        */
       action (message) {
         const {guild} = message;
-        const onlineCount = guild.members.cache.filter(
-          (m) => m.presence.status !== 'offline'
+        const onlineCount = guild?.members.cache.filter(
+          (m) => m.presence?.status !== 'offline'
         ).size;
 
-        const admins = guild.members.cache.filter((m) => {
+        const admins = guild?.members.cache.filter((m) => {
           if (
             m.roles.cache.some((r) => {
               return ADMIN_ROLES.includes(r.name);
             })
           ) {
-            return m.presence.status !== 'offline';
+            return m.presence?.status !== 'offline';
           }
           return false;
 
@@ -46,7 +46,7 @@ const getSocialInfo = ({
           } currently ${onlineCount} user${
             (onlineCount === 1) ? '' : 's'
           } online, including ${
-            admins.size
+            admins?.size
           } admin/mod/helper(s).`
         );
 
@@ -62,7 +62,7 @@ const getSocialInfo = ({
       // },
       /**
        * Seen returns the last time a user sent a message.
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {void}
        */
       action (message) {
@@ -96,7 +96,7 @@ const getSocialInfo = ({
           const lastseen = new Date(user.lastMessage.createdAt);
           const now = new Date();
           const timedelta = (now > lastseen)
-            ? now - lastseen
+            ? Number(now) - Number(lastseen)
             : 0;
           replies.push(
             `${sname} is now ${stat}, and was last seen in ${

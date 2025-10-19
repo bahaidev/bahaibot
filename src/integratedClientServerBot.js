@@ -13,12 +13,12 @@ const hashParams = hash.slice(1);
 // GET LOCALE
 const locales = [
   new URLSearchParams(hashParams).get('locales') ||
-  new URLSearchParams(search).get('locales')
+  new URLSearchParams(search).get('locales') || 'en_US'
 ];
 
 // GET OTHER OPTIONS
-const checkins = new URLSearchParams(hashParams).get('checkins') ||
-  new URLSearchParams(search).get('checkins');
+const checkins = Boolean(new URLSearchParams(hashParams).get('checkins') ||
+  new URLSearchParams(search).get('checkins'));
 
 /**
  * @param {string} path
@@ -29,13 +29,17 @@ const getPath = (path) => {
 };
 
 // Note: These implementations are specific to our needs
-const fs = {
+const fs = /** @type {LimitedFs} */ ({
   /**
-   * @param {string} fileName
+   * @param {string|URL} fileName
    * @returns {Promise<string>}
    */
   async readFile (fileName) {
-    return await (await fetch(fileName?.href ?? fileName)).text();
+    return await (await fetch(
+      typeof fileName === 'object' && 'href' in fileName && fileName.href
+        ? fileName.href
+        : fileName
+    )).text();
   },
   /**
    * @param {string} fileName
@@ -43,14 +47,16 @@ const fs = {
    * @returns {void}
    */
   writeFile (fileName, data) {
-    localStorage.setItem(`bahaibot-${fileName}`, data || Date.now());
+    localStorage.setItem(`bahaibot-${fileName}`, String(data || Date.now()));
   },
   /**
    * @param {string} fileName
-   * @returns {string}
+   * @returns {Promise<{mtime: Date}>}
    */
   stat (fileName) {
-    return localStorage.getItem(`bahaibot-${fileName}`);
+    return Promise.resolve({
+      mtime: new Date(Number(localStorage.getItem(`bahaibot-${fileName}`)))
+    });
   },
   /**
    * @param {string} fileName
@@ -59,13 +65,24 @@ const fs = {
   unlink (fileName) {
     localStorage.removeItem(fileName);
   }
-};
+});
+
+/**
+ * @template {object} T
+ * @template {keyof T} K
+ * @typedef {Omit<T, K> & Partial<Pick<T, K>>} SetOptional
+ */
+
+/**
+ * @typedef {Pick<import('node:fs/promises'),
+ *   'readFile'|'writeFile'|'stat'|'unlink'>} LimitedFs
+ */
 
 /**
  * This is created separately from `index.js` so as to allow testing files to
  * have Discord conveniently baked in, requiring case-by-case overrides only.
- * @param {BotOptions} args
- * @returns {Promise<void>}
+ * @param {SetOptional<import('./bot.js').BotOptions, 'getPath'|'fs'>} args
+ * @returns {Promise<import('./bot.js').BotResponse>}
  */
 function discordBot (args) {
   return bot({
@@ -75,6 +92,7 @@ function discordBot (args) {
     fs,
     fetch,
     i18n,
+    /** @type {import('./getWikiTools.js').StripTags} */
     striptags: (str) => stripHtml(str).result,
     // Todo: See about using https://github.com/mishushakov/dialogflow-web-v2
     //   to pass in as is (or with an adapter as needed) for our `dialogflow`

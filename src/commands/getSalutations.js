@@ -1,5 +1,5 @@
 /**
- * @returns {BotCommands}
+ * @returns {import('./getCommands.js').BotCommands}
  */
 const getSalutations = () => {
   return {
@@ -7,7 +7,7 @@ const getSalutations = () => {
       re: /\b(?:su+p|wh[au]+[sz]+[au]+p|(?:(?:what|wut)['’´]?s (?:up|new|good|gud|cookin[g'’´])))\b/iv,
       /**
        * What's up?
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {void}
        */
       action (message) {
@@ -36,7 +36,7 @@ const getSalutations = () => {
       re: /\bgood morning\b/iv,
       /**
        * Good morning.
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {void}
        */
       action (message) {
@@ -49,7 +49,7 @@ const getSalutations = () => {
       re: /\bgood afternoon\b/iv,
       /**
        * Good afternoon.
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {void}
        */
       action (message) {
@@ -60,7 +60,7 @@ const getSalutations = () => {
       re: /\bgood evening\b/iv,
       /**
        * Good evening.
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {void}
        */
       action (message) {
@@ -71,7 +71,7 @@ const getSalutations = () => {
       re: /\b(?:h[uea]llo|hi|hi there|howdy|yo|heya|sal[aá]{1,2}m)\b/iv,
       /**
        * Hello.
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {void}
        */
       action (message) {
@@ -82,7 +82,7 @@ const getSalutations = () => {
       re: /^(?:everyone|everybody)?\W*(?:please|pleez|pls|plz)?\W*(?:\W*welcome|.*>+\W*welcome\b|.*\bwb\b)/iv,
       /**
        * Welcome.
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {void}
        */
       action (message) {
@@ -92,14 +92,14 @@ const getSalutations = () => {
       },
       notMentioned: {
         /**
-         * @param {DiscordMessage} message
+         * @param {import('discord.js').Message} message
          * @returns {boolean}
          */
         check (message) {
-          return Boolean(message.mentions.members.first());
+          return Boolean(message.mentions.members?.first());
         },
         /**
-         * @param {DiscordMessage} message
+         * @param {import('discord.js').Message} message
          * @returns {void}
          */
         action (message) {

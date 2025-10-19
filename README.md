@@ -211,3 +211,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
     ESM (bundle-friendly) export as well as updated discord.js support)
 1. Make commands available as slash commands
 1. See about any refactoring needed to allow to work with bahai-matrix-bot
+1. Go through in-code to-dos

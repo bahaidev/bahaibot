@@ -1,15 +1,15 @@
 /**
  * @param {object} cfg
- * @param {BotWikiTools} cfg.wikiTools
- * @param {DiscordClient} cfg.client
- * @param {IntlDom} cfg._
- * @returns {BotCommand}
+ * @param {import('../getWikiTools.js').BotWikiTools} cfg.wikiTools
+ * @param {import('discord.js').Client} cfg.client
+ * @param {import('intl-dom').I18NCallback} cfg._
+ * @returns {import('./getCommands.js').BotCommands}
  */
 const getBahaiWikis = function ({wikiTools, client, _}) {
   // Private methods
 
   /**
-   * @param {DiscordMessage} message
+   * @param {import('discord.js').Message} message
    * @param {string} bstarString
    * @returns {Promise<void>}
    */
@@ -28,6 +28,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
     if (res) {
       // eslint-disable-next-line no-console -- CLI
       console.log('Query completed.');
+      /** @type {Intl.DateTimeFormatOptions} */
       const options = {month: 'long', day: 'numeric'};
       const date = Date.now();
       const md = new Intl.DateTimeFormat(
@@ -62,8 +63,8 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   };
 
   /**
-   * @param {DiscordMessage} message
-   * @param {Integer} numResults
+   * @param {import('discord.js').Message} message
+   * @param {import('../getWikiTools.js').Integer} numResults
    * @param {string} host
    * @param {string} bstarString
    * @param {string} sitename
@@ -125,9 +126,9 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   };
 
   /**
-   * @param {DiscordMessage} message
+   * @param {import('discord.js').Message} message
    * @param {string} kw
-   * @param {Integer} numResults
+   * @param {import('../getWikiTools.js').Integer} numResults
    * @param {string} host
    * @param {string} bstarString
    * @param {string} sitename
@@ -148,13 +149,13 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
     }
     // eslint-disable-next-line no-console -- CLI
     console.log('Result:', sr);
-    const res = sr?.title && sr;
+    const res = typeof sr === 'object' && sr?.title && sr;
     // console.log(pi);
     if (res) {
       // eslint-disable-next-line no-console -- CLI
       console.log(`Search completed: ${kw} => ${res.title}`);
       const regex = /<span class="searchmatch">|<\/span>/gvi;
-      const snip = res.snippet.replaceAll(regex, '**');
+      const snip = res.snippet?.replaceAll(regex, '**');
       message.channel.send({
         content: 'Here is the result of your search.',
         embed: {
@@ -195,9 +196,9 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
 
   // Bp looks up keywords on bahaipedia
   /**
-   * @param {DiscordMessage} message
+   * @param {import('discord.js').Message} message
    * @param {object} cfg
-   * @param {boolean} cfg.forceToday
+   * @param {boolean} [cfg.forceToday]
    * @returns {Promise<void>}
    */
   async function bahaipediaAction (message, {forceToday} = {}) {
@@ -338,7 +339,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
           'in history, via Bahaipedia.'
     },
     /**
-     * @param {DiscordMessage} message
+     * @param {import('discord.js').Message} message
      * @returns {Promise<void>}
      */
     async action (message) {
@@ -349,8 +350,8 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   const b9 = {
     re: /!(?:b9|bahai9)\b/iv,
     /**
-     * @param {DiscordMessage} message
-     * @returns {void}
+     * @param {import('discord.js').Message} message
+     * @returns {Promise<void>}
      */
     async action (message) {
       return await bahaipediaAction(message);
@@ -360,7 +361,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   const bm = {
     re: /!(?:bm|media|img)\b/iv,
     /**
-     * @param {DiscordMessage} message
+     * @param {import('discord.js').Message} message
      * @returns {Promise<void>}
      */
     async action (message) {

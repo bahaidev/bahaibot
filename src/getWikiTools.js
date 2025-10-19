@@ -1,6 +1,38 @@
 /**
+ * @typedef {number} Integer
+ */
+/**
+ * @typedef {(text: string) => string} StripTags
+ */
+/**
+ * @typedef {object} PageInfo
+ * @property {string} url
+ * @property {string} title
+ * @property {string} img
+ * @property {string} [snippet]
+ */
+/**
+ * @callback BpGetTodayTool
+ * @returns {Promise<string>}
+ */
+/**
+ * @callback WikiGetRandomTool
+ * @param {Integer} num
+ * @param {string} host
+ * @param {boolean} wikiPrefix
+ * @returns {Promise<PageInfo|"">}
+ */
+/**
+ * @callback WikiGetURLTool
+ * @param {string} kw
+ * @param {Integer} num
+ * @param {string} host
+ * @param {boolean} [wikiPrefix=false]
+ * @returns {Promise<PageInfo|false|undefined>}
+ */
+/**
 * @typedef {object} BotWikiTools
-* @property {PuppetTool} puppet
+* @property {import('./commands/getAdmin.js').PuppetTool} [puppet]
 * @property {BpGetTodayTool} bpGetToday
 * @property {WikiGetRandomTool} wikiGetRandom
 * @property {WikiGetURLTool} wikiGetURL
@@ -8,9 +40,9 @@
 
 /**
  * @param {object} cfg
- * @param {globalThis.fetch} cfg.fetch
- * @param {IntlDom} cfg._
- * @param {striptags} cfg.striptags
+ * @param {globalThis.fetch|import('node-fetch').default} cfg.fetch
+ * @param {import('intl-dom').I18NCallback} cfg._
+ * @param {StripTags} cfg.striptags
  * @returns {BotWikiTools}
  */
 function getWikiTools ({
@@ -25,17 +57,15 @@ function getWikiTools ({
    */
   return {
     /**
-     * @callback BpGetTodayTool
-     * @returns {Promise<string>}
-     */
-    /**
      * @type {BpGetTodayTool}
      */
     async bpGetToday () {
       const options = {month: 'long', day: 'numeric'};
       const date = Date.now();
       const md = new Intl.DateTimeFormat(
-        _.resolvedLocale, options
+        _.resolvedLocale,
+        // @ts-expect-error TS issue
+        options
       ).format(date);
       // console.log(md);
 
@@ -69,19 +99,12 @@ function getWikiTools ({
     },
 
     /**
-     * @callback WikiGetRandomTool
-     * @param {Integer} num
-     * @param {string} host
-     * @param {boolean} wikiPrefix
-     * @returns {Promise<PageInfo|"">}
-     */
-    /**
      * @type {WikiGetRandomTool}
      */
     async wikiGetRandom (num, host, wikiPrefix) {
       const url = `https://${host}/api.php`;
 
-      const queryParams = {
+      const queryParams = /** @type {Record<string, string>} */ ({
         action: 'query',
         indexpageids: '1',
         prop: (host === 'bahai.media') ? 'imageinfo' : '',
@@ -89,9 +112,9 @@ function getWikiTools ({
         iiprop: (host === 'bahai.media') ? 'url' : '',
         generator: 'random',
         grnnamespace: (host === 'bahai.media') ? '6' : '0',
-        grnlimit: num,
+        grnlimit: String(num),
         format: 'json'
-      };
+      });
 
       const rUrl = `${url}?${new URLSearchParams({
         ...queryParams,
@@ -155,20 +178,11 @@ function getWikiTools ({
     */
 
     /**
-     * @callback WikiGetURLTool
-     * @param {string} kw
-     * @param {Integer} num
-     * @param {string} host
-     * @param {boolean} [wikiPrefix=false]
-     * @returns {Promise<PageInfo|false|undefined>}
-     */
-
-    /**
      * @type {WikiGetURLTool}
      */
     async wikiGetURL (kw, num, host, wikiPrefix = false) {
       const url = `https://${host}/api.php`;
-      const searchParams = {
+      const searchParams = /** @type {Record<string, string>} */ ({
         action: 'query',
         list: 'search',
         generator: 'search',
@@ -176,13 +190,13 @@ function getWikiTools ({
         iiprop: (host === 'bahai.media') ? 'url' : '',
         srsearch: kw,
         srnamespace: (host === 'bahai.media') ? '6' : '0',
-        srlimit: num,
+        srlimit: String(num),
         srprop: 'snippet',
         gsrsearch: kw,
         gsrnamespace: (host === 'bahai.media') ? '6' : '0',
-        gsrlimit: num,
+        gsrlimit: String(num),
         format: 'json'
-      };
+      });
 
       const sUrl = `${url}?${new URLSearchParams({
         ...searchParams,
@@ -264,13 +278,6 @@ function getWikiTools ({
       return this.wikiGetURL(kw, num, host, true);
     },
     */
-
-    /**
-     * @typedef {object} PageInfo
-     * @property {string} url
-     * @property {string} title
-     * @property {string} snippet
-     */
 
     /**
      *

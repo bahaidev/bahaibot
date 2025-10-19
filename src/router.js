@@ -1,21 +1,3 @@
-// These are for the current API; old docs not online
-/**
- * @external DiscordModule
- * @see https://discord.js.org/#/docs/main/stable/general/welcome
- */
-/**
- * @external DiscordClient
- * @see https://discord.js.org/#/docs/main/stable/class/Client
- */
-/**
- * @external DiscordMessage
- * @see https://discord.js.org/#/docs/main/stable/class/Message
- */
-/**
- * @external DialogflowResponse
- * @see https://github.com/googleapis/nodejs-dialogflow
- */
-
 /*
   Resource Loader
 */
@@ -24,17 +6,19 @@
 
 // Export the router
 
+/* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
  * @callback Router
- * @param {DialogflowResponse} response
+ * @param {import('@google-cloud/dialogflow').Response} response
  * NOTE: response.queryResult.fulfillmentMessages is the array (not used)
  * NOTE: response.queryResult.fulfillmentText a string with default response
- * @param {DiscordMessage} message
- * @param {DiscordClient} client
- * @param {DiscordModule} Discord
- * @param {IntlDom} _
+ * @param {import('discord.js').Message} message
+ * @param {import('discord.js').Client} client
+ * @param {import('discord.js')} Discord
+ * @param {import('intl-dom').I18NCallback} _
  * @returns {void}
  */
+/* eslint-enable jsdoc/imports-as-dependencies -- Bug */
 
 /**
  * @type {Router}

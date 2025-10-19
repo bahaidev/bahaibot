@@ -87,7 +87,7 @@ describe('ready event', function () {
 
     globalThis.Date = mockDate({
       /**
-       * @returns {Integer}
+       * @returns {import('../src/getWikiTools.js').Integer}
        */
       now: () => simulatedTimestamp
     });
@@ -175,7 +175,7 @@ describe('ready event', function () {
 
     globalThis.Date = mockDate({
       /**
-       * @returns {Integer}
+       * @returns {import('../src/getWikiTools.js').Integer}
        */
       now: () => simulatedTimestamp
     });

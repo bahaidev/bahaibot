@@ -1,8 +1,8 @@
 /**
  * Puppet Function.
  * @callback PuppetTool
- * @param {DiscordMessage} message
- * @param {{authorID: number, permission: string}} permissions
+ * @param {import('discord.js').Message} message
+ * @param {{authorID: string, permission: string}} permissions
  * @returns {void}
  */
 /**
@@ -23,9 +23,12 @@ function puppet ({content, guild, author, /* member, */ channel}, permissions) {
 
     // Did regex pass
     if (echo) {
-      const {userChannel, msg} = echo.groups;
+      // eslint-disable-next-line @stylistic/max-len -- Long
+      const {userChannel, msg} = /** @type {{userChannel: string, msg: string}} */ (
+        echo.groups
+      );
 
-      const destination = guild.channels.cache.find(
+      const destination = guild?.channels.cache.find(
         (val) => val.name === userChannel
       );
 
@@ -39,18 +42,20 @@ function puppet ({content, guild, author, /* member, */ channel}, permissions) {
   }
 }
 
+/* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
  * @param {object} cfg
  * @param {string[]} cfg.ADMIN_IDS
  * @param {string} cfg.ADMIN_PERMISSION
  * @param {string} cfg.PUPPET_AUTHOR
- * @param {GuildCheckin} cfg.guildCheckin
- * @param {IntlDom} cfg._
- * @param {DiscordClient} cfg.client
- * @param {DiscordTTS} cfg.discordTTS
- * @returns {BotCommands}
+ * @param {import('../getCheckin.js').GuildCheckin} cfg.guildCheckin
+ * @param {import('intl-dom').I18NCallback} cfg._
+ * @param {import('discord.js').Client} cfg.client
+ * @param {import('discord-tts')} cfg.discordTTS
+ * @returns {import('./getCommands.js').BotCommands}
  */
 const getAdmin = ({
+  /* eslint-enable jsdoc/imports-as-dependencies -- Bug */
   ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR,
   discordTTS, guildCheckin, _, client
 }) => {
@@ -66,7 +71,7 @@ const getAdmin = ({
       /* c8 ignore next 39 */
       /**
        * Reads some scripture.
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {Promise<void>}
        */
       async action (message) {
@@ -79,25 +84,33 @@ const getAdmin = ({
 
         // Todo: Abstract out code so browser can instead use `SpeechSynthesis`
         const broadcast = client.voice.createBroadcast();
-        const channelId = message.member.voice.channelID;
+        const channelId = message.member?.voice.channelID;
         if (!channelId) {
           // eslint-disable-next-line no-console -- Debug
           console.log('Message member not in a voice channel with `channelID`');
         }
         const channel = client.channels.cache.get(channelId);
-        const connection = await channel.join('');
+        const connection = await channel?.join('');
         broadcast.play(discordTTS.getVoiceStream(words));
         const dispatcher = connection.play(broadcast);
-        /* c8 ignore next 9 */
+        /* c8 ignore next 17 */
         // Would seem difficult to simulate this.
-        dispatcher.on('error', (err) => {
-          // eslint-disable-next-line no-console -- Debug
-          console.error(_('speechError'), err);
-        });
-        dispatcher.on('debug', (err) => {
-          // eslint-disable-next-line no-console -- Debug
-          console.log(err);
-        });
+        dispatcher.on(
+          'error',
+          /** @type {(err: Error) => void} */
+          (err) => {
+            // eslint-disable-next-line no-console -- Debug
+            console.error(_('speechError'), err);
+          }
+        );
+        dispatcher.on(
+          'debug',
+          /** @type {(err: Error) => void} */
+          (err) => {
+            // eslint-disable-next-line no-console -- Debug
+            console.log(err);
+          }
+        );
         /* c8 ignore next 5 */
         dispatcher.on('start', () => {
           // eslint-disable-next-line no-console -- Debug
@@ -110,7 +123,7 @@ const getAdmin = ({
       /**
        * Puppet enables the administrators + bot developers to puppeteer a bot
        * Must be positioned on top so it can handle sub requests listed below.
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {void}
        */
       action (message) {
@@ -132,7 +145,7 @@ const getAdmin = ({
       re: /!echo\b/iv,
       /**
        * Echo what was said.
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {void}
        */
       action (message) {
@@ -153,7 +166,7 @@ const getAdmin = ({
     checkin: {
       re: /!checkin\b/iv,
       /**
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {Promise<void>}
        */
       async action (message) {

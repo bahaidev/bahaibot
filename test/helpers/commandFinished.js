@@ -1,5 +1,5 @@
 /**
- * @param {DiscordClient} client
+ * @param {import('discord.js').Client} client
  * @returns {Promise<void>}
  */
 function commandFinished (client) {

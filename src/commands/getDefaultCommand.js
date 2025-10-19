@@ -1,21 +1,23 @@
+/* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
 * @param {object} cfg
-* @param {DialogflowApp} cfg.app
-* @param {Router} cfg.router
-* @param {DiscordClient} cfg.client
-* @param {Discord} cfg.Discord
-* @param {IntlDom} cfg._
-* @param {settings} cfg.settings
-* @returns {BotCommand}
+* @param {import('@google-cloud/dialogflow').App} cfg.app
+* @param {import('../router.js').Router} cfg.router
+* @param {import('discord.js').Client} cfg.client
+* @param {import('discord.js')} cfg.Discord
+* @param {import('intl-dom').I18NCallback} cfg._
+* @param {import('../discordBot.js').Settings} cfg.settings
+* @returns {import('./getCommands.js').BotCommand}
 */
 const getDefaultCommand = ({
+  /* eslint-enable jsdoc/imports-as-dependencies -- Bug */
   app, router, client, Discord, _, settings
 }) => {
   return {
     re: /[\s\S]*/u, // Should always match
     /**
-     * @param {DiscordMessage} message
-     * @returns {void}
+     * @param {import('discord.js').Message} message
+     * @returns {Promise<void>}
      */
     async action (message) {
       /* BOT DATA */
@@ -29,7 +31,7 @@ const getDefaultCommand = ({
       const userInput = message.content.trimStart().replaceAll(
         /<@!?(?<snowflake>\d+)>/gv,
         (__, n1, offset, wholeStr, {snowflake}) => {
-          if (snowflake === client.user.id) {
+          if (snowflake === client.user?.id) {
             // Re-add this condition if the intents are ever modified to take
             //   into account "BahaiBot" as part of the text (e.g., so that
             //   "Who is X, BahaiBot" is as good of a match as "Who is X",
@@ -64,11 +66,15 @@ const getDefaultCommand = ({
         }
       };
 
+      /* eslint-disable jsdoc/imports-as-dependencies -- Bug */
       /**
       * @throws {DialogflowError}
-      * @returns {Promise<DialogflowResponse[]>} responses
+      * @returns {Promise<
+      *   import('@google-cloud/dialogflow').Response[]
+      * >} responses
       */
       async function dialogflowCall () {
+        /* eslint-enable jsdoc/imports-as-dependencies -- Bug */
         // Send request and log result
         try {
           const [response] = await app.detectIntent(request);
@@ -91,7 +97,8 @@ const getDefaultCommand = ({
 
       // Return in case an implementation wants this as a Promise that
       //  waits to resolve
-      return await dialogflowCall();
+      // return await dialogflowCall();
+      await dialogflowCall();
     }
   };
 };

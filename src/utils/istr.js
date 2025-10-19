@@ -1,4 +1,7 @@
 /**
+ * @typedef {number} Float
+ */
+/**
  * Given time in seconds, creates pretty output in days, hours,
  *   minutes, and seconds.
  * @todo See about replacing with

@@ -10,7 +10,7 @@ import Discord from 'discord.js';
  */
 class MockDiscord {
   /**
-   * @param {DiscordClient} client
+   * @param {import('discord.js').Client} client
    * @param {string} guildName
    * @param {string} guildID
    * @param {DiscordRole} role
@@ -170,7 +170,7 @@ class MockDiscord {
   }
 
   /**
-   * @returns {DiscordClient}
+   * @returns {import('discord.js').Client}
    */
   getClient () {
     return this.client;
@@ -206,13 +206,13 @@ class MockDiscord {
     return this.user;
   }
   /**
-   * @returns {DiscordGuildMember}
+   * @returns {import('discord.js').GuildMember}
    */
   getGuildMember () {
     return this.guildMember;
   }
   /**
-   * @returns {DiscordMessage}
+   * @returns {import('discord.js').Message}
    */
   getMessage () {
     return this.message;
@@ -284,7 +284,7 @@ class MockDiscord {
   /* eslint-disable class-methods-use-this -- Consistent */
   /**
   * @param {object} cfg
-  * @param {DiscordClient} cfg.client
+  * @param {import('discord.js').Client} cfg.client
   * @param {string} cfg.roleID
   * @param {string} cfg.name
   * @returns {DiscordRole}
@@ -367,7 +367,7 @@ class MockDiscord {
    * @param {string} cfg.status
    * @param {DiscordRole[]} cfg.roles
    * @param {boolean} cfg.hideUserStatus
-   * @param {DiscordClient} cfg.client
+   * @param {import('discord.js').Client} cfg.client
    * @returns {ClientUser}
    */
   mockUser ({
@@ -417,7 +417,7 @@ class MockDiscord {
    * @param {object} cfg
    * @param {DiscordUser} cfg.user
    * @param {DiscordRole[]} cfg.roles
-   * @returns {DiscordGuildMember}
+   * @returns {import('discord.js').GuildMember}
    */
   mockGuildMember ({user, roles} = {}) {
     return new Discord.GuildMember(this.client, {
@@ -439,7 +439,7 @@ class MockDiscord {
    * @param {boolean} cfg.mentionEveryone
    * @param {DiscordUser} cfg.user
    * @param {DiscordMessageMentions[]} cfg.mentions
-   * @returns {DiscordMessage}
+   * @returns {import('discord.js').Message}
    */
   mockMessage ({content, mentionEveryone, user, mentions}) {
     return new Discord.Message(this.client, {
@@ -471,7 +471,7 @@ class MockDiscord {
   /* eslint-disable class-methods-use-this -- Consistent */
   /**
    * @param {object} cfg
-   * @param {DiscordMessage} cfg.message
+   * @param {import('discord.js').Message} cfg.message
    * @param {DiscordCollection<Snowflake,DiscordUser>} cfg.users
    * @param {DiscordCollection<Snowflake,DiscordRole>} cfg.roles
    * @param {boolean} cfg.everyone

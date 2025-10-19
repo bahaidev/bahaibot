@@ -1,8 +1,8 @@
 /**
  * @param {object} cfg
- * @param {DiscordClient} cfg.client
- * @param {Discord} cfg.Discord
- * @returns {BotCommands}
+ * @param {import('discord.js').Client} cfg.client
+ * @param {import('discord.js')} cfg.Discord
+ * @returns {import('./getCommands.js').BotCommands}
  */
 const getBahaiInfo = ({client, Discord}) => {
   return {
@@ -17,7 +17,7 @@ const getBahaiInfo = ({client, Discord}) => {
     info: {
       re: /!info/iv,
       /**
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {void}
        */
       action (message) {
@@ -28,7 +28,7 @@ const getBahaiInfo = ({client, Discord}) => {
         const embedDescription = "Bahá'í Bot for Discord\n";
 
         // Add data
-        embed.setAuthor('BahaiBot', client.user.avatarURL());
+        embed.setAuthor('BahaiBot', client.user?.avatarURL());
 
         embed.setDescription(embedDescription);
 
@@ -42,7 +42,7 @@ const getBahaiInfo = ({client, Discord}) => {
     badi: {
       re: /\bbad[íi]\b/iv,
       /**
-       * @param {DiscordMessage} message
+       * @param {import('discord.js').Message} message
        * @returns {void}
        */
       action (message) {

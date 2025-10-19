@@ -1,14 +1,18 @@
 /**
 * @callback DoAIProcessing
-* @param {string} userInput
-* @param {string} sessionId
-* @param {string} languageCode
-* @param {string} keyFilename
+* @param {object} cfg
+* @param {string} cfg.userInput
+* @param {string} cfg.sessionId
+* @param {string} cfg.languageCode
+* @param {string} cfg.keyFilename
 * @returns {void}
 */
 
 /**
- * @param {DoAIProcessing} doAIProcessing
+ * @param {{
+ *   doAIProcessing: DoAIProcessing,
+ *   projectAgentSessionPath: (projectID: string, sessionID: string) => string
+ * }} doAIProcessing
  * @returns {dialogflow}
  */
 function getDialogflowAdapter ({
@@ -32,15 +36,10 @@ function getDialogflowAdapter ({
       constructor ({keyFilename}) {
         this.keyFilename = keyFilename;
       }
-      /**
-      * @param {string} projectID
-      * @param {string} sessionID
-      * @returns {string}
-      */
-      [projectAgentSessionPath];
 
       // Reenable when ready to test
-      /* c8 ignore next 34 */
+      /* c8 ignore next 36 */
+      /* eslint-disable jsdoc/imports-as-dependencies -- Bug */
       /**
        *
        * @param {object} cfg
@@ -49,10 +48,13 @@ function getDialogflowAdapter ({
        * @param {object} cfg.queryInput.text
        * @param {string} cfg.queryInput.text.text
        * @param {string} cfg.queryInput.text.languageCode
-       * @returns {Promise<DialogflowResponse[]>} Resolved value not
+       * @returns {Promise<
+       *   import('@google-cloud/dialogflow').Response[]
+       * >} Resolved value not
        * used internally.
        */
       async detectIntent ({
+        /* eslint-enable jsdoc/imports-as-dependencies -- Bug */
         session: sessionId,
         queryInput: {
           text: {
@@ -77,6 +79,9 @@ function getDialogflowAdapter ({
       }
     }
   };
+  // @ts-expect-error We want a dynamic method, so adding now
+  dialogflow.SessionsClient.projectAgentSessionPath = projectAgentSessionPath;
+
   return dialogflow;
 }
 

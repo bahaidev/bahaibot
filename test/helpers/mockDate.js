@@ -27,7 +27,7 @@ function mockDate ({
       return now ? new _Date(now).getTime() : _Date.now();
     }
     /**
-     * @param {Integer} _date
+     * @param {import('../src/getWikiTools.js').Integer} _date
      */
     constructor (_date) {
       if (typeof date === 'function') {
@@ -44,19 +44,19 @@ function mockDate ({
     }
 
     /**
-     * @returns {Integer}
+     * @returns {import('../src/getWikiTools.js').Integer}
      */
     getTime () {
       return this._date.getTime();
     }
     /**
-     * @returns {Integer}
+     * @returns {import('../src/getWikiTools.js').Integer}
      */
     getUTCHours () {
       return this._date.getUTCHours();
     }
     /**
-     * @returns {Integer}
+     * @returns {import('../src/getWikiTools.js').Integer}
      */
     getUTCMinutes () {
       return this._date.getUTCMinutes();

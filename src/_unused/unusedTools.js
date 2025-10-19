@@ -9,7 +9,7 @@ db (r) {
 
 /**
  * Name generator for puzzles or vote.
- * @param {Integer} n Length of string
+ * @param {import('../getWikiTools.js').Integer} n Length of string
  * @returns {string}
  */
 /*
@@ -24,10 +24,15 @@ randomStringGenerator (n) {
 },
 */
 
+/* eslint-disable jsdoc/reject-any-type -- Should be FirebaseDatabase */
+/**
+ * @typedef {any} AnyType
+ */
+/* eslint-enable jsdoc/reject-any-type -- Should be FirebaseDatabase */
 /**
  * Find ID system.
  * @param {string} id
- * @param {FirebaseDatabase} db
+ * @param {AnyType} db FirebaseDatabase
  * @returns {Promise<false|Dataset>}
  */
 /*
@@ -54,7 +59,7 @@ async findID (id, db) {
 },
 */
 /**
- * @param {DiscordMessage} message
+ * @param {import('discord.js').Message} message
  * @returns {void}
  */
 /*
