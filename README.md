@@ -207,6 +207,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## To-dos
 
-1. Update APIs for updated discord.js
+1. Update APIs for updated discord.js (and PR to discord.js-Rate-Limiter for
+    ESM (bundle-friendly) export as well as updated discord.js support)
 1. Make commands available as slash commands
-1. See about any refactoring needed to allow to work with bahai-matrix-bbot
+1. See about any refactoring needed to allow to work with bahai-matrix-bot
