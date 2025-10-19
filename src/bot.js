@@ -115,7 +115,7 @@ const bot = async ({
   exitNoThrow = false
 }) => {
   /**
-  * @param {import('discord.js').Message<true>} message
+  * @param {import('discord.js').Message} message
   * @returns {boolean}
   */
   const isUserAbusive = (message) => {
@@ -260,13 +260,18 @@ const bot = async ({
 
   /**
   * @callback MessageListener
-  * @param {import('discord.js').Message<true>} message
+  * @param {import('discord.js').Message} msg
   * @returns {Promise<void>}
   */
 
   // Create an event listener for messages
   client.on(
-    'message', /** @type {MessageListener} */ async (message) => {
+    'messageCreate', /** @type {MessageListener} */ async (msg) => {
+      // if (!msg.guildId) {
+      //   return;
+      // }
+      const message = /** @type {import('discord.js').Message<true>} */ (msg);
+
       // Collect userID
       // Ensure that the bot is being messaged
       if (client.user && message.mentions.has(client.user)) {
