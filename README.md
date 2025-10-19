@@ -204,3 +204,9 @@ See [implementation-notes.md](./docs/implementation-notes.md).
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+## To-dos
+
+1. Update APIs for updated discord.js
+1. Make commands available as slash commands
+1. See about any refactoring needed to allow to work with bahai-matrix-bbot
