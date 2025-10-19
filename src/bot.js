@@ -129,8 +129,8 @@ const bot = async ({
     intents: [
       Discord.GatewayIntentBits.Guilds,
       Discord.GatewayIntentBits.GuildMessages,
-      Discord.GatewayIntentBits.MessageContent,
-      Discord.GatewayIntentBits.GuildPresences
+      Discord.GatewayIntentBits.MessageContent
+      // Discord.GatewayIntentBits.GuildPresences
     ]
   });
 
@@ -209,7 +209,7 @@ const bot = async ({
 
   // The ready event is vital, it means that your bot will only start
   //  reacting to information from Discord _after_ ready is emitted
-  client.on('ready', /** @type {ReadyListener} */ () => {
+  client.on('clientReady', /** @type {ReadyListener} */ () => {
     // eslint-disable-next-line no-console -- CLI
     console.log(_('BahaiBotOnline'));
 

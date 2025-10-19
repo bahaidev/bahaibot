@@ -27,7 +27,7 @@ describe('ready event', function () {
     const discord = new MockDiscord();
     const {client} = await bot({client: discord.getClient()});
     this.sinon.spy(console, 'log');
-    client.emit('ready');
+    client.emit('clientReady');
     expect(console.log.calledOnce).to.be.true;
     expect(console.log.calledWith("The Bahá'í Bot Online!")).to.be.true;
   });
@@ -100,7 +100,7 @@ describe('ready event', function () {
       client: discord.getClient()
     });
     client.user = discord.getUser();
-    client.emit('ready');
+    client.emit('clientReady');
 
     // eslint-disable-next-line promise/avoid-new -- Impose delay
     return new Promise((resolve) => {
@@ -188,7 +188,7 @@ describe('ready event', function () {
       client: discord.getClient()
     });
     client.user = discord.getUser();
-    client.emit('ready');
+    client.emit('clientReady');
 
     // eslint-disable-next-line promise/avoid-new -- Impose delay
     return new Promise((resolve) => {

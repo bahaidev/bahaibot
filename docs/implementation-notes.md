@@ -104,7 +104,7 @@ mentioned in the "Required by" column.
 | `client` | `.channels.cache.get(channelId)` | | Admin (`speak` command); see also `channel.join()`
 | `client` | `.voice.createBroadcast()` | Passed to `connection.play()` | Admin (`speak` command); see also `broadcast`
 | `client` | `.login(token)` | | (Called in main bot code after listeners)
-| `client.on(event, listener)` | `'ready'` event | | (Called in main bot code)
+| `client.on(event, listener)` | `'clientReady'` event | | (Called in main bot code)
 | `client.on(event, listener)` | `'guildMemberAdd'` event | | (Called in main bot code); see also `guildMemberAddEvent`
 | `client.on(event, listener)` | `'message'` event | | (Called in main bot code; see also `message`)
 | `guildMemberAddEvent` | `guild.channels.cache.find({name})` | Uses `channel.send(string)` | (Called in main bot code)
