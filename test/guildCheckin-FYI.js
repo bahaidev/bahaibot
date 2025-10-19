@@ -76,6 +76,7 @@ describe('guildCheckin (FYI)', function () {
         }
       ]
     });
+    // @ts-expect-error Don't need a full mock
     const {guildCheckin} = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -116,6 +117,7 @@ describe('guildCheckin (FYI)', function () {
       }
     );
 
+    // @ts-expect-error Don't need a full mock
     const {guildCheckin} = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -160,6 +162,8 @@ describe('guildCheckin (FYI)', function () {
     const discord = new MockDiscord(discordOptions);
 
     const client = discord.getClient();
+
+    // @ts-expect-error Don't need a full mock
     const {guildCheckin} = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -203,6 +207,8 @@ describe('guildCheckin (FYI)', function () {
     const discord = new MockDiscord(discordOptions);
 
     const client = discord.getClient();
+
+    // @ts-expect-error Don't need a full mock
     const {guildCheckin} = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -243,6 +249,7 @@ describe('guildCheckin (FYI)', function () {
 
     this.sinon.spy(console, 'log');
 
+    // @ts-expect-error Don't need a full mock
     const {guildCheckin} = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -302,7 +309,7 @@ describe('guildCheckin (FYI)', function () {
     );
 
     expect(
-      guildChannelsGetResultSendSpy3.firstCall.firstArg.embed.description
+      guildChannelsGetResultSendSpy3.firstCall.firstArg.embeds[0].description
     ).to.have.string(
       "Here's Bahaipedia's Today in History entry for"
     ).and.to.have.string(
@@ -340,10 +347,22 @@ describe('guildCheckin (FYI)', function () {
 
       // Since Sinon can't stub ESM, we err with the `toString()` to trigger
       //   coverage of the catch block
-      this.sinon.stub(Number.prototype, 'toString').value(() => {
-        throw new Error('Simulated problem writing');
-      });
+      // this.sinon.stub(Number.prototype, 'toString').value(() => {
+      //   throw new Error('Simulated problem writing');
+      // });
+      const {toString: toStr} = Number.prototype;
+      // eslint-disable-next-line no-extend-native -- Needed to spy
+      Number.prototype.toString = function () {
+        if (this.valueOf() !== 1755) {
+          // eslint-disable-next-line @stylistic/max-len -- Long
+          // eslint-disable-next-line no-extend-native -- Needed to finish spying
+          Number.prototype.toString = toStr;
+          throw new Error('Simulated problem writing');
+        }
+        return toStr.call(this);
+      };
 
+      // @ts-expect-error Don't need a full mock
       const {guildCheckin} = await bot({
         checkins: true,
         exitNoThrow: true,
@@ -415,6 +434,8 @@ describe('guildCheckin (FYI)', function () {
         }
       ]
     });
+
+    // @ts-expect-error Don't need a full mock
     const {guildCheckin} = await bot({
       checkins: true,
       exitNoThrow: true,

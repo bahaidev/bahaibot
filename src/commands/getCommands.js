@@ -59,6 +59,9 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
  * @param {import('../integratedClientServerBot.js').LimitedFs} cfg.fs
  * @param {import('../discordBot.js').Settings} cfg.settings
  * @param {import('discord-tts')} cfg.discordTTS
+ * @param {Pick<import('@discordjs/voice'),
+ *   "joinVoiceChannel"|"createAudioPlayer"|
+ *   "createAudioResource">} cfg.DiscordVoice
  * @returns {Promise<import('./getCommands.js').BotCommands>}
  */
 const getCommands = async function ({
@@ -69,7 +72,8 @@ const getCommands = async function ({
   // eslint-disable-next-line no-unused-vars -- Not currently in use
   getLocalizedSetting,
   fs, settings,
-  discordTTS
+  discordTTS,
+  DiscordVoice
 }) {
   const {
     PUPPET_AUTHOR = DiscordConstants.USER_AB,
@@ -92,7 +96,7 @@ const getCommands = async function ({
     ['bahaiWikis', () => getBahaiWikis({wikiTools, client, _})],
     ['admin', () => getAdmin({
       ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR, guildCheckin, _,
-      discordTTS
+      discordTTS, DiscordVoice
     })],
     ['bahaiInfo', () => getBahaiInfo({client, Discord})],
     ['bahaiSalutations', () => getBahaiSalutations({client})],

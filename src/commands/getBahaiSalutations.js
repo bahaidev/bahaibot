@@ -40,7 +40,7 @@ const getBahaiSalutations = ({client}) => {
          * @returns {boolean}
          */
         check (message) {
-          return Boolean(message.mentions.members?.first());
+          return Boolean(message.mentions.users?.first());
         },
         /**
          * @param {import('discord.js').Message<true>} message

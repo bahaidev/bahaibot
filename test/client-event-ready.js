@@ -25,10 +25,14 @@ describe('ready event', function () {
 
   it('ready event logs', async function () {
     const discord = new MockDiscord();
+    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
     this.sinon.spy(console, 'log');
     client.emit('clientReady');
+
+    // @ts-expect-error Sinon
     expect(console.log.calledOnce).to.be.true;
+    // @ts-expect-error Sinon
     expect(console.log.calledWith("The Bahá'í Bot Online!")).to.be.true;
   });
 
@@ -94,6 +98,7 @@ describe('ready event', function () {
 
     this.sinon.spy(console, 'log');
 
+    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -115,10 +120,12 @@ describe('ready event', function () {
           fiftyMinutesInMilliseconds
         );
 
+        // @ts-expect-error Sinon
         expect(console.log.calledWith(
           "Checking in on Bahá'í Lab."
         )).to.be.true;
 
+        // @ts-expect-error Sinon
         expect(console.log.calledWith(
           "Checking in on Bahá'í.FYI."
         )).to.be.true;
@@ -182,6 +189,7 @@ describe('ready event', function () {
 
     this.sinon.spy(console, 'log');
 
+    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -203,6 +211,7 @@ describe('ready event', function () {
           fiftyMinutesInMilliseconds
         );
 
+        // @ts-expect-error Sinon
         expect(console.log.calledWith(
           "Checking in on Bahá'í Lab."
         )).to.be.true;

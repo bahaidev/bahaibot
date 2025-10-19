@@ -22,14 +22,16 @@ describe('Client event (message)', function () {
     async function () {
       const discord = new MockDiscord();
 
+      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
 
       const message = discord.getMessage();
       // console.log('message', message);
-      client.emit('message', message);
+      client.emit('messageCreate', message);
 
       this.sinon.spy(console, 'log');
 
+      // @ts-expect-error Sinon
       expect(console.log.firstCall).to.equal(null);
     }
   );
@@ -42,6 +44,7 @@ describe('Client event (message)', function () {
         messageContent: "What is the Baha'i Faith?"
       });
 
+      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
 
       const message = discord.getMessage();
@@ -49,15 +52,17 @@ describe('Client event (message)', function () {
       this.sinon.spy(message.channel, 'send');
 
       // console.log('message', message);
-      client.emit('message', message);
+      client.emit('messageCreate', message);
 
       this.sinon.spy(console, 'log');
 
       await commandFinished(client);
 
+      // @ts-expect-error Sinon
       expect(message.channel.send.firstCall.firstArg).to.have.string(
         "The Bahá'í Faith is an independent world religion"
       );
+      // @ts-expect-error Sinon
       expect(console.log.calledWith(
         'Router response:'
       )).to.be.true;
@@ -75,6 +80,7 @@ describe('Client event (message)', function () {
           "is the Baha'i Faith?"
       });
 
+      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
 
       const message = discord.getMessage();
@@ -82,14 +88,16 @@ describe('Client event (message)', function () {
       this.sinon.spy(message.channel, 'send');
 
       // console.log('message', message);
-      client.emit('message', message);
+      client.emit('messageCreate', message);
 
       this.sinon.spy(console, 'log');
 
       await commandFinished(client);
+      // @ts-expect-error Sinon
       expect(message.channel.send.firstCall.firstArg).to.have.string(
         "The Bahá'í Faith is an independent world religion"
       );
+      // @ts-expect-error Sinon
       expect(console.log.calledWith(
         'Router response:'
       )).to.be.true;
@@ -106,6 +114,7 @@ describe('Client event (message)', function () {
         messageContent: `<@${DiscordConstants.BAHAI_BOT_ID}> Who am I?`
       });
 
+      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
 
       const message = discord.getMessage();
@@ -116,18 +125,22 @@ describe('Client event (message)', function () {
         id: DiscordConstants.BAHAI_BOT_ID,
         username: 'Other BahaiBot'
       };
+
+      // @ts-expect-error Only a few properties needed
       client.users.cache.set(user.id, user);
 
       // console.log('message', message);
-      client.emit('message', message);
+      client.emit('messageCreate', message);
 
       this.sinon.spy(console, 'log');
 
       await commandFinished(client);
 
+      // @ts-expect-error Sinon
       expect(message.channel.send.firstCall.firstArg).to.match(
         /understand your question|know enough to answer/v
       );
+      // @ts-expect-error Sinon
       expect(console.log.calledWith(
         'Router response:'
       )).to.be.true;
@@ -145,6 +158,7 @@ describe('Client event (message)', function () {
           `<@!${DiscordConstants.BAHAI_BOT_ID}>?`
       });
 
+      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
 
       const message = discord.getMessage();
@@ -155,17 +169,21 @@ describe('Client event (message)', function () {
         id: DiscordConstants.BAHAI_BOT_ID,
         username: 'Other BahaiBot'
       };
+
+      // @ts-expect-error Only a few properties needed
       client.users.cache.set(user.id, user);
 
       // console.log('message', message);
-      client.emit('message', message);
+      client.emit('messageCreate', message);
 
       this.sinon.spy(console, 'log');
 
       await commandFinished(client);
+      // @ts-expect-error Sinon
       expect(message.channel.send.firstCall.firstArg).to.match(
         /understand your question|know enough to answer/v
       );
+      // @ts-expect-error Sinon
       expect(console.log.calledWith(
         'Router response:'
       )).to.be.true;
@@ -180,6 +198,7 @@ describe('Client event (message)', function () {
         messageContent: 'where am I?'
       });
 
+      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
 
       const message = discord.getMessage();
@@ -187,15 +206,17 @@ describe('Client event (message)', function () {
       this.sinon.spy(message.channel, 'send');
 
       // console.log('message', message);
-      client.emit('message', message);
+      client.emit('messageCreate', message);
 
       this.sinon.spy(console, 'log');
 
       await commandFinished(client);
 
+      // @ts-expect-error Sinon
       expect(message.channel.send.firstCall.firstArg).to.match(
         /understand your question|know enough to answer/v
       );
+      // @ts-expect-error Sinon
       expect(console.log.calledWith(
         'Router response:'
       )).to.be.true;
@@ -209,6 +230,7 @@ describe('Client event (message)', function () {
         messageContent: '☕'
       });
 
+      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
 
       const message = discord.getMessage();
@@ -216,8 +238,9 @@ describe('Client event (message)', function () {
       this.sinon.spy(message, 'react');
 
       // console.log('message', message);
-      client.emit('message', message);
+      client.emit('messageCreate', message);
 
+      // @ts-expect-error Sinon
       expect(message.react.firstCall.firstArg).to.equal('☕');
     }
   );
@@ -227,6 +250,7 @@ describe('Client event (message)', function () {
       messageContent: 'welcome'
     });
 
+    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -234,8 +258,9 @@ describe('Client event (message)', function () {
     this.sinon.spy(message, 'react');
 
     // console.log('message', message);
-    client.emit('message', message);
+    client.emit('messageCreate', message);
 
+    // @ts-expect-error Sinon
     expect(message.react.firstCall).to.equal(null);
   });
 
@@ -244,6 +269,7 @@ describe('Client event (message)', function () {
       mentionEveryone: true
     });
 
+    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const channelSpy = this.sinon.spy();
@@ -267,7 +293,7 @@ describe('Client event (message)', function () {
     };
 
     // console.log('message', message);
-    client.emit('message', message);
+    client.emit('messageCreate', message);
 
     this.sinon.spy(console, 'error');
 
@@ -275,9 +301,11 @@ describe('Client event (message)', function () {
     expect(channelSpy.firstCall.firstArg).to.have.string(
       "<@abc>, I couldn't process your question at the moment."
     );
+    // @ts-expect-error Sinon
     expect(console.error.firstCall.firstArg).to.equal(
       'Error executing command with message'
     );
+    // @ts-expect-error Sinon
     expect(console.error.secondCall.lastArg.message).to.have.string(
       'Input text not set'
     );

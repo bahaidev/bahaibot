@@ -4,10 +4,10 @@ const _Date = Date;
  * @todo See about replacing with `mockdate` if it exports its own `MockDate`
  * class for purposes of our overwriting `global.Date`:
  * {@link https://github.com/boblauer/MockDate/issues/46}
- * @param {object} cfg
- * @param {string} cfg.date
- * @param {string} cfg.now
- * @returns {MockDate}
+ * @param {object} [cfg]
+ * @param {string|((num: number|undefined) => string|number|Date)} [cfg.date]
+ * @param {string|(() => string)} [cfg.now]
+ * @returns {{new (): MockDate}}
  */
 function mockDate ({
   date,
@@ -18,7 +18,7 @@ function mockDate ({
    */
   class MockDate {
     /**
-     * @returns {void}
+     * @returns {number}
      */
     static now () {
       if (typeof now === 'function') {
@@ -27,7 +27,7 @@ function mockDate ({
       return now ? new _Date(now).getTime() : _Date.now();
     }
     /**
-     * @param {import('../src/getWikiTools.js').Integer} _date
+     * @param {import('../../src/getWikiTools.js').Integer} [_date]
      */
     constructor (_date) {
       if (typeof date === 'function') {
@@ -44,19 +44,19 @@ function mockDate ({
     }
 
     /**
-     * @returns {import('../src/getWikiTools.js').Integer}
+     * @returns {import('../../src/getWikiTools.js').Integer}
      */
     getTime () {
       return this._date.getTime();
     }
     /**
-     * @returns {import('../src/getWikiTools.js').Integer}
+     * @returns {import('../../src/getWikiTools.js').Integer}
      */
     getUTCHours () {
       return this._date.getUTCHours();
     }
     /**
-     * @returns {import('../src/getWikiTools.js').Integer}
+     * @returns {import('../../src/getWikiTools.js').Integer}
      */
     getUTCMinutes () {
       return this._date.getUTCMinutes();

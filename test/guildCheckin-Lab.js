@@ -66,8 +66,10 @@ describe('guildCheckin (Lab)', function () {
         }
       ]
     });
+
     const {
       guildCheckin
+    // @ts-expect-error Don't need a full mock
     } = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -123,6 +125,7 @@ describe('guildCheckin (Lab)', function () {
       }
     );
 
+    // @ts-expect-error Don't need a full mock
     const {guildCheckin} = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -176,6 +179,8 @@ describe('guildCheckin (Lab)', function () {
     const discord = new MockDiscord(discordOptions);
 
     const client = discord.getClient();
+
+    // @ts-expect-error Don't need a full mock
     const {guildCheckin} = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -212,6 +217,7 @@ describe('guildCheckin (Lab)', function () {
 
     this.sinon.spy(console, 'log');
 
+    // @ts-expect-error Don't need a full mock
     const {guildCheckin} = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -279,10 +285,22 @@ describe('guildCheckin (Lab)', function () {
 
       // Since Sinon can't stub ESM, we err with the `toString()` to trigger
       //   coverage of the catch block
-      this.sinon.stub(Number.prototype, 'toString').value(() => {
-        throw new Error('Simulated problem writing');
-      });
+      // this.sinon.stub(Number.prototype, 'toString').value(() => {
+      //   throw new Error('Simulated problem writing');
+      // });
+      const {toString: toStr} = Number.prototype;
+      // eslint-disable-next-line no-extend-native -- Needed to spy
+      Number.prototype.toString = function () {
+        if (this.valueOf() !== 1755) {
+          // eslint-disable-next-line @stylistic/max-len -- Long
+          // eslint-disable-next-line no-extend-native -- Needed to finish spying
+          Number.prototype.toString = toStr;
+          throw new Error('Simulated problem writing');
+        }
+        return toStr.call(this);
+      };
 
+      // @ts-expect-error Don't need a full mock
       const {guildCheckin} = await bot({
         checkins: true,
         exitNoThrow: true,
@@ -331,6 +349,7 @@ describe('guildCheckin (Lab)', function () {
     const discord = new MockDiscord(discordOptions);
     const {
       guildCheckin
+    // @ts-expect-error Don't need a full mock
     } = await bot({
       checkins: true,
       exitNoThrow: true,

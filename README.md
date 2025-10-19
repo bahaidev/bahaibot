@@ -207,10 +207,10 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## To-dos
 
+1. Waiting: Update to discord 15 when comes out
 1. Smoke test and unit test
 1. PR to discord.js-Rate-Limiter for
     ESM (bundle-friendly) export as well as updated discord.js support
-1. Update to discord 15 when comes out
 1. See about establishing our own ownership so we can add back the intent
     for presence
 1. Make commands available as slash commands

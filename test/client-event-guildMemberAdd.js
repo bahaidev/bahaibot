@@ -7,10 +7,15 @@ import * as DiscordConstants from '../src/messages/DiscordConstants.js';
 
 import spyOnGetterResults from './helpers/spyOnGetterResults.js';
 
-describe('guildMemberAdd event', function () {
+/**
+ * @typedef {number} Float
+ */
+
+describe('guildMemberAdd event', () => {
   const _random = Math.random;
   beforeEach(function () {
     this.sinon = createSandbox();
+    // @ts-ignore The spy exists on sinon now (sometimes triggered)
     this.sinon.spyOnGetterResults = spyOnGetterResults;
   });
   afterEach(function () {
@@ -19,7 +24,10 @@ describe('guildMemberAdd event', function () {
   });
   it('guildMemberAdd event (non-existing channel)', async function () {
     const discord = new MockDiscord();
-    const {client} = await bot({client: discord.getClient()});
+    // @ts-expect-error Don't need a full mock
+    const {client} = await bot({
+      client: discord.getClient()
+    });
     const channelsCacheFindSpy = this.sinon.spy(
       discord.getGuild().channels.cache, 'find'
     );
@@ -99,6 +107,7 @@ describe('guildMemberAdd event', function () {
       }
     );
 
+    // @ts-expect-error Don't need a full mock
     await bot({client});
     client.emit('guildMemberAdd', discord.getGuildMember());
 
@@ -225,6 +234,7 @@ describe('guildMemberAdd event', function () {
       }
     );
 
+    // @ts-expect-error Don't need a full mock
     await bot({client});
     client.emit('guildMemberAdd', discord.getGuildMember());
 

@@ -26,6 +26,9 @@ import * as DiscordConstants from './messages/DiscordConstants.js';
  * @property {import('discord.js').Client} [client=new Discord.Client()]
  * @property {import('discord.js')} Discord
  * @property {import('discord-tts')} discordTTS
+ * @property {Pick<import('@discordjs/voice'),
+ *   "joinVoiceChannel"|"createAudioPlayer"|
+ *   "createAudioResource">} DiscordVoice
  * @property {import('@google-cloud/dialogflow')} dialogflow
  * @property {import('./integratedClientServerBot.js').LimitedFs} fs
  * @property {import('./discordBot.js').GetPath} getPath
@@ -81,7 +84,7 @@ const supportedLocales = [
 /**
  * @param {WithRequired<
  *   Partial<BotOptions>,
- *   'fs' | 'dialogflow' | 'Discord' | 'discordTTS'
+ *   'fs' | 'dialogflow' | 'Discord' | 'discordTTS' | 'DiscordVoice'
  * > & Partial<BotOptions>} cfg
  * @returns {Promise<BotResponse>}
  */
@@ -102,6 +105,7 @@ const bot = async ({
   client: cl,
   Discord,
   discordTTS, // `speak` admin command
+  DiscordVoice,
   dialogflow,
   fs,
   /**
@@ -199,7 +203,7 @@ const bot = async ({
     app, router, Discord,
     wikiTools, client, guildCheckin,
     _, getLocalizedSetting,
-    fs, settings, discordTTS
+    fs, settings, discordTTS, DiscordVoice
   });
 
   /**

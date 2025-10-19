@@ -17,6 +17,7 @@ class MockDiscord {
    * @returns {import('discord.js').Guild}
    */
   static createGuild (client, guildName, guildID, role) {
+    // @ts-expect-error We need it for mocking
     const guild = new Discord.Guild(client, {
       unavailable: false,
       id: guildID || 'guild-id',
@@ -67,6 +68,7 @@ class MockDiscord {
   static createGuildChannel (
     discord, guild, name, guildChannels, type, client, channelID, clear = true
   ) {
+    // @ts-expect-error We need it for mocking
     const guildChannel = new Discord[
       type === 'text' ? 'TextChannel' : 'GuildChannel'
     ](
@@ -114,9 +116,10 @@ class MockDiscord {
   */
 
   /**
-  * @typedef {NameID} Guild
-  * @property {Channel[]} channels
-  * @property {Emoji[]} emojis
+  * @typedef {NameID & {
+  *   channels: Channel[],
+  *   emojis: Emoji[]
+  * }} Guild
   */
 
   /**
@@ -163,7 +166,9 @@ class MockDiscord {
     }
 
     this.guildMember = this.mockGuildMember();
-    this.guild.addMember(this.user, {accessToken: 'mockAccessToken'});
+
+    client.emit('guildMemberAdd', this.guildMember);
+
     this.message = this.mockMessage({
       user: opts.messageUser,
       content: opts.messageContent,
@@ -184,7 +189,7 @@ class MockDiscord {
     return this.guild;
   }
   /**
-   * @returns {import('discord.js').Channel}
+   * @returns {import('discord.js').GuildChannel}
    */
   getChannel () {
     return this.channel;
@@ -224,7 +229,12 @@ class MockDiscord {
    * @param {string} cfg.name
    * @param {Guild[]} cfg.guilds
    * @param {string} cfg.roleID
-   * @returns {{client: Client, role: Role}}
+   * @returns {{
+   *   client: import('discord.js').Client,
+   *   role: import('discord.js').Role,
+   *   clientGuilds: import('discord.js').Guild[],
+   *   guildChannels: import('discord.js').GuildChannel[]
+   * }}
    */
   mockClient ({name, guilds, roleID}) {
     const client = new Discord.Client({
@@ -247,6 +257,7 @@ class MockDiscord {
       return {client, role, clientGuilds: [], guildChannels: []};
     }
 
+    /** @type {import('discord.js').GuildChannel[]} */
     const guildChannels = [];
     const clientGuilds = guilds.map(({
       id: guildID,
@@ -299,6 +310,7 @@ class MockDiscord {
   * @returns {import('discord.js').Role}
   */
   mockRole ({client, roleID, name}) {
+    // @ts-expect-error We need it for mocking
     return new Discord.Role(client, {
       id: roleID,
       name
@@ -309,8 +321,8 @@ class MockDiscord {
   /**
    * @param {string} guildID
    * @param {string} guildName
-   * @param {Role} role
-   * @returns {MockGuild}
+   * @param {import('discord.js').Role} role
+   * @returns {import('discord.js').Guild}
    */
   mockGuild (guildID, guildName, role) {
     return MockDiscord.createGuild(
@@ -319,12 +331,13 @@ class MockDiscord {
   }
   /**
    * @param {string} id
-   * @returns {Channel}
+   * @returns {import('discord.js').GuildChannel}
    */
   mockChannel (id) {
-    return new Discord.GuildChannel(this.client, {
+    // @ts-expect-error We need it for mocking
+    return new Discord.GuildChannel(this.guild, {
       id: id || 'channel-id'
-    });
+    }, this.client);
   }
   /**
    * @param {string} name
@@ -338,9 +351,10 @@ class MockDiscord {
     );
   }
   /**
-   * @returns {TextChannel}
+   * @returns {import('discord.js').TextChannel}
    */
   mockTextChannel () {
+    // @ts-expect-error We need it for mocking
     return new Discord.TextChannel(
       this.guild,
       {
@@ -351,7 +365,8 @@ class MockDiscord {
         lastPinTimestamp: new Date('2019-01-01').getTime(),
         rate_limit_per_user: 0,
         messages: []
-      }
+      },
+      this.client
     );
   }
 
@@ -362,6 +377,7 @@ class MockDiscord {
    * @returns {import('discord.js').Presence}
    */
   mockPresence ({user, status}) {
+    // @ts-expect-error We need it for mocking
     return new Discord.Presence(this.client, {
       user,
       status
@@ -377,11 +393,12 @@ class MockDiscord {
    * @param {import('discord.js').Role[]} cfg.roles
    * @param {boolean} cfg.hideUserStatus
    * @param {import('discord.js').Client} cfg.client
-   * @returns {ClientUser}
+   * @returns {import('discord.js').ClientUser}
    */
   mockUser ({
     userID, userName, guild, status, roles, hideUserStatus, client = this.client
   } = {}) {
+    // @ts-expect-error We need it for mocking
     const user = new Discord.ClientUser(this.client, {
       id: userID || 'user-id',
       username: userName || 'user username',
@@ -391,6 +408,26 @@ class MockDiscord {
     });
 
     if (guild && status) {
+      // // @ts-expect-error We need it for mocking
+      // const mockMember = new Discord.GuildMember(
+      //   this.client,
+      //   {
+      //     user,
+      //     guild
+      //   }
+      // );
+      const mockMember = this.mockGuildMember({user});
+
+      client.emit('guildMemberAdd', mockMember);
+
+      const oldPresence = null;
+      // @ts-expect-error We need it for mocking
+      const newPresence = new Discord.Presence(
+        this.client, {status, user}
+      );
+      client.emit('presenceUpdate', oldPresence, newPresence);
+      /*
+      // Above code is untested; this is the previous code (for the old API)
       guild.presences.add({
         guild,
         user,
@@ -398,6 +435,7 @@ class MockDiscord {
         // client_status: {web, mobile, desktop}
         status
       });
+      */
     }
     if (guild) {
       const guildMember = this.mockGuildMember({
@@ -423,12 +461,13 @@ class MockDiscord {
   }
 
   /**
-   * @param {object} cfg
-   * @param {import('discord.js').User} cfg.user
-   * @param {import('discord.js').Role[]} cfg.roles
+   * @param {object} [cfg]
+   * @param {import('discord.js').User} [cfg.user]
+   * @param {import('discord.js').Role[]} [cfg.roles]
    * @returns {import('discord.js').GuildMember}
    */
   mockGuildMember ({user, roles} = {}) {
+    // @ts-expect-error We need it for mocking
     return new Discord.GuildMember(this.client, {
       deaf: false,
       mute: false,
@@ -451,8 +490,9 @@ class MockDiscord {
    * @returns {import('discord.js').Message<true>}
    */
   mockMessage ({content, mentionEveryone, user, mentions}) {
-    return new Discord.Message(this.client, {
-      id: 'message-id',
+    // @ts-expect-error We need it for mocking
+    const msg = new Discord.Message(this.client, {
+      id: 100000n, // 'message-id',
       type: 'DEFAULT',
       content: content || 'this is the message content',
       author: user || this.user,
@@ -473,7 +513,15 @@ class MockDiscord {
       mention_roles: [],
       mention_everyone: Boolean(mentionEveryone),
       hit: false
-    }, this.textChannel);
+    });
+
+    // Is otherwise readonly
+    Object.defineProperty(msg, 'channel', {
+      configurable: true,
+      value: this.textChannel
+    });
+
+    return msg;
     // this.message.guild.members.add(this.guildMember);
   }
 
@@ -495,6 +543,7 @@ class MockDiscord {
     message, users, roles, everyone, crosspostedChannels
   }) {
     /* eslint-enable class-methods-use-this -- Consistent */
+    // @ts-expect-error We need it for mocking
     return new Discord.MessageMentions(
       message, users, roles, everyone, crosspostedChannels
     );

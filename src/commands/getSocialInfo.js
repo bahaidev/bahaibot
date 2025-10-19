@@ -86,7 +86,10 @@ const getSocialInfo = ({
         }
         // userStatus = user.presence.status;
 
-        const member = await message.guild.members.fetch(user);
+        const member = await message.guild.members.fetch({
+          user,
+          withPresences: true
+        });
         const {channel} = message;
         const messages = await channel.messages.fetch({limit: 100});
         const userMessages = messages.filter(

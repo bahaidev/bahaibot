@@ -10,6 +10,7 @@ import {join} from 'path';
 import * as Discord from 'discord.js';
 
 import * as discordTTS from 'discord-tts';
+import * as DiscordVoice from '@discordjs/voice';
 
 // ChatBot functions
 // Require Modules and settings for AI
@@ -127,6 +128,7 @@ function discordBot (args) {
     fetch,
     Discord,
     discordTTS,
+    DiscordVoice,
     ...args
   });
 }

@@ -76,8 +76,16 @@ const fulfillmentText = await doAIProcessing({
 ### Building one's own `discordTTS` implementation
 
 Needs a `getVoiceStream` method which accepts the words as a string and returns
-a stream (passed to `broadcast.play()` (see below)). Needed only for the
-admin `speak` command.
+a stream. Needed only for the admin `speak` command.
+
+### Building one's own `DiscordVoice` implementation
+
+Needs the following for Admin (`speak` command):
+- `joinVoiceChannel()` - Returns a connection object with a `subscribe` method
+  that will be passed the reult of `createAudioPlayer()`.
+- `createAudioPlayer()` - Returns an object with `play`
+- `createAudioResource()` - Will be passed `discordTTS.getVoiceStream(words)` and
+  will be passed to the `play` method mentioned just above.
 
 ### Building one's own `discord.js` implementation
 
@@ -112,7 +120,6 @@ mentioned in the "Required by" column.
 | `guildMemberAddEvent` | `user.id` | String | (Called in main bot code)
 | `message`| | Tracks a subset of `Discord.Message`; may be a string or an object | See table below and "Building one's own `dialogflow` implementation" section
 | `guild` | `.channels.cache.get(guildChannelID)` | Returns a channel object | (Called in main bot code if `checkins` flag passed; also in Admin (`checkin` command); see also `channel` for the returned object)
-| `broadcast` | `play` | Will be passed `discordTTS.getVoiceStream(words)` | Admin (`speak` command)
 | `channel` | `.name` | A string | (Accessed in main bot code if `checkins` flag passed); also in Admin (`checkin` command))
 | `channel` | `.send(string)` | See also the object signature | (Called in main bot code if `checkins` flag passed); also in Admin (`checkin` command))
 | `channel` | `.send(object)` | Object has two properties: `content` string, and `embed` subobject (with `color` number and `description` string) | (Called in main bot code if `checkins` flag passed); also in Admin (`checkin` command))

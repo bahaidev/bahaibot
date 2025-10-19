@@ -31,14 +31,18 @@ describe('Bot', function () {
       Discord,
       fs,
       getPath,
+      // @ts-expect-error Just a mock
       dialogflow: getDialogflowAdapter({
+        // @ts-expect-error Just a mock
         doAIProcessing () {
           //
         }
       })
     });
 
-    const settings = getSettings?.(system);
+    const settings = getSettings?.(
+      /** @type {import('../src/discordBot.js').SettingsFile} */ (system)
+    );
     expect(settings).to.have.property('token');
   });
 });

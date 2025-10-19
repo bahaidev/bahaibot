@@ -84,7 +84,7 @@ const fs = /** @type {LimitedFs} */ ({
  * @param {SetOptional<import('./bot.js').BotOptions, 'getPath'|'fs'>} args
  * @returns {Promise<import('./bot.js').BotResponse>}
  */
-function discordBot (args) {
+function integratedClientServerBot (args) {
   return bot({
     checkins,
     locales,
@@ -102,4 +102,4 @@ function discordBot (args) {
   });
 }
 
-export default discordBot;
+export default integratedClientServerBot;

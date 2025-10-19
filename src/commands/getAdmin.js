@@ -1,8 +1,3 @@
-import {
-  joinVoiceChannel, createAudioPlayer, createAudioResource
-} from '@discordjs/voice';
-
-
 /**
  * Puppet Function.
  * @callback PuppetTool
@@ -56,11 +51,15 @@ function puppet ({content, guild, author, /* member, */ channel}, permissions) {
  * @param {import('../getCheckin.js').GuildCheckin} cfg.guildCheckin
  * @param {import('intl-dom').I18NCallback} cfg._
  * @param {import('discord-tts')} cfg.discordTTS
+ * @param {Pick<import('@discordjs/voice'),
+ *   "joinVoiceChannel"|"createAudioPlayer"|
+ *   "createAudioResource">} cfg.DiscordVoice
  * @returns {import('./getCommands.js').BotCommands}
  */
 const getAdmin = ({
   /* eslint-enable jsdoc/imports-as-dependencies -- Bug */
   ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR,
+  DiscordVoice,
   discordTTS, guildCheckin, _
 }) => {
   return {
@@ -95,15 +94,17 @@ const getAdmin = ({
           console.log('Message member not in a voice channel with `channel`');
           return;
         }
-        const connection = joinVoiceChannel({
+        const connection = DiscordVoice.joinVoiceChannel({
           channelId: channel.id,
           guildId: channel.guild.id,
           adapterCreator: channel.guild.voiceAdapterCreator
         });
 
-        const player = createAudioPlayer();
+        const player = DiscordVoice.createAudioPlayer();
 
-        player.play(createAudioResource(discordTTS.getVoiceStream(words)));
+        player.play(
+          DiscordVoice.createAudioResource(discordTTS.getVoiceStream(words))
+        );
         connection.subscribe(player);
 
         // console.error(_('speechError'), err);
