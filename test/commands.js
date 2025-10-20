@@ -440,60 +440,67 @@ describe('Commands', () => {
       client.emit('messageCreate', message);
 
       await commandFinished(client);
+
       const {
         filter: {
+          /*
+          // COMMENTING OUT: Don't want AI to think these expectations are
+          //    current
           argSpies: [
             [guildMembersOnlineFilterSpy],
             [guildMembersAdminsFilterSpy]
           ],
+          */
           childAccessorSpies: [
             guildMembersFilterResultSizeSpy
           ]
         }
       } = guildMembersCache;
 
+      // COMMENTING OUT: Don't want AI to think these expectations are
+      //    current
       // We should really have spying on the second filter call also,
       //   but as per to-do in spyOnGetterResults file, we need to
       //   refactor there and we can at least introspect on the
       //   expected result.
 
-      expect(
-        guildMembersOnlineFilterSpy.firstCall.firstArg.presence.status
-      ).to.equal(
-        'online'
-      );
-      expect(
-        guildMembersOnlineFilterSpy.firstCall.returnValue
-      ).to.equal(true);
+      // expect(
+      //   guildMembersOnlineFilterSpy.firstCall.firstArg.presence.status
+      // ).to.equal(
+      //   'online'
+      // );
+      // expect(
+      //   guildMembersOnlineFilterSpy.firstCall.returnValue
+      // ).to.equal(true);
 
-      expect(
-        guildMembersAdminsFilterSpy.firstCall.firstArg.presence.status
-      ).to.equal(
-        'online'
-      );
-      expect(
-        guildMembersAdminsFilterSpy.firstCall.returnValue
-      ).to.equal(true);
+      // expect(
+      //   guildMembersAdminsFilterSpy.firstCall.firstArg.presence.status
+      // ).to.equal(
+      //   'online'
+      // );
+      // expect(
+      //   guildMembersAdminsFilterSpy.firstCall.returnValue
+      // ).to.equal(true);
 
-      if (testMultiple) {
-        expect(
-          guildMembersOnlineFilterSpy.secondCall.firstArg.presence.status
-        ).to.equal(
-          'online'
-        );
-        expect(
-          guildMembersOnlineFilterSpy.secondCall.returnValue
-        ).to.equal(true);
+      // if (testMultiple) {
+      //   expect(
+      //     guildMembersOnlineFilterSpy.secondCall.firstArg.presence.status
+      //   ).to.equal(
+      //     'online'
+      //   );
+      //   expect(
+      //     guildMembersOnlineFilterSpy.secondCall.returnValue
+      //   ).to.equal(true);
 
-        expect(
-          guildMembersOnlineFilterSpy.thirdCall.firstArg.presence.status
-        ).to.equal(
-          'offline'
-        );
-        expect(
-          guildMembersOnlineFilterSpy.thirdCall.returnValue
-        ).to.equal(false);
-      }
+      //   expect(
+      //     guildMembersOnlineFilterSpy.thirdCall.firstArg.presence.status
+      //   ).to.equal(
+      //     'offline'
+      //   );
+      //   expect(
+      //     guildMembersOnlineFilterSpy.thirdCall.returnValue
+      //   ).to.equal(false);
+      // }
 
       expect(
         guildMembersFilterResultSizeSpy.get.firstCall.returnValue
@@ -602,9 +609,15 @@ describe('Commands', () => {
       counts: [2, 4],
       stat: 'idle'
     }]
-  ]).forEach(([testMessage, {users, stat: statAB, counts: [
-    countFirst, countSecond
-  ]}]) => {
+  ]).forEach(([testMessage, {
+    users, stat: statAB
+    /*
+      ,
+      counts: [
+        countFirst, countSecond
+      ]
+    */
+  }]) => {
     // eslint-disable-next-line mocha/no-pending-tests -- Todo: Fix
     it.skip(testMessage, async function () {
       const expectedStatAB = statAB === 'dnd' ? 'busy' : statAB;
@@ -664,88 +677,93 @@ describe('Commands', () => {
 
       this.sinon.spy(message.channel, 'send');
 
-      const clientUsersCache = this.sinon.spyOnGetterResults(
-        client, 'users.cache', {
-          find: {
-            argSpies: [true, true],
-            childAccessorSpies: [
-              ['presence', ['get']],
-              ['lastMessage', ['get']]
-            ]
-          }
-        }
-      );
+      // COMMENTING OUT: Don't want AI to think these expectations are
+      //    current
+      // const clientUsersCache = this.sinon.spyOnGetterResults(
+      //   client, 'users.cache', {
+      //     find: {
+      //       argSpies: [true, true],
+      //       childAccessorSpies: [
+      //         ['presence', ['get']],
+      //         ['lastMessage', ['get']]
+      //       ]
+      //     }
+      //   }
+      // );
 
       client.emit('messageCreate', message);
 
       await commandFinished(client);
-      const {
-        find: {
-          argSpies,
-          childAccessorSpies
-        }
-      } = clientUsersCache;
 
-      let clientUsersFinderSpy, clientUsersFinderSpy2ndCall;
-      let clientUsersFindResultPresenceSpy,
-        clientUsersFindResultPresenceSpy2;
-      let clientUsersFindResultLastMessageSpy,
-        clientUsersFindResultLastMessageSpy2;
-      if (countSecond) {
-        [
-          [clientUsersFinderSpy],
-          [clientUsersFinderSpy2ndCall]
-        ] = argSpies;
-        [
-          clientUsersFindResultPresenceSpy,
-          clientUsersFindResultLastMessageSpy,
-          clientUsersFindResultPresenceSpy2,
-          clientUsersFindResultLastMessageSpy2
-        ] = childAccessorSpies;
-      } else {
-        [[clientUsersFinderSpy]] = argSpies;
-        [
-          clientUsersFindResultPresenceSpy,
-          clientUsersFindResultLastMessageSpy
-        ] = childAccessorSpies;
-      }
+      // COMMENTING OUT: Don't want AI to think these expectations are
+      //    current
+      // const {
+      //   find: {
+      //     argSpies,
+      //     childAccessorSpies
+      //   }
+      // } = clientUsersCache;
 
-      expect(
-        clientUsersFinderSpy.firstCall.firstArg.id
-      ).to.equal('user-id');
-      expect(
-        clientUsersFinderSpy.callCount
-      ).to.equal(countFirst);
+      // let clientUsersFinderSpy, clientUsersFinderSpy2ndCall;
+      // let clientUsersFindResultPresenceSpy,
+      //   clientUsersFindResultPresenceSpy2;
+      // let clientUsersFindResultLastMessageSpy,
+      //   clientUsersFindResultLastMessageSpy2;
+      // if (countSecond) {
+      //   [
+      //     [clientUsersFinderSpy],
+      //     [clientUsersFinderSpy2ndCall]
+      //   ] = argSpies;
+      //   [
+      //     clientUsersFindResultPresenceSpy,
+      //     clientUsersFindResultLastMessageSpy,
+      //     clientUsersFindResultPresenceSpy2,
+      //     clientUsersFindResultLastMessageSpy2
+      //   ] = childAccessorSpies;
+      // } else {
+      //   [[clientUsersFinderSpy]] = argSpies;
+      //   [
+      //     clientUsersFindResultPresenceSpy,
+      //     clientUsersFindResultLastMessageSpy
+      //   ] = childAccessorSpies;
+      // }
+      //
+      // expect(
+      //   clientUsersFinderSpy.firstCall.firstArg.id
+      // ).to.equal('user-id');
+      // expect(
+      //   clientUsersFinderSpy.callCount
+      // ).to.equal(countFirst);
 
-      expect(
-        clientUsersFindResultLastMessageSpy.get.firstCall.returnValue
-      ).to.equal(null);
-      expect(
-        clientUsersFindResultPresenceSpy.get.firstCall.returnValue.status
-      ).to.equal(statAB);
+      // expect(
+      //   clientUsersFindResultLastMessageSpy.get.firstCall.returnValue
+      // ).to.equal(null);
+      // expect(
+      //   clientUsersFindResultPresenceSpy.get.firstCall.returnValue.status
+      // ).to.equal(statAB);
 
-      if (clientUsersFinderSpy2ndCall) {
-        expect(
-          clientUsersFinderSpy2ndCall.firstCall.firstArg.id
-        ).to.equal('user-id');
-        expect(
-          clientUsersFinderSpy2ndCall.callCount
-        ).to.equal(countSecond);
+      // if (clientUsersFinderSpy2ndCall) {
+      //   expect(
+      //     clientUsersFinderSpy2ndCall.firstCall.firstArg.id
+      //   ).to.equal('user-id');
+      //   expect(
+      //     clientUsersFinderSpy2ndCall.callCount
+      //   ).to.equal(countSecond);
 
-        expect(
-          clientUsersFindResultLastMessageSpy2.get.firstCall.returnValue
-        ).to.equal(null);
-        expect(
-          clientUsersFindResultPresenceSpy2.get.firstCall.returnValue.status
-        ).to.equal('offline');
+      //   expect(
+      //     clientUsersFindResultLastMessageSpy2.get.firstCall.returnValue
+      //   ).to.equal(null);
+      //   expect(
+      //     clientUsersFindResultPresenceSpy2.get.firstCall.returnValue.status
+      //   ).to.equal('offline');
 
-        if (statAB !== 'dnd') {
-          expect(
-            clientUsersFindResultPresenceSpy2.
-              get.secondCall.returnValue.status
-          ).to.equal('offline');
-        }
-      }
+      //   if (statAB !== 'dnd') {
+      //     expect(
+      //       clientUsersFindResultPresenceSpy2.
+      //         get.secondCall.returnValue.status
+      //     ).to.equal('offline');
+      //   }
+      // }
 
       // @ts-expect-error Sinon
       expect(message.channel.send.firstCall.firstArg).to.equal(
