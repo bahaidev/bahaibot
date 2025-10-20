@@ -5,13 +5,13 @@
 * @param {string} cfg.sessionId
 * @param {string} cfg.languageCode
 * @param {string} cfg.keyFilename
-* @returns {string}
+* @returns {Promise<string>}
 */
 
 /**
  * @param {{
  *   doAIProcessing: DoAIProcessing,
- *   projectAgentSessionPath: (projectID: string, sessionID: string) => string
+ *   projectAgentSessionPath?: (projectID: string, sessionID: string) => string
  * }} doAIProcessing
  * @returns {dialogflow}
  */
@@ -83,7 +83,8 @@ function getDialogflowAdapter ({
     }
   };
   // @ts-expect-error We want a dynamic method, so adding now
-  dialogflow.SessionsClient.projectAgentSessionPath = projectAgentSessionPath;
+  dialogflow.SessionsClient.prototype.projectAgentSessionPath =
+    projectAgentSessionPath;
 
   return dialogflow;
 }
