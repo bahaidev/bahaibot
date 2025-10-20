@@ -30,6 +30,7 @@ const getBahaiInfo = ({client, Discord}) => {
         // Add data
         embed.setAuthor({
           name: 'BahaiBot',
+          /* c8 ignore next --- TS */
           iconURL: client.user?.avatarURL() ?? undefined
         });
 

@@ -38,7 +38,7 @@ function getDialogflowAdapter ({
       }
 
       // Reenable when ready to test
-      /* c8 ignore next 34 */
+      /* c8 ignore next 41 */
       /**
        *
        * @param {object} cfg

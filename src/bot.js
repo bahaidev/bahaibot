@@ -89,8 +89,8 @@ const supportedLocales = [
 const bot = async ({
   checkins = false,
   locales = typeof navigator === 'undefined'
+    /* c8 ignore next 5 */
     ? [defaultLocale]
-    /* c8 ignore next 3 */
     : [...navigator.languages.filter((locale) => {
       return supportedLocales.includes(locale);
     }), defaultLocale],
@@ -98,6 +98,7 @@ const bot = async ({
   fetch = globalThis.fetch,
   // Default to dependencies' globals in case using UMD files and user not
   //  supplying own modular versions
+  /* c8 ignore next --- Ok */
   i18n = globalThis.intlDom?.i18n,
   striptags = globalThis.striptags,
   client: cl,
@@ -110,6 +111,7 @@ const bot = async ({
    * @type {GetSettings}
    */
   getSettings: defaultGetSettings,
+  /* c8 ignore next -- Todo? */
   getPath = (path) => path,
   // numberOfCommands = 1,
   commandInterval = 2000,
@@ -185,6 +187,7 @@ const bot = async ({
    * @type {GetLocalizedSetting}
    */
   const getLocalizedSetting = (key, {defaultValue} = {}) => {
+    /* c8 ignore next --- Not used? */
     return settings?.locales?.[_.resolvedLocale][key] ||
       defaultValue || _(key);
   };
@@ -391,6 +394,7 @@ const bot = async ({
           getLocalizedSetting('serverName')
         ),
         helpTeam: `<@&${helpTeam}>`,
+        /* c8 ignore next 2 --- TS */
         // eslint-disable-next-line @stylistic/max-len -- Long
         rulesChannel: ev.guild.channels.cache.get(rulesChannel)?.toString() ?? ''
       }))

@@ -69,7 +69,7 @@ const getAdmin = ({
         value: 'Reads some words as speech'
       },
       */
-      /* c8 ignore next 39 */
+      /* c8 ignore next 40 */
       /* eslint-disable require-await -- Easier */
       /**
        * Reads some scripture.

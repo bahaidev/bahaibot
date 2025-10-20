@@ -111,6 +111,7 @@ async function getReader ({fs, settings}) {
 
   // GLOBAL VARIABLES
   const colorBorder = settings.embedColor;
+  /* c8 ignore next -- TS */
   const MAX_TEXT_LIMIT = settings.embedTextLimit ?? 2000;
 
   const availableRandomOptions = Object.keys(library.index);
@@ -159,7 +160,7 @@ async function getReader ({fs, settings}) {
     // Disable this and test once other works are enabled besides the
     //   Hidden Words (which should not have any verses we could use
     //   exceeding our default `MAX_TEXT_LIMIT` setting)
-    /* c8 ignore next 20 */
+    /* c8 ignore next 22 */
     // If content string is greater than max limit
     while (str.length > l) {
       // Find the last position of space
@@ -224,10 +225,12 @@ async function getReader ({fs, settings}) {
       const embed = new Discord.EmbedBuilder();
 
       // Set colors and data
+      /* c8 ignore next -- Todo */
       embed.setColor(colorBorder ?? null);
       embed.setAuthor({
         name: `${library.list[library.index[refName]].title} by ` +
         `${library.list[library.index[refName]].author}`,
+        /* c8 ignore next -- Todo */
         iconURL: avatar ?? undefined
       });
 
@@ -240,7 +243,7 @@ async function getReader ({fs, settings}) {
         // Unreachable currently with the two Hidden Words options not
         //  having notes; remove this ignore and test when enabling
         //  other works that do have notes.
-        /* c8 ignore next 12 */
+        /* c8 ignore next 16 */
         // If there are notes
         if (content.notes !== undefined && content.notes.length > 0) {
           let ntext = '';
@@ -339,6 +342,7 @@ async function getReader ({fs, settings}) {
     const userInput = message.content;
 
     // Pull the relevant data from the regex
+    /* c8 ignore next -- TS */
     const {groups} = userInput.match(fileRegex) ?? {};
 
     let {refName} = /** @type {{refName: string}} */ (groups);

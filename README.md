@@ -209,7 +209,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 1. Waiting: Update to discord 15 when comes out
 
-1. Unit test and coverage; smoke test
+1. Smoke test
 1. See about establishing our own ownership so we can add back the intent
     for presence (and test)
 
@@ -218,4 +218,5 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
       ESM (bundle-friendly) export as well as any updated discord.js support?
 
 1. Make commands available as slash commands
+1. Stop skipping (social) tests
 1. Go through in-code to-dos

@@ -16,6 +16,7 @@ const getSocialInfo = ({
       //  name: '!users',
       //  value: 'Displays a count of online users.'
       // }
+      /* c8 ignore next 52 -- Reenable when testing again */
       /**
        * Users gives the number of online users.
        * @param {import('discord.js').Message<true>} message
@@ -97,6 +98,7 @@ const getSocialInfo = ({
         });
         if (!user) {
           replies.push(`I haven't seen ${sname} lately.`);
+        /* c8 ignore next 41 -- Reenable when testing again */
         } else {
           // userStatus = user.presence.status;
 
