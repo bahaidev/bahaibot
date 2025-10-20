@@ -9,9 +9,15 @@
 */
 
 /**
+ * @typedef {(
+ *   projectID: string, sessionID: string
+ * ) => string} ProjectAgentSessionPath
+ */
+
+/**
  * @param {{
  *   doAIProcessing: DoAIProcessing,
- *   projectAgentSessionPath?: (projectID: string, sessionID: string) => string
+ *   projectAgentSessionPath?: ProjectAgentSessionPath
  * }} doAIProcessing
  * @returns {dialogflow}
  */

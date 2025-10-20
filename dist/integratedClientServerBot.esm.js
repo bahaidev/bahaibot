@@ -8118,6 +8118,12 @@ function getCheckin ({
 
 
 /**
+ * @callback MessageListener
+ * @param {import('discord.js').Message} msg
+ * @returns {Promise<void>}
+ */
+
+/**
  * This lets us also update the `client` value and dependent code against
  * a unit testing mock client.
  * @typedef {object} BotOptions
@@ -8369,12 +8375,6 @@ const bot = async ({
   });
 
   // Process Bot Commands
-
-  /**
-  * @callback MessageListener
-  * @param {import('discord.js').Message} msg
-  * @returns {Promise<void>}
-  */
 
   // Create an event listener for messages
   client.on(
