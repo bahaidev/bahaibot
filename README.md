@@ -213,7 +213,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 1. Smoke test
 1. See about establishing maintenance of bot on own server
 
-1. See about any refactoring needed to allow to work with bahai-matrix-bot
+1. See about any refactoring needed to allow to work with bahai-matrix-bot and
+    easier for website
   1. PR to discord.js-Rate-Limiter for
       ESM (bundle-friendly) export as well as any updated discord.js support?
 
