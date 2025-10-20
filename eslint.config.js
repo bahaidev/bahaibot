@@ -46,6 +46,10 @@ export default [
   ...ashNazg(['sauron', 'node']).map((cfg) => {
     return {
       files: ['src/discordBot.js', 'test/**/*.js'],
+      rules: {
+        // Buggy
+        'jsdoc/imports-as-dependencies': 0
+      },
       ...cfg
     };
   }),

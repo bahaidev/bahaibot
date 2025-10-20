@@ -45,7 +45,6 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
 * @typedef {Object<string,BotCommand>} BotCommands
 */
 
-/* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
  * @param {object} cfg
  * @param {import('@google-cloud/dialogflow').SessionsClient} cfg.app
@@ -65,7 +64,6 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
  * @returns {Promise<import('./getCommands.js').BotCommands>}
  */
 const getCommands = async function ({
-  /* eslint-enable jsdoc/imports-as-dependencies -- Bug */
   app, router, Discord,
   wikiTools, client, guildCheckin,
   _,

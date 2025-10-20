@@ -6,7 +6,6 @@
 
 // Export the router
 
-/* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
  * @callback Router
  * @param {import('@google-cloud/dialogflow').protos.google.
@@ -19,7 +18,6 @@
  * @param {import('intl-dom').I18NCallback} _
  * @returns {void}
  */
-/* eslint-enable jsdoc/imports-as-dependencies -- Bug */
 
 /**
  * @type {Router}

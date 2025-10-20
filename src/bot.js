@@ -11,7 +11,6 @@ import getCheckin from './getCheckin.js';
 import {greets, happies} from './messages/messages.js';
 import * as DiscordConstants from './messages/DiscordConstants.js';
 
-/* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
  * This lets us also update the `client` value and dependent code against
  * a unit testing mock client.
@@ -37,7 +36,6 @@ import * as DiscordConstants from './messages/DiscordConstants.js';
  * @property {import('discord.js-rate-limiter').RateLimiter} [rateLimiter]
  * @property {boolean} [exitNoThrow=false] Set to true for testing
  */
-/* eslint-enable jsdoc/imports-as-dependencies -- Bug */
 
 /**
  * @typedef {{

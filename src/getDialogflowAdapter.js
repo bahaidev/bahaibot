@@ -38,8 +38,7 @@ function getDialogflowAdapter ({
       }
 
       // Reenable when ready to test
-      /* c8 ignore next 36 */
-      /* eslint-disable jsdoc/imports-as-dependencies -- Bug */
+      /* c8 ignore next 34 */
       /**
        *
        * @param {object} cfg
@@ -55,7 +54,6 @@ function getDialogflowAdapter ({
        * used internally.
        */
       async detectIntent ({
-        /* eslint-enable jsdoc/imports-as-dependencies -- Bug */
         session: sessionId,
         queryInput: {
           text: {

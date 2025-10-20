@@ -42,7 +42,6 @@ function puppet ({content, guild, author, /* member, */ channel}, permissions) {
   }
 }
 
-/* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
  * @param {object} cfg
  * @param {string[]} cfg.ADMIN_IDS
@@ -57,7 +56,6 @@ function puppet ({content, guild, author, /* member, */ channel}, permissions) {
  * @returns {import('./getCommands.js').BotCommands}
  */
 const getAdmin = ({
-  /* eslint-enable jsdoc/imports-as-dependencies -- Bug */
   ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR,
   DiscordVoice,
   discordTTS, guildCheckin, _

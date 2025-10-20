@@ -1,10 +1,8 @@
-
 /* eslint-disable jsdoc/reject-any-type -- Needed */
 /**
  * @typedef {any} AnyValue
  */
 /* eslint-enable jsdoc/reject-any-type -- Needed */
-
 
 /**
  * @typedef {Record<

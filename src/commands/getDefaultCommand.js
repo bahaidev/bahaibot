@@ -1,4 +1,3 @@
-/* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
 * @param {object} cfg
 * @param {import('@google-cloud/dialogflow').SessionsClient} cfg.app
@@ -10,7 +9,6 @@
 * @returns {import('./getCommands.js').BotCommand}
 */
 const getDefaultCommand = ({
-  /* eslint-enable jsdoc/imports-as-dependencies -- Bug */
   app, router, client, Discord, _, settings
 }) => {
   return {
@@ -66,7 +64,6 @@ const getDefaultCommand = ({
         }
       };
 
-      /* eslint-disable jsdoc/imports-as-dependencies -- Bug */
       /**
       * @throws {DialogflowError}
       * @returns {Promise<
@@ -75,7 +72,6 @@ const getDefaultCommand = ({
       * >} responses
       */
       async function dialogflowCall () {
-        /* eslint-enable jsdoc/imports-as-dependencies -- Bug */
         // Send request and log result
         try {
           const [response] = await app.detectIntent(request);
