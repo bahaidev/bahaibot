@@ -51,6 +51,9 @@ importers:
       '@babel/plugin-syntax-top-level-await':
         specifier: ^7.14.5
         version: 7.14.5(@babel/core@7.28.4)
+      '@brettz9/node-static':
+        specifier: ^0.1.1
+        version: 0.1.1
       '@rollup/plugin-commonjs':
         specifier: ^28.0.8
         version: 28.0.8(rollup@4.52.5)
@@ -102,9 +105,6 @@ importers:
       mocha:
         specifier: ^11.7.4
         version: 11.7.4
-      node-static:
-        specifier: ^0.7.11
-        version: 0.7.11
       nodemon:
         specifier: ^3.1.10
         version: 3.1.10
@@ -226,6 +226,11 @@ packages:
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: '>=7.20.0'
+
+  '@brettz9/node-static@0.1.1':
+    resolution: {integrity: sha512-HHD3JKDCTxudQ7btLDykPlzLBFl+RM70vC6Zsvey1cr9m67UBOmwiP0f2Bk7IjjU3G1c4vAJCjysVxPkmHs7Ew==}
+    engines: {node: '>=10.0.0'}
+    hasBin: true
 
   '@discordjs/builders@1.12.2':
     resolution: {integrity: sha512-AugKmrgRJOHXEyMkABH/hXpAmIBKbYokCEl9VAM4Kh6FvkdobQ+Zhv7AR6K+y5hS7+VQ7gKXPYCe1JQmV07H1g==}
@@ -867,6 +872,10 @@ packages:
   ansi-escapes@7.1.1:
     resolution: {integrity: sha512-Zhl0ErHcSRUaVfGUeUdDuLgpkEo8KIFjB4Y9uAc46ScOpdDiU1Dbyplh7qWJeJ/ZHpbyMSM26+X3BySgnIz40Q==}
     engines: {node: '>=18'}
+
+  ansi-regex@2.1.1:
+    resolution: {integrity: sha512-TIGnTpdo+E3+pCyAluZvtED5p5wCqLdezCyhPZzKPcxvFplEt4i+W7OONCKgeZFT3+y5NZZfOOS/Bdcanm1MYA==}
+    engines: {node: '>=0.10.0'}
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -2547,9 +2556,9 @@ packages:
     resolution: {integrity: sha512-xRc4oEhT6eaBpU1XF7AjpOFD+xQmXNB5OVKwp4tqCuBpHLS/ZbBDrc07mYTDqVMg6PfxUjjNp85O6Cd2Z/5HWA==}
     engines: {node: '>= 0.6'}
 
-  mime@1.6.0:
-    resolution: {integrity: sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==}
-    engines: {node: '>=4'}
+  mime@2.6.0:
+    resolution: {integrity: sha512-USPkMeET31rOMiarsBNIHZKLGgvKc/LrjofAnBlOttf5ajRvqiRA8QsenbcooctK6d6Ts6aqZXBA+XbkKthiQg==}
+    engines: {node: '>=4.0.0'}
     hasBin: true
 
   mimic-function@5.0.1:
@@ -2562,9 +2571,6 @@ packages:
   minimatch@9.0.5:
     resolution: {integrity: sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==}
     engines: {node: '>=16 || 14 >=14.17'}
-
-  minimist@0.0.10:
-    resolution: {integrity: sha512-iotkTvxc+TwOm5Ieim8VnSNvCDjCK9S8G3scJ50ZthspSxa7jx50jkhYduuAtAjvfDUwSgOwf8+If99AlOEhyw==}
 
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
@@ -2610,6 +2616,9 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
+  neodoc@2.0.2:
+    resolution: {integrity: sha512-NAppJ0YecKWdhSXFYCHbo6RutiX8vOt/Jo3l46mUg6pQlpJNaqc5cGxdrW2jITQm5JIYySbFVPDl3RrREXNyPw==}
+
   node-addon-api@8.5.0:
     resolution: {integrity: sha512-/bRZty2mXUIFY/xU5HLvveNHlswNJej+RnxBjOMkidWfwZzgTbPG1E3K5TOxRLOR+5hX7bSofy8yf1hZevMS8A==}
     engines: {node: ^18 || ^20 || >= 21}
@@ -2634,11 +2643,6 @@ packages:
 
   node-releases@2.0.25:
     resolution: {integrity: sha512-4auku8B/vw5psvTiiN9j1dAOsXvMoGqJuKJcR+dTdqiXEK20mMTk1UEo3HS16LeGQsVG6+qKTPM9u/qQ2LqATA==}
-
-  node-static@0.7.11:
-    resolution: {integrity: sha512-zfWC/gICcqb74D9ndyvxZWaI1jzcoHmf4UTHWQchBNuNMxdBLJMDiUgZ1tjGLEIe/BMhj2DxKD8HOuc2062pDQ==}
-    engines: {node: '>= 0.4.1'}
-    hasBin: true
 
   nodemon@3.1.10:
     resolution: {integrity: sha512-WDjw3pJ0/0jMFmyNDp3gvY2YizjLmmOUQo6DEBY+JgdvW/yQ9mEeSw6H5ythl5Ny2ytb7f9C2nIbjSxMNzbJXw==}
@@ -2703,9 +2707,6 @@ packages:
   onetime@7.0.0:
     resolution: {integrity: sha512-VXJjc87FScF88uafS3JllDgvAm+c/Slfz06lorj2uAY34rlUu0Nt+v8wreiImcrgAjjIHp1rXpTDlLOGw29WwQ==}
     engines: {node: '>=18'}
-
-  optimist@0.6.1:
-    resolution: {integrity: sha512-snN4O4TkigujZphWLN0E//nQmm7790RYaE53DdL7ZYwee2D8DDo9/EyYiKUfN3rneWUjhJnueija3G9I2i0h3g==}
 
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
@@ -3416,10 +3417,6 @@ packages:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
 
-  wordwrap@0.0.3:
-    resolution: {integrity: sha512-1tMA907+V4QmxV7dbRvb4/8MaRALK6q9Abid3ndMYnbyo8piisCmeONVqVSXqQA3KaP4SLt5b7ud6E2sqP8TFw==}
-    engines: {node: '>=0.4.0'}
-
   wordwrapjs@5.1.1:
     resolution: {integrity: sha512-0yweIbkINJodk27gX9LBGMzyQdBDan3s/dEAiwBOj+Mf0PPyWL6/rikalkv8EeD0E8jm4o5RXEOrFTP3NXbhJg==}
     engines: {node: '>=12.17'}
@@ -3625,6 +3622,13 @@ snapshots:
   '@brettz9/eslint-plugin@3.0.0(eslint@9.38.0)':
     dependencies:
       eslint: 9.38.0
+
+  '@brettz9/node-static@0.1.1':
+    dependencies:
+      colors: 1.4.0
+      mime: 2.6.0
+      minimatch: 3.1.2
+      neodoc: 2.0.2
 
   '@discordjs/builders@1.12.2':
     dependencies:
@@ -4255,6 +4259,8 @@ snapshots:
   ansi-escapes@7.1.1:
     dependencies:
       environment: 1.1.0
+
+  ansi-regex@2.1.1: {}
 
   ansi-regex@5.0.1: {}
 
@@ -6336,7 +6342,7 @@ snapshots:
     dependencies:
       mime-db: 1.54.0
 
-  mime@1.6.0: {}
+  mime@2.6.0: {}
 
   mimic-function@5.0.1: {}
 
@@ -6347,8 +6353,6 @@ snapshots:
   minimatch@9.0.5:
     dependencies:
       brace-expansion: 2.0.2
-
-  minimist@0.0.10: {}
 
   minimist@1.2.8: {}
 
@@ -6399,6 +6403,10 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
+  neodoc@2.0.2:
+    dependencies:
+      ansi-regex: 2.1.1
+
   node-addon-api@8.5.0: {}
 
   node-domexception@1.0.0: {}
@@ -6414,12 +6422,6 @@ snapshots:
       formdata-polyfill: 4.0.10
 
   node-releases@2.0.25: {}
-
-  node-static@0.7.11:
-    dependencies:
-      colors: 1.4.0
-      mime: 1.6.0
-      optimist: 0.6.1
 
   nodemon@3.1.10:
     dependencies:
@@ -6497,11 +6499,6 @@ snapshots:
   onetime@7.0.0:
     dependencies:
       mimic-function: 5.0.1
-
-  optimist@0.6.1:
-    dependencies:
-      minimist: 0.0.10
-      wordwrap: 0.0.3
 
   optionator@0.9.4:
     dependencies:
@@ -7333,8 +7330,6 @@ snapshots:
       string-width: 7.2.0
 
   word-wrap@1.2.5: {}
-
-  wordwrap@0.0.3: {}
 
   wordwrapjs@5.1.1: {}
 
