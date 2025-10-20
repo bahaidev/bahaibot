@@ -4889,17 +4889,14 @@ var c$1={strictlyTwoElementsInRangeArrays:false,progressFn:null};function g(t,u)
 var d={mergeType:1,progressFn:null,joinRangesThatTouchEdges:true};function b(i,t){function l(e){return !!e&&typeof e=="object"&&!Array.isArray(e)}if(!Array.isArray(i)||!i.length)return null;let s;if(t)if(l(t)){if(s={...d,...t},s.progressFn&&l(s.progressFn)&&!Object.keys(s.progressFn).length)s.progressFn=null;else if(s.progressFn&&typeof s.progressFn!="function")throw new Error(`ranges-merge: [THROW_ID_01] opts.progressFn must be a function! It was given of a type: "${typeof s.progressFn}", equal to ${JSON.stringify(s.progressFn,null,4)}`);if(![1,2,"1","2"].includes(s.mergeType))throw new Error(`ranges-merge: [THROW_ID_02] opts.mergeType was customised to a wrong thing! It was given of a type: "${typeof s.mergeType}", equal to ${JSON.stringify(s.mergeType,null,4)}`);if(typeof s.joinRangesThatTouchEdges!="boolean")throw new Error(`ranges-merge: [THROW_ID_04] opts.joinRangesThatTouchEdges was customised to a wrong thing! It was given of a type: "${typeof s.joinRangesThatTouchEdges}", equal to ${JSON.stringify(s.joinRangesThatTouchEdges,null,4)}`)}else throw new Error(`emlint: [THROW_ID_03] the second input argument must be a plain object. It was given as:
 ${JSON.stringify(t,null,4)} (type ${typeof t})`);else s={...d};let g$1=i.filter(e=>Array.isArray(e)).map(e=>[...e]).filter(e=>e[2]!==void 0||e[0]!==e[1]),n,o,r;s.progressFn?n=g(g$1,{progressFn:e=>{r=Math.floor(e/5),r!==o&&(o=r,s.progressFn(r));}}):n=g(g$1);let a=n.length-1;for(let e=a;e>0;e--)s.progressFn&&(r=Math.floor((1-e/a)*78)+21,r!==o&&r>o&&(o=r,s.progressFn(r))),(n[e][0]<=n[e-1][0]||!s.joinRangesThatTouchEdges&&n[e][0]<n[e-1][1]||s.joinRangesThatTouchEdges&&n[e][0]<=n[e-1][1])&&(n[e-1][0]=Math.min(n[e][0],n[e-1][0]),n[e-1][1]=Math.max(n[e][1],n[e-1][1]),n[e][2]!==void 0&&(n[e-1][0]>=n[e][0]||n[e-1][1]<=n[e][1])&&n[e-1][2]!==null&&(n[e][2]===null&&n[e-1][2]!==null?n[e-1][2]=null:n[e-1][2]!=null?+s.mergeType==2&&n[e-1][0]===n[e][0]?n[e-1][2]=n[e][2]:n[e-1][2]+=n[e][2]:n[e-1][2]=n[e][2]),n.splice(e,1),e=n.length);return n.length?n:null}
 
-var isProduction = process.env.NODE_ENV === 'production';
 var prefix = 'Invariant failed';
 function invariant(condition, message) {
     if (condition) {
         return;
     }
-    if (isProduction) {
+    {
         throw new Error(prefix);
     }
-    var value = prefix;
-    throw new Error(value);
 }
 
 /**

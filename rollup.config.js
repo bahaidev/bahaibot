@@ -1,6 +1,6 @@
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-
+import replace from '@rollup/plugin-replace';
 import terser from '@rollup/plugin-terser';
 // import babel from '@rollup/plugin-babel';
 // import packageJson from './package.json';
@@ -36,7 +36,10 @@ function getRollupObject ({
     },
     plugins: [
       nodeResolve(),
-      commonjs()
+      commonjs(),
+      replace({
+        'process.env.NODE_ENV': JSON.stringify('production')
+      })
       /*
       babel({
         babelHelpers: 'bundled'
