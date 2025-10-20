@@ -32,9 +32,10 @@ const discordOptions = {
   ]
 };
 
-describe('guildCheckin (Lab)', function () {
+describe('guildCheckin (Lab)', () => {
   beforeEach(function () {
     this.sinon = createSandbox();
+    // @ts-ignore Adding method deliberately
     this.sinon.spyOnGetterResults = spyOnGetterResults;
   });
   afterEach(function () {
@@ -46,6 +47,7 @@ describe('guildCheckin (Lab)', function () {
     const discord = new MockDiscord({
       guildChannels: true,
       guilds: [
+        // @ts-expect-error Deliberately missing ID
         {
           name: "Bahá'í Lab",
           channels: [
@@ -80,6 +82,7 @@ describe('guildCheckin (Lab)', function () {
 
     await guildCheckin();
 
+    // @ts-expect-error Sinon
     expect(console.log.calledWith(
       "Checking in on Bahá'í Lab #bot-testing."
     )).to.be.false;
@@ -91,6 +94,7 @@ describe('guildCheckin (Lab)', function () {
       guilds: [
         {
           id: DiscordConstants.BAHAI_LAB_GUILD_ID,
+          name: 'test',
           channels: [
             {
               id: 'some-other-id',
@@ -154,9 +158,13 @@ describe('guildCheckin (Lab)', function () {
   it('logs if log file is present', async function () {
     await fs.writeFile('greet.guild.txt', '');
 
-    const discord = new MockDiscord(discordOptions);
+    const discord = new MockDiscord(
+      /** @type {import('./helpers/MockDiscord.js').MockDiscordOptions} */
+      (discordOptions)
+    );
 
     const client = discord.getClient();
+    // @ts-expect-error Don't need all for mock
     const {guildCheckin} = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -166,6 +174,7 @@ describe('guildCheckin (Lab)', function () {
     this.sinon.spy(console, 'log');
     await guildCheckin();
 
+    // @ts-expect-error Sinon
     expect(console.log.secondCall.firstArg).to.have.string(
       'Last greeting to #bot-testing'
     );
@@ -176,7 +185,10 @@ describe('guildCheckin (Lab)', function () {
       await fs.unlink('greet.guild.txt');
     } catch (err) {}
 
-    const discord = new MockDiscord(discordOptions);
+    const discord = new MockDiscord(
+      /** @type {import('./helpers/MockDiscord.js').MockDiscordOptions} */
+      (discordOptions)
+    );
 
     const client = discord.getClient();
 
@@ -190,13 +202,17 @@ describe('guildCheckin (Lab)', function () {
     this.sinon.spy(console, 'log');
     await guildCheckin();
 
+    // @ts-expect-error Sinon
     expect(console.log.secondCall.firstArg).to.equal(
       'First greet for #bot-testing'
     );
   });
 
   it('Sends checking in message', async function () {
-    const discord = new MockDiscord(discordOptions);
+    const discord = new MockDiscord(
+      /** @type {import('./helpers/MockDiscord.js').MockDiscordOptions} */
+      (discordOptions)
+    );
 
     const client = discord.getClient();
 
@@ -240,6 +256,7 @@ describe('guildCheckin (Lab)', function () {
       /just checking in/v
     );
 
+    // @ts-expect-error Sinon
     expect(console.log.calledWith(
       'Greeting sent to #bot-testing.'
     )).to.be.true;
@@ -261,7 +278,10 @@ describe('guildCheckin (Lab)', function () {
   it(
     'Reports error if write file fails',
     async function () {
-      const discord = new MockDiscord(discordOptions);
+      const discord = new MockDiscord(
+        /** @type {import('./helpers/MockDiscord.js').MockDiscordOptions} */
+        (discordOptions)
+      );
 
       const client = discord.getClient();
 
@@ -323,9 +343,11 @@ describe('guildCheckin (Lab)', function () {
         /just checking in/v
       );
 
+      // @ts-expect-error Sinon
       expect(console.log.calledWith(
         'Greeting sent to #bot-testing.'
       )).to.be.false;
+      // @ts-expect-error Sinon
       expect(console.error.calledWith(
         'Error writing greet.guild.txt file'
       )).to.be.true;
@@ -346,7 +368,11 @@ describe('guildCheckin (Lab)', function () {
   );
 
   it('logs', async function () {
-    const discord = new MockDiscord(discordOptions);
+    const discord = new MockDiscord(
+      /** @type {import('./helpers/MockDiscord.js').MockDiscordOptions} */ (
+        discordOptions
+      )
+    );
     const {
       guildCheckin
     // @ts-expect-error Don't need a full mock
@@ -360,8 +386,10 @@ describe('guildCheckin (Lab)', function () {
 
     await guildCheckin();
 
+    // @ts-expect-error Sinon
     console.log('console.log', console.log.getCalls());
 
+    // @ts-expect-error Sinon
     expect(console.log.calledWith(
       "Checking in on Bahá'í Lab."
     )).to.be.true;

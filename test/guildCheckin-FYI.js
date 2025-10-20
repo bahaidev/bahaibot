@@ -42,7 +42,7 @@ const discordOptions = {
   ]
 };
 
-describe('guildCheckin (FYI)', function () {
+describe('guildCheckin (FYI)', () => {
   beforeEach(function () {
     this.sinon = createSandbox();
     this.sinon.spyOnGetterResults = spyOnGetterResults;
@@ -56,6 +56,7 @@ describe('guildCheckin (FYI)', function () {
     const discord = new MockDiscord({
       guildChannels: true,
       guilds: [
+        // @ts-expect-error Deliberately missing ID
         {
           name: "Bahá'í FYI",
           channels: [
@@ -87,6 +88,7 @@ describe('guildCheckin (FYI)', function () {
 
     await guildCheckin();
 
+    // @ts-expect-error Sinon
     expect(console.log.calledWith(
       "Checking in on Bahá'í.FYI."
     )).to.be.false;
@@ -94,12 +96,16 @@ describe('guildCheckin (FYI)', function () {
 
   it('silently fails if no testing channel', async function () {
     await fs.writeFile('greet.guild.txt', '');
-    const opts = jsonClone(discordOptions);
+    const opts = /** @type {discordOptions} */ (jsonClone(discordOptions));
 
     // Remove #general, #irc-bridge, #study-hall
     opts.guilds[0].channels = [];
 
-    const discord = new MockDiscord(opts);
+    const discord = new MockDiscord(
+      /** @type {import('./helpers/MockDiscord.js').MockDiscordOptions} */ (
+        opts
+      )
+    );
 
     const client = discord.getClient();
 
@@ -159,7 +165,11 @@ describe('guildCheckin (FYI)', function () {
 
   it('logs if log file is present', async function () {
     await fs.writeFile('greet.guild.txt', '');
-    const discord = new MockDiscord(discordOptions);
+    const discord = new MockDiscord(
+      /** @type {import('./helpers/MockDiscord.js').MockDiscordOptions} */ (
+        discordOptions
+      )
+    );
 
     const client = discord.getClient();
 
@@ -173,27 +183,34 @@ describe('guildCheckin (FYI)', function () {
     this.sinon.spy(console, 'log');
     await guildCheckin();
 
+    // @ts-expect-error Sinon
     expect(console.log.firstCall.firstArg).to.have.string(
       "Checking in on Bahá'í.FYI."
     );
+    // @ts-expect-error Sinon
     expect(console.log.secondCall.firstArg).to.have.string(
       'Last greeting to #general, #irc-bridge, and #study-hall'
     );
 
+    // @ts-expect-error Sinon
     expect(console.log.thirdCall.firstArg).to.have.string(
       "Bahá'í.FYI #general found"
     );
+    // @ts-expect-error Sinon
     expect(console.log.getCall(3).firstArg).to.have.string(
       "Bahá'í.FYI #irc-bridge found"
     );
+    // @ts-expect-error Sinon
     expect(console.log.getCall(4).firstArg).to.have.string(
       "Bahá'í.FYI #study-hall found"
     );
 
+    // @ts-expect-error Sinon
     expect(console.log.getCall(5).firstArg).to.have.string(
       'Query completed, posting Today in History.'
     );
 
+    // @ts-expect-error Sinon
     expect(console.log.getCall(6).firstArg).to.have.string(
       'Greeting sent to #general, #irc-bridge, and #study-hall.'
     );
@@ -204,7 +221,11 @@ describe('guildCheckin (FYI)', function () {
       await fs.unlink('greet.guild.txt');
     } catch (err) {}
 
-    const discord = new MockDiscord(discordOptions);
+    const discord = new MockDiscord(
+      /** @type {import('./helpers/MockDiscord.js').MockDiscordOptions} */ (
+        discordOptions
+      )
+    );
 
     const client = discord.getClient();
 
@@ -218,17 +239,23 @@ describe('guildCheckin (FYI)', function () {
     this.sinon.spy(console, 'log');
     await guildCheckin();
 
+    // @ts-expect-error Sinon
     expect(console.log.secondCall.firstArg).to.equal(
       'First greet for #general, #irc-bridge, and #study-hall'
     );
 
+    // @ts-expect-error Sinon
     expect(console.log.thirdCall.firstArg).to.have.string(
       "Bahá'í.FYI #general found"
     );
   });
 
   it('Sends checking in message', async function () {
-    const discord = new MockDiscord(discordOptions);
+    const discord = new MockDiscord(
+      /** @type {import('./helpers/MockDiscord.js').MockDiscordOptions} */ (
+        discordOptions
+      )
+    );
 
     const client = discord.getClient();
 
@@ -282,11 +309,11 @@ describe('guildCheckin (FYI)', function () {
     ].forEach((constant, idx) => {
       /* eslint-disable import/namespace -- Safe */
       expect(guildChannelsGetterSpy.getCall(idx).firstArg).to.equal(
-        DiscordConstants[constant]
+        DiscordConstants[/** @type {keyof DiscordConstants} */ (constant)]
       );
 
       const channelStringified = `<#${
-        DiscordConstants[constant]
+        DiscordConstants[/** @type {keyof DiscordConstants} */ (constant)]
       }>`; // Shows, e.g., as `#general`
       /* eslint-enable import/namespace -- Safe */
 
@@ -316,6 +343,7 @@ describe('guildCheckin (FYI)', function () {
       `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
     );
 
+    // @ts-expect-error Sinon
     expect(console.log.calledWith(
       'Greeting sent to #general, #irc-bridge, and #study-hall.'
     )).to.be.true;
@@ -324,7 +352,11 @@ describe('guildCheckin (FYI)', function () {
   it(
     'Reports error if write file fails',
     async function () {
-      const discord = new MockDiscord(discordOptions);
+      const discord = new MockDiscord(
+        /** @type {import('./helpers/MockDiscord.js').MockDiscordOptions} */ (
+          discordOptions
+        )
+      );
 
       const client = discord.getClient();
 
@@ -384,10 +416,12 @@ describe('guildCheckin (FYI)', function () {
         clientGuildsCacheGetSpy.secondCall.firstArg
       ).to.equal(DiscordConstants.BAHAI_FYI_GUILD_ID);
 
+      // @ts-expect-error Sinon
       expect(console.log.calledWith(
         'Greeting sent to #general, #irc-bridge, #study-hall.'
       )).to.be.false;
 
+      // @ts-expect-error Sinon
       expect(console.error.calledWith(
         'Error writing greet.guild.txt file'
       )).to.be.true;
@@ -399,11 +433,11 @@ describe('guildCheckin (FYI)', function () {
       ].forEach((constant, idx) => {
         /* eslint-disable import/namespace -- Safe */
         expect(guildChannelsGetterSpy.getCall(idx).firstArg).to.equal(
-          DiscordConstants[constant]
+          DiscordConstants[/** @type {keyof DiscordConstants} */ (constant)]
         );
 
         const channelStringified = `<#${
-          DiscordConstants[constant]
+          DiscordConstants[/** @type {keyof DiscordConstants} */ (constant)]
         }>`; // Shows, e.g., as `#general`
         /* eslint-enable import/namespace -- Safe */
 
@@ -421,6 +455,7 @@ describe('guildCheckin (FYI)', function () {
       guilds: [
         {
           id: DiscordConstants.BAHAI_FYI_GUILD_ID,
+          name: 'test',
           channels: [
             {
               name: 'welcome'
@@ -446,6 +481,7 @@ describe('guildCheckin (FYI)', function () {
 
     await guildCheckin();
 
+    // @ts-expect-error Sinon
     expect(console.log.calledWith(
       "Checking in on Bahá'í.FYI."
     )).to.be.true;

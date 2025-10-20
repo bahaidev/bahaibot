@@ -6,6 +6,21 @@
 import * as Discord from 'discord.js';
 
 /**
+ * @typedef {object} MockDiscordOptions
+ * @property {Guild[]} [guilds]
+ * @property {boolean} [guildChannels]
+ * @property {boolean} [mentionEveryone]
+ * @property {string} [messageContent]
+ * @property {string} [userID]
+ * @property {string} [roleID]
+ * @property {string} [userName]
+ * @property {string} [clientName]
+ * @property {boolean} [hideUserStatus]
+ * @property {import('discord.js').User} [messageUser]
+ * @property {boolean} [addClientUser]
+ */
+
+/**
  *
  */
 class MockDiscord {
@@ -117,29 +132,21 @@ class MockDiscord {
   /**
    * @typedef {object} Emoji
    * @property {string} [id]
+   * @property {string} [emojiID]
    * @property {string} name
    */
 
   /**
   * @typedef {NameID & {
+  *   userID?: string,
+  *   userName?: string,
   *   channels?: Channel[],
   *   emojis?: Emoji[]
   * }} Guild
   */
 
   /**
-   * @param {object} opts
-   * @param {Guild[]} [opts.guilds]
-   * @param {boolean} [opts.guildChannels]
-   * @param {boolean} [opts.mentionEveryone]
-   * @param {string} [opts.messageContent]
-   * @param {string} [opts.userID]
-   * @param {string} [opts.roleID]
-   * @param {string} [opts.userName]
-   * @param {string} [opts.clientName]
-   * @param {boolean} [opts.hideUserStatus]
-   * @param {import('discord.js').User} [opts.messageUser]
-   * @param {boolean} [opts.addClientUser]
+   * @param {MockDiscordOptions} opts
    */
   constructor (opts = {}) {
     const {client, role, clientGuilds, textChannels} = this.mockClient({
@@ -403,7 +410,7 @@ class MockDiscord {
    * @param {string} [cfg.userName]
    * @param {import('discord.js').Guild} [cfg.guild]
    * @param {string} [cfg.status]
-   * @param {import('discord.js').Role[]} [cfg.roles]
+   * @param {string[]} [cfg.roles]
    * @param {boolean} [cfg.hideUserStatus]
    * @param {import('discord.js').Client} [cfg.client]
    * @returns {import('discord.js').ClientUser}
@@ -477,7 +484,7 @@ class MockDiscord {
   /**
    * @param {object} [cfg]
    * @param {import('discord.js').User} [cfg.user]
-   * @param {import('discord.js').Role[]} [cfg.roles]
+   * @param {string[]} [cfg.roles]
    * @returns {import('discord.js').GuildMember}
    */
   mockGuildMember ({user, roles} = {}) {
@@ -500,7 +507,9 @@ class MockDiscord {
    * @param {string} [cfg.content]
    * @param {boolean} [cfg.mentionEveryone]
    * @param {import('discord.js').User} [cfg.user]
-   * @param {import('discord.js').MessageMentions[]} [cfg.mentions]
+   * @param {{
+   *   member: import('discord.js').GuildMember
+   * }[]} [cfg.mentions]
    * @returns {import('discord.js').Message<true>}
    */
   mockMessage ({content, mentionEveryone, user, mentions}) {

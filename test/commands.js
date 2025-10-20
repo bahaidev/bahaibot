@@ -10,9 +10,10 @@ import * as DiscordConstants from '../src/messages/DiscordConstants.js';
 
 import spyOnGetterResults from './helpers/spyOnGetterResults.js';
 
-describe('Commands', function () {
+describe('Commands', () => {
   beforeEach(function () {
     this.sinon = createSandbox();
+    // @ts-ignore We want to add it
     this.sinon.spyOnGetterResults = spyOnGetterResults;
     this.sinon.spy(console, 'log');
   });
@@ -39,6 +40,7 @@ describe('Commands', function () {
     });
 
     await commandFinished(client);
+    // @ts-expect-error Sinon
     expect(message.channel.send.firstCall.firstArg.content).to.have.string(
       'Here are the instructions you need, user username.'
     );
@@ -71,11 +73,13 @@ describe('Commands', function () {
       client.emit('messageCreate', message);
       setTimeout(() => {
         expect(
+          // @ts-expect-error Sinon
           message.channel.send.firstCall.firstArg.content
         ).to.have.string(
           'Here are the instructions you need, user username.'
         );
         expect(
+          // @ts-expect-error Sinon
           message.channel.send.secondCall.firstArg.content
         ).to.have.string(
           'Here are the instructions you need, user username.'
@@ -116,6 +120,7 @@ describe('Commands', function () {
       client.emit('messageCreate', message);
 
       expect(
+        // @ts-expect-error Sinon
         message.channel.send.firstCall
       ).to.be.null;
     }
@@ -129,10 +134,11 @@ describe('Commands', function () {
         messageContent: 'good evening'
       });
 
+      // @ts-expect-error Just need to mock some properties
       const {client} = await bot({
         client: discord.getClient(),
         /**
-         * @param {import('../src/discordBot.js').Settings} system
+         * @param {import('../src/discordBot.js').SettingsFile} system
          * @returns {import('../src/discordBot.js').Settings}
          */
         getSettings (system) {
@@ -151,6 +157,7 @@ describe('Commands', function () {
       client.emit('messageCreate', message);
 
       expect(
+        // @ts-expect-error Sinon
         message.channel.send.firstCall
       ).to.be.null;
     }
@@ -173,6 +180,7 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].data
     ).to.deep.include({
       description: "Bahá'í Bot for Discord\n",
@@ -201,6 +209,7 @@ describe('Commands', function () {
       guilds: [
         {
           id: DiscordConstants.BAHAI_LAB_GUILD_ID,
+          name: 'test',
           channels: [
             {
               id: DiscordConstants.BAHAI_LAB_BOT_TESTING_CHANNEL_ID,
@@ -255,6 +264,7 @@ describe('Commands', function () {
     );
 
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('Puppet command issued by AB.')
     ).to.be.true;
     expect(channelSpy.firstCall).to.be.null;
@@ -270,6 +280,7 @@ describe('Commands', function () {
       guilds: [
         {
           id: DiscordConstants.BAHAI_LAB_GUILD_ID,
+          name: 'test',
           channels: [
             {
               id: DiscordConstants.BAHAI_LAB_BOT_TESTING_CHANNEL_ID,
@@ -323,6 +334,7 @@ describe('Commands', function () {
     expect(guildChannelsFinderSpy.firstCall.returnValue).to.equal(false);
 
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('Puppet command issued by AB.')
     ).to.be.true;
   });
@@ -347,6 +359,7 @@ describe('Commands', function () {
         guilds: [
           {
             id: DiscordConstants.BAHAI_LAB_GUILD_ID,
+            name: 'test',
             channels: [
               {
                 id: DiscordConstants.BAHAI_LAB_BOT_TESTING_CHANNEL_ID,
@@ -486,6 +499,7 @@ describe('Commands', function () {
       ).to.equal(testMultiple ? 2 : 1);
 
       expect(
+        // @ts-expect-error Sinon
         message.channel.send.firstCall.firstArg
       ).to.equal(
         testMultiple
@@ -496,6 +510,7 @@ describe('Commands', function () {
       );
 
       expect(
+        // @ts-expect-error Sinon
         console.log.calledWith('Users command issued by user username.')
       ).to.be.true;
     });
@@ -517,16 +532,18 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     await commandFinished(client);
+    // @ts-expect-error Sinon
     expect(message.channel.send.firstCall.firstArg).to.equal('');
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('Seen command issued by user username.')
     ).to.be.true;
   });
 
-  [
+  /** @type {[string, string[]][]} */ ([
     ['Executes seen for one unseen user', ['AB']],
     ['Executes seen for two unseen users', ['AB', 'OfflineNonAdmin']]
-  ].forEach(([testMessage, users]) => {
+  ]).forEach(([testMessage, users]) => {
     it(testMessage, async function () {
       const discord = new MockDiscord({
         mentionEveryone: true,
@@ -543,18 +560,27 @@ describe('Commands', function () {
       client.emit('messageCreate', message);
 
       await commandFinished(client);
+      // @ts-expect-error Sinon
       expect(message.channel.send.firstCall.firstArg).to.equal(
         users.map((user) => {
           return `I haven't seen ${user} lately.`;
         }).join('\n')
       );
       expect(
+        // @ts-expect-error Sinon
         console.log.calledWith('Seen command issued by user username.')
       ).to.be.true;
     });
   });
 
-  [
+  /**
+   * @type {[string, {
+   *   users: string[],
+   *   counts: number[],
+   *   stat: string
+   * }][]}
+   */
+  ([
     ['Executes seen for one unseen user (dnd)', {
       users: ['AB'],
       counts: [2],
@@ -575,10 +601,10 @@ describe('Commands', function () {
       counts: [2, 4],
       stat: 'idle'
     }]
-  ].forEach(([testMessage, {users, stat: statAB, counts: [
+  ]).forEach(([testMessage, {users, stat: statAB, counts: [
     countFirst, countSecond
   ]}]) => {
-    it(testMessage, async function () {
+    it.only(testMessage, async function () {
       const expectedStatAB = statAB === 'dnd' ? 'busy' : statAB;
 
       const discord = new MockDiscord({
@@ -588,6 +614,7 @@ describe('Commands', function () {
         guilds: [
           {
             id: DiscordConstants.BAHAI_LAB_GUILD_ID,
+            name: 'test',
             channels: [
               {
                 id: DiscordConstants.BAHAI_LAB_BOT_TESTING_CHANNEL_ID,
@@ -718,6 +745,7 @@ describe('Commands', function () {
         }
       }
 
+      // @ts-expect-error Sinon
       expect(message.channel.send.firstCall.firstArg).to.equal(
         users.map((user, idx) => {
           return `${user} is now ${
@@ -726,6 +754,7 @@ describe('Commands', function () {
         }).join('\n')
       );
       expect(
+        // @ts-expect-error Sinon
         console.log.calledWith('Seen command issued by user username.')
       ).to.be.true;
     });
@@ -748,6 +777,7 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string("I couldn't understand your request");
   });
@@ -769,6 +799,7 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.notCalled
     ).to.be.true;
   });
@@ -790,6 +821,7 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].data
     ).to.deep.include({
       author: {
@@ -799,6 +831,7 @@ describe('Commands', function () {
       }
     });
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].data.description
     ).to.have.string(
       'The best beloved of all things in My sight is Justice'
@@ -822,6 +855,7 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].data
     ).to.deep.include({
       author: {
@@ -831,6 +865,7 @@ describe('Commands', function () {
       }
     });
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].data.description
     ).to.have.string(
       'Abide not but in the rose-garden of the spirit.'
@@ -854,6 +889,7 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.deep.include({
       content: `The following texts are available in my ` +
@@ -892,17 +928,21 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].data.author.icon_url
     ).to.equal(
       'https://cdn.discordapp.com/avatars/user-id/user-avatar-url.webp'
     );
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].data.author.url
     ).to.be.undefined;
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].data.author.name
     ).to.be.a('string');
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].data.description
     ).to.be.a('string');
   });
@@ -957,16 +997,19 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('Query completed.')
     ).to.be.true;
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.content
     ).to.equal(
       'Here is the result of your query.'
     );
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].description
     ).to.have.string(
       'Bahai9 has returned the following random page, AB:\n\n **'
@@ -976,6 +1019,7 @@ describe('Commands', function () {
       `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
     );
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('BP command issued by AB.')
     ).to.be.true;
   });
@@ -1030,16 +1074,19 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('Query completed.')
     ).to.be.true;
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.content
     ).to.equal(
       'Here is the result of your query.'
     );
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].description
     ).to.have.string(
       'Bahaimedia has returned the following random page, AB:\n\n **'
@@ -1049,6 +1096,7 @@ describe('Commands', function () {
       `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
     );
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('BP command issued by AB.')
     ).to.be.true;
   });
@@ -1107,10 +1155,12 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       console.error.calledWith('Error retrieving random wiki URL')
     ).to.be.true;
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.deep.include({
       content: `Here is the result of your query.`,
@@ -1175,16 +1225,19 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('Search completed: God => God')
     ).to.be.true;
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.content
     ).to.equal(
       'Here is the result of your search.'
     );
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].description
     ).to.have.string(
       'has returned the following page as the top result ' +
@@ -1193,6 +1246,7 @@ describe('Commands', function () {
       `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
     );
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('BP command issued by AB.')
     ).to.be.true;
   });
@@ -1247,6 +1301,7 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith(
         'Search completed: ‘Abdu’l-Bahá => File:Abdul-Baha, taken ' +
           'in Paris.jpg'
@@ -1254,12 +1309,14 @@ describe('Commands', function () {
     ).to.be.true;
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.content
     ).to.equal(
       'Here is the result of your search.'
     );
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].description
     ).to.have.string(
       'has returned the following page as the top result ' +
@@ -1269,6 +1326,7 @@ describe('Commands', function () {
       `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
     );
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('BP command issued by AB.')
     ).to.be.true;
   });
@@ -1323,16 +1381,19 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('Search completed: God => God')
     ).to.be.true;
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.content
     ).to.equal(
       'Here is the result of your search.'
     );
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].description
     ).to.have.string(
       'has returned the following page as the top result ' +
@@ -1341,6 +1402,7 @@ describe('Commands', function () {
       `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
     );
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('BP command issued by AB.')
     ).to.be.true;
   });
@@ -1391,16 +1453,19 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('Search completed: God => God')
     ).to.be.true;
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.content
     ).to.equal(
       'Here is the result of your search.'
     );
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].description
     ).to.have.string(
       'has returned the following page as the top result ' +
@@ -1409,6 +1474,7 @@ describe('Commands', function () {
       `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
     );
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('BP command issued by AB.')
     ).to.be.true;
   });
@@ -1463,18 +1529,21 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith(
         'Search completed: God is great -2 => Manifestation of God'
       )
     ).to.be.true;
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.content
     ).to.equal(
       'Here is the result of your search.'
     );
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].description
     ).to.have.string(
       'has returned the following page as the top result ' +
@@ -1483,6 +1552,7 @@ describe('Commands', function () {
       `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
     );
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('BP command issued by AB.')
     ).to.be.true;
   });
@@ -1537,16 +1607,19 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       console.log.firstCall.firstArg
     ).to.equal('Result:');
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.content
     ).to.equal(
       'Here is the result of your search.'
     );
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].description
     ).to.have.string(
       'did not return any results for your search, AB. ' +
@@ -1558,6 +1631,7 @@ describe('Commands', function () {
       `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
     );
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('BP command issued by AB.')
     ).to.be.true;
   });
@@ -1616,10 +1690,12 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       console.error.calledWith('Error retrieving wiki search URL')
     ).to.be.true;
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.deep.include({
       content: `Here is the result of your search.`,
@@ -1690,10 +1766,12 @@ describe('Commands', function () {
     await commandFinished(client);
 
     expect(
+      // @ts-expect-error Sinon
       console.error.calledWith('Error retrieving JSON for today URL')
     ).to.be.true;
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.deep.include({
       content: `Here is the result of your query.`,
@@ -1758,16 +1836,19 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('Query completed.')
     ).to.be.true;
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.content
     ).to.equal(
       'Here is the result of your query.'
     );
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg.embeds[0].description
     ).to.have.string(
       "Here's Bahaipedia's Today in History entry for"
@@ -1791,9 +1872,11 @@ describe('Commands', function () {
 
     client.emit('messageCreate', message);
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall
     ).to.be.null;
     expect(
+      // @ts-expect-error Sinon
       console.log.notCalled
     ).to.be.true;
   });
@@ -1816,6 +1899,7 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string("Here's what you said, AB:").and.to.have.string(
       '!echo Hello'
@@ -1837,9 +1921,11 @@ describe('Commands', function () {
 
     client.emit('messageCreate', message);
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall
     ).to.be.null;
     expect(
+      // @ts-expect-error Sinon
       console.log.notCalled
     ).to.be.true;
   });
@@ -1886,14 +1972,17 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('Checkin command issued by AB.')
     ).to.be.true;
 
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith("Checking in on Bahá'í.FYI.")
     ).to.be.true;
 
     expect(
+      // @ts-expect-error Sinon
       console.error.notCalled
     ).to.be.true;
   });
@@ -1942,9 +2031,11 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith('Checkin command issued by AB.')
     ).to.be.true;
     expect(
+      // @ts-expect-error Sinon
       console.log.calledWith("Checking in on Bahá'í.FYI.")
     ).to.be.true;
   });
@@ -1965,6 +2056,7 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string('Pong');
   });
@@ -1985,14 +2077,21 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
-    ).to.satisfy((val) => {
-      return val.includes('Just waiting') ||
-        val.includes('Same as') ||
-        val.includes('Same old') ||
-        val.includes('like usual') ||
-        val.includes('to be here');
-    }).and.to.have.string(
+    ).to.satisfy(
+      /**
+       * @param {string} val
+       * @returns {boolean}
+       */
+      (val) => {
+        return val.includes('Just waiting') ||
+          val.includes('Same as') ||
+          val.includes('Same old') ||
+          val.includes('like usual') ||
+          val.includes('to be here');
+      }
+    ).and.to.have.string(
       'user username'
     );
   });
@@ -2067,6 +2166,7 @@ describe('Commands', function () {
     );
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string('Alláh-u-Abhá').and.to.have.string(
       'user username'
@@ -2074,6 +2174,7 @@ describe('Commands', function () {
       `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
     );
     expect(
+      // @ts-expect-error Sinon
       message.react.firstCall.firstArg.name
     ).to.equal('9star');
   });
@@ -2121,6 +2222,7 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string('Alláh-u-Abhá').and.to.have.string(
       'user username'
@@ -2128,6 +2230,7 @@ describe('Commands', function () {
       `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
     );
     expect(
+      // @ts-expect-error Sinon
       message.react.firstCall
     ).to.be.null;
   });
@@ -2172,7 +2275,7 @@ describe('Commands', function () {
     });
 
     const message = discord.mockMessage({
-      guild,
+      // guild,
       content: 'allahuabha, @AB',
       user,
       mentions: [
@@ -2212,6 +2315,7 @@ describe('Commands', function () {
     expect(emojisFinderSpy.firstCall.returnValue).to.equal(true);
 
     expect(
+      // @ts-expect-error Sinon
       message.react.firstCall.firstArg.name
     ).to.equal('9star');
   });
@@ -2277,6 +2381,7 @@ describe('Commands', function () {
     );
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string(
       'OK'
@@ -2323,6 +2428,7 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string(
       'OK'
@@ -2418,6 +2524,7 @@ describe('Commands', function () {
     );
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string('Happy Naw-Rúz!').and.to.have.string(
       `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
@@ -2425,6 +2532,7 @@ describe('Commands', function () {
       `<:sabzi:${DiscordConstants.SABZI_EMOJI_ID_FYI}>`
     );
     expect(
+      // @ts-expect-error Sinon
       message.react.firstCall.firstArg.name
     ).to.equal('9star');
   });
@@ -2476,6 +2584,7 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string('Happy Naw-Rúz!').and.to.have.string(
       `<:sabzi:${DiscordConstants.SABZI_EMOJI_ID_FYI}>`
@@ -2483,6 +2592,7 @@ describe('Commands', function () {
       `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
     );
     expect(
+      // @ts-expect-error Sinon
       message.react.firstCall
     ).to.be.null;
   });
@@ -2563,6 +2673,7 @@ describe('Commands', function () {
     expect(emojisFindResultToStringSpy2).to.be.undefined;
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string('Happy Naw-Rúz!').and.to.have.string(
       `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
@@ -2570,6 +2681,7 @@ describe('Commands', function () {
       `<:sabzi:${DiscordConstants.SABZI_EMOJI_ID_FYI}>`
     );
     expect(
+      // @ts-expect-error Sinon
       message.react.firstCall.firstArg.name
     ).to.equal('9star');
   });
@@ -2644,11 +2756,13 @@ describe('Commands', function () {
     );
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string('Happy Ridván!').and.to.have.string(
       `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
     );
     expect(
+      // @ts-expect-error Sinon
       message.react.firstCall.firstArg.name
     ).to.equal('9star');
   });
@@ -2696,11 +2810,13 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string('Happy Ridván!').and.to.not.have.string(
       `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`
     );
     expect(
+      // @ts-expect-error Sinon
       message.react.firstCall
     ).to.be.null;
   });
@@ -2721,6 +2837,7 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string('Good morning').and.to.have.string(
       'user username'
@@ -2743,6 +2860,7 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string('Good afternoon').and.to.have.string(
       'user username'
@@ -2765,6 +2883,7 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string('Good evening').and.to.have.string(
       'user username'
@@ -2787,6 +2906,7 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string('Hello').and.to.have.string(
       'user username'
@@ -2809,6 +2929,7 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string('Thanks').and.to.have.string(
       'user username'
@@ -2832,7 +2953,7 @@ describe('Commands', function () {
     });
 
     const message = discord.mockMessage({
-      guild,
+      // guild,
       content: 'welcome',
       user,
       mentions: [
@@ -2847,6 +2968,7 @@ describe('Commands', function () {
 
     await commandFinished(client);
     expect(
+      // @ts-expect-error Sinon
       message.react.firstCall.firstArg
     ).to.equal('👋');
   });
@@ -2860,10 +2982,11 @@ describe('Commands', function () {
         messageContent: 'welcome'
       });
 
+      // @ts-expect-error Just need some mock properties
       const {client} = await bot({
         client: discord.getClient(),
         /**
-         * @param {import('../src/discordBot.js').Settings} system
+         * @param {import('../src/discordBot.js').SettingsFile} system
          * @returns {import('../src/discordBot.js').Settings}
          */
         getSettings (system) {
@@ -2882,7 +3005,7 @@ describe('Commands', function () {
       });
 
       const message = discord.mockMessage({
-        guild,
+        // guild,
         content: 'welcome',
         user,
         mentions: [
@@ -2896,6 +3019,7 @@ describe('Commands', function () {
       client.emit('messageCreate', message);
 
       expect(
+        // @ts-expect-error Sinon
         message.react.firstCall
       ).to.be.null;
     }
@@ -2917,6 +3041,7 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string(':coffee:');
   });
@@ -2937,6 +3062,7 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string(':tea:');
   });
@@ -2956,6 +3082,7 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.react.firstCall.firstArg
     ).to.equal('🍵');
   });
@@ -2976,6 +3103,7 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string(':popcorn:');
   });
@@ -2995,6 +3123,7 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.react.firstCall.firstArg
     ).to.equal('🍿');
   });
@@ -3015,6 +3144,7 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.have.string('European swallow');
   });
@@ -3035,6 +3165,7 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.equal('Bruh.');
   });
@@ -3056,9 +3187,11 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.equal('Thanks!');
     expect(
+      // @ts-expect-error Sinon
       message.react.firstCall.firstArg
     ).to.equal('😊');
   });
@@ -3080,9 +3213,11 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
     ).to.equal('Sorry.');
     expect(
+      // @ts-expect-error Sinon
       message.react.firstCall.firstArg
     ).to.equal('☹️');
   });
@@ -3103,13 +3238,20 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
-    ).to.satisfy((val) => {
-      return (/sorry|oops/v).test(val) ||
-        val.includes('chatbot') ||
-        val.includes('happen a lot') ||
-        val.includes('tend to do that');
-    });
+    ).to.satisfy(
+      /**
+       * @param {string} val
+       * @returns {boolean}
+       */
+      (val) => {
+        return (/sorry|oops/v).test(val) ||
+          val.includes('chatbot') ||
+          val.includes('happen a lot') ||
+          val.includes('tend to do that');
+      }
+    );
   });
 
   it('santacat', async function () {
@@ -3128,14 +3270,21 @@ describe('Commands', function () {
     client.emit('messageCreate', message);
 
     expect(
+      // @ts-expect-error Sinon
       message.channel.send.firstCall.firstArg
-    ).to.satisfy((val) => {
-      return val.includes('Not telling') ||
-        val.includes('secret to everybody') ||
-        val.includes('make a meme') ||
-        val.includes('This one?') ||
-        val.includes('like to know') ||
-        val.includes('Who do you think');
-    });
+    ).to.satisfy(
+      /**
+       * @param {string} val
+       * @returns {boolean}
+       */
+      (val) => {
+        return val.includes('Not telling') ||
+          val.includes('secret to everybody') ||
+          val.includes('make a meme') ||
+          val.includes('This one?') ||
+          val.includes('like to know') ||
+          val.includes('Who do you think');
+      }
+    );
   });
 });

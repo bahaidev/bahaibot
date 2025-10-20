@@ -209,7 +209,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 1. Waiting: Update to discord 15 when comes out
 
-1. Finish testing TS; Unit test and coverage; smoke test
+1. Unit test and coverage; smoke test
 1. See about establishing our own ownership so we can add back the intent
     for presence (and test)
 

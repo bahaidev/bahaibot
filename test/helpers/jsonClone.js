@@ -1,6 +1,23 @@
+/* eslint-disable jsdoc/reject-any-type -- Needed */
 /**
- * @param {JSON} json
- * @returns {JSON}
+ * @typedef {any} AnyValue
+ */
+/* eslint-enable jsdoc/reject-any-type -- Needed */
+
+/**
+ * @typedef {string | number | boolean | null} JSONPrimitive
+ */
+/**
+ * @typedef {JSONValue[]} JSONArray
+ */
+/**
+ * @typedef {JSONPrimitive |
+ *   { [key: string]: JSONValue } | JSONArray} JSONValue
+ */
+
+/**
+ * @param {AnyValue} json
+ * @returns {JSONValue}
  */
 function jsonClone (json) {
   // eslint-disable-next-line @stylistic/max-len -- Long
