@@ -5558,6 +5558,7 @@ function getWikiTools ({
       try {
         const tResponse = await (await fetch(tUrl)).json();
         const rawText = tResponse.parse.text['*'].split('</center>\n');
+        /* c8 ignore next -- Todo */
         const text = striptags(rawText.length > 1 ? rawText[1] : rawText[0]);
         // console.log(text);
         // console.log(uUrl);
@@ -5849,29 +5850,45 @@ const getSocialInfo = ({
       //  name: '!users',
       //  value: 'Displays a count of online users.'
       // }
+      /* c8 ignore next 52 -- Reenable when testing again */
       /**
        * Users gives the number of online users.
        * @param {import('discord.js').Message<true>} message
-       * @returns {void}
+       * @returns {Promise<void>}
        */
-      action (message) {
+      async action (message) {
         const {guild} = message;
         const onlineCount = guild?.members.cache.filter(
           (m) => m.presence?.status !== 'offline'
         ).size;
 
-        const admins = guild?.members.cache.filter((m) => {
-          if (
+        const allAdmins = guild?.members.cache.filter((m) => {
+          return (
             m.roles.cache.some((r) => {
               return ADMIN_ROLES.includes(r.name);
             })
-          ) {
-            return m.presence?.status !== 'offline';
-          }
-          return false;
-
+          );
           // console.log(m.roles)
         });
+
+        let adminCount = 0;
+        for (const admin of allAdmins) {
+          // eslint-disable-next-line no-await-in-loop -- Convenient
+          const member = await guild.members.fetch({
+            user: admin,
+            withPresences: true
+          });
+
+          if (
+            member && 'presence' in member &&
+            member.presence &&
+            typeof member.presence === 'object' &&
+            'status' in member.presence &&
+            member.presence.status !== 'offline'
+          ) {
+            adminCount++;
+          }
+        }
 
         message.channel.send(
           `There ${
@@ -5879,7 +5896,7 @@ const getSocialInfo = ({
           } currently ${onlineCount} user${
             (onlineCount === 1) ? '' : 's'
           } online, including ${
-            admins?.size
+            adminCount
           } admin/mod/helper(s).`
         );
 
@@ -5915,44 +5932,47 @@ const getSocialInfo = ({
         });
         if (!user) {
           replies.push(`I haven't seen ${sname} lately.`);
-          return;
-        }
-        // userStatus = user.presence.status;
-
-        const member = await message.guild.members.fetch({
-          user,
-          withPresences: true
-        });
-        const {channel} = message;
-        const messages = await channel.messages.fetch({limit: 100});
-        const userMessages = messages.filter(
-          (msg) => msg.author.id === user.id
-        );
-        const lastUserMessage = userMessages.first();
-
-        // Todo: Stop ignoring this once test in place.
-        /* c8 ignore next 16 */
-        if (lastUserMessage) {
-          const stat = (
-            member.presence?.status === 'dnd' ? 'busy' : member.presence?.status
-          );
-          const lastseen = new Date(lastUserMessage.createdAt);
-          const now = new Date();
-          const timedelta = (now > lastseen)
-            ? Number(now) - Number(lastseen)
-            : 0;
-          replies.push(
-            `${sname} is now ${stat}, and was last seen in ${
-              channel
-            } ${istr(timedelta / 1000)} ago.`
-          );
+        /* c8 ignore next 41 -- Reenable when testing again */
         } else {
-          const stat = (
-            member.presence?.status === 'dnd' ? 'busy' : member.presence?.status
+          // userStatus = user.presence.status;
+
+          const member = await message.guild.members.fetch({
+            user,
+            withPresences: true
+          });
+          const {channel} = message;
+          const messages = await channel.messages.fetch({limit: 100});
+          const userMessages = messages.filter(
+            (msg) => msg.author.id === user.id
           );
-          replies.push(
-            `${sname} is now ${stat}; I haven't seen them lately.`
-          );
+          const lastUserMessage = userMessages.first();
+
+          if (lastUserMessage) {
+            const stat = (
+              member.presence?.status === 'dnd'
+                ? 'busy'
+                : member.presence?.status
+            );
+            const lastseen = new Date(lastUserMessage.createdAt);
+            const now = new Date();
+            const timedelta = (now > lastseen)
+              ? Number(now) - Number(lastseen)
+              : 0;
+            replies.push(
+              `${sname} is now ${stat}, and was last seen in ${
+                channel
+              } ${istr(timedelta / 1000)} ago.`
+            );
+          } else {
+            const stat = (
+              member.presence?.status === 'dnd'
+                ? 'busy'
+                : member.presence?.status
+            );
+            replies.push(
+              `${sname} is now ${stat}; I haven't seen them lately.`
+            );
+          }
         }
 
         message.channel.send(replies.join('\n'));
@@ -6077,6 +6097,7 @@ async function getReader ({fs, settings}) {
 
   // GLOBAL VARIABLES
   const colorBorder = settings.embedColor;
+  /* c8 ignore next -- TS */
   const MAX_TEXT_LIMIT = settings.embedTextLimit ?? 2000;
 
   const availableRandomOptions = Object.keys(library.index);
@@ -6125,7 +6146,7 @@ async function getReader ({fs, settings}) {
     // Disable this and test once other works are enabled besides the
     //   Hidden Words (which should not have any verses we could use
     //   exceeding our default `MAX_TEXT_LIMIT` setting)
-    /* c8 ignore next 20 */
+    /* c8 ignore next 22 */
     // If content string is greater than max limit
     while (str.length > l) {
       // Find the last position of space
@@ -6190,10 +6211,12 @@ async function getReader ({fs, settings}) {
       const embed = new Discord.EmbedBuilder();
 
       // Set colors and data
+      /* c8 ignore next -- Todo */
       embed.setColor(colorBorder ?? null);
       embed.setAuthor({
         name: `${library.list[library.index[refName]].title} by ` +
         `${library.list[library.index[refName]].author}`,
+        /* c8 ignore next -- Todo */
         iconURL: avatar ?? undefined
       });
 
@@ -6206,7 +6229,7 @@ async function getReader ({fs, settings}) {
         // Unreachable currently with the two Hidden Words options not
         //  having notes; remove this ignore and test when enabling
         //  other works that do have notes.
-        /* c8 ignore next 12 */
+        /* c8 ignore next 16 */
         // If there are notes
         if (content.notes !== undefined && content.notes.length > 0) {
           let ntext = '';
@@ -6305,6 +6328,7 @@ async function getReader ({fs, settings}) {
     const userInput = message.content;
 
     // Pull the relevant data from the regex
+    /* c8 ignore next -- TS */
     const {groups} = userInput.match(fileRegex) ?? {};
 
     let {refName} = /** @type {{refName: string}} */ (groups);
@@ -6895,7 +6919,6 @@ function puppet ({content, guild, author, /* member, */ channel}, permissions) {
   }
 }
 
-/* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
  * @param {object} cfg
  * @param {string[]} cfg.ADMIN_IDS
@@ -6910,7 +6933,6 @@ function puppet ({content, guild, author, /* member, */ channel}, permissions) {
  * @returns {import('./getCommands.js').BotCommands}
  */
 const getAdmin = ({
-  /* eslint-enable jsdoc/imports-as-dependencies -- Bug */
   ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR,
   DiscordVoice,
   discordTTS, guildCheckin, _
@@ -6924,7 +6946,7 @@ const getAdmin = ({
         value: 'Reads some words as speech'
       },
       */
-      /* c8 ignore next 39 */
+      /* c8 ignore next 40 */
       /* eslint-disable require-await -- Easier */
       /**
        * Reads some scripture.
@@ -7067,6 +7089,7 @@ const getBahaiInfo = ({client, Discord}) => {
         // Add data
         embed.setAuthor({
           name: 'BahaiBot',
+          /* c8 ignore next --- TS */
           iconURL: client.user?.avatarURL() ?? undefined
         });
 
@@ -7473,7 +7496,6 @@ const getLightHearted = () => {
   };
 };
 
-/* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
 * @param {object} cfg
 * @param {import('@google-cloud/dialogflow').SessionsClient} cfg.app
@@ -7485,7 +7507,6 @@ const getLightHearted = () => {
 * @returns {import('./getCommands.js').BotCommand}
 */
 const getDefaultCommand = ({
-  /* eslint-enable jsdoc/imports-as-dependencies -- Bug */
   app, router, client, Discord, _, settings
 }) => {
   return {
@@ -7541,7 +7562,6 @@ const getDefaultCommand = ({
         }
       };
 
-      /* eslint-disable jsdoc/imports-as-dependencies -- Bug */
       /**
       * @throws {DialogflowError}
       * @returns {Promise<
@@ -7550,7 +7570,6 @@ const getDefaultCommand = ({
       * >} responses
       */
       async function dialogflowCall () {
-        /* eslint-enable jsdoc/imports-as-dependencies -- Bug */
         // Send request and log result
         try {
           const [response] = await app.detectIntent(request);
@@ -7687,7 +7706,6 @@ const ADMIN_PERMISSION = 'ADMINISTRATOR';
 * @typedef {Object<string,BotCommand>} BotCommands
 */
 
-/* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
  * @param {object} cfg
  * @param {import('@google-cloud/dialogflow').SessionsClient} cfg.app
@@ -7707,7 +7725,6 @@ const ADMIN_PERMISSION = 'ADMINISTRATOR';
  * @returns {Promise<import('./getCommands.js').BotCommands>}
  */
 const getCommands = async function ({
-  /* eslint-enable jsdoc/imports-as-dependencies -- Bug */
   app, router, Discord,
   wikiTools, client, guildCheckin,
   _,
@@ -7779,7 +7796,6 @@ const getCommands = async function ({
 
 // Export the router
 
-/* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
  * @callback Router
  * @param {import('@google-cloud/dialogflow').protos.google.
@@ -7792,7 +7808,6 @@ const getCommands = async function ({
  * @param {import('intl-dom').I18NCallback} _
  * @returns {void}
  */
-/* eslint-enable jsdoc/imports-as-dependencies -- Bug */
 
 /**
  * @type {Router}
@@ -8105,7 +8120,6 @@ function getCheckin ({
 //   least flagged as deliberately not awaiting
 
 
-/* eslint-disable jsdoc/imports-as-dependencies -- Bug */
 /**
  * This lets us also update the `client` value and dependent code against
  * a unit testing mock client.
@@ -8131,7 +8145,6 @@ function getCheckin ({
  * @property {import('discord.js-rate-limiter').RateLimiter} [rateLimiter]
  * @property {boolean} [exitNoThrow=false] Set to true for testing
  */
-/* eslint-enable jsdoc/imports-as-dependencies -- Bug */
 
 /**
  * @typedef {{
@@ -8185,8 +8198,8 @@ const supportedLocales = [
 const bot = async ({
   checkins = false,
   locales = typeof navigator === 'undefined'
+    /* c8 ignore next 5 */
     ? [defaultLocale]
-    /* c8 ignore next 3 */
     : [...navigator.languages.filter((locale) => {
       return supportedLocales.includes(locale);
     }), defaultLocale],
@@ -8194,6 +8207,7 @@ const bot = async ({
   fetch = globalThis.fetch,
   // Default to dependencies' globals in case using UMD files and user not
   //  supplying own modular versions
+  /* c8 ignore next --- Ok */
   i18n = globalThis.intlDom?.i18n,
   striptags = globalThis.striptags,
   client: cl,
@@ -8206,6 +8220,7 @@ const bot = async ({
    * @type {GetSettings}
    */
   getSettings: defaultGetSettings,
+  /* c8 ignore next -- Todo? */
   getPath = (path) => path,
   // numberOfCommands = 1,
   commandInterval = 2000,
@@ -8227,8 +8242,9 @@ const bot = async ({
     intents: [
       Discord.GatewayIntentBits.Guilds,
       Discord.GatewayIntentBits.GuildMessages,
-      Discord.GatewayIntentBits.MessageContent
-      // Discord.GatewayIntentBits.GuildPresences
+      Discord.GatewayIntentBits.MessageContent,
+      Discord.GatewayIntentBits.GuildMembers,
+      Discord.GatewayIntentBits.GuildPresences
     ]
   });
 
@@ -8280,6 +8296,7 @@ const bot = async ({
    * @type {GetLocalizedSetting}
    */
   const getLocalizedSetting = (key, {defaultValue} = {}) => {
+    /* c8 ignore next --- Not used? */
     return settings?.locales?.[_.resolvedLocale][key] ||
       defaultValue || _(key);
   };
@@ -8486,6 +8503,7 @@ const bot = async ({
           getLocalizedSetting('serverName')
         ),
         helpTeam: `<@&${helpTeam}>`,
+        /* c8 ignore next 2 --- TS */
         // eslint-disable-next-line @stylistic/max-len -- Long
         rulesChannel: ev.guild.channels.cache.get(rulesChannel)?.toString() ?? ''
       }))
