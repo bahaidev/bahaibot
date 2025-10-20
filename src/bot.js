@@ -132,6 +132,7 @@ const bot = async ({
       Discord.GatewayIntentBits.Guilds,
       Discord.GatewayIntentBits.GuildMessages,
       Discord.GatewayIntentBits.MessageContent
+      // Discord.GatewayIntentBits.GuildMembers
       // Discord.GatewayIntentBits.GuildPresences
     ]
   });

@@ -19,26 +19,41 @@ const getSocialInfo = ({
       /**
        * Users gives the number of online users.
        * @param {import('discord.js').Message<true>} message
-       * @returns {void}
+       * @returns {Promise<void>}
        */
-      action (message) {
+      async action (message) {
         const {guild} = message;
         const onlineCount = guild?.members.cache.filter(
           (m) => m.presence?.status !== 'offline'
         ).size;
 
-        const admins = guild?.members.cache.filter((m) => {
-          if (
+        const allAdmins = guild?.members.cache.filter((m) => {
+          return (
             m.roles.cache.some((r) => {
               return ADMIN_ROLES.includes(r.name);
             })
-          ) {
-            return m.presence?.status !== 'offline';
-          }
-          return false;
-
+          );
           // console.log(m.roles)
         });
+
+        let adminCount = 0;
+        for (const admin of allAdmins) {
+          // eslint-disable-next-line no-await-in-loop -- Convenient
+          const member = await guild.members.fetch({
+            user: admin,
+            withPresences: true
+          });
+
+          if (
+            member && 'presence' in member &&
+            member.presence &&
+            typeof member.presence === 'object' &&
+            'status' in member.presence &&
+            member.presence.status !== 'offline'
+          ) {
+            adminCount++;
+          }
+        }
 
         message.channel.send(
           `There ${
@@ -46,7 +61,7 @@ const getSocialInfo = ({
           } currently ${onlineCount} user${
             (onlineCount === 1) ? '' : 's'
           } online, including ${
-            admins?.size
+            adminCount
           } admin/mod/helper(s).`
         );
 

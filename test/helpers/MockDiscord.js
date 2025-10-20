@@ -254,8 +254,9 @@ class MockDiscord {
       intents: [
         Discord.GatewayIntentBits.Guilds,
         Discord.GatewayIntentBits.GuildMessages,
-        Discord.GatewayIntentBits.MessageContent
-        // Discord.GatewayIntentBits.GuildPresences
+        Discord.GatewayIntentBits.MessageContent,
+        Discord.GatewayIntentBits.GuildMembers,
+        Discord.GatewayIntentBits.GuildPresences
       ]
     });
 
