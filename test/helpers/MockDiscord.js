@@ -63,7 +63,8 @@ class MockDiscord {
    * @param {import('discord.js').Client} client
    * @param {string} [channelID]
    * @param {boolean} [clear]
-   * @returns {import('discord.js').GuildChannel}
+   * @returns {import('discord.js').GuildChannel|
+   *   import('discord.js').TextChannel}
    */
   static createGuildChannel (
     discord, guild, name, guildChannels, type, client, channelID, clear = true
@@ -108,17 +109,21 @@ class MockDiscord {
   */
 
   /**
-  * @typedef {NameID} Channel
-  */
+   * @typedef {object} Channel
+   * @property {string} [id]
+   * @property {string} name
+   */
 
   /**
-  * @typedef {NameID} Emoji
-  */
+   * @typedef {object} Emoji
+   * @property {string} [id]
+   * @property {string} name
+   */
 
   /**
   * @typedef {NameID & {
-  *   channels: Channel[],
-  *   emojis: Emoji[]
+  *   channels?: Channel[],
+  *   emojis?: Emoji[]
   * }} Guild
   */
 
@@ -129,13 +134,15 @@ class MockDiscord {
    * @param {boolean} [opts.mentionEveryone]
    * @param {string} [opts.messageContent]
    * @param {string} [opts.userID]
+   * @param {string} [opts.roleID]
    * @param {string} [opts.userName]
    * @param {string} [opts.clientName]
+   * @param {boolean} [opts.hideUserStatus]
    * @param {import('discord.js').User} [opts.messageUser]
    * @param {boolean} [opts.addClientUser]
    */
   constructor (opts = {}) {
-    const {client, role, clientGuilds, guildChannels} = this.mockClient({
+    const {client, role, clientGuilds, textChannels} = this.mockClient({
       name: opts.clientName,
       guilds: opts.guilds,
       roleID: opts.roleID
@@ -144,16 +151,15 @@ class MockDiscord {
     this.role = role;
     this.clientGuilds = clientGuilds;
     this.clientGuild = clientGuilds[0];
-    this.guildChannels = guildChannels;
 
-    guildChannels.forEach((guildChannel) => {
-      client.channels.cache.set(guildChannel.id, guildChannel);
+    textChannels.forEach((textChannel) => {
+      client.channels.cache.set(textChannel.id, textChannel);
     });
 
     this.guild = this.mockGuild(
-      opts.guilds?.[0]?.id, opts.guilds?.[0]?.name, role
+      opts.guilds?.[0]?.id ?? '', opts.guilds?.[0]?.name ?? '', role
     );
-    this.channel = this.mockChannel(opts.guilds?.[0]?.channels?.[0]?.id);
+    this.channel = this.mockChannel(opts.guilds?.[0]?.channels?.[0]?.id ?? '');
     this.textChannel = this.mockTextChannel();
     this.user = this.mockUser({
       userID: opts.userID,
@@ -198,7 +204,7 @@ class MockDiscord {
    * @returns {import('discord.js').GuildChannel}
    */
   getGuildChannel () {
-    return this.guildChannel;
+    return /** @type {import('discord.js').GuildChannel} */ (this.guildChannel);
   }
   /**
    * @returns {import('discord.js').TextChannel}
@@ -226,14 +232,14 @@ class MockDiscord {
   }
   /**
    * @param {object} cfg
-   * @param {string} cfg.name
-   * @param {Guild[]} cfg.guilds
-   * @param {string} cfg.roleID
+   * @param {string} [cfg.name]
+   * @param {Guild[]} [cfg.guilds]
+   * @param {string} [cfg.roleID]
    * @returns {{
    *   client: import('discord.js').Client,
    *   role: import('discord.js').Role,
    *   clientGuilds: import('discord.js').Guild[],
-   *   guildChannels: import('discord.js').GuildChannel[]
+   *   textChannels: import('discord.js').TextChannel[]
    * }}
    */
   mockClient ({name, guilds, roleID}) {
@@ -249,16 +255,17 @@ class MockDiscord {
     const role = this.mockRole({client, name, roleID});
 
     // Don't actually login
+    // @ts-expect-error Just for mocking
     client.login = () => {
       // Empty
     };
 
     if (!guilds) {
-      return {client, role, clientGuilds: [], guildChannels: []};
+      return {client, role, clientGuilds: [], textChannels: []};
     }
 
-    /** @type {import('discord.js').GuildChannel[]} */
-    const guildChannels = [];
+    /** @type {import('discord.js').TextChannel[]} */
+    const textChannels = [];
     const clientGuilds = guilds.map(({
       id: guildID,
       name: guildName,
@@ -273,11 +280,12 @@ class MockDiscord {
 
       if (emojis) {
         emojis.forEach(({id, name}) => {
+          // @ts-expect-error We need it for mocking
           const guildEmoji = new Discord.GuildEmoji(client, {
             id,
             name
           }, guild);
-          guild.emojis.cache.set(id, guildEmoji);
+          guild.emojis.cache.set(/** @type {string} */ (id), guildEmoji);
         });
       }
 
@@ -288,9 +296,14 @@ class MockDiscord {
           const channel = MockDiscord.createGuildChannel(
             this, guild, name, true, 'text', client, id, idx === 0
           );
-          guildChannels.push(channel);
+          textChannels.push(
+            /** @type {import('discord.js').TextChannel} */ (channel)
+          );
           // console.log('channel2', channel, channelName);
-          guild.channels.cache.set(id, channel);
+          guild.channels.cache.set(
+            /** @type {string} */ (id),
+            /** @type {import('discord.js').TextChannel} */ (channel)
+          );
         });
       }
 
@@ -298,15 +311,15 @@ class MockDiscord {
       return guild;
     });
 
-    return {client, role, clientGuilds, guildChannels};
+    return {client, role, clientGuilds, textChannels};
   }
 
   /* eslint-disable class-methods-use-this -- Consistent */
   /**
   * @param {object} cfg
   * @param {import('discord.js').Client} cfg.client
-  * @param {string} cfg.roleID
-  * @param {string} cfg.name
+  * @param {string} [cfg.roleID]
+  * @param {string} [cfg.name]
   * @returns {import('discord.js').Role}
   */
   mockRole ({client, roleID, name}) {
@@ -330,7 +343,7 @@ class MockDiscord {
     );
   }
   /**
-   * @param {string} id
+   * @param {string} [id]
    * @returns {import('discord.js').GuildChannel}
    */
   mockChannel (id) {
@@ -385,18 +398,19 @@ class MockDiscord {
   }
 
   /**
-   * @param {object} cfg
-   * @param {string} cfg.userID
-   * @param {string} cfg.userName
-   * @param {import('discord.js').Guild} cfg.guild
-   * @param {string} cfg.status
-   * @param {import('discord.js').Role[]} cfg.roles
-   * @param {boolean} cfg.hideUserStatus
-   * @param {import('discord.js').Client} cfg.client
+   * @param {object} [cfg]
+   * @param {string} [cfg.userID]
+   * @param {string} [cfg.userName]
+   * @param {import('discord.js').Guild} [cfg.guild]
+   * @param {string} [cfg.status]
+   * @param {import('discord.js').Role[]} [cfg.roles]
+   * @param {boolean} [cfg.hideUserStatus]
+   * @param {import('discord.js').Client} [cfg.client]
    * @returns {import('discord.js').ClientUser}
    */
   mockUser ({
-    userID, userName, guild, status, roles, hideUserStatus, client = this.client
+    userID, userName, guild, status, roles,
+    hideUserStatus, client = this.client
   } = {}) {
     // @ts-expect-error We need it for mocking
     const user = new Discord.ClientUser(this.client, {
@@ -483,10 +497,10 @@ class MockDiscord {
   }
   /**
    * @param {object} cfg
-   * @param {string} cfg.content
-   * @param {boolean} cfg.mentionEveryone
-   * @param {import('discord.js').User} cfg.user
-   * @param {import('discord.js').MessageMentions[]} cfg.mentions
+   * @param {string} [cfg.content]
+   * @param {boolean} [cfg.mentionEveryone]
+   * @param {import('discord.js').User} [cfg.user]
+   * @param {import('discord.js').MessageMentions[]} [cfg.mentions]
    * @returns {import('discord.js').Message<true>}
    */
   mockMessage ({content, mentionEveryone, user, mentions}) {

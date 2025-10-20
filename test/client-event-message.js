@@ -274,23 +274,25 @@ describe('Client event (message)', function () {
 
     const channelSpy = this.sinon.spy();
 
-    const message = {
-      content: '',
-      author: {
-        id: 'abc'
-      },
-      mentions: {
-        /**
-         * @returns {boolean}
-         */
-        has () {
-          return true;
+    const message = /** @type {import('discord.js').Message<true>} */ (
+      /** @type {unknown} */ ({
+        content: '',
+        author: {
+          id: 'abc'
+        },
+        mentions: {
+          /**
+           * @returns {boolean}
+           */
+          has () {
+            return true;
+          }
+        },
+        channel: {
+          send: channelSpy
         }
-      },
-      channel: {
-        send: channelSpy
-      }
-    };
+      })
+    );
 
     // console.log('message', message);
     client.emit('messageCreate', message);

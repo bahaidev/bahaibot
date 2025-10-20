@@ -12,10 +12,11 @@ import mockDate from './helpers/mockDate.js';
 
 const sufficientDelay = 800;
 
-describe('ready event', function () {
+describe('ready event', () => {
   const _Date = Date;
   beforeEach(function () {
     this.sinon = createSandbox();
+    // @ts-ignore We want to add it
     this.sinon.spyOnGetterResults = spyOnGetterResults;
   });
   afterEach(function () {
@@ -28,6 +29,7 @@ describe('ready event', function () {
     // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
     this.sinon.spy(console, 'log');
+    // @ts-expect-error Bug?
     client.emit('clientReady');
 
     // @ts-expect-error Sinon
@@ -47,6 +49,9 @@ describe('ready event', function () {
     //  track with our own spy.
     const timeoutSpy = this.sinon.spy();
     const timeout = this.sinon.stub(globalThis, 'setTimeout').value(
+      /**
+       * @type {(fn: () => void, delay: number) => void}
+       */
       (fn, delay) => {
         timeoutSpy(fn, delay);
 
@@ -68,6 +73,7 @@ describe('ready event', function () {
       guilds: [
         {
           id: DiscordConstants.BAHAI_LAB_GUILD_ID,
+          name: 'test',
           channels: [
             {
               id: DiscordConstants.BAHAI_LAB_BOT_TESTING_CHANNEL_ID,
@@ -84,11 +90,13 @@ describe('ready event', function () {
           ]
         },
         {
-          id: DiscordConstants.BAHAI_FYI_GUILD_ID
+          id: DiscordConstants.BAHAI_FYI_GUILD_ID,
+          name: 'test'
         }
       ]
     });
 
+    // @ts-expect-error Just mocking what we need
     globalThis.Date = mockDate({
       /**
        * @returns {import('../src/getWikiTools.js').Integer}
@@ -104,7 +112,9 @@ describe('ready event', function () {
       exitNoThrow: true,
       client: discord.getClient()
     });
+    // @ts-expect-error Just need a partial mock
     client.user = discord.getUser();
+    // @ts-expect-error Bug?
     client.emit('clientReady');
 
     // eslint-disable-next-line promise/avoid-new -- Impose delay
@@ -147,6 +157,9 @@ describe('ready event', function () {
     //  track with our own spy.
     const timeoutSpy = this.sinon.spy();
     const timeout = this.sinon.stub(globalThis, 'setTimeout').value(
+      /**
+       * @type {(fn: () => void, delay: number) => void}
+       */
       (fn, delay) => {
         timeoutSpy(fn, delay);
 
@@ -162,6 +175,7 @@ describe('ready event', function () {
       guilds: [
         {
           id: DiscordConstants.BAHAI_LAB_GUILD_ID,
+          name: 'test',
           channels: [
             {
               id: DiscordConstants.BAHAI_LAB_BOT_TESTING_CHANNEL_ID,
@@ -180,6 +194,7 @@ describe('ready event', function () {
       ]
     });
 
+    // @ts-expect-error Just need partial mock
     globalThis.Date = mockDate({
       /**
        * @returns {import('../src/getWikiTools.js').Integer}
@@ -195,7 +210,11 @@ describe('ready event', function () {
       exitNoThrow: true,
       client: discord.getClient()
     });
+
+    // @ts-expect-error Just need partial mock
     client.user = discord.getUser();
+
+    // @ts-expect-error Bug?
     client.emit('clientReady');
 
     // eslint-disable-next-line promise/avoid-new -- Impose delay

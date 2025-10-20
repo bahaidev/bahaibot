@@ -6,7 +6,7 @@ const _Date = Date;
  * {@link https://github.com/boblauer/MockDate/issues/46}
  * @param {object} [cfg]
  * @param {string|((num: number|undefined) => string|number|Date)} [cfg.date]
- * @param {string|(() => string)} [cfg.now]
+ * @param {string|number|Date|(() => string|number|Date)} [cfg.now]
  * @returns {{new (): MockDate}}
  */
 function mockDate ({

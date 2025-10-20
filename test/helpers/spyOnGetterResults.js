@@ -1,10 +1,42 @@
+
+/* eslint-disable jsdoc/reject-any-type -- Needed */
+/**
+ * @typedef {any} AnyValue
+ */
+/* eslint-enable jsdoc/reject-any-type -- Needed */
+
+
+/**
+ * @typedef {Record<
+ *   string,
+ *   {
+ *     simpleSpy?: import('sinon').SinonSpy,
+ *     argSpies?: (import('sinon').SinonSpy<unknown[], AnyValue> | null)[][],
+ *     childSpies?: import('sinon').SinonSpy[],
+ *     childAccessorSpies?: AnyValue[]
+ *   }
+ * >} Spies
+ */
+
 /**
  * Note: Only destructure the results after running your code.
- * @param {anything} ancestor
+ * @param {AnyValue} ancestor
  * @param {string} descendants Dot-separated
- * @param {Object<string,Object<(
- * "argSpies"|"childSpies"|"childAccessorSpies"|"simpleSpy"),
- * (boolean[]|string[]|boolean)>>} config Keyed by method name.
+ * @param {Record<
+ *   string,
+ *   {
+ *     childSpies?: (string|number|symbol)[]
+ *   } & {
+ *     childAccessorSpies?: [
+ *       childAccessorName: string,
+ *       accessors: ("get"|"set")[]
+ *     ][]
+ *   } & {
+ *     argSpies?: import('sinon').SinonSpy[]
+ *   } & {
+ *     simpleSpy: boolean
+ *   }
+ * >} config Keyed by method name.
  *
  * `argSpies` is an array of booleans indicating whether
  * to pass in a spy for any given argument value of the method (or just to
@@ -19,9 +51,8 @@
  * If `simpleSpy` is `true`, will create a basic
  * spy for watching non-spy arguments of this method, though while allowing
  * for `childSpies` (and `childAccessorSpies`).
- * @this {SinonSandbox}
- * @returns {Object<string,Object<("childSpies"|"childAccessorSpies"|
- * "argSpies"|"simpleSpy"),SinonSpy[]>>} `simpleSpy` is a single function.
+ * @this {import('sinon').SinonSandbox}
+ * @returns {Spies} `simpleSpy` is a single function.
  *
  * The return `argSpies` will be an array of arrays of spies. Each call of the
  * method will correlate with a separate child array, while the individual
@@ -40,8 +71,20 @@ function spyOnGetterResults (ancestor, descendants, config) {
   */
   const grandchildOriginal = ancestor[child][grandchild];
 
+  /**
+   * @type {Spies}
+   */
   const spies = {};
 
+  /**
+   * @type {Record<
+   *   string,
+   *   Record<
+   *     string,
+   *     (...args: AnyValue[]) => AnyValue
+   *   >
+   * >}
+   */
   const grandchildren = {
     [grandchild]: {}
   };
@@ -61,12 +104,13 @@ function spyOnGetterResults (ancestor, descendants, config) {
     //   add a different spy for at least the children so different
     //   results may allow different expectations
     /**
-     * @param {...anything} args
-     * @returns {anything}
+     * @param {...AnyValue} args
+     * @returns {AnyValue}
      */
     grandchildren[grandchild][method] = (...args) => {
       let result;
       if (argSpies.length) {
+        /** @type {AnyValue[]} */
         const newArgs = [];
         if (!spies[method].argSpies) {
           spies[method].argSpies = [];
@@ -102,19 +146,20 @@ function spyOnGetterResults (ancestor, descendants, config) {
       // user.prop;
 
       if (spies[method].childAccessorSpies) {
+        const cas = childAccessorSpies.map(([
+          childAccessorName,
+          accessors
+        ]) => {
+          let ret;
+          try {
+            ret = this.spy(result, childAccessorName, accessors);
+          } catch (e) {
+            ret = result;
+          }
+          return ret;
+        });
         spies[method].childAccessorSpies.push(
-          ...childAccessorSpies.map(([
-            childAccessorName,
-            accessors
-          ]) => {
-            let ret;
-            try {
-              ret = this.spy(result, childAccessorName, accessors);
-            } catch (e) {
-              ret = result;
-            }
-            return ret;
-          })
+          ...cas
         );
       } else {
         spies[method].childAccessorSpies = childAccessorSpies.map(([
