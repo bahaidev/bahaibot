@@ -13,7 +13,7 @@
 
 - See `0.2.0`.
 
-## 0.2.0 (Unpublished)
+## 0.2.0
 
 - Update from deprecated `apiai` to `@google-cloud/dialogflow` (@sscotti)
 - Fix: Ensure there is a means to get at `settings.json` `production` section
