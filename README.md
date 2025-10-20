@@ -128,7 +128,8 @@ buildBahaiBot({
 
 ## Settings
 
-- `token`
+- `token` - Get this string from your Bot page on the Discord Developer Dashboard;
+    be sure not to publish it
 - `disableNotMentioned` - Defaults to `false`
 - `welcomeChannel` - Defaults to 'welcome'
 - `awesomeEmoji` - Defaults to 'awesome'
