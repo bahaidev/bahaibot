@@ -82,44 +82,46 @@ const getSocialInfo = ({
         });
         if (!user) {
           replies.push(`I haven't seen ${sname} lately.`);
-          return;
-        }
-        // userStatus = user.presence.status;
-
-        const member = await message.guild.members.fetch({
-          user,
-          withPresences: true
-        });
-        const {channel} = message;
-        const messages = await channel.messages.fetch({limit: 100});
-        const userMessages = messages.filter(
-          (msg) => msg.author.id === user.id
-        );
-        const lastUserMessage = userMessages.first();
-
-        // Todo: Stop ignoring this once test in place.
-        /* c8 ignore next 16 */
-        if (lastUserMessage) {
-          const stat = (
-            member.presence?.status === 'dnd' ? 'busy' : member.presence?.status
-          );
-          const lastseen = new Date(lastUserMessage.createdAt);
-          const now = new Date();
-          const timedelta = (now > lastseen)
-            ? Number(now) - Number(lastseen)
-            : 0;
-          replies.push(
-            `${sname} is now ${stat}, and was last seen in ${
-              channel
-            } ${istr(timedelta / 1000)} ago.`
-          );
         } else {
-          const stat = (
-            member.presence?.status === 'dnd' ? 'busy' : member.presence?.status
+          // userStatus = user.presence.status;
+
+          const member = await message.guild.members.fetch({
+            user,
+            withPresences: true
+          });
+          const {channel} = message;
+          const messages = await channel.messages.fetch({limit: 100});
+          const userMessages = messages.filter(
+            (msg) => msg.author.id === user.id
           );
-          replies.push(
-            `${sname} is now ${stat}; I haven't seen them lately.`
-          );
+          const lastUserMessage = userMessages.first();
+
+          if (lastUserMessage) {
+            const stat = (
+              member.presence?.status === 'dnd'
+                ? 'busy'
+                : member.presence?.status
+            );
+            const lastseen = new Date(lastUserMessage.createdAt);
+            const now = new Date();
+            const timedelta = (now > lastseen)
+              ? Number(now) - Number(lastseen)
+              : 0;
+            replies.push(
+              `${sname} is now ${stat}, and was last seen in ${
+                channel
+              } ${istr(timedelta / 1000)} ago.`
+            );
+          } else {
+            const stat = (
+              member.presence?.status === 'dnd'
+                ? 'busy'
+                : member.presence?.status
+            );
+            replies.push(
+              `${sname} is now ${stat}; I haven't seen them lately.`
+            );
+          }
         }
 
         message.channel.send(replies.join('\n'));

@@ -533,7 +533,9 @@ describe('Commands', () => {
 
     await commandFinished(client);
     // @ts-expect-error Sinon
-    expect(message.channel.send.firstCall.firstArg).to.equal('');
+    expect(message.channel.send.firstCall.firstArg).to.equal(
+      `I haven't seen  lately.`
+    );
     expect(
       // @ts-expect-error Sinon
       console.log.calledWith('Seen command issued by user username.')
@@ -562,9 +564,7 @@ describe('Commands', () => {
       await commandFinished(client);
       // @ts-expect-error Sinon
       expect(message.channel.send.firstCall.firstArg).to.equal(
-        users.map((user) => {
-          return `I haven't seen ${user} lately.`;
-        }).join('\n')
+        `I haven't seen ${users.join(' ')} lately.`
       );
       expect(
         // @ts-expect-error Sinon
@@ -604,7 +604,7 @@ describe('Commands', () => {
   ]).forEach(([testMessage, {users, stat: statAB, counts: [
     countFirst, countSecond
   ]}]) => {
-    it.only(testMessage, async function () {
+    it(testMessage, async function () {
       const expectedStatAB = statAB === 'dnd' ? 'busy' : statAB;
 
       const discord = new MockDiscord({
