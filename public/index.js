@@ -58,20 +58,23 @@ const dialogflow = getDialogflowAdapter({
 
 // eslint-disable-next-line no-unused-vars -- Scaffolding
 const {client} = await integratedClientServerBot({
+  // @ts-expect-error Only polyfill what we need
   dialogflow,
   Discord: {
     // Todo: This should be part of an adapter
+    // @ts-expect-error Only polyfill what we need
     GatewayIntentBits: {
-      Guilds: null,
-      GuildMessages: null,
-      MessageContent: null,
-      GuildMembers: null,
-      GuildPresences: null
+      Guilds: 1,
+      GuildMessages: 512,
+      MessageContent: 32768,
+      GuildMembers: 2,
+      GuildPresences: 256
     },
-    /**
+    // @ts-expect-error Only mocking what we need to get a skeleton ready
+    Client: /**
      *
      */
-    Client: class {
+    class {
       user = true; // Todo: Make into a user
 
       /**
