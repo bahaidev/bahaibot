@@ -202,7 +202,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
    * @returns {Promise<void>}
    */
   async function bahaipediaAction (message, {forceToday} = {}) {
-    const bwikiMatch = /!(?:bp|pedia|b9|bahai9|bm|media|img)/gvi;
+    const bwikiMatch = /!(?:bp|pedia|b9|bahai9|bm|media|img|bw|bworks)/gvi;
     // const flag = /-([1-5]|r|rnd|rand|t|tih|today)/gvi;
 
     const words = message.content.split(' ');
@@ -249,6 +249,9 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
       } else if (bm.re.test(message.content)) {
         host = 'bahai.media';
         sitename = 'Bahaimedia';
+      } else if (bw.re.test(message.content)) {
+        host = 'bahai.works';
+        sitename = 'Bahaiworks';
       }
 
       // find the rand flag
@@ -374,11 +377,22 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
     action: bahaipediaAction,
     // This will be reused across several commands
     helpInfo: {
-      name: '!bp | !b9 | !bm [-rand | *‹keyword›*]',
+      name: '!bp | !b9 | !bm | !bw [-rand | *‹keyword›*]',
       value: 'Return a link to the top result for *keyword* on ' +
-          'Bahaipedia (`!bp`), Bahai9.com (`!b9`), or ' +
-          'Bahai.media (`!bm`); `-rand` displays a random ' +
+          'Bahaipedia (`!bp`), Bahai9.com (`!b9`), ' +
+          'Bahai.media (`!bm`), or Bahai.works; `-rand` displays a random ' +
           'article (or file).'
+    }
+  };
+
+  const bw = {
+    re: /!(?:bw|bworks)\b/iv,
+    /**
+     * @param {import('discord.js').Message<true>} message
+     * @returns {Promise<void>}
+     */
+    async action (message) {
+      return await bahaipediaAction(message);
     }
   };
 
@@ -386,7 +400,8 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
     bp,
     today,
     b9,
-    bm
+    bm,
+    bw
   };
 };
 
