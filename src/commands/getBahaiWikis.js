@@ -272,7 +272,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
 
       const nrIdx = words.findIndex((i) => i.match(nrRgx));
       if (nrIdx !== -1) {
-        numResults = Number(words[nrIdx]);
+        numResults = Math.abs(Number(words[nrIdx]));
         // remove this word
         words.splice(nrIdx, 1);
       }
