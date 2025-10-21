@@ -321,7 +321,7 @@ describe('Commands', () => {
     await commandFinished(client);
 
     expect(channelSpy.firstCall.firstArg).to.have.string(
-      'Channel bad-name does not exist!'
+      'Channel bad-name does not exist or is not text-based!'
     );
     const {
       find: {

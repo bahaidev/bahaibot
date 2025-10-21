@@ -28,7 +28,8 @@ const USER_AB = '309427494778306560';
 
 const ADMIN_IDS = [
   USER_AB,
-  '324993843005227008' // dragfyre
+  '324993843005227008', // dragfyre
+  '410259427770499072' // brettz9
 ];
 
 // Just using for consistency in tests; not the actual

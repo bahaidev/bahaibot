@@ -8,36 +8,42 @@
 /**
  * @type {PuppetTool}
  */
-function puppet ({content, guild, author, /* member, */ channel}, permissions) {
+function puppet ({
+  content, guild, /* author, member, */ channel
+  // eslint-disable-next-line no-unused-vars -- Keeping signature for now
+}, permissions) {
   // Transmit message as:
   // !puppet <CHANNEL> | <MESSAGE>
-  if (
-    author.id === permissions.authorID
+  // if (author.id !== permissions.authorID
 
   // Reenable this if we allow `getCommands.js` to pass in arbitrary users
   // or are using this file elsewhere
-  // || member.permissions.has(permissions.permission)
-  ) {
-    const regex = /!puppet (?<userChannel>\S.+) \| (?<msg>\S.+)/iv;
-    const echo = content.match(regex);
+  // && !member.permissions.has(permissions.permission)
+  // ) {
+  //   return;
+  // }
 
-    // Did regex pass
-    if (echo) {
-      // eslint-disable-next-line @stylistic/max-len -- Long
-      const {userChannel, msg} = /** @type {{userChannel: string, msg: string}} */ (
-        echo.groups
+  const regex = /!puppet (?<userChannel>\S.+) \| (?<msg>\S.+)/iv;
+  const echo = content.match(regex);
+
+  // Did regex pass
+  if (echo) {
+    // eslint-disable-next-line @stylistic/max-len -- Long
+    const {userChannel, msg} = /** @type {{userChannel: string, msg: string}} */ (
+      echo.groups
+    );
+
+    const destination = guild?.channels.cache.find(
+      (val) => val.name === userChannel
+    );
+
+    // Does the channel exist?
+    if (destination && destination.isTextBased()) {
+      destination.send(msg);
+    } else {
+      channel.send(
+        `Channel ${userChannel} does not exist or is not text-based!`
       );
-
-      const destination = guild?.channels.cache.find(
-        (val) => val.name === userChannel
-      );
-
-      // Does the channel exist?
-      if (destination && destination.isTextBased()) {
-        destination.send(msg);
-      } else {
-        channel.send(`Channel ${userChannel} does not exist!`);
-      }
     }
   }
 }
