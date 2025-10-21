@@ -220,4 +220,5 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 1. Add help-all command to show abbrevs for more obscure features
 1. Make commands available as slash commands
 1. Go through in-code to-dos
-    1. Fix and stop skipping (social) tests
+    1. Fix `speak` and test
+    1. Adjust the (social) tests and stop skipping them
