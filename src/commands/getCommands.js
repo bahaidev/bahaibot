@@ -97,7 +97,10 @@ const getCommands = async function ({
       discordTTS, DiscordVoice
     })],
     ['bahaiInfo', () => getBahaiInfo({client, Discord})],
-    ['bahaiSalutations', () => getBahaiSalutations({client})],
+    ['bahaiSalutations', () => getBahaiSalutations({
+      client,
+      BSTAR_EMOJI_ID_LAB: DiscordConstants.BSTAR_EMOJI_ID_LAB
+    })],
     ['salutations', () => getSalutations()],
     ['lightHearted', () => getLightHearted()]
   ]).map(async ([name, cmd]) => {

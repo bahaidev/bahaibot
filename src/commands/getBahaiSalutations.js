@@ -1,9 +1,10 @@
 /**
  * @param {object} cfg
  * @param {import('discord.js').Client} cfg.client
+ * @param {string} cfg.BSTAR_EMOJI_ID_LAB
  * @returns {import('./getCommands.js').BotCommands}
  */
-const getBahaiSalutations = ({client}) => {
+const getBahaiSalutations = ({client, BSTAR_EMOJI_ID_LAB}) => {
   /**
    * @param {import('discord.js').Message<true>} message
    * @returns {import('discord.js').GuildEmoji|undefined}
@@ -78,6 +79,28 @@ const getBahaiSalutations = ({client}) => {
       action (message) {
         const star = reactToStar(message);
         message.channel.send(`Happy Ridván! ${star ? star.toString() : ''}`);
+      }
+    },
+    ninePointedStar: {
+      re: /\u{1F7D9}/u,
+      /**
+       * Nine-pointed-star (should be at the end so everything else is
+       *   processed first).
+       * @param {import('discord.js').Message<true>} message
+       * @returns {void}
+       */
+      action (message) {
+        message.channel.send(`<:bstar:${BSTAR_EMOJI_ID_LAB}>`);
+      },
+      notMentioned: {
+        /**
+         * @param {import('discord.js').Message<true>} message
+         * @returns {void}
+         */
+        action (message) {
+          // message.react('\u{1F7D9}');
+          message.react(`<:bstar:${BSTAR_EMOJI_ID_LAB}>`);
+        }
       }
     }
   };

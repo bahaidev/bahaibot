@@ -107,7 +107,7 @@ mentioned in the "Required by" column.
 | `client` | `.user` | Passed to `message.mentions.has()` | (Obtained in main bot code within "message" event)
 | `client.user` | `.avatarURL()` | | "Bahá'í Writings" (`readBook` and `readRandom` commands)
 | `client.user` | `.setPresence({activity: {name: '@BahaiBot !help', type: 'PLAYING'}})` | | (Accessed in main bot code (within "ready" event))
-| `client` | `.emojis.cache.find(({name}) => {return bool;})` | | (Called in main bot code (within "guildMemberAdd" event or if `checkins` flag passed)); also in Bahá'í Info (`badi` command), Bahá'í Salutations (`abha`, `nawruz`, and `ridvan` commands), Bahá'í Wikis (`today`, `b9`, `bm`, `bp` commands), Admin (`checkin` command); see also `emoji.toString()`
+| `client` | `.emojis.cache.find(({name}) => {return bool;})` | | (Called in main bot code (within "guildMemberAdd" event or if `checkins` flag passed)); also in Bahá'í Info (`badi` command), Bahá'í Salutations (`abha`, `nawruz`, `ridvan`, and `ninePointedStar` commands), Bahá'í Wikis (`today`, `b9`, `bm`, `bp` commands), Admin (`checkin` command); see also `emoji.toString()`
 | `client` | `.guilds.cache.get(guildID)` | Returns a guild object | (Called in main bot code if `checkins` flag passed); also in Admin (`checkin` command); see also `guild` for the returned object)
 | `client` | `.channels.cache.get(channelId)` | | Admin (`speak` command); see also `channel.join()`
 | `client` | `.voice.createBroadcast()` | Passed to `connection.play()` | Admin (`speak` command); see also `broadcast`
@@ -126,14 +126,14 @@ mentioned in the "Required by" column.
 | `channel` | `.join()` | Resolves to `connection` | Admin (`speak` command)
 | `connection` | `.play()` | Returns a `dispatcher` | Admin (`speak` command)
 | `dispatcher` | `on()` | "error", "debug", and "start" events with an error object to the first two | Admin (`speak` command)
-| `emoji` | `.toString()` | | (Called in main bot code (within "guildMemberAdd" event or if `checkins` flag passed)); also in Bahá'í Info (`badi` command), Bahá'í Salutations (`abha`, `nawruz`, and `ridvan` commands), Bahá'í Wikis (`today`, `b9`, `bm`, `bp` commands), Admin (`checkin` command)
+| `emoji` | `.toString()` | | (Called in main bot code (within "guildMemberAdd" event or if `checkins` flag passed)); also in Bahá'í Info (`badi` command), Bahá'í Salutations (`abha`, `nawruz`, `ridvan`, and `ninePointedStar` commands), Bahá'í Wikis (`today`, `b9`, `bm`, `bp` commands), Admin (`checkin` command)
 
 | `message` Property, Method, or Child Class | Notes | Required by |
 |--------------------------------------------|-------|-------------|
 | `content` | String | Accessed by default command, Bahá'í Writings (`readBook` command), Admin (`speak`, `echo`, `puppet` commands); Social Info (`seen` command); Bahá'í Wikis (`bp`, `today`, `b9`, `bm` commands)
 | `author.id` | String | Accessed by default command; Admin (`speak`, `puppet`, `echo`, `checkin` command)
 | `author.username` | String | Accessed by Help (`help` command), Bahá'í Writings (`showList` command); Admin (`puppet`, `echo`, and `checkin` commands); Bahá'í Salutations (`abha` command); Salutations (`sup`, `morning`, `afternoon`, `evening`, `hello`, `welcome` commands); Social Info (`users` and `seen` commands); Bahá'í Wikis (`bp`, `today`, `b9`, `bm` commands)
-| `channel.send(string)` | See also the object signature | Called by default command (and possibly in dialogflow router); Bahá'í Writings (`readBook` and default `reader` fallback commands); Admin (`echo`, `puppet` command); Bahá'í Info (`badi` command); Bahá'í Salutations (`abha`, `nawruz`, and `ridvan` commands); Salutations (`sup`, `morning`, `afternoon`, `evening`, `hello`, `welcome` commands); Light-hearted (`coffee`, `tea`, `unladen`, `bruh`, `goodbot`, `badbot`, `repeating`, `santacat`, `ping` commands); Social Info (`users` and `seen` commands)
+| `channel.send(string)` | See also the object signature | Called by default command (and possibly in dialogflow router); Bahá'í Writings (`readBook` and default `reader` fallback commands); Admin (`echo`, `puppet` command); Bahá'í Info (`badi` command); Bahá'í Salutations (`abha`, `nawruz`, `ridvan`, and `ninePointedStar` commands); Salutations (`sup`, `morning`, `afternoon`, `evening`, `hello`, `welcome` commands); Light-hearted (`coffee`, `tea`, `unladen`, `bruh`, `goodbot`, `badbot`, `repeating`, `santacat`, `ping` commands); Social Info (`users` and `seen` commands)
 | `channel.send(object)` | Like the `channel.send` above | Bahá'í Writings (`readBook` and `readRandom` commands); possibly in dialogflow router (via default command)
 | `channel.send(object)` | Like the `channel.send` above though also has `fields` on `embed` which is an array of `{name: string, value: string}` objects (the command and help text for it) | Help (`help` command), Bahá'í Writings (`showList` command); Bahá'í Info (`info` command)
 | `channel.send(object)` | Like the `channel.send` above though also has `image: {url: string}` on `embed` | Bahá'í Wikis (`bp`, `today`, `b9`, `bm` commands)
@@ -143,4 +143,4 @@ mentioned in the "Required by" column.
 | `member.voice.channelID` | | Admin (`speak` command)
 | `mentions.has(user)` | Passed a user object | (Called in main bot code (within "message" event))
 | `mentions.members.first()` | Truthy result; called within `notMentioned` only | Bahá'í Salutations (`abha` command); Salutations (`welcome` command `notMentioned` check)
-| `react` | | Bahá'í Salutations (`abha`, `nawruz`, and `ridvan` commands); Salutations (`welcome` command `notMentioned` check); Light-hearted (`goodbot`, `badbot` commands; `tea` and `coffee` `notMentioned` commands); Bahá'í Wikis (`bp`, `today`, `b9`, `bm` commands)
+| `react` | | Bahá'í Salutations (`abha`, `nawruz`, `ridvan`, and `ninePointedStar` commands); Salutations (`welcome` command `notMentioned` check); Light-hearted (`goodbot`, `badbot` commands; `tea` and `coffee` `notMentioned` commands); Bahá'í Wikis (`bp`, `today`, `b9`, `bm` commands)

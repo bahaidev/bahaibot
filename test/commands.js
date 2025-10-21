@@ -3122,6 +3122,47 @@ describe('Commands', () => {
     }
   );
 
+  it('ninePointedStar', async function () {
+    const discord = new MockDiscord({
+      mentionEveryone: true,
+      messageContent: '\u{1F7D9}'
+    });
+
+    // @ts-expect-error Don't need a full mock
+    const {client} = await bot({client: discord.getClient()});
+
+    const message = discord.getMessage();
+
+    this.sinon.spy(message.channel, 'send');
+
+    client.emit('messageCreate', message);
+
+    expect(
+      // @ts-expect-error Sinon
+      message.channel.send.firstCall.firstArg
+    ).to.have.string(`<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`);
+  });
+
+  it('ninePointedStar (not mentioned)', async function () {
+    const discord = new MockDiscord({
+      messageContent: '\u{1F7D9}'
+    });
+
+    // @ts-expect-error Don't need a full mock
+    const {client} = await bot({client: discord.getClient()});
+
+    const message = discord.getMessage();
+
+    this.sinon.spy(message, 'react');
+
+    client.emit('messageCreate', message);
+
+    expect(
+      // @ts-expect-error Sinon
+      message.react.firstCall.firstArg
+    ).to.equal(`<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`);
+  });
+
   it('coffee', async function () {
     const discord = new MockDiscord({
       mentionEveryone: true,
