@@ -216,8 +216,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
     easier for website; make website version support opening URLs on behalf
     of user for full context of the Writings
 
-1. Add help-all command to show abbrevs for more obscure features
 1. Make commands available as slash commands
+1. Add help-all command to show abbrevs for more obscure features
 1. Go through in-code to-dos
     1. Fix `speak` and test
     1. Adjust the (social) tests and stop skipping them
