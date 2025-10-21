@@ -142,7 +142,8 @@ const bot = async ({
       Discord.GatewayIntentBits.MessageContent,
       Discord.GatewayIntentBits.GuildMembers,
       Discord.GatewayIntentBits.GuildPresences
-    ]
+    ],
+    partials: [Discord.Partials.GuildMember]
   });
 
   // Import the .json settings (use this when JSON importing is standard in

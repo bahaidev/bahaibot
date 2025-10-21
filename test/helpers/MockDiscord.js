@@ -257,7 +257,8 @@ class MockDiscord {
         Discord.GatewayIntentBits.MessageContent,
         Discord.GatewayIntentBits.GuildMembers,
         Discord.GatewayIntentBits.GuildPresences
-      ]
+      ],
+      partials: [Discord.Partials.GuildMember]
     });
 
     const role = this.mockRole({client, name, roleID});

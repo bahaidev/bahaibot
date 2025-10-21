@@ -1,5 +1,64 @@
 import istr from '../utils/istr.js';
 
+/* c8 ignore next 57 -- Todo: Reenable when testing again */
+/**
+ * Finds the last message sent by a user, including threads, in a specific
+ *   guild.
+ * @param {import('discord.js').Guild} guild The guild to search.
+ * @param {import('discord.js').User} user The user to find the last
+ *   message for.
+ * @param {number} limit
+ * @returns {Promise<{
+ *   lastMessage: import('discord.js').Message|null,
+ *   lastChannel: import('discord.js').Channel|null
+ * }>} The last message,
+ *   or null if not found.
+ */
+async function getLastUserMessage (guild, user, limit = 100) {
+  /** @type {import('discord.js').Message|null} */
+  let lastMessage = null;
+  /** @type {import('discord.js').Channel|null} */
+  let lastChannel = null;
+
+  // Get all text and news channels.
+  const textChannels = guild.channels.cache.filter((c) => c.isTextBased());
+
+  // Create an array of all channels and threads to check.
+  const channelsAndThreads = [...textChannels.values()];
+
+  // Fetch all active threads in the guild and add them to the array.
+  const activeThreads = await guild.channels.fetchActiveThreads();
+  channelsAndThreads.push(...activeThreads.threads.values());
+
+  // Now, iterate through all channels and threads.
+  await Promise.all(channelsAndThreads.map(async (channel) => {
+    let messages;
+    try {
+      // Fetch the last (default 100) messages in the channel or thread.
+      messages = await channel.messages.fetch({limit});
+    } catch (err) {
+      // Ignore moderator-only channels
+      return;
+    }
+
+    // Find the most recent message by the target user in this batch.
+    const userMessage = messages.filter(
+      (m) => m.author.id === user.id
+    ).first();
+
+    // Compare it to the current latest message found.
+    if (userMessage &&
+      (!lastMessage ||
+        userMessage.createdTimestamp > lastMessage.createdTimestamp)
+    ) {
+      lastMessage = userMessage;
+      lastChannel = channel;
+    }
+  }));
+
+  return {lastMessage, lastChannel};
+}
+
 /**
 * @param {object} cfg
 * @param {string[]} cfg.ADMIN_ROLES
@@ -16,7 +75,7 @@ const getSocialInfo = ({
       //  name: '!users',
       //  value: 'Displays a count of online users.'
       // }
-      /* c8 ignore next 52 -- Reenable when testing again */
+      /* c8 ignore next 52 -- Todo: Reenable when testing again */
       /**
        * Users gives the number of online users.
        * @param {import('discord.js').Message<true>} message
@@ -87,57 +146,66 @@ const getSocialInfo = ({
             word.includes('847456996738334730') || word === '!seen')
         ).join(' ');
 
-        // const {guild} = message;
-        // const userOnline = guild.members.cache.filter(
-        //  (m) => m.presence.status === 'online').size;
-        // let userStatus = '';
         const replies = [];
 
         const user = client.users.cache.find((val) => {
           return val.username === sname;
         });
-        if (!user) {
-          replies.push(`I haven't seen ${sname} lately.`);
-        /* c8 ignore next 41 -- Reenable when testing again */
-        } else {
-          // userStatus = user.presence.status;
 
+        const haventSeen = () => {
+          replies.push(`I haven't seen ${sname} lately.`);
+        };
+
+        if (!user) {
+          haventSeen();
+        /* c8 ignore next 50 -- Todo: Reenable when testing again */
+        } else {
           const member = await message.guild.members.fetch({
             user,
             withPresences: true
           });
-          const {channel} = message;
-          const messages = await channel.messages.fetch({limit: 100});
-          const userMessages = messages.filter(
-            (msg) => msg.author.id === user.id
-          );
-          const lastUserMessage = userMessages.first();
 
-          if (lastUserMessage) {
+          const {
+            lastMessage,
+            lastChannel
+          } = await getLastUserMessage(message.guild, user);
+          if (lastMessage) {
             const stat = (
               member.presence?.status === 'dnd'
                 ? 'busy'
-                : member.presence?.status
+                // c8 ignore next -- Inconsistent? */
+                : member.presence?.status ?? 'offline'
             );
-            const lastseen = new Date(lastUserMessage.createdAt);
-            const now = new Date();
-            const timedelta = (now > lastseen)
-              ? Number(now) - Number(lastseen)
-              : 0;
-            replies.push(
-              `${sname} is now ${stat}, and was last seen in ${
-                channel
-              } ${istr(timedelta / 1000)} ago.`
-            );
+            if (stat === 'offline') {
+              // User is invisible, so don't leak presence to channel
+              haventSeen();
+            } else {
+              const lastseen = new Date(lastMessage.createdAt);
+              const now = new Date();
+              const timedelta = (now > lastseen)
+                ? Number(now) - Number(lastseen)
+                : 0;
+              replies.push(
+                `${sname} is now ${stat}, and was last seen in ${
+                  lastChannel
+                } ${istr(timedelta / 1000)} ago.`
+              );
+            }
           } else {
             const stat = (
               member.presence?.status === 'dnd'
                 ? 'busy'
-                : member.presence?.status
+                // c8 ignore next -- Inconsistent? */
+                : member.presence?.status ?? 'offline'
             );
-            replies.push(
-              `${sname} is now ${stat}; I haven't seen them lately.`
-            );
+            if (stat === 'offline') {
+              // User is invisible, so don't leak presence to channel
+              haventSeen();
+            } else {
+              replies.push(
+                `${sname} is now ${stat}; I haven't seen them lately.`
+              );
+            }
           }
         }
 
