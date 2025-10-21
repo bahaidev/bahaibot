@@ -100,7 +100,7 @@ const getSocialInfo = ({
         for (const admin of allAdmins) {
           // eslint-disable-next-line no-await-in-loop -- Convenient
           const member = await guild.members.fetch({
-            user: admin,
+            user: admin[1].user,
             withPresences: true
           });
 
