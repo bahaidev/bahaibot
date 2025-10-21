@@ -1044,6 +1044,83 @@ describe('Commands', () => {
     ).to.be.true;
   });
 
+  it('bw (random)', async function () {
+    const discord = new MockDiscord({
+      mentionEveryone: true,
+      messageContent: '!bw -rand',
+      userID: DiscordConstants.USER_AB,
+      userName: 'AB',
+      guildChannels: true,
+      guilds: [
+        {
+          id: DiscordConstants.BAHAI_FYI_GUILD_ID,
+          name: "Bahá'í FYI",
+          channels: [
+            {
+              id: DiscordConstants.BAHAI_FYI_GENERAL_CHANNEL_ID,
+              name: 'general'
+            },
+            {
+              id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
+              name: 'irc-bridge'
+            },
+            {
+              id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
+              name: 'study-hall'
+            }
+          ],
+          emojis: [
+            {
+              id: DiscordConstants.BSTAR_EMOJI_ID_LAB,
+              name: 'bstar'
+            }
+          ]
+        }
+      ]
+    });
+
+    // @ts-expect-error Don't need a full mock
+    const {client} = await bot({
+      checkins: true,
+      client: discord.getClient()
+    });
+
+    const message = discord.getMessage();
+
+    this.sinon.spy(console, 'error');
+    this.sinon.spy(message.channel, 'send');
+
+    client.emit('messageCreate', message);
+
+    await commandFinished(client);
+    expect(
+      // @ts-expect-error Sinon
+      console.log.calledWith('Query completed.')
+    ).to.be.true;
+
+    expect(
+      // @ts-expect-error Sinon
+      message.channel.send.firstCall.firstArg.content
+    ).to.equal(
+      'Here is the result of your query.'
+    );
+
+    expect(
+      // @ts-expect-error Sinon
+      message.channel.send.firstCall.firstArg.embeds[0].description
+    ).to.have.string(
+      'Bahaiworks has returned the following random page, AB:\n\n **'
+    ).and.to.have.string(
+      '(https://bahai.works/'
+    ).and.to.have.string(
+      `<:bstar:${DiscordConstants.BSTAR_EMOJI_ID_LAB}>`
+    );
+    expect(
+      // @ts-expect-error Sinon
+      console.log.calledWith('BP command issued by AB.')
+    ).to.be.true;
+  });
+
   it('bahaimedia (random)', async function () {
     const discord = new MockDiscord({
       mentionEveryone: true,
