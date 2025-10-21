@@ -1,3 +1,6 @@
+// Todo: Besides dialogflow not working with CORS (as attempted below),
+//        This should not be triggering a `messageCreate` immediately.
+
 // eslint-disable-next-line import/no-unresolved -- Bug
 import postJSON from 'simple-post-json';
 
