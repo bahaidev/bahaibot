@@ -214,7 +214,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 1. See about establishing maintenance of bot on own server
 
 1. See about any refactoring needed to allow to work with bahai-matrix-bot and
-    easier for website
+    easier for website; make website version support opening URLs on behalf
+    of user for full context of the Writings
 
 1. Add help-all command to show abbrevs for more obscure features
 1. Make commands available as slash commands
