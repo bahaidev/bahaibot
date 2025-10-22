@@ -2,8 +2,6 @@ import * as fs from 'fs/promises';
 import {join} from 'path';
 import {expect} from 'chai';
 import * as Discord from 'discord.js';
-// eslint-disable-next-line no-shadow -- Familiar
-import fetch from 'node-fetch';
 import {i18n, setFetch} from 'intl-dom';
 import fileFetch from 'file-fetch'; // For `intl-dom`
 // eslint-disable-next-line import/no-unresolved -- Bug

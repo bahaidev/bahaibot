@@ -23,8 +23,7 @@ import * as DiscordConstants from './messages/DiscordConstants.js';
  * @typedef {object} BotOptions
  * @property {boolean} [checkins=false]
  * @property {string[]} [locales=["en-US"]]
- * @property {globalThis.fetch|import('node-fetch').
- *   default} [fetch=globalThis.fetch]
+ * @property {globalThis.fetch} [fetch=globalThis.fetch]
  * @property {typeof import('intl-dom').i18n} [i18n=globalThis?.intlDom?.i18n]
  * @property {import('./getWikiTools.js').
  *   StripTags} [striptags=globalThis.striptags]

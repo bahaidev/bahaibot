@@ -40,7 +40,7 @@
 
 /**
  * @param {object} cfg
- * @param {globalThis.fetch|import('node-fetch').default} cfg.fetch
+ * @param {globalThis.fetch} cfg.fetch
  * @param {import('intl-dom').I18NCallback} cfg._
  * @param {StripTags} cfg.striptags
  * @returns {BotWikiTools}

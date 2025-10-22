@@ -20,8 +20,6 @@ import dialogflow from '@google-cloud/dialogflow';
 
 import {i18n, setFetch} from 'intl-dom';
 import fileFetch from 'file-fetch'; // For `intl-dom`
-// eslint-disable-next-line no-shadow -- Familiar
-import fetch from 'node-fetch';
 // eslint-disable-next-line import/no-unresolved -- Bug
 import {stripHtml} from 'string-strip-html';
 
