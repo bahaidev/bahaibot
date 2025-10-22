@@ -210,6 +210,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 1. Waiting: Update to discord 15 when comes out
 
+1. Complete slash commands
+1. Unit testing for new commands
 1. See about establishing maintenance of bot on own server
 
 1. See about any refactoring needed to allow to work with bahai-matrix-bot and

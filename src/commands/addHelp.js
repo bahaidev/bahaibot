@@ -17,9 +17,7 @@ const addHelp = ({commands}) => {
                 '`!helpextras` and `!helpadmin`'
     },
     /**
-     * @param {import('discord.js').ChatInputCommandInteraction<
-     *   import('discord.js').CacheType
-     * >} interaction
+     * @param {import('./getCommands.js').InputCommandOrSelectMenu} interaction
      * @returns {Promise<void>}
      */
     async slashCommand (interaction) {
@@ -60,9 +58,7 @@ const addHelp = ({commands}) => {
       value: 'Displays help text for rarer commands.'
     },
     /**
-     * @param {import('discord.js').ChatInputCommandInteraction<
-     *   import('discord.js').CacheType
-     * >} interaction
+     * @param {import('./getCommands.js').InputCommandOrSelectMenu} interaction
      * @returns {Promise<void>}
      */
     async slashCommand (interaction) {
@@ -110,9 +106,7 @@ const addHelp = ({commands}) => {
       value: 'Displays help text for commands available only to admins.'
     },
     /**
-     * @param {import('discord.js').ChatInputCommandInteraction<
-     *   import('discord.js').CacheType
-     * >} interaction
+     * @param {import('./getCommands.js').InputCommandOrSelectMenu} interaction
      * @returns {Promise<void>}
      */
     async slashCommand (interaction) {

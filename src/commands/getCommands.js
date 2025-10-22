@@ -34,14 +34,20 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
 */
 
 /**
+ * @typedef {import('discord.js').ChatInputCommandInteraction<
+ *   import('discord.js').CacheType
+ * > | import('discord.js').StringSelectMenuInteraction<
+ *   import('discord.js').CacheType
+ * >} InputCommandOrSelectMenu
+ */
+
+/**
  * @typedef {object} BotCommand
  * @property {RegExp} [re]
  * @property {string} [name]
  * @property {string} [description]
  * @property {(
- *   interaction: import('discord.js').ChatInputCommandInteraction<
- *     import('discord.js').CacheType
- *   >
+ *   interaction: InputCommandOrSelectMenu
  * ) => Promise<void>} [slashCommand]
  * @property {import('discord.js').
  *   _AddUndefinedToPossiblyUndefinedPropertiesOfInterface<

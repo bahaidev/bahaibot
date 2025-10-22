@@ -277,13 +277,18 @@ const bot = async ({
   });
 
   client.on('interactionCreate', async (interaction) => {
-    if (!interaction.isChatInputCommand()) {
+    if (!interaction.isChatInputCommand() &&
+      !interaction.isStringSelectMenu()) {
       return;
     }
 
-    const commandObject = Object.values(botCommands).find((cmd) => {
-      return cmd.name === interaction.commandName;
-    });
+    const commandObject = interaction.isStringSelectMenu()
+      ? Object.values(botCommands).find((cmd) => {
+        return cmd.name === interaction.customId.split('_')[0];
+      })
+      : Object.values(botCommands).find((cmd) => {
+        return cmd.name === interaction.commandName;
+      });
 
     if (!commandObject) {
       return;

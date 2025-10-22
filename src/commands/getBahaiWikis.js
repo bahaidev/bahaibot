@@ -346,9 +346,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
           'in history, via Bahaipedia.'
     },
     /**
-     * @param {import('discord.js').ChatInputCommandInteraction<
-     *   import('discord.js').CacheType
-     * >} interaction
+     * @param {import('./getCommands.js').InputCommandOrSelectMenu} interaction
      * @returns {Promise<void>}
      */
     async slashCommand (interaction) {
@@ -397,13 +395,11 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
   const getSlashCommand = (prefix) => {
     /**
      * @this {import('./getCommands.js').BotCommand}
-     * @param {import('discord.js').ChatInputCommandInteraction<
-     *   import('discord.js').CacheType
-     * >} interaction
+     * @param {import('./getCommands.js').InputCommandOrSelectMenu} interaction
      * @returns {Promise<void>}
      */
     return async function slashCommand (interaction) {
-      if (!interaction.inCachedGuild()) {
+      if (!interaction.inCachedGuild() || interaction.isStringSelectMenu()) {
         return;
       }
       await this.action?.({
@@ -492,11 +488,74 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
 
   // This is only for slash commands, as the indidivual items allow random for
   //   the Bot dialogues
-  const randomWiki = {
+  const randomWiki = /** @type {import('./getCommands.js').BotCommand} */ ({
     name: 'rand-wiki',
-    description: 'A random wiki selection'
-    // Todo: subcommand
-  };
+    description: 'A random wiki selection',
+    /**
+     * @param {import('discord.js').Message<true>} message
+     * @returns {Promise<void>}
+     */
+    async action (message) {
+      return await bahaipediaAction(message);
+    },
+    /**
+     * @param {import('./getCommands.js').InputCommandOrSelectMenu} interaction
+     * @returns {Promise<void>}
+     */
+    async slashCommand (interaction) {
+      if (interaction.isStringSelectMenu()) {
+        await this.action?.({
+          author: interaction.user,
+          content: /** @type {string} */ (
+            `!${interaction.values[0]} -rand`
+          ),
+          // @ts-expect-error No-op
+          react () {
+            // No-op as no need for emoji response to slash command
+          },
+          channel: {
+            /**
+             * @param {string} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
+        return;
+      }
+      if (interaction.isChatInputCommand()) {
+        const selectMenu = new Discord.StringSelectMenuBuilder().
+          setCustomId('rand-wiki_site').
+          setPlaceholder('Choose a site!').
+          addOptions(
+            new Discord.StringSelectMenuOptionBuilder().
+              setLabel('bahaipedia.org').setValue('bp'),
+            new Discord.StringSelectMenuOptionBuilder().
+              setLabel('bahai9.com').setValue('b9'),
+            new Discord.StringSelectMenuOptionBuilder().
+              setLabel('bahai.media').setValue('bm'),
+            new Discord.StringSelectMenuOptionBuilder().
+              setLabel('bahai.works').setValue('bw')
+          );
+
+        const row = new (
+          /**
+           * @type {typeof import('discord.js').ActionRowBuilder<
+           *   import('discord.js').StringSelectMenuBuilder
+           * >}
+           */ (Discord.ActionRowBuilder)
+        )().addComponents(selectMenu);
+
+        await interaction.reply({
+          content: 'Random wiki:',
+          components: [row],
+          ephemeral: true
+        });
+      }
+    }
+  });
 
   return {
     // @ts-expect-error TS bug?

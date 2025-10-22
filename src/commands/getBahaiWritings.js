@@ -13,27 +13,29 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
 
   return {
     // Todo: Finish for other books
-    // Todo: Add subcommands for page, Q&A, note, paragraph numbers
+    // Todo: Add for page, Q&A, note
     kitabIAqdas: {
       name: 'kitabiaqdas',
       description: 'The Kitáb-i-Aqdas (Most Holy Book)',
       options: [
         {
-          name: 'verse-number',
-          description: 'The verse number',
+          name: 'paragraph-number',
+          description: 'The paragraph number',
           type: Discord.ApplicationCommandOptionType.Integer
         }
       ],
       /**
-       * @param {import('discord.js').ChatInputCommandInteraction<
-       *   import('discord.js').CacheType
-       * >} interaction
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
-        const verse = interaction.options.get('verse-number')?.value;
+        if (interaction.isStringSelectMenu()) {
+          return;
+        }
+        const verse = interaction.options.get('paragraph-number')?.value;
         await interaction.reply(
-          `[Kitáb-i-Aqdas${verse ? `, verse ${verse}` : ''}](https://bahai-library.com/writings/bahaullah/aqdas/kaall.html#par${verse ?? ''})`
+          `[Kitáb-i-Aqdas${verse ? `, paragraph ${verse}` : ''}](https://bahai-library.com/writings/bahaullah/aqdas/kaall.html#par${verse ?? ''})`
         );
       }
     },
@@ -41,9 +43,8 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       name: 'rand-writings',
       description: "A link to a random selection from the Bahá'í Writings",
       /**
-       * @param {import('discord.js').ChatInputCommandInteraction<
-       *   import('discord.js').CacheType
-       * >} interaction
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
@@ -87,9 +88,8 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       description: "Provide a random selection of the Bahá'í Writings",
       re: /\bread random$/iv,
       /**
-       * @param {import('discord.js').ChatInputCommandInteraction<
-       *   import('discord.js').CacheType
-       * >} interaction
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {

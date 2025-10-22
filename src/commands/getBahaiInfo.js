@@ -23,15 +23,11 @@ const getBahaiInfo = ({client, Discord}) => {
         value: 'Provides a link to the support server'
       },
       /**
-       * @param {import('discord.js').ChatInputCommandInteraction<
-       *   import('discord.js').CacheType
-       * >} interaction
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
-        if (!interaction.inCachedGuild()) {
-          return;
-        }
         await this.action?.({
           channel: {
             /**

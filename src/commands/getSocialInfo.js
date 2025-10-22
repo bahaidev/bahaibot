@@ -80,9 +80,8 @@ const getSocialInfo = ({
       },
       /* c8 ignore next 76 -- Todo: Reenable when testing again */
       /**
-       * @param {import('discord.js').ChatInputCommandInteraction<
-       *   import('discord.js').CacheType
-       * >} interaction
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
@@ -173,13 +172,12 @@ const getSocialInfo = ({
         value: 'Displays the last time a user was seen online.'
       },
       /**
-       * @param {import('discord.js').ChatInputCommandInteraction<
-       *   import('discord.js').CacheType
-       * >} interaction
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
-        if (!interaction.inCachedGuild()) {
+        if (!interaction.inCachedGuild() || interaction.isStringSelectMenu()) {
           return;
         }
         await this.action?.({

@@ -85,11 +85,10 @@ const getAdmin = ({
         name: '!speak some words',
         value: 'Reads some words as speech'
       },
-      /* c8 ignore next 64 -- Todo: Incomplete */
+      /* c8 ignore next 65 -- Todo: Incomplete */
       /**
-       * @param {import('discord.js').ChatInputCommandInteraction<
-       *   import('discord.js').CacheType
-       * >} interaction
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
@@ -176,13 +175,12 @@ const getAdmin = ({
         }
       ],
       /**
-       * @param {import('discord.js').ChatInputCommandInteraction<
-       *   import('discord.js').CacheType
-       * >} interaction
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
-        if (!interaction.inCachedGuild()) {
+        if (!interaction.inCachedGuild() || interaction.isStringSelectMenu()) {
           return;
         }
         await this.action?.({
@@ -237,12 +235,15 @@ const getAdmin = ({
         }
       ],
       /**
-       * @param {import('discord.js').ChatInputCommandInteraction<
-       *   import('discord.js').CacheType
-       * >} interaction
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
+        if (interaction.isStringSelectMenu()) {
+          return;
+        }
+
         await this.action?.({
           author: interaction.user,
           content: /** @type {string} */ (
@@ -293,9 +294,8 @@ const getAdmin = ({
         value: 'Checks in to send a greeting to a bot-testing channel'
       },
       /**
-       * @param {import('discord.js').ChatInputCommandInteraction<
-       *   import('discord.js').CacheType
-       * >} interaction
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
