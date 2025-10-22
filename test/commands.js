@@ -89,6 +89,56 @@ describe('Commands', () => {
     });
   });
 
+  it('Executes helpextras', async function () {
+    const discord = new MockDiscord({
+      mentionEveryone: true,
+      messageContent: '!helpextras'
+    });
+
+    // @ts-expect-error Don't need a full mock
+    const {client} = await bot({client: discord.getClient()});
+
+    const message = discord.getMessage();
+
+    this.sinon.spy(message.channel, 'send');
+
+    // console.log('message', message);
+    Array.from({length: 10}).forEach(() => {
+      client.emit('messageCreate', message);
+    });
+
+    await commandFinished(client);
+    // @ts-expect-error Sinon
+    expect(message.channel.send.firstCall.firstArg.content).to.have.string(
+      'Here are the instructions you need, user username.'
+    );
+  });
+
+  it('Executes helpadmin', async function () {
+    const discord = new MockDiscord({
+      mentionEveryone: true,
+      messageContent: '!helpadmin'
+    });
+
+    // @ts-expect-error Don't need a full mock
+    const {client} = await bot({client: discord.getClient()});
+
+    const message = discord.getMessage();
+
+    this.sinon.spy(message.channel, 'send');
+
+    // console.log('message', message);
+    Array.from({length: 10}).forEach(() => {
+      client.emit('messageCreate', message);
+    });
+
+    await commandFinished(client);
+    // @ts-expect-error Sinon
+    expect(message.channel.send.firstCall.firstArg.content).to.have.string(
+      'Here are the instructions you need, user username.'
+    );
+  });
+
   it(
     "Doesn't execute a command if disabled",
     async function () {
