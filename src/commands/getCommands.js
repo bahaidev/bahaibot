@@ -34,14 +34,27 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
 */
 
 /**
-* @typedef {object} BotCommand
-* @property {RegExp} re
-* @property {ActionBehavior} action
-* @property {NotMentionedCommand} [notMentioned]
-* @property {{name: string, value: string}} [helpInfo] For use with !help
-* @property {{name: string, value: string}} [helpExtra] For use with !helpextras
-* @property {{name: string, value: string}} [helpAdmin] For use with !helpAdmin
-*/
+ * @typedef {object} BotCommand
+ * @property {RegExp} [re]
+ * @property {string} [name]
+ * @property {string} [description]
+ * @property {(
+ *   interaction: import('discord.js').ChatInputCommandInteraction<
+ *     import('discord.js').CacheType
+ *   >
+ * ) => Promise<void>} [slashCommand]
+ * @property {import('discord.js').
+ *   _AddUndefinedToPossiblyUndefinedPropertiesOfInterface<
+ *     import('discord.js').APIApplicationCommandOption[] | undefined
+ *   >} [options]
+ * @property {boolean} [deleted]
+ * @property {ActionBehavior} [action]
+ * @property {NotMentionedCommand} [notMentioned]
+ * @property {{name: string, value: string}} [helpInfo] For use with !help
+ * @property {{name: string, value: string}} [helpExtra] For use with
+ *   !helpextras
+ * @property {{name: string, value: string}} [helpAdmin] For use with !helpAdmin
+ */
 
 /**
 * @typedef {Object<string,BotCommand>} BotCommands
@@ -88,15 +101,15 @@ const getCommands = async function ({
 
   // eslint-disable-next-line @stylistic/max-len -- Long
   const objs = await Promise.all(/** @type {([string, () => BotCommands])[]} */ ([
-    ['socialInfo', () => getSocialInfo({ADMIN_ROLES, client})],
+    ['socialInfo', () => getSocialInfo({ADMIN_ROLES, client, Discord})],
     [
       'bahaiWritings',
       () => getBahaiWritings({fs, settings, client, Discord})
     ],
-    ['bahaiWikis', () => getBahaiWikis({wikiTools, client, _})],
+    ['bahaiWikis', () => getBahaiWikis({wikiTools, client, _, Discord})],
     ['admin', () => getAdmin({
       ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR, guildCheckin, _,
-      discordTTS, DiscordVoice
+      discordTTS, DiscordVoice, Discord
     })],
     ['bahaiInfo', () => getBahaiInfo({client, Discord})],
     ['bahaiSalutations', () => getBahaiSalutations({

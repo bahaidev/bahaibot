@@ -63,19 +63,46 @@ async function getLastUserMessage (guild, user, limit = 100) {
 * @param {object} cfg
 * @param {string[]} cfg.ADMIN_ROLES
 * @param {import('discord.js').Client} cfg.client
+* @param {import('discord.js')} cfg.Discord
 * @returns {import('./getCommands.js').BotCommands}
 */
 const getSocialInfo = ({
-  ADMIN_ROLES, client
+  ADMIN_ROLES, client, Discord
 }) => {
   return {
     users: {
+      name: 'users',
+      description: 'Displays a count of online users',
       re: /!users\b/iv,
       helpExtra: {
         name: '!users',
         value: 'Displays a count of online users.'
       },
-      /* c8 ignore next 52 -- Todo: Reenable when testing again */
+      /* c8 ignore next 76 -- Todo: Reenable when testing again */
+      /**
+       * @param {import('discord.js').ChatInputCommandInteraction<
+       *   import('discord.js').CacheType
+       * >} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        if (!interaction.inCachedGuild()) {
+          return;
+        }
+        await this.action?.({
+          author: interaction.user,
+          guild: interaction.guild,
+          channel: {
+            /**
+             * @param {string} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
+      },
       /**
        * Users gives the number of online users.
        * @param {import('discord.js').Message<true>} message
@@ -130,10 +157,46 @@ const getSocialInfo = ({
       }
     },
     seen: {
+      name: 'seen',
+      description: 'Displays the last time a user was seen online.',
+      options: [
+        {
+          name: 'user',
+          description: 'The user to check',
+          type: Discord.ApplicationCommandOptionType.User,
+          required: true
+        }
+      ],
       re: /!seen\b/iv,
       helpExtra: {
         name: '!seen',
         value: 'Displays the last time a user was seen online.'
+      },
+      /**
+       * @param {import('discord.js').ChatInputCommandInteraction<
+       *   import('discord.js').CacheType
+       * >} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        if (!interaction.inCachedGuild()) {
+          return;
+        }
+        await this.action?.({
+          author: interaction.user,
+          content:
+            `<@${interaction.options.get('user')?.value}>`,
+          guild: interaction.guild,
+          channel: {
+            /**
+             * @param {string} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
       },
       /**
        * Seen returns the last time a user sent a message.

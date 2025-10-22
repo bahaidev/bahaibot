@@ -12,7 +12,51 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
   const reader = await getReader({fs, settings});
 
   return {
+    // Todo: Finish for other books
+    // Todo: Add subcommands for page, Q&A, note, paragraph numbers
+    kitabIAqdas: {
+      name: 'kitabiaqdas',
+      description: 'The Kitáb-i-Aqdas (Most Holy Book)',
+      options: [
+        {
+          name: 'verse-number',
+          description: 'The verse number',
+          type: Discord.ApplicationCommandOptionType.Integer
+        }
+      ],
+      /**
+       * @param {import('discord.js').ChatInputCommandInteraction<
+       *   import('discord.js').CacheType
+       * >} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        const verse = interaction.options.get('verse-number')?.value;
+        await interaction.reply(
+          `[Kitáb-i-Aqdas${verse ? `, verse ${verse}` : ''}](https://bahai-library.com/writings/bahaullah/aqdas/kaall.html#par${verse ?? ''})`
+        );
+      }
+    },
+    randomWritings: {
+      name: 'rand-writings',
+      description: "A link to a random selection from the Bahá'í Writings",
+      /**
+       * @param {import('discord.js').ChatInputCommandInteraction<
+       *   import('discord.js').CacheType
+       * >} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        await interaction.reply(
+          `<[Random Bahá'í Writings](https://bahai-library.com/random)>`
+        );
+      }
+    },
     readBook: {
+      name: 'read',
+      description:
+        "Provide a selection of the Bahá'í Writings by book and chapter",
+      // Todo: Add subcommand autocomplete or pull-down
       re: /\bread (?<refName>\S.+) (?<index>[\-.\d]+)\b/iv,
       /**
        * Reads some scripture.
@@ -39,7 +83,31 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       }
     },
     readRandom: {
+      name: 'read-random',
+      description: "Provide a random selection of the Bahá'í Writings",
       re: /\bread random$/iv,
+      /**
+       * @param {import('discord.js').ChatInputCommandInteraction<
+       *   import('discord.js').CacheType
+       * >} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        if (!interaction.inCachedGuild()) {
+          return;
+        }
+        await this.action?.({
+          channel: {
+            /**
+             * @param {string} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
+      },
       /**
        *
        * @param {import('discord.js').Message<true>} message

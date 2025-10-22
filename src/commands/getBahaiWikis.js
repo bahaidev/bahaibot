@@ -3,9 +3,10 @@
  * @param {import('../getWikiTools.js').BotWikiTools} cfg.wikiTools
  * @param {import('discord.js').Client} cfg.client
  * @param {import('intl-dom').I18NCallback} cfg._
+ * @param {import('discord.js')} cfg.Discord
  * @returns {import('./getCommands.js').BotCommands}
  */
-const getBahaiWikis = function ({wikiTools, client, _}) {
+const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
   // Private methods
 
   /**
@@ -336,10 +337,41 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
 
   const today = {
     re: /!today\b/iv,
+    name: 'today',
+    description: "Displays a list of events from today's date " +
+      'in history, via Bahaipedia.',
     helpInfo: {
       name: '!today',
       value: "Displays a list of events from today's date " +
           'in history, via Bahaipedia.'
+    },
+    /**
+     * @param {import('discord.js').ChatInputCommandInteraction<
+     *   import('discord.js').CacheType
+     * >} interaction
+     * @returns {Promise<void>}
+     */
+    async slashCommand (interaction) {
+      if (!interaction.inCachedGuild()) {
+        return;
+      }
+      await this.action?.({
+        author: interaction.user,
+        content: '!today',
+        // @ts-expect-error No-op
+        react () {
+          // No-op as no need for emoji response to slash command
+        },
+        channel: {
+          /**
+           * @param {string} reply
+           */
+          // @ts-expect-error Just mocking what we need
+          send (reply) {
+            interaction.reply(reply);
+          }
+        }
+      });
     },
     /**
      * @param {import('discord.js').Message<true>} message
@@ -350,7 +382,57 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
     }
   };
 
+  const options = [
+    {
+      name: 'keywords',
+      description: 'The search keywords',
+      type: Discord.ApplicationCommandOptionType.String,
+      required: true
+    }
+  ];
+
+  /**
+   * @param {string} prefix
+   */
+  const getSlashCommand = (prefix) => {
+    /**
+     * @this {import('./getCommands.js').BotCommand}
+     * @param {import('discord.js').ChatInputCommandInteraction<
+     *   import('discord.js').CacheType
+     * >} interaction
+     * @returns {Promise<void>}
+     */
+    return async function slashCommand (interaction) {
+      if (!interaction.inCachedGuild()) {
+        return;
+      }
+      await this.action?.({
+        author: interaction.user,
+        content: /** @type {string} */ (
+          `${prefix} ${interaction.options.get('keywords')?.value}`
+        ),
+        // @ts-expect-error No-op
+        react () {
+          // No-op as no need for emoji response to slash command
+        },
+        channel: {
+          /**
+           * @param {string} reply
+           */
+          // @ts-expect-error Just mocking what we need
+          send (reply) {
+            interaction.reply(reply);
+          }
+        }
+      });
+    };
+  };
+
   const b9 = {
+    name: 'b9',
+    description: 'bahai9.com search',
+    options,
+    slashCommand: getSlashCommand('!b9'),
     re: /!(?:b9|bahai9)\b/iv,
     /**
      * @param {import('discord.js').Message<true>} message
@@ -362,6 +444,10 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   };
 
   const bm = {
+    name: 'bm',
+    description: 'bahai.media search',
+    options,
+    slashCommand: getSlashCommand('!bm'),
     re: /!(?:bm|media|img)\b/iv,
     /**
      * @param {import('discord.js').Message<true>} message
@@ -373,6 +459,10 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   };
 
   const bp = {
+    name: 'bp',
+    description: 'bahaipedia.org search',
+    options,
+    slashCommand: getSlashCommand('!bp'),
     re: /!(?:bp|pedia)\b/iv,
     action: bahaipediaAction,
     // This will be reused across several commands
@@ -386,6 +476,10 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   };
 
   const bw = {
+    name: 'bw',
+    description: 'bahai.works search',
+    options,
+    slashCommand: getSlashCommand('!bw'),
     re: /!(?:bw|bworks)\b/iv,
     /**
      * @param {import('discord.js').Message<true>} message
@@ -396,12 +490,25 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
     }
   };
 
+  // This is only for slash commands, as the indidivual items allow random for
+  //   the Bot dialogues
+  const randomWiki = {
+    name: 'rand-wiki',
+    description: 'A random wiki selection'
+    // Todo: subcommand
+  };
+
   return {
+    // @ts-expect-error TS bug?
     bp,
     today,
+    // @ts-expect-error TS bug?
     b9,
+    // @ts-expect-error TS bug?
     bm,
-    bw
+    // @ts-expect-error TS bug?
+    bw,
+    randomWiki
   };
 };
 

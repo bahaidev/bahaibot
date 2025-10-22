@@ -7,6 +7,7 @@ import router from './router.js';
 import getCheckin from './getCheckin.js';
 import {greets, happies} from './messages/messages.js';
 import * as DiscordConstants from './messages/DiscordConstants.js';
+import areCommandsDifferent from './utils/areCommandsDifferent.js';
 
 /**
  * @callback MessageListener
@@ -67,6 +68,70 @@ const supportedLocales = [
   //   names):
   defaultLocale
 ];
+
+/**
+ * @license MIT
+ * @see Adapted from {@link https://github.com/notunderctrl/discordjs-v14-series/tree/master/07%20-%20Command%20Handler}
+ * @param {import('discord.js').Client} client
+ * @param {import('./commands/getCommands.js').BotCommands} localCommands
+ */
+const registerCommands = async (client, localCommands) => {
+  const applicationCommands = await client.application?.commands;
+  if (!applicationCommands) {
+    // eslint-disable-next-line no-console -- CLI
+    console.log('No application commands found');
+    return;
+  }
+  await applicationCommands.fetch();
+
+  await Promise.all(Object.values(localCommands).map(async (localCommand) => {
+    const {name, description, options} = localCommand;
+
+    if (!name || !description) {
+      return;
+    }
+
+    const existingCommand = await applicationCommands.cache.find(
+      (cmd) => cmd.name === name
+    );
+
+    if (existingCommand) {
+      if (localCommand.deleted) {
+        await applicationCommands.delete(existingCommand.id);
+        // eslint-disable-next-line no-console -- CLI
+        console.log(`🗑 Deleted command "${name}".`);
+        return;
+      }
+
+      if (areCommandsDifferent(existingCommand, localCommand)) {
+        await applicationCommands.edit(existingCommand.id, {
+          description,
+          options
+        });
+
+        // eslint-disable-next-line no-console -- CLI
+        console.log(`🔁 Edited command "${name}".`);
+      }
+    } else {
+      if (localCommand.deleted) {
+        // eslint-disable-next-line no-console -- CLI
+        console.log(
+          `⏩ Skipping registering command "${name}" as it's set to delete.`
+        );
+        return;
+      }
+
+      await applicationCommands.create({
+        name,
+        description,
+        options
+      });
+
+      // eslint-disable-next-line no-console -- CLI
+      console.log(`👍 Registered command "${name}."`);
+    }
+  }));
+};
 
 /**
  * @template {object} T
@@ -211,16 +276,34 @@ const bot = async ({
     fs, settings, discordTTS, DiscordVoice
   });
 
+  client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isChatInputCommand()) {
+      return;
+    }
+
+    const commandObject = Object.values(botCommands).find((cmd) => {
+      return cmd.name === interaction.commandName;
+    });
+
+    if (!commandObject) {
+      return;
+    }
+
+    await commandObject?.slashCommand?.(interaction);
+  });
+
   /**
   * @callback ReadyListener
-  * @returns {void}
+  * @returns {Promise<void>}
   */
 
   // The ready event is vital, it means that your bot will only start
   //  reacting to information from Discord _after_ ready is emitted
-  client.on('clientReady', /** @type {ReadyListener} */ () => {
+  client.on('clientReady', /** @type {ReadyListener} */ async () => {
     // eslint-disable-next-line no-console -- CLI
     console.log(_('BahaiBotOnline'));
+
+    await registerCommands(client, botCommands);
 
     // To run immediately (as for testing), uncomment:
     // guildCheckin();
@@ -286,11 +369,11 @@ const bot = async ({
           // console.log('Command info',
           //  command.re, message.content, command.re.test(message.content)
           // );
-          if (command.re.test(message.content)) {
+          if (command.re?.test(message.content)) {
             try {
               // eslint-disable-next-line @stylistic/max-len -- Long
               // eslint-disable-next-line no-await-in-loop -- Needs to be in series
-              await command.action(message);
+              await command.action?.(message);
             /* c8 ignore start */
             } catch (err) {
               // eslint-disable-next-line no-console -- CLI
@@ -315,7 +398,7 @@ const bot = async ({
           return cmd.notMentioned;
         });
         for (const {re, notMentioned} of notMentionedCommands) {
-          if (re.test(message.content) &&
+          if (re?.test(message.content) &&
             (!notMentioned?.check ||
               // Any extra checks
               notMentioned.check(message))

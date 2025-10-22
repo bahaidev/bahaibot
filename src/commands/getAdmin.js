@@ -56,6 +56,7 @@ function puppet ({
  * @param {import('../getCheckin.js').GuildCheckin} cfg.guildCheckin
  * @param {import('intl-dom').I18NCallback} cfg._
  * @param {import('discord-tts')} cfg.discordTTS
+ * @param {import('discord.js')} cfg.Discord
  * @param {Pick<import('@discordjs/voice'),
  *   "joinVoiceChannel"|"createAudioPlayer"|
  *   "createAudioResource">} cfg.DiscordVoice
@@ -63,19 +64,53 @@ function puppet ({
  */
 const getAdmin = ({
   ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR,
+  Discord,
   DiscordVoice,
   discordTTS, guildCheckin, _
 }) => {
   return {
     speak: {
+      name: 'speak',
+      description: 'Reads some words as speech',
+      options: [
+        {
+          name: 'words',
+          description: 'The words',
+          type: Discord.ApplicationCommandOptionType.String
+        }
+      ],
+      deleted: true, // Remove this line when functionality may be restored
       re: /!speak/iv,
       helpAdmin: {
         name: '!speak some words',
         value: 'Reads some words as speech'
       },
-      /*
-      */
-      /* c8 ignore next 40 */
+      /* c8 ignore next 64 -- Todo: Incomplete */
+      /**
+       * @param {import('discord.js').ChatInputCommandInteraction<
+       *   import('discord.js').CacheType
+       * >} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        if (!interaction.isCommand() || !interaction.inCachedGuild()) {
+          return;
+        }
+
+        await this.action?.({
+          member: {
+            // @ts-expect-error Just use what we need
+            voice: {
+              channel: interaction.member?.voice?.channel
+            }
+          },
+          author: interaction.user,
+          content:
+            `placeholder1 placeholder2 ${
+              interaction.options.get('words')?.value
+            }`
+        });
+      },
       /* eslint-disable require-await -- Easier */
       /**
        * Reads some scripture.
@@ -93,7 +128,7 @@ const getAdmin = ({
         // Todo: Abstract out code so browser can instead use `SpeechSynthesis`
         const channel = message.member?.voice.channel;
         if (!channel) {
-          // eslint-disable-next-line no-console -- Debugging
+          // eslint-disable-next-line no-console -- CLI
           console.log('Message member not in a voice channel with `channel`');
           return;
         }
@@ -112,16 +147,62 @@ const getAdmin = ({
 
         // console.error(_('speechError'), err);
 
-        // eslint-disable-next-line no-console -- Debugging
+        // eslint-disable-next-line no-console -- CLI
         console.log(_('speakingBegun'));
       }
     },
     puppet: {
+      name: 'puppet',
+      description: 'Allows administrators to puppeteer a bot, channeling a ' +
+        'message to another channel',
       re: /!puppet (?:\S.+) \| (?:\S.+)/iv,
       helpAdmin: {
         name: '!puppet userChannel | message',
         value: 'Allows administrators to puppeteer a bot, channeling a ' +
           'message to another channel'
+      },
+      options: [
+        {
+          name: 'channel',
+          description: 'The channel into which to send a message',
+          type: Discord.ApplicationCommandOptionType.Channel,
+          required: true
+        },
+        {
+          name: 'message',
+          description: 'The message to send',
+          type: Discord.ApplicationCommandOptionType.String,
+          required: true
+        }
+      ],
+      /**
+       * @param {import('discord.js').ChatInputCommandInteraction<
+       *   import('discord.js').CacheType
+       * >} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        if (!interaction.inCachedGuild()) {
+          return;
+        }
+        await this.action?.({
+          author: interaction.user,
+          content: /** @type {string} */ (
+            `!puppet ${interaction.options.get('channel')?.value} | ${
+              interaction.options.get('message')?.value
+            }`
+          ),
+          guild: interaction.guild,
+          channel: {
+            /**
+             * @param {string} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
       },
       /**
        * Puppet enables the administrators + bot developers to puppeteer a bot
@@ -145,6 +226,39 @@ const getAdmin = ({
       }
     },
     echo: {
+      name: 'echo',
+      description: 'Just echoes back the words supplied.',
+      options: [
+        {
+          name: 'echo-text',
+          description: 'The text to echo back',
+          type: Discord.ApplicationCommandOptionType.String,
+          required: true
+        }
+      ],
+      /**
+       * @param {import('discord.js').ChatInputCommandInteraction<
+       *   import('discord.js').CacheType
+       * >} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        await this.action?.({
+          author: interaction.user,
+          content: /** @type {string} */ (
+            interaction.options.get('echo-text')?.value
+          ),
+          channel: {
+            /**
+             * @param {string} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
+      },
       re: /!echo\b/iv,
       helpAdmin: {
         name: '!echo words',
@@ -171,10 +285,24 @@ const getAdmin = ({
       }
     },
     checkin: {
+      name: 'checkin',
+      description: 'Checks in to send a greeting to a bot-testing channel',
       re: /!checkin\b/iv,
       helpAdmin: {
         name: '!checkin',
         value: 'Checks in to send a greeting to a bot-testing channel'
+      },
+      /**
+       * @param {import('discord.js').ChatInputCommandInteraction<
+       *   import('discord.js').CacheType
+       * >} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        // @ts-expect-error Just supplying what we need
+        await this.action?.({
+          author: interaction.user
+        });
       },
       /**
        * @param {import('discord.js').Message<true>} message

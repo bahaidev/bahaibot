@@ -15,10 +15,34 @@ const getBahaiInfo = ({client, Discord}) => {
       },
     */
     info: {
+      name: 'info',
+      description: 'Provides a link to the support server',
       re: /!info/iv,
       helpExtra: {
         name: '!info',
         value: 'Provides a link to the support server'
+      },
+      /**
+       * @param {import('discord.js').ChatInputCommandInteraction<
+       *   import('discord.js').CacheType
+       * >} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        if (!interaction.inCachedGuild()) {
+          return;
+        }
+        await this.action?.({
+          channel: {
+            /**
+             * @param {string} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
       },
       /**
        * @param {import('discord.js').Message<true>} message

@@ -6,7 +6,7 @@
 
 ## Commands
 
-Bot commands are stored in the file `getCommands.js` which expects the
+Bot commands are stored in the file `getCommands.js` which generally expects the
 following structure:
 
 ```js
@@ -40,3 +40,6 @@ const commands = {
   }
 };
 ```
+
+The structure will vary vary based on whether a slash command is being created
+or whether a Bot dialog response is being created.
