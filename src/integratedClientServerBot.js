@@ -94,10 +94,6 @@ function integratedClientServerBot (args) {
     i18n,
     /** @type {import('./getWikiTools.js').StripTags} */
     striptags: (str) => stripHtml(str).result,
-    // Todo: See about using https://github.com/mishushakov/dialogflow-web-v2
-    //   to pass in as is (or with an adapter as needed) for our `dialogflow`
-    //   argument, allowing the user to only neeed to pass in their own
-    //   `Discord`
     ...args
   });
 }

@@ -214,7 +214,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 1. See about any refactoring needed to allow to work with bahai-matrix-bot and
     easier for website; make website version support opening URLs on behalf
-    of user for full context of the Writings
+    of user for full context of the Writings and support speech synthesis
 
 1. Make commands available as slash commands
 1. Go through in-code to-dos

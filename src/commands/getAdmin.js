@@ -84,7 +84,6 @@ const getAdmin = ({
        */
       async action (message) {
         /* eslint-enable require-await -- Easier */
-        // Todo: Needs testing
         if (!ADMIN_IDS.includes(message.author.id)) {
           return;
         }
