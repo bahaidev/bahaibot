@@ -11,7 +11,7 @@ import getReader from './getReader.js';
 const getBahaiWritings = async ({fs, settings, client, Discord}) => {
   const reader = await getReader({fs, settings});
 
-  return {
+  return /** @type {import('./getCommands.js').BotCommands} */ ({
     // Todo: Finish for other books
     // Todo: Add for page, Q&A, note
     kitabIAqdas: {
@@ -57,7 +57,64 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       name: 'read',
       description:
         "Provide a selection of the Bahá'í Writings by book and chapter",
-      // Todo: Add subcommand autocomplete or pull-down
+      /**
+       * @param {import('discord.js').AutocompleteInteraction<
+       *   import('discord.js').CacheType
+       * >} interaction
+       * @returns {Promise<void>}
+       */
+      async autocomplete (interaction) {
+        // Get the value the user is typing
+        const focusedValue = interaction.options.getFocused();
+        const choices = reader.getAvailableRandomOptions();
+
+        const filtered = choices.filter(
+          (choice) => choice.startsWith(focusedValue)
+        );
+        await interaction.respond(
+          filtered.map((choice) => ({name: choice, value: choice}))
+        );
+      },
+      options: [
+        {
+          name: 'book',
+          description: 'The book to select',
+          type: Discord.ApplicationCommandOptionType.String,
+          autocomplete: true,
+          required: true
+        },
+        {
+          name: 'chapter',
+          description: 'The chapter',
+          type: Discord.ApplicationCommandOptionType.Integer,
+          required: true
+        }
+      ],
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        if (!interaction.isChatInputCommand()) {
+          return;
+        }
+        const book = interaction.options.getString('book') ?? '';
+        const chapter = interaction.options.getInteger('chapter') ?? '';
+        await this.action?.({
+          content: `!read ${book} ${chapter}`,
+          channel: {
+            /**
+             * @param {string} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
+      },
+
       re: /\bread (?<refName>\S.+) (?<index>[\-.\d]+)\b/iv,
       /**
        * Reads some scripture.
@@ -142,7 +199,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
         return reader.reader(message);
       }
     }
-  };
+  });
 };
 
 export default getBahaiWritings;

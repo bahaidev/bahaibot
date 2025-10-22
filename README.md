@@ -210,7 +210,6 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 1. Waiting: Update to discord 15 when comes out
 
-1. Complete slash commands
 1. Unit testing for new commands
 1. See about establishing maintenance of bot on own server
 
@@ -218,7 +217,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
     easier for website; make website version support opening URLs on behalf
     of user for full context of the Writings and support speech synthesis
 
-1. Make commands available as slash commands
+1. Complete Bahá'í Writings commands (including Kitáb-i-Aqdas notes, Q&A,
+    page numbers)
 1. Go through in-code to-dos
     1. Fix `speak` and test
     1. Adjust the (social) tests and stop skipping them

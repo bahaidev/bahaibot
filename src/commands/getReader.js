@@ -30,7 +30,8 @@
  *   showList: ShowList,
  *   readBook: ReadBook,
  *   readRandom: ReadRandom,
- *   reader: Reader
+ *   reader: Reader,
+ *   getAvailableRandomOptions: () => string[]
  * }} ReaderInfo
  */
 
@@ -119,6 +120,13 @@ async function getReader ({fs, settings}) {
   const fileRegex = /\bread (?<refName>\S.+) (?<index>[\-.\d]+)\b/iv;
 
   // FUNCTIONS
+
+  /**
+   * @returns {string[]}
+   */
+  const getAvailableRandomOptions = () => {
+    return availableRandomOptions;
+  };
 
   /**
    * Checks whether file exists.
@@ -416,7 +424,8 @@ async function getReader ({fs, settings}) {
     showList,
     readBook,
     readRandom,
-    reader
+    reader,
+    getAvailableRandomOptions
   };
 }
 

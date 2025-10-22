@@ -278,19 +278,29 @@ const bot = async ({
 
   client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand() &&
-      !interaction.isStringSelectMenu()) {
+      !interaction.isStringSelectMenu() &&
+      !interaction.isAutocomplete()) {
       return;
     }
 
-    const commandObject = interaction.isStringSelectMenu()
+    const commandObject = interaction.isAutocomplete()
       ? Object.values(botCommands).find((cmd) => {
-        return cmd.name === interaction.customId.split('_')[0];
-      })
-      : Object.values(botCommands).find((cmd) => {
         return cmd.name === interaction.commandName;
-      });
+      })
+      : interaction.isStringSelectMenu()
+        ? Object.values(botCommands).find((cmd) => {
+          return cmd.name === interaction.customId.split('_')[0];
+        })
+        : Object.values(botCommands).find((cmd) => {
+          return cmd.name === interaction.commandName;
+        });
 
     if (!commandObject) {
+      return;
+    }
+
+    if (interaction.isAutocomplete()) {
+      await commandObject?.autocomplete?.(interaction);
       return;
     }
 

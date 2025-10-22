@@ -53,6 +53,11 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
  *   _AddUndefinedToPossiblyUndefinedPropertiesOfInterface<
  *     import('discord.js').APIApplicationCommandOption[] | undefined
  *   >} [options]
+ * @property {(
+ *   interaction: import('discord.js').AutocompleteInteraction<
+ *   import('discord.js').CacheType
+ * >
+ * ) => Promise<void>} [autocomplete]
  * @property {boolean} [deleted]
  * @property {ActionBehavior} [action]
  * @property {NotMentionedCommand} [notMentioned]
