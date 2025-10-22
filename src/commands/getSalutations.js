@@ -5,6 +5,10 @@ const getSalutations = () => {
   return {
     sup: {
       re: /\b(?:su+p|wh[au]+[sz]+[au]+p|(?:(?:what|wut)['’´]?s (?:up|new|good|gud|cookin[g'’´])))\b/iv,
+      helpExtra: {
+        name: 'sup',
+        value: "Sends the greeting 'What's up'"
+      },
       /**
        * What's up?
        * @param {import('discord.js').Message<true>} message
@@ -34,6 +38,10 @@ const getSalutations = () => {
     },
     morning: {
       re: /\bgood morning\b/iv,
+      helpExtra: {
+        name: 'good morning',
+        value: "Sends the greeting 'Good morning'"
+      },
       /**
        * Good morning.
        * @param {import('discord.js').Message<true>} message
@@ -47,6 +55,10 @@ const getSalutations = () => {
     },
     afternoon: {
       re: /\bgood afternoon\b/iv,
+      helpExtra: {
+        name: 'good afternoon',
+        value: "Sends the greeting 'Good afternoon'"
+      },
       /**
        * Good afternoon.
        * @param {import('discord.js').Message<true>} message
@@ -58,6 +70,10 @@ const getSalutations = () => {
     },
     evening: {
       re: /\bgood evening\b/iv,
+      helpExtra: {
+        name: 'good evening',
+        value: "Sends the greeting 'Good evening'"
+      },
       /**
        * Good evening.
        * @param {import('discord.js').Message<true>} message
@@ -69,6 +85,10 @@ const getSalutations = () => {
     },
     hello: {
       re: /\b(?:h[uea]llo|hi|hi there|howdy|yo|heya|sal[aá]{1,2}m)\b/iv,
+      helpExtra: {
+        name: 'hello',
+        value: "Sends the greeting 'Hello'"
+      },
       /**
        * Hello.
        * @param {import('discord.js').Message<true>} message
@@ -80,6 +100,10 @@ const getSalutations = () => {
     },
     welcome: {
       re: /^(?:everyone|everybody)?\W*(?:please|pleez|pls|plz)?\W*(?:\W*welcome|.*>+\W*welcome\b|.*\bwb\b)/iv,
+      helpExtra: {
+        name: 'welcome',
+        value: "Sends the greeting 'Welcome'"
+      },
       /**
        * Welcome.
        * @param {import('discord.js').Message<true>} message

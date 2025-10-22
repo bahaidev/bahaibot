@@ -69,11 +69,11 @@ const getAdmin = ({
   return {
     speak: {
       re: /!speak/iv,
-      /*
-      helpInfo: {
+      helpAdmin: {
         name: '!speak some words',
         value: 'Reads some words as speech'
       },
+      /*
       */
       /* c8 ignore next 40 */
       /* eslint-disable require-await -- Easier */
@@ -119,6 +119,11 @@ const getAdmin = ({
     },
     puppet: {
       re: /!puppet (?:\S.+) \| (?:\S.+)/iv,
+      helpAdmin: {
+        name: '!puppet userChannel | message',
+        value: 'Allows administrators to puppeteer a bot, channeling a ' +
+          'message to another channel'
+      },
       /**
        * Puppet enables the administrators + bot developers to puppeteer a bot
        * Must be positioned on top so it can handle sub requests listed below.
@@ -142,6 +147,10 @@ const getAdmin = ({
     },
     echo: {
       re: /!echo\b/iv,
+      helpAdmin: {
+        name: '!echo words',
+        value: 'Just echoes back the words supplied.'
+      },
       /**
        * Echo what was said.
        * @param {import('discord.js').Message<true>} message
@@ -164,6 +173,10 @@ const getAdmin = ({
     },
     checkin: {
       re: /!checkin\b/iv,
+      helpAdmin: {
+        name: '!checkin',
+        value: 'Checks in to send a greeting to a bot-testing channel'
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {Promise<void>}

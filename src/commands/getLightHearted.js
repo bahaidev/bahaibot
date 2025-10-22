@@ -6,6 +6,10 @@ const getLightHearted = () => {
     /* OTHER CHIT-CHAT */
     coffee: {
       re: /\u{2615}/u,
+      helpExtra: {
+        name: '\u{2615}',
+        value: 'Sends a coffee cup emoji'
+      },
       /**
        * Coffee (should be at the end so everything else is processed first).
        * @param {import('discord.js').Message<true>} message
@@ -26,6 +30,10 @@ const getLightHearted = () => {
     },
     tea: {
       re: /\u{1F375}/u,
+      helpExtra: {
+        name: '\u{1F375}',
+        value: 'Sends a tea emoji'
+      },
       /**
        * Tea (should be at the end so everything else is processed first).
        * @param {import('discord.js').Message<true>} message
@@ -46,6 +54,10 @@ const getLightHearted = () => {
     },
     popcorn: {
       re: /\u{1F37F}/u,
+      helpExtra: {
+        name: '\u{1F37F}',
+        value: 'Sends a popcorn emoji'
+      },
       /**
        * Popcorn (should be at the end so everything else is processed first).
        * @param {import('discord.js').Message<true>} message
@@ -67,6 +79,10 @@ const getLightHearted = () => {
     // Lulz (should be at the end so everything else is processed first).
     unladen: {
       re: /\bunladen\sswallow\b/iv,
+      helpExtra: {
+        name: 'unladen swallow',
+        value: 'Prompt for a Monty Python response'
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -79,6 +95,10 @@ const getLightHearted = () => {
     },
     bruh: {
       re: /\bbruh\b/iv,
+      helpExtra: {
+        name: 'bruh',
+        value: 'Sends a Bruh'
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -89,6 +109,10 @@ const getLightHearted = () => {
     },
     goodbot: {
       re: /\bgood\s?bot\b/iv,
+      helpExtra: {
+        name: 'good bot',
+        value: 'Praises the bot'
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -100,6 +124,10 @@ const getLightHearted = () => {
     },
     badbot: {
       re: /\bbad\s?bot\b/iv,
+      helpExtra: {
+        name: 'bad bot',
+        value: 'Criticizes the bot'
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -111,6 +139,10 @@ const getLightHearted = () => {
     },
     repeating: {
       re: /\brepeating yourself\b/iv,
+      helpExtra: {
+        name: 'repeating yourself',
+        value: 'Indicate the bot is repeating itself'
+      },
       /**
        * Repeating.
        * @param {import('discord.js').Message<true>} message
@@ -140,6 +172,10 @@ const getLightHearted = () => {
     },
     santacat: {
       re: /\b(?:my|santa['’´]?s)\scat\b/iv,
+      helpExtra: {
+        name: 'santa cat',
+        value: 'Makes reference to a Santa cat'
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -159,6 +195,10 @@ const getLightHearted = () => {
     },
     ping: {
       re: /\bping\b/iv,
+      helpExtra: {
+        name: 'ping',
+        value: 'Pings the bot'
+      },
       /**
        * Ping message.
        * @param {import('discord.js').Message<true>} message

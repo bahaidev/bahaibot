@@ -20,6 +20,10 @@ const getBahaiSalutations = ({client, BSTAR_EMOJI_ID_LAB}) => {
     // GREETINGS //
     abha: {
       re: /\b(?:all[aá]h['’´\-]?[uo]?['’´\-]?abh[aá]|abh[aá])/iv,
+      helpExtra: {
+        name: 'allahuabha',
+        value: "Sends the Bahá'í greeting, Alláh'u'Abhá"
+      },
       /**
        * Alláh-u-Abhá!
        * @param {import('discord.js').Message<true>} message
@@ -54,6 +58,10 @@ const getBahaiSalutations = ({client, BSTAR_EMOJI_ID_LAB}) => {
     },
     nawruz: {
       re: /\b(?:(?:happy|joyous)\s?n[ao]w[\- ]?ro?[uú]z|n[ao]w[\- ]?ro?[uú]z\s?(?:m[uo]b[aá]r[aá]k))\b/iv,
+      helpExtra: {
+        name: 'nawruz',
+        value: "Sends a greeting for the Bahá'í Holy Day Naw-Rúz"
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -72,6 +80,11 @@ const getBahaiSalutations = ({client, BSTAR_EMOJI_ID_LAB}) => {
     },
     ridvan: {
       re: /\b(?:(?:happy|joyous)\s?r[ie][ḍdz][vw][aá]n|r[ie][ḍdz][vw][aá]n\s?(?:m[uo]b[aá]r[aá]k))\b/iv,
+      helpExtra: {
+        name: 'ridvan',
+        value: "Sends a greeting for the Bahá'í Holy Day Ridván"
+      },
+
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -83,6 +96,10 @@ const getBahaiSalutations = ({client, BSTAR_EMOJI_ID_LAB}) => {
     },
     ninePointedStar: {
       re: /\u{1F7D9}/u,
+      helpExtra: {
+        name: '\u{1F7D9}',
+        value: "Sends a greeting via a Bahá'í symbol, the nine-pointed star"
+      },
       /**
        * Nine-pointed-star (should be at the end so everything else is
        *   processed first).

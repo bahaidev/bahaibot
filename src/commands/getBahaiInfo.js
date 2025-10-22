@@ -16,6 +16,10 @@ const getBahaiInfo = ({client, Discord}) => {
     */
     info: {
       re: /!info/iv,
+      helpExtra: {
+        name: '!info',
+        value: 'Provides a link to the support server'
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -49,6 +53,10 @@ const getBahaiInfo = ({client, Discord}) => {
     },
     badi: {
       re: /\bbad[íi]\b/iv,
+      helpExtra: {
+        name: 'badi',
+        value: 'Provides a link to the illustrious Bahá\'í youth'
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}

@@ -71,10 +71,10 @@ const getSocialInfo = ({
   return {
     users: {
       re: /!users\b/iv,
-      // helpInfo: {
-      //  name: '!users',
-      //  value: 'Displays a count of online users.'
-      // }
+      helpExtra: {
+        name: '!users',
+        value: 'Displays a count of online users.'
+      },
       /* c8 ignore next 52 -- Todo: Reenable when testing again */
       /**
        * Users gives the number of online users.
@@ -131,10 +131,10 @@ const getSocialInfo = ({
     },
     seen: {
       re: /!seen\b/iv,
-      // helpInfo: {
-      //  name: '!seen',
-      //  value: 'Displays the last time a user was seen online.'
-      // },
+      helpExtra: {
+        name: '!seen',
+        value: 'Displays the last time a user was seen online.'
+      },
       /**
        * Seen returns the last time a user sent a message.
        * @param {import('discord.js').Message<true>} message

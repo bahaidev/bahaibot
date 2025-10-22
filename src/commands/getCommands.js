@@ -38,7 +38,9 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
 * @property {RegExp} re
 * @property {ActionBehavior} action
 * @property {NotMentionedCommand} [notMentioned]
-* @property {{name: string, value: string}} [helpInfo]
+* @property {{name: string, value: string}} [helpInfo] For use with !help
+* @property {{name: string, value: string}} [helpExtra] For use with !helpextra
+* @property {{name: string, value: string}} [helpAdmin] For use with !helpAdmin
 */
 
 /**
