@@ -551,7 +551,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
         await interaction.reply({
           content: 'Random wiki:',
           components: [row],
-          ephemeral: true
+          flags: Discord.MessageFlags.Ephemeral
         });
       }
     }
