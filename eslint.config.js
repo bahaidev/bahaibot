@@ -47,7 +47,7 @@ export default [
     return {
       files: ['src/discordBot.js', 'test/**/*.js'],
       rules: {
-        // Buggy
+        // Doesn't handle globals we use
         'jsdoc/imports-as-dependencies': 0
       },
       ...cfg

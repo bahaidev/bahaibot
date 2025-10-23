@@ -27,8 +27,8 @@
     "string-strip-html": "^13.5.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.4",
-    "@babel/eslint-parser": "^7.28.4",
+    "@babel/core": "^7.28.5",
+    "@babel/eslint-parser": "^7.28.5",
     "@babel/plugin-syntax-top-level-await": "^7.14.5",
     "@rollup/plugin-commonjs": "^28.0.8",
     "@rollup/plugin-node-resolve": "^16.0.3",
@@ -42,10 +42,10 @@
     "c8": "^10.1.3",
     "chai": "^6.2.0",
     "eslint": "^9.38.0",
-    "eslint-config-ash-nazg": "39.5.0",
+    "eslint-config-ash-nazg": "39.6.1",
     "eslint-plugin-jsonc": "^2.21.0",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.5",
+    "lint-staged": "^16.2.6",
     "mocha": "^11.7.4",
     "nodemon": "^3.1.10",
     "rollup": "^4.52.5",
