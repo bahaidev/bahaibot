@@ -515,7 +515,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
           },
           channel: {
             /**
-             * @param {string} reply
+             * @param {import('discord.js').MessagePayload} reply
              */
             // @ts-expect-error Just mocking what we need
             send (reply) {

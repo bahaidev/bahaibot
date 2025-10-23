@@ -92,7 +92,9 @@ const registerCommands = async (client, localCommands) => {
     }
 
     const existingCommand = await applicationCommands.cache.find(
-      (cmd) => cmd.name === name
+      (cmd) => {
+        return cmd.name === name;
+      }
     );
 
     if (existingCommand) {

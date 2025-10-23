@@ -14,6 +14,22 @@ describe('areCommandsDifferent extra cases', function () {
     )).to.be.true;
   });
 
+  it('detects when existing has no matching option', function () {
+    const existing = {
+      description: 'd', options: [{name: 'a', description: 'd', type: 3}]
+    };
+    const local = {description: 'd', options: [
+      {
+        name: 'b', description: 'd', type: 3
+      }
+    ]};
+    expect(areCommandsDifferent(
+      // @ts-expect-error Just mock what we need
+      existing,
+      local
+    )).to.be.true;
+  });
+
   it('returns false when choices are identical', function () {
     const existing = {
       description: 'd',

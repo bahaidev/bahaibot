@@ -87,4 +87,82 @@ describe('areCommandsDifferent', function () {
       local
     )).to.be.true;
   });
+
+  it(
+    'detects missing nested options (subcommand) differences (2)',
+    function () {
+      const existing = {
+        description: 'd',
+        options: [
+          {
+            name: 'group',
+            description: 'g',
+            type: 2,
+            options: [
+              {name: 'sub', description: 's', type: 3}
+            ]
+          }
+        ]
+      };
+
+      const local = {
+        description: 'd',
+        options: [
+          {
+            name: 'group',
+            description: 'g',
+            type: 2,
+            options: [
+              {name: 'subAnother', description: 's', type: 3}
+            ]
+          }
+        ]
+      };
+
+      expect(areCommandsDifferent(
+        // @ts-expect-error Just mock what we need
+        existing,
+        local
+      )).to.be.true;
+    }
+  );
+
+  it(
+    'detects missing nested options (subcommand) differences (3)',
+    function () {
+      const existing = {
+        description: 'd',
+        options: [
+          {
+            name: 'group',
+            description: 'g',
+            type: 2,
+            options: [
+              {name: 'sub', description: 's', type: 3}
+            ]
+          }
+        ]
+      };
+
+      const local = {
+        description: 'd',
+        options: [
+          {
+            name: 'group',
+            description: 'g',
+            type: 2,
+            options: [
+              {name: 'sub', description: 's', type: 3}
+            ]
+          }
+        ]
+      };
+
+      expect(areCommandsDifferent(
+        // @ts-expect-error Just mock what we need
+        existing,
+        local
+      )).to.be.false;
+    }
+  );
 });

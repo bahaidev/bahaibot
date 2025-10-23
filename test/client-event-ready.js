@@ -32,10 +32,81 @@ describe('ready event', () => {
     // @ts-expect-error Bug?
     client.emit('clientReady');
 
-    // @ts-expect-error Sinon
-    expect(console.log.calledOnce).to.be.true;
-    // @ts-expect-error Sinon
-    expect(console.log.calledWith("The Bahá'í Bot Online!")).to.be.true;
+    // eslint-disable-next-line promise/avoid-new -- Delay test
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // @ts-expect-error Sinon
+        expect(console.log.calledTwice).to.be.true;
+        // @ts-expect-error Sinon
+        expect(console.log.calledWith("The Bahá'í Bot Online!")).to.be.true;
+        // @ts-expect-error Sinon
+        expect(console.log.secondCall.firstArg).to.equal(
+          'No application commands found'
+        );
+        resolve();
+      });
+    });
+  });
+
+  it('ready event registers commands', async function () {
+    const discord = new MockDiscord();
+    // @ts-expect-error Don't need a full mock
+    const {client} = await bot({client: discord.getClient()});
+
+    let fetched = false;
+    /** @type {string[]} */
+    const names = [];
+    /** @type {string[]} */
+    const editDescriptions = [];
+    client.application = {
+      commands: {
+        // @ts-expect-error Just mocking what we need
+        cache: {
+          // @ts-expect-error Just mocking what we need
+          find (cmd) {
+            return cmd({
+              name: 'read'
+            });
+          }
+        },
+        // @ts-expect-error Just mocking what we need
+        create ({name}) {
+          names.push(name);
+        },
+        // @ts-expect-error Just mocking what we need
+        edit (id, {description}) {
+          editDescriptions.push(description);
+        },
+        // @ts-expect-error Just mocking what we need
+        fetch () {
+          fetched = true;
+        }
+      }
+    };
+
+    this.sinon.spy(console, 'log');
+    // @ts-expect-error Bug?
+    client.emit('clientReady');
+
+    // eslint-disable-next-line promise/avoid-new -- Delay test
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        expect(fetched).to.equal(true);
+        expect(names).to.deep.contain('users');
+        expect(editDescriptions).to.deep.contain(
+          "Provide a selection of the Bahá'í Writings by book and chapter"
+        );
+        // @ts-expect-error Sinon
+        expect(console.log.getCalls().length).to.equal(21);
+        // @ts-expect-error Sinon
+        expect(console.log.calledWith("The Bahá'í Bot Online!")).to.be.true;
+        // @ts-expect-error Sinon
+        expect(console.log.secondCall.firstArg).to.equal(
+          `⏩ Skipping registering command "speak" as it's set to delete.`
+        );
+        resolve();
+      });
+    });
   });
 
   it('Avoids running checkin functions twice in the hour', async function () {
