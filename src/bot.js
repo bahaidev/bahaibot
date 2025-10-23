@@ -503,3 +503,4 @@ const bot = async ({
 };
 
 export default bot;
+export {registerCommands};
