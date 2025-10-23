@@ -1,12 +1,12 @@
 /**
+ * @typedef {{name: string, value: string}} BotHelpField
+ */
+
+/**
  * @param {object} cfg
  * @param {import('./getCommands.js').BotCommands} cfg.commands
  */
 const addHelp = ({commands}) => {
-  /**
-  * @typedef {{name: string, value: string}} BotHelpField
-  */
-
   const help = {
     name: 'help',
     description: 'List available help commands',
@@ -175,6 +175,8 @@ const addHelp = ({commands}) => {
       return helpAdmin;
     }).filter(Boolean)
   );
+
+  return commands;
 };
 
 export default addHelp;

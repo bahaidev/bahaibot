@@ -3,19 +3,27 @@ import areCommandsDifferent from '../src/utils/areCommandsDifferent.js';
 
 describe('areCommandsDifferent', function () {
   it('returns false for identical commands (no options)', function () {
-  const existing = /** @type {any} */ ({description: 'desc', options: []});
-  const local = /** @type {any} */ ({description: 'desc', options: []});
-    expect(areCommandsDifferent(existing, local)).to.be.false;
+    const existing = {description: 'desc', options: []};
+    const local = {description: 'desc', options: []};
+    expect(areCommandsDifferent(
+      // @ts-expect-error Just mock what we need
+      existing,
+      local
+    )).to.be.false;
   });
 
   it('detects description change', function () {
-  const existing = /** @type {any} */ ({description: 'old', options: []});
-  const local = /** @type {any} */ ({description: 'new', options: []});
-    expect(areCommandsDifferent(existing, local)).to.be.true;
+    const existing = {description: 'old', options: []};
+    const local = {description: 'new', options: []};
+    expect(areCommandsDifferent(
+      // @ts-expect-error Just mock what we need
+      existing,
+      local
+    )).to.be.true;
   });
 
   it('detects differing choice values', function () {
-    const existing = /** @type {any} */ ({
+    const existing = {
       description: 'd',
       options: [
         {
@@ -25,9 +33,9 @@ describe('areCommandsDifferent', function () {
           choices: [{name: 'a', value: '1'}]
         }
       ]
-  });
+    };
 
-    const local = /** @type {any} */ ({
+    const local = {
       description: 'd',
       options: [
         {
@@ -37,13 +45,17 @@ describe('areCommandsDifferent', function () {
           choices: [{name: 'a', value: '2'}]
         }
       ]
-  });
+    };
 
-    expect(areCommandsDifferent(existing, local)).to.be.true;
+    expect(areCommandsDifferent(
+      // @ts-expect-error Just mock what we need
+      existing,
+      local
+    )).to.be.true;
   });
 
   it('detects missing nested options (subcommand) differences', function () {
-    const existing = /** @type {any} */ ({
+    const existing = {
       description: 'd',
       options: [
         {
@@ -55,9 +67,9 @@ describe('areCommandsDifferent', function () {
           ]
         }
       ]
-  });
+    };
 
-    const local = /** @type {any} */ ({
+    const local = {
       description: 'd',
       options: [
         {
@@ -67,8 +79,12 @@ describe('areCommandsDifferent', function () {
           options: []
         }
       ]
-  });
+    };
 
-    expect(areCommandsDifferent(existing, local)).to.be.true;
+    expect(areCommandsDifferent(
+      // @ts-expect-error Just mock what we need
+      existing,
+      local
+    )).to.be.true;
   });
 });
