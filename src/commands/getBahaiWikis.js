@@ -557,6 +557,42 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
     }
   });
 
+  const bpLink = {
+    re: /\[\[(?<bpText>.*?)\]\]/v,
+    notMentioned: {
+      /**
+       * If welcome AND a user are mentioned.
+       * @param {import('discord.js').Message<true>} message
+       * @returns {boolean}
+       */
+      check (message) {
+        return bpLink.re.test(message.content);
+      },
+      /**
+       * @param {import('discord.js').Message<true>} message
+       * @returns {Promise<void>}
+       */
+      async action (message) {
+        const prefixRegex = /^(?<prefix>b9|bm|bw|bp):/v;
+        const {bpText = ''} = message.content.match(bpLink.re)?.groups ?? {};
+        const {prefix = ''} = bpText.match(prefixRegex)?.groups ?? {};
+        const wikiText = bpText.replace(prefixRegex, '');
+        const content = `[${wikiText}](https://${
+          prefix === 'b9'
+            ? 'bahai9.com/wiki/'
+            : prefix === 'bm'
+              ? 'bahai.media/Category:'
+              : prefix === 'bw'
+                ? 'bahai.works/'
+                : 'bahaipedia.org/'
+        }${encodeURIComponent(wikiText)})`;
+        await message.channel.send({
+          content
+        });
+      }
+    }
+  };
+
   return {
     // @ts-expect-error TS bug?
     bp,
@@ -567,7 +603,8 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
     bm,
     // @ts-expect-error TS bug?
     bw,
-    randomWiki
+    randomWiki,
+    bpLink
   };
 };
 
