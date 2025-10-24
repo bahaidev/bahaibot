@@ -74,6 +74,9 @@
     },
     "registered_command": {
       "message": "👍 Registered command \"{name}.\""
+    },
+    "was_not_able_to_speak": {
+      "message": "(Was not able to speak)"
     }
   }
 }

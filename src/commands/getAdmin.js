@@ -91,13 +91,14 @@ const getAdmin = ({
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
-        if (!interaction.isCommand() || !interaction.inCachedGuild()) {
+        /* c8 ignore next 3 -- TS */
+        if (interaction.isStringSelectMenu() || !interaction.inCachedGuild()) {
           return;
         }
 
         const words = interaction.options.getString('words');
 
-        await this.action?.({
+        const spoken = await this.action?.({
           member: {
             // @ts-expect-error Just use what we need
             voice: {
@@ -110,18 +111,26 @@ const getAdmin = ({
               words
             }`
         });
-        await interaction.reply(words ?? '');
+        await interaction.reply(
+          spoken
+            /* c8 ignore next -- Should be present */
+            ? words ?? ''
+            : /** @type {string} */ (
+              _('was_not_able_to_speak')
+            )
+        );
       },
       /* eslint-disable require-await -- Easier */
       /**
        * Reads some scripture.
        * @param {import('discord.js').Message<true>} message
-       * @returns {Promise<void>}
+       * @returns {Promise<boolean>}
        */
+      // @ts-expect-error We re-use this function, so not wanting void here
       async action (message) {
         /* eslint-enable require-await -- Easier */
         if (!ADMIN_IDS.includes(message.author.id)) {
-          return;
+          return false;
         }
 
         const words = message.content.split(' ').slice(2).join(' ');
@@ -131,7 +140,7 @@ const getAdmin = ({
         if (!channel) {
           // eslint-disable-next-line no-console -- CLI
           console.log(_('not_in_a_voice_channel'));
-          return;
+          return false;
         }
         const connection = DiscordVoice.joinVoiceChannel({
           channelId: channel.id,
@@ -140,32 +149,39 @@ const getAdmin = ({
         });
 
         const player = DiscordVoice.createAudioPlayer();
-        player.on('error', (error) => {
-          // eslint-disable-next-line no-console -- Debugging
-          console.error(`Error: ${error.message} with resource ${
-            // @ts-expect-error Ok
-            error.resource?.metadata?.title
-          }`);
-        });
-
-        // player.on('idle', () => {
-        //     // Optionally disconnect after speaking
-        //     // connection.destroy();
-        // });
-
-        const audioStream = discordTTS.getVoiceStream(words, {
-          lang: _.resolvedLocale.replace(/-US?/v, '')
-        });
-
-        player.play(
-          DiscordVoice.createAudioResource(audioStream)
-        );
-        connection.subscribe(player);
-
-        // console.error(_('speechError'), err);
 
         // eslint-disable-next-line no-console -- CLI
         console.log(_('speakingBegun'));
+
+        // eslint-disable-next-line promise/avoid-new -- API
+        return new Promise((resolve) => {
+          player.on('error', (error) => {
+            // eslint-disable-next-line no-console -- Debugging
+            console.error(`Error: ${error.message} with resource ${
+              /* c8 ignore next 2 -- Bug? */
+              // @ts-expect-error Ok
+              error.resource?.metadata?.title
+            }`);
+            resolve(false);
+          });
+          // @ts-expect-error Ok
+          player.on('idle', () => {
+            // Optionally disconnect after speaking
+            // connection.destroy();
+            resolve(true);
+          });
+
+          const audioStream = discordTTS.getVoiceStream(words, {
+            lang: _.resolvedLocale.replace(/-US?/v, '')
+          });
+
+          player.play(
+            DiscordVoice.createAudioResource(audioStream)
+          );
+          connection.subscribe(player);
+
+        // console.error(_('speechError'), err);
+        });
       }
     },
     puppet: {

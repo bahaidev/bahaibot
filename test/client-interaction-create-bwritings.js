@@ -111,6 +111,110 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
   );
 
   it(
+    '`interactionCreate` finds a ChatInputCommand (kitabiaqdas-page)',
+    async function () {
+      const discord = new MockDiscord();
+      // @ts-expect-error Don't need a full mock
+      const {client} = await bot({client: discord.getClient()});
+      const checkedCommands = [];
+
+      let message = '';
+
+      let optionName = '';
+
+      // @ts-expect-error Just mocking what we need
+      client.emit('interactionCreate', {
+        commandName: 'kitabiaqdas-page',
+        isChatInputCommand () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isStringSelectMenu () {
+          checkedCommands.push(true);
+          return false;
+        },
+        isAutocomplete () {
+          checkedCommands.push(true);
+          return false;
+        },
+        user: {
+          username: 'brettz9',
+          id: '410259427770499072'
+        },
+        options: {
+          get (optName) {
+            optionName = optName;
+            return {
+              value: 5
+            };
+          }
+        },
+        reply (msg) {
+          message = /** @type {string} */ (msg);
+        }
+      });
+
+      await setTimeout(3000);
+      expect(checkedCommands.length).to.equal(5);
+      expect(optionName).to.equal('page-number');
+      expect(message).to.equal(
+        '[Kitáb-i-Aqdas, page 5](https://bahai-library.com/writings/bahaullah/aqdas/kaall.html#5)'
+      );
+    }
+  );
+
+  it(
+    '`interactionCreate` finds a ChatInputCommand (kitabiaqdas-page no verse)',
+    async function () {
+      const discord = new MockDiscord();
+      // @ts-expect-error Don't need a full mock
+      const {client} = await bot({client: discord.getClient()});
+      const checkedCommands = [];
+
+      let message = '';
+
+      let optionName = '';
+
+      // @ts-expect-error Just mocking what we need
+      client.emit('interactionCreate', {
+        commandName: 'kitabiaqdas-page',
+        isChatInputCommand () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isStringSelectMenu () {
+          checkedCommands.push(true);
+          return false;
+        },
+        isAutocomplete () {
+          checkedCommands.push(true);
+          return false;
+        },
+        user: {
+          username: 'brettz9',
+          id: '410259427770499072'
+        },
+        options: {
+          get (optName) {
+            optionName = optName;
+            return undefined;
+          }
+        },
+        reply (msg) {
+          message = /** @type {string} */ (msg);
+        }
+      });
+
+      await setTimeout(3000);
+      expect(checkedCommands.length).to.equal(5);
+      expect(optionName).to.equal('page-number');
+      expect(message).to.equal(
+        '[Kitáb-i-Aqdas](https://bahai-library.com/writings/bahaullah/aqdas/kaall.html)'
+      );
+    }
+  );
+
+  it(
     '`interactionCreate` finds a ChatInputCommand (rand-writings)',
     async function () {
       const discord = new MockDiscord();
