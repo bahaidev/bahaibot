@@ -1,4 +1,5 @@
-
+// eslint-disable-next-line no-shadow -- Ok
+import {setTimeout} from 'node:timers/promises';
 import {expect} from 'chai';
 import MockDiscord from './helpers/MockDiscord.js';
 import bot from '../src/discordBot.js';
@@ -42,7 +43,7 @@ describe('`interactionCreate` Bahá\'í wiki', function () {
       const checkedCommands = [];
 
       /** @type {import('discord.js').InteractionReplyOptions} */
-      let message;
+      let message = {};
 
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
@@ -75,26 +76,21 @@ describe('`interactionCreate` Bahá\'í wiki', function () {
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(5);
-          expect(message.content).to.equal(
-            'Here is the result of your query.'
-          );
-          expect(
-            /** @type {import('discord.js').APIEmbed} */
-            (message.embeds?.[0])?.color
-          ).to.equal(3447003);
-          expect(
-            /** @type {import('discord.js').APIEmbed} */
-            (message.embeds?.[0])?.description
-          ).to.include(
-            "Here's Bahaipedia's Today in History entry for"
-          );
-          resolve();
-        }, 3000);
-      });
+      await setTimeout(3000);
+      expect(checkedCommands.length).to.equal(5);
+      expect(message.content).to.equal(
+        'Here is the result of your query.'
+      );
+      expect(
+        /** @type {import('discord.js').APIEmbed} */
+        (message.embeds?.[0])?.color
+      ).to.equal(3447003);
+      expect(
+        /** @type {import('discord.js').APIEmbed} */
+        (message.embeds?.[0])?.description
+      ).to.include(
+        "Here's Bahaipedia's Today in History entry for"
+      );
     }
   );
 
@@ -135,10 +131,10 @@ describe('`interactionCreate` Bahá\'í wiki', function () {
       const checkedCommands = [];
 
       /** @type {import('discord.js').InteractionReplyOptions} */
-      let message;
+      let message = {};
 
       /** @type {string} */
-      let optionName;
+      let optionName = '';
 
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
@@ -179,27 +175,22 @@ describe('`interactionCreate` Bahá\'í wiki', function () {
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(6);
-          expect(optionName).to.equal('keywords');
-          expect(message.content).to.equal(
-            'Here is the result of your search.'
-          );
-          expect(
-            /** @type {import('discord.js').APIEmbed} */
-            (message.embeds?.[0])?.color
-          ).to.equal(3447003);
-          expect(
-            /** @type {import('discord.js').APIEmbed} */
-            (message.embeds?.[0])?.description
-          ).to.include(
-            'Bahai9 has returned the following page'
-          );
-          resolve();
-        }, 3000);
-      });
+      await setTimeout(3000);
+      expect(checkedCommands.length).to.equal(6);
+      expect(optionName).to.equal('keywords');
+      expect(message.content).to.equal(
+        'Here is the result of your search.'
+      );
+      expect(
+        /** @type {import('discord.js').APIEmbed} */
+        (message.embeds?.[0])?.color
+      ).to.equal(3447003);
+      expect(
+        /** @type {import('discord.js').APIEmbed} */
+        (message.embeds?.[0])?.description
+      ).to.include(
+        'Bahai9 has returned the following page'
+      );
     }
   );
 });

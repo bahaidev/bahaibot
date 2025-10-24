@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-shadow -- Ok
+import {setTimeout} from 'node:timers/promises';
 import {expect} from 'chai';
 import MockDiscord from './helpers/MockDiscord.js';
 import bot from '../src/discordBot.js';
@@ -12,10 +14,10 @@ describe('`interactionCreate` social', function () {
       const checkedCommands = [];
 
       /** @type {string} */
-      let optionName;
+      let optionName = '';
 
       /** @type {string} */
-      let message;
+      let message = '';
 
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
@@ -53,17 +55,12 @@ describe('`interactionCreate` social', function () {
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(6);
-          expect(optionName).to.equal('user');
-          expect(message).to.equal(
-            "I haven't seen <@brettz9> lately."
-          );
-          resolve();
-        });
-      });
+      await setTimeout();
+      expect(checkedCommands.length).to.equal(6);
+      expect(optionName).to.equal('user');
+      expect(message).to.equal(
+        "I haven't seen <@brettz9> lately."
+      );
     }
   );
 
@@ -76,10 +73,10 @@ describe('`interactionCreate` social', function () {
       const checkedCommands = [];
 
       /** @type {string} */
-      let optionName;
+      let optionName = '';
 
       /** @type {string} */
-      let message;
+      let message = '';
 
       const user = {
         username: 'brettz9',
@@ -188,17 +185,12 @@ describe('`interactionCreate` social', function () {
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(6);
-          expect(optionName).to.equal('user');
-          expect(message).to.equal(
-            "<@brettz9> is now idle; I haven't seen them lately."
-          );
-          resolve();
-        });
-      });
+      await setTimeout();
+      expect(checkedCommands.length).to.equal(6);
+      expect(optionName).to.equal('user');
+      expect(message).to.equal(
+        "<@brettz9> is now idle; I haven't seen them lately."
+      );
     }
   );
 
@@ -211,10 +203,10 @@ describe('`interactionCreate` social', function () {
       const checkedCommands = [];
 
       /** @type {string} */
-      let optionName;
+      let optionName = '';
 
       /** @type {string} */
-      let message;
+      let message = '';
 
       const user = {
         username: 'brettz9',
@@ -330,17 +322,12 @@ describe('`interactionCreate` social', function () {
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(6);
-          expect(optionName).to.equal('user');
-          expect(message).to.equal(
-            "<@brettz9> is now busy; I haven't seen them lately."
-          );
-          resolve();
-        });
-      });
+      await setTimeout();
+      expect(checkedCommands.length).to.equal(6);
+      expect(optionName).to.equal('user');
+      expect(message).to.equal(
+        "<@brettz9> is now busy; I haven't seen them lately."
+      );
     }
   );
 
@@ -353,10 +340,10 @@ describe('`interactionCreate` social', function () {
       const checkedCommands = [];
 
       /** @type {string} */
-      let optionName;
+      let optionName = '';
 
       /** @type {string} */
-      let message;
+      let message = '';
 
       const user = {
         username: 'brettz9',
@@ -465,17 +452,12 @@ describe('`interactionCreate` social', function () {
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(6);
-          expect(optionName).to.equal('user');
-          expect(message).to.equal(
-            "I haven't seen <@brettz9> lately."
-          );
-          resolve();
-        });
-      });
+      await setTimeout();
+      expect(checkedCommands.length).to.equal(6);
+      expect(optionName).to.equal('user');
+      expect(message).to.equal(
+        "I haven't seen <@brettz9> lately."
+      );
     }
   );
 
@@ -489,10 +471,10 @@ describe('`interactionCreate` social', function () {
       const checkedCommands = [];
 
       /** @type {string} */
-      let optionName;
+      let optionName = '';
 
       /** @type {string} */
-      let message;
+      let message = '';
 
       const user = {
         username: 'brettz9',
@@ -632,18 +614,13 @@ describe('`interactionCreate` social', function () {
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(6);
-          expect(optionName).to.equal('user');
-          expect(message).to.equal(
-            '<@brettz9> is now busy, and was last seen in ' +
-              '<#391408369891672064> 0s ago.'
-          );
-          resolve();
-        });
-      });
+      await setTimeout();
+      expect(checkedCommands.length).to.equal(6);
+      expect(optionName).to.equal('user');
+      expect(message).to.equal(
+        '<@brettz9> is now busy, and was last seen in ' +
+          '<#391408369891672064> 0s ago.'
+      );
     }
   );
 
@@ -657,10 +634,10 @@ describe('`interactionCreate` social', function () {
       const checkedCommands = [];
 
       /** @type {string} */
-      let optionName;
+      let optionName = '';
 
       /** @type {string} */
-      let message;
+      let message = '';
 
       const user = {
         username: 'brettz9',
@@ -800,18 +777,13 @@ describe('`interactionCreate` social', function () {
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(6);
-          expect(optionName).to.equal('user');
-          expect(message).to.equal(
-            '<@brettz9> is now offline, and was last seen in ' +
-            '<#391408369891672064> 0s ago.'
-          );
-          resolve();
-        });
-      });
+      await setTimeout();
+      expect(checkedCommands.length).to.equal(6);
+      expect(optionName).to.equal('user');
+      expect(message).to.equal(
+        '<@brettz9> is now offline, and was last seen in ' +
+        '<#391408369891672064> 0s ago.'
+      );
     }
   );
 
@@ -824,7 +796,7 @@ describe('`interactionCreate` social', function () {
       const checkedCommands = [];
 
       /** @type {string} */
-      let message;
+      let message = '';
 
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
@@ -855,17 +827,12 @@ describe('`interactionCreate` social', function () {
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(5);
-          expect(message).to.equal(
-            'There are currently 0 users online, ' +
-              'including 0 admin/mod/helper(s).'
-          );
-          resolve();
-        });
-      });
+      await setTimeout();
+      expect(checkedCommands.length).to.equal(5);
+      expect(message).to.equal(
+        'There are currently 0 users online, ' +
+          'including 0 admin/mod/helper(s).'
+      );
     }
   );
 });

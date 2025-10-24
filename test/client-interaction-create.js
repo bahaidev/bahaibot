@@ -1,4 +1,6 @@
 /* eslint-disable camelcase -- API */
+// eslint-disable-next-line no-shadow -- Ok
+import {setTimeout} from 'node:timers/promises';
 import {expect} from 'chai';
 import MockDiscord from './helpers/MockDiscord.js';
 import bot from '../src/discordBot.js';
@@ -133,7 +135,7 @@ describe('`interactionCreate`', function () {
       const checkedCommands = [];
 
       /** @type {import('discord.js').InteractionReplyOptions} */
-      let reply;
+      let reply = {};
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
         commandName: 'rand-wiki',
@@ -159,18 +161,13 @@ describe('`interactionCreate`', function () {
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(/** @type {import('discord.js').APIEmbed} */ (
-            reply.embeds?.[0]
-          )?.description).includes(
-            'Bahai9 has returned the following random page, abc:'
-          );
-          expect(checkedCommands.length).to.equal(6);
-          resolve();
-        }, 3000);
-      });
+      await setTimeout(3000);
+      expect(/** @type {import('discord.js').APIEmbed} */ (
+        reply.embeds?.[0]
+      )?.description).includes(
+        'Bahai9 has returned the following random page, abc:'
+      );
+      expect(checkedCommands.length).to.equal(6);
     }
   );
 
@@ -211,7 +208,7 @@ describe('`interactionCreate`', function () {
       const checkedCommands = [];
 
       /** @type {import('discord.js').InteractionReplyOptions} */
-      let reply;
+      let reply = {};
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
         commandName: 'rand-wiki',
@@ -237,64 +234,59 @@ describe('`interactionCreate`', function () {
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(6);
-          expect(/** @type {import('discord.js').APIEmbed} */ (
-            reply
-          )).to.deep.equal({
+      await setTimeout(3000);
+      expect(checkedCommands.length).to.equal(6);
+      expect(/** @type {import('discord.js').APIEmbed} */ (
+        reply
+      )).to.deep.equal({
+        components: [
+          {
             components: [
               {
-                components: [
+                data: {
+                  custom_id: 'rand-wiki_site',
+                  placeholder: 'Choose a site!',
+                  type: 3
+                },
+                options: [
                   {
                     data: {
-                      custom_id: 'rand-wiki_site',
-                      placeholder: 'Choose a site!',
-                      type: 3
-                    },
-                    options: [
-                      {
-                        data: {
-                          emoji: undefined,
-                          label: 'bahaipedia.org',
-                          value: 'bp'
-                        }
-                      },
-                      {
-                        data: {
-                          emoji: undefined,
-                          label: 'bahai9.com',
-                          value: 'b9'
-                        }
-                      },
-                      {
-                        data: {
-                          emoji: undefined,
-                          label: 'bahai.media',
-                          value: 'bm'
-                        }
-                      },
-                      {
-                        data: {
-                          emoji: undefined,
-                          label: 'bahai.works',
-                          value: 'bw'
-                        }
-                      }
-                    ]
+                      emoji: undefined,
+                      label: 'bahaipedia.org',
+                      value: 'bp'
+                    }
+                  },
+                  {
+                    data: {
+                      emoji: undefined,
+                      label: 'bahai9.com',
+                      value: 'b9'
+                    }
+                  },
+                  {
+                    data: {
+                      emoji: undefined,
+                      label: 'bahai.media',
+                      value: 'bm'
+                    }
+                  },
+                  {
+                    data: {
+                      emoji: undefined,
+                      label: 'bahai.works',
+                      value: 'bw'
+                    }
                   }
-                ],
-                data: {
-                  type: 1
-                }
+                ]
               }
             ],
-            content: 'Random wiki:',
-            flags: 64
-          });
-          resolve();
-        }, 3000);
+            data: {
+              type: 1
+            }
+          }
+        ],
+        content: 'Random wiki:',
+        flags: 64
       });
     }
   );
@@ -308,10 +300,10 @@ describe('`interactionCreate`', function () {
       const checkedCommands = [];
 
       /** @type {string} */
-      let optionName;
+      let optionName = '';
 
       /** @type {string} */
-      let message;
+      let message = '';
 
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
@@ -345,17 +337,12 @@ describe('`interactionCreate`', function () {
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(5);
-          expect(optionName).to.equal('echo-text');
-          expect(message).to.equal(
-            "Here's what you said, brettz9: ``testing``"
-          );
-          resolve();
-        });
-      });
+      await setTimeout();
+      expect(checkedCommands.length).to.equal(5);
+      expect(optionName).to.equal('echo-text');
+      expect(message).to.equal(
+        "Here's what you said, brettz9: ``testing``"
+      );
     }
   );
 
@@ -368,7 +355,7 @@ describe('`interactionCreate`', function () {
       const checkedCommands = [];
 
       /** @type {string} */
-      let message;
+      let message = '';
 
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
@@ -390,33 +377,28 @@ describe('`interactionCreate`', function () {
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(4);
-          expect(message).to.deep.equal({
-            embeds: [
-              {
-                data: {
-                  author: {
-                    icon_url: 'https://cdn.discordapp.com/avatars/user-id/user-avatar-url.webp',
-                    name: 'BahaiBot',
-                    url: undefined
-                  },
-                  description: "Bahá'í Bot for Discord\n",
-                  fields: [
-                    {
-                      inline: false,
-                      name: 'Support Server',
-                      value: '[Invite link](https://discord.gg/NE6dJaw)'
-                    }
-                  ]
+      await setTimeout();
+      expect(checkedCommands.length).to.equal(4);
+      expect(message).to.deep.equal({
+        embeds: [
+          {
+            data: {
+              author: {
+                icon_url: 'https://cdn.discordapp.com/avatars/user-id/user-avatar-url.webp',
+                name: 'BahaiBot',
+                url: undefined
+              },
+              description: "Bahá'í Bot for Discord\n",
+              fields: [
+                {
+                  inline: false,
+                  name: 'Support Server',
+                  value: '[Invite link](https://discord.gg/NE6dJaw)'
                 }
-              }
-            ]
-          });
-          resolve();
-        });
+              ]
+            }
+          }
+        ]
       });
     }
   );
@@ -429,8 +411,8 @@ describe('`interactionCreate`', function () {
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
-      /** @type {string} */
-      let message;
+      /** @type {import('discord.js').InteractionReplyOptions} */
+      let message = {};
 
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
@@ -453,64 +435,62 @@ describe('`interactionCreate`', function () {
           return true;
         },
         reply (msg) {
-          message = /** @type {string} */ (msg);
+          // eslint-disable-next-line @stylistic/max-len -- Long
+          message = /** @type {import('discord.js').InteractionReplyOptions} */ (
+            msg
+          );
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(5);
-          expect(message).to.deep.equal({
-            content: 'Here are the instructions you need, abc.',
-            embeds: [
+      await setTimeout();
+      expect(checkedCommands.length).to.equal(5);
+      expect(message).to.deep.equal({
+        content: 'Here are the instructions you need, abc.',
+        embeds: [
+          {
+            color: 8359053,
+            description: 'I can respond to well-formed questions about ' +
+              "basic Bahá'í topics. As well, the following commands can " +
+              'help me process your requests. Make sure to mention me ' +
+              'when trying to use them, like this: `@BahaiBot !help`',
+            fields: [
               {
-                color: 8359053,
-                description: 'I can respond to well-formed questions about ' +
-                  "basic Bahá'í topics. As well, the following commands can " +
-                  'help me process your requests. Make sure to mention me ' +
-                  'when trying to use them, like this: `@BahaiBot !help`',
-                fields: [
-                  {
-                    name: '!read [list | random | *‹text›* *‹chapter›*]',
-                    value: "Reads from the Bahá'í Writings. Displays an " +
-                      'excerpt from given *chapter* of *text*. Available ' +
-                      'texts are displayed using `!read list`; ' +
-                      '`!read random` displays a random passage from ' +
-                      'available texts.'
-                  },
-                  {
-                    name: '!bp | !b9 | !bm | !bw [-rand | *‹keyword›*]',
-                    value: 'Return a link to the top result for *keyword* ' +
-                      'on Bahaipedia (`!bp`), Bahai9.com (`!b9`), ' +
-                      'Bahai.media (`!bm`), or Bahai.works; `-rand` displays ' +
-                      'a random article (or file).'
-                  },
-                  {
-                    name: '!today',
-                    value: "Displays a list of events from today's date in " +
-                      'history, via Bahaipedia.'
-                  },
-                  {
-                    name: '!help',
-                    value: 'Displays help text. For more commands, use ' +
-                      '`!helpextras` and `!helpadmin`'
-                  },
-                  {
-                    name: '!helpextras',
-                    value: 'Displays help text for rarer commands.'
-                  },
-                  {
-                    name: '!helpadmin',
-                    value: 'Displays help text for commands available ' +
-                      'only to admins.'
-                  }
-                ]
+                name: '!read [list | random | *‹text›* *‹chapter›*]',
+                value: "Reads from the Bahá'í Writings. Displays an " +
+                  'excerpt from given *chapter* of *text*. Available ' +
+                  'texts are displayed using `!read list`; ' +
+                  '`!read random` displays a random passage from ' +
+                  'available texts.'
+              },
+              {
+                name: '!bp | !b9 | !bm | !bw [-rand | *‹keyword›*]',
+                value: 'Return a link to the top result for *keyword* ' +
+                  'on Bahaipedia (`!bp`), Bahai9.com (`!b9`), ' +
+                  'Bahai.media (`!bm`), or Bahai.works; `-rand` displays ' +
+                  'a random article (or file).'
+              },
+              {
+                name: '!today',
+                value: "Displays a list of events from today's date in " +
+                  'history, via Bahaipedia.'
+              },
+              {
+                name: '!help',
+                value: 'Displays help text. For more commands, use ' +
+                  '`!helpextras` and `!helpadmin`'
+              },
+              {
+                name: '!helpextras',
+                value: 'Displays help text for rarer commands.'
+              },
+              {
+                name: '!helpadmin',
+                value: 'Displays help text for commands available ' +
+                  'only to admins.'
               }
             ]
-          });
-          resolve();
-        });
+          }
+        ]
       });
     }
   );
@@ -523,8 +503,8 @@ describe('`interactionCreate`', function () {
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
-      /** @type {string} */
-      let message;
+      /** @type {import('discord.js').InteractionReplyOptions} */
+      let message = {};
 
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
@@ -547,126 +527,124 @@ describe('`interactionCreate`', function () {
           return true;
         },
         reply (msg) {
-          message = /** @type {string} */ (msg);
+          // eslint-disable-next-line @stylistic/max-len -- Long
+          message = /** @type {import('discord.js').InteractionReplyOptions} */ (
+            msg
+          );
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(5);
-          expect(message).to.deep.equal({
-            content: 'Here are the instructions you need, abc.',
-            embeds: [
+      await setTimeout();
+      expect(checkedCommands.length).to.equal(5);
+      expect(message).to.deep.equal({
+        content: 'Here are the instructions you need, abc.',
+        embeds: [
+          {
+            color: 8359053,
+            description: 'The following commands can help me process ' +
+              'your requests. Make sure to mention me when trying to ' +
+              'use them, like this: `@BahaiBot !helpextras`',
+            fields: [
               {
-                color: 8359053,
-                description: 'The following commands can help me process ' +
-                  'your requests. Make sure to mention me when trying to ' +
-                  'use them, like this: `@BahaiBot !helpextras`',
-                fields: [
-                  {
-                    name: '!users',
-                    value: 'Displays a count of online users.'
-                  },
-                  {
-                    name: '!seen',
-                    value: 'Displays the last time a user was seen online.'
-                  },
-                  {
-                    name: '!info',
-                    value: 'Provides a link to the support server'
-                  },
-                  {
-                    name: 'badi',
-                    value: "Provides a link to the illustrious Bahá'í youth"
-                  },
-                  {
-                    name: 'allahuabha',
-                    value: "Sends the Bahá'í greeting, Alláh'u'Abhá"
-                  },
-                  {
-                    name: 'nawruz',
-                    value: "Sends a greeting for the Bahá'í Holy Day Naw-Rúz"
-                  },
-                  {
-                    name: 'ridvan',
-                    value: "Sends a greeting for the Bahá'í Holy Day Ridván"
-                  },
-                  {
-                    name: '🟙',
-                    value: "Sends a greeting via a Bahá'í symbol, " +
-                      'the nine-pointed star'
-                  },
-                  {
-                    name: 'sup',
-                    value: "Sends the greeting 'What's up'"
-                  },
-                  {
-                    name: 'good morning',
-                    value: "Sends the greeting 'Good morning'"
-                  },
-                  {
-                    name: 'good afternoon',
-                    value: "Sends the greeting 'Good afternoon'"
-                  },
-                  {
-                    name: 'good evening',
-                    value: "Sends the greeting 'Good evening'"
-                  },
-                  {
-                    name: 'hello',
-                    value: "Sends the greeting 'Hello'"
-                  },
-                  {
-                    name: 'welcome',
-                    value: "Sends the greeting 'Welcome'"
-                  },
-                  {
-                    name: '☕',
-                    value: 'Sends a coffee cup emoji'
-                  },
-                  {
-                    name: '🍵',
-                    value: 'Sends a tea emoji'
-                  },
-                  {
-                    name: '🍿',
-                    value: 'Sends a popcorn emoji'
-                  },
-                  {
-                    name: 'unladen swallow',
-                    value: 'Prompt for a Monty Python response'
-                  },
-                  {
-                    name: 'bruh',
-                    value: 'Sends a Bruh'
-                  },
-                  {
-                    name: 'good bot',
-                    value: 'Praises the bot'
-                  },
-                  {
-                    name: 'bad bot',
-                    value: 'Criticizes the bot'
-                  },
-                  {
-                    name: 'repeating yourself',
-                    value: 'Indicate the bot is repeating itself'
-                  },
-                  {
-                    name: 'santa cat',
-                    value: 'Makes reference to a Santa cat'
-                  },
-                  {
-                    name: 'ping',
-                    value: 'Pings the bot'
-                  }
-                ]
+                name: '!users',
+                value: 'Displays a count of online users.'
+              },
+              {
+                name: '!seen',
+                value: 'Displays the last time a user was seen online.'
+              },
+              {
+                name: '!info',
+                value: 'Provides a link to the support server'
+              },
+              {
+                name: 'badi',
+                value: "Provides a link to the illustrious Bahá'í youth"
+              },
+              {
+                name: 'allahuabha',
+                value: "Sends the Bahá'í greeting, Alláh'u'Abhá"
+              },
+              {
+                name: 'nawruz',
+                value: "Sends a greeting for the Bahá'í Holy Day Naw-Rúz"
+              },
+              {
+                name: 'ridvan',
+                value: "Sends a greeting for the Bahá'í Holy Day Ridván"
+              },
+              {
+                name: '🟙',
+                value: "Sends a greeting via a Bahá'í symbol, " +
+                  'the nine-pointed star'
+              },
+              {
+                name: 'sup',
+                value: "Sends the greeting 'What's up'"
+              },
+              {
+                name: 'good morning',
+                value: "Sends the greeting 'Good morning'"
+              },
+              {
+                name: 'good afternoon',
+                value: "Sends the greeting 'Good afternoon'"
+              },
+              {
+                name: 'good evening',
+                value: "Sends the greeting 'Good evening'"
+              },
+              {
+                name: 'hello',
+                value: "Sends the greeting 'Hello'"
+              },
+              {
+                name: 'welcome',
+                value: "Sends the greeting 'Welcome'"
+              },
+              {
+                name: '☕',
+                value: 'Sends a coffee cup emoji'
+              },
+              {
+                name: '🍵',
+                value: 'Sends a tea emoji'
+              },
+              {
+                name: '🍿',
+                value: 'Sends a popcorn emoji'
+              },
+              {
+                name: 'unladen swallow',
+                value: 'Prompt for a Monty Python response'
+              },
+              {
+                name: 'bruh',
+                value: 'Sends a Bruh'
+              },
+              {
+                name: 'good bot',
+                value: 'Praises the bot'
+              },
+              {
+                name: 'bad bot',
+                value: 'Criticizes the bot'
+              },
+              {
+                name: 'repeating yourself',
+                value: 'Indicate the bot is repeating itself'
+              },
+              {
+                name: 'santa cat',
+                value: 'Makes reference to a Santa cat'
+              },
+              {
+                name: 'ping',
+                value: 'Pings the bot'
               }
             ]
-          });
-          resolve();
-        });
+          }
+        ]
       });
     }
   );
@@ -680,8 +658,8 @@ describe('`interactionCreate`', function () {
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
-      /** @type {string} */
-      let message;
+      /** @type {import('discord.js').InteractionReplyOptions} */
+      let message = {};
 
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
@@ -704,48 +682,46 @@ describe('`interactionCreate`', function () {
           return true;
         },
         reply (msg) {
-          message = /** @type {string} */ (msg);
+          // eslint-disable-next-line @stylistic/max-len -- Long
+          message = /** @type {import('discord.js').InteractionReplyOptions} */ (
+            msg
+          );
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(5);
-          expect(message).to.deep.equal({
-            content: 'Here are the instructions you need, abc.',
-            embeds: [
+      await setTimeout();
+      expect(checkedCommands.length).to.equal(5);
+      expect(message).to.deep.equal({
+        content: 'Here are the instructions you need, abc.',
+        embeds: [
+          {
+            color: 8359053,
+            description: 'The following administrator commands can ' +
+              'help me process your requests. Make sure to mention ' +
+              'me when trying to use them, like this: ' +
+              '`@BahaiBot !helpextras`',
+            fields: [
               {
-                color: 8359053,
-                description: 'The following administrator commands can ' +
-                  'help me process your requests. Make sure to mention ' +
-                  'me when trying to use them, like this: ' +
-                  '`@BahaiBot !helpextras`',
-                fields: [
-                  {
-                    name: '!speak some words',
-                    value: 'Reads some words as speech'
-                  },
-                  {
-                    name: '!puppet userChannel | message',
-                    value: 'Allows administrators to puppeteer a bot, ' +
-                      'channeling a message to another channel'
-                  },
-                  {
-                    name: '!echo words',
-                    value: 'Just echoes back the words supplied.'
-                  },
-                  {
-                    name: '!checkin',
-                    value: 'Checks in to send a greeting to a ' +
-                      'bot-testing channel'
-                  }
-                ]
+                name: '!speak some words',
+                value: 'Reads some words as speech'
+              },
+              {
+                name: '!puppet userChannel | message',
+                value: 'Allows administrators to puppeteer a bot, ' +
+                  'channeling a message to another channel'
+              },
+              {
+                name: '!echo words',
+                value: 'Just echoes back the words supplied.'
+              },
+              {
+                name: '!checkin',
+                value: 'Checks in to send a greeting to a ' +
+                  'bot-testing channel'
               }
             ]
-          });
-          resolve();
-        });
+          }
+        ]
       });
     }
   );

@@ -1,4 +1,6 @@
 
+// eslint-disable-next-line no-shadow -- Ok
+import {setTimeout} from 'node:timers/promises';
 import {expect} from 'chai';
 import MockDiscord from './helpers/MockDiscord.js';
 import bot from '../src/discordBot.js';
@@ -30,13 +32,8 @@ describe('`interactionCreate` admin', function () {
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(4);
-          resolve();
-        });
-      });
+      await setTimeout();
+      expect(checkedCommands.length).to.equal(4);
     }
   );
 
@@ -52,7 +49,7 @@ describe('`interactionCreate` admin', function () {
       const optionNames = [];
 
       /** @type {string} */
-      let message;
+      let message = '';
 
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
@@ -90,17 +87,12 @@ describe('`interactionCreate` admin', function () {
         }
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Delay test
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          expect(checkedCommands.length).to.equal(6);
-          expect(optionNames).to.deep.equal(['channel', 'message']);
-          expect(message).to.equal(
-            'Channel bot-testing does not exist or is not text-based!'
-          );
-          resolve();
-        });
-      });
+      await setTimeout();
+      expect(checkedCommands.length).to.equal(6);
+      expect(optionNames).to.deep.equal(['channel', 'message']);
+      expect(message).to.equal(
+        'Channel bot-testing does not exist or is not text-based!'
+      );
     }
   );
 });

@@ -1,4 +1,7 @@
 /* eslint-disable no-console -- Testing console */
+// eslint-disable-next-line no-shadow -- Ok
+import {setTimeout} from 'node:timers/promises';
+
 import {expect} from 'chai';
 import {createSandbox} from 'sinon';
 import MockDiscord from './helpers/MockDiscord.js';
@@ -32,20 +35,15 @@ describe('ready event', () => {
     // @ts-expect-error Bug?
     client.emit('clientReady');
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        // @ts-expect-error Sinon
-        expect(console.log.calledTwice).to.be.true;
-        // @ts-expect-error Sinon
-        expect(console.log.calledWith("The Bahá'í Bot Online!")).to.be.true;
-        // @ts-expect-error Sinon
-        expect(console.log.secondCall.firstArg).to.equal(
-          'No application commands found'
-        );
-        resolve();
-      });
-    });
+    await setTimeout();
+    // @ts-expect-error Sinon
+    expect(console.log.calledTwice).to.be.true;
+    // @ts-expect-error Sinon
+    expect(console.log.calledWith("The Bahá'í Bot Online!")).to.be.true;
+    // @ts-expect-error Sinon
+    expect(console.log.secondCall.firstArg).to.equal(
+      'No application commands found'
+    );
   });
 
   it('ready event registers commands', async function () {
@@ -88,25 +86,20 @@ describe('ready event', () => {
     // @ts-expect-error Bug?
     client.emit('clientReady');
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        expect(fetched).to.equal(true);
-        expect(names).to.deep.contain('users');
-        expect(editDescriptions).to.deep.contain(
-          "Provide a selection of the Bahá'í Writings by book and chapter"
-        );
-        // @ts-expect-error Sinon
-        expect(console.log.getCalls().length).to.equal(21);
-        // @ts-expect-error Sinon
-        expect(console.log.calledWith("The Bahá'í Bot Online!")).to.be.true;
-        // @ts-expect-error Sinon
-        expect(console.log.secondCall.firstArg).to.equal(
-          `⏩ Skipping registering command "speak" as it's set to delete.`
-        );
-        resolve();
-      });
-    });
+    await setTimeout();
+    expect(fetched).to.equal(true);
+    expect(names).to.deep.contain('users');
+    expect(editDescriptions).to.deep.contain(
+      "Provide a selection of the Bahá'í Writings by book and chapter"
+    );
+    // @ts-expect-error Sinon
+    expect(console.log.getCalls().length).to.equal(21);
+    // @ts-expect-error Sinon
+    expect(console.log.calledWith("The Bahá'í Bot Online!")).to.be.true;
+    // @ts-expect-error Sinon
+    expect(console.log.secondCall.firstArg).to.equal(
+      `⏩ Skipping registering command "speak" as it's set to delete.`
+    );
   });
 
   it('Avoids running checkin functions twice in the hour', async function () {

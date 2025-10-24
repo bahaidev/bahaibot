@@ -1,4 +1,7 @@
 /* eslint-disable no-console -- Testing console */
+
+// eslint-disable-next-line no-shadow -- Ok
+import {setTimeout} from 'node:timers/promises';
 import {expect} from 'chai';
 import {createSandbox} from 'sinon';
 
@@ -240,6 +243,29 @@ describe('Client event (message)', function () {
       // console.log('message', message);
       client.emit('messageCreate', message);
 
+      // @ts-expect-error Sinon
+      expect(message.react.firstCall.firstArg).to.equal('☕');
+    }
+  );
+
+  it.skip(
+    'Passes bracketed syntax command (`notMentioned` without a check)',
+    async function () {
+      const discord = new MockDiscord({
+        messageContent: 'Here is a bracketed link: [[God]].'
+      });
+
+      // @ts-expect-error Don't need a full mock
+      const {client} = await bot({client: discord.getClient()});
+
+      const message = discord.getMessage();
+
+      this.sinon.spy(message, 'react');
+
+      // console.log('message', message);
+      client.emit('messageCreate', message);
+
+      await setTimeout();
       // @ts-expect-error Sinon
       expect(message.react.firstCall.firstArg).to.equal('☕');
     }

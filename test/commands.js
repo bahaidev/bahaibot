@@ -1,5 +1,7 @@
 /* eslint-disable no-console -- Testing console */
 /* eslint-disable camelcase -- API */
+// eslint-disable-next-line no-shadow -- Ok
+import {setTimeout} from 'node:timers/promises';
 import {createSandbox} from 'sinon';
 import {expect} from 'chai';
 import MockDiscord from './helpers/MockDiscord.js';
@@ -68,25 +70,21 @@ describe('Commands', () => {
 
     await commandFinished(client);
 
-    // eslint-disable-next-line promise/avoid-new -- Delay test
-    return new Promise((resolve) => {
-      client.emit('messageCreate', message);
-      setTimeout(() => {
-        expect(
-          // @ts-expect-error Sinon
-          message.channel.send.firstCall.firstArg.content
-        ).to.have.string(
-          'Here are the instructions you need, user username.'
-        );
-        expect(
-          // @ts-expect-error Sinon
-          message.channel.send.secondCall.firstArg.content
-        ).to.have.string(
-          'Here are the instructions you need, user username.'
-        );
-        resolve();
-      });
-    });
+    client.emit('messageCreate', message);
+
+    await setTimeout();
+    expect(
+      // @ts-expect-error Sinon
+      message.channel.send.firstCall.firstArg.content
+    ).to.have.string(
+      'Here are the instructions you need, user username.'
+    );
+    expect(
+      // @ts-expect-error Sinon
+      message.channel.send.secondCall.firstArg.content
+    ).to.have.string(
+      'Here are the instructions you need, user username.'
+    );
   });
 
   it('Executes helpextras', async function () {
