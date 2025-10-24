@@ -43,7 +43,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
             bstarString
           }Here's Bahaipedia's Today in History entry for ${
             md
-          }, ${message.author.username}:\n\n ${res}`
+          }, ${message.author.username}:\n\n${res}`
         }]
       });
       return;
@@ -350,6 +350,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
      * @returns {Promise<void>}
      */
     async slashCommand (interaction) {
+      /* c8 ignore next 3 -- TS guard */
       if (!interaction.inCachedGuild()) {
         return;
       }
@@ -399,6 +400,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
      * @returns {Promise<void>}
      */
     return async function slashCommand (interaction) {
+      /* c8 ignore next 3 -- TS guard */
       if (!interaction.inCachedGuild() || interaction.isStringSelectMenu()) {
         return;
       }

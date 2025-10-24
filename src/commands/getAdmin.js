@@ -180,6 +180,7 @@ const getAdmin = ({
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
         if (!interaction.inCachedGuild() || interaction.isStringSelectMenu()) {
           return;
         }
@@ -240,6 +241,7 @@ const getAdmin = ({
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
         if (interaction.isStringSelectMenu()) {
           return;
         }

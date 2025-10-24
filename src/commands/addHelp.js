@@ -21,12 +21,21 @@ const addHelp = ({commands}) => {
      * @returns {Promise<void>}
      */
     async slashCommand (interaction) {
+      /* c8 ignore next 3 -- TS guard */
       if (!interaction.inCachedGuild()) {
         return;
       }
-      // @ts-expect-error Just passing what we need
       await this.action?.({
-        author: interaction.user
+        author: interaction.user,
+        channel: {
+          /**
+           * @param {string} reply
+           */
+          // @ts-expect-error Just mocking what we need
+          send (reply) {
+            interaction.reply(reply);
+          }
+        }
       });
     },
     /**
@@ -40,7 +49,7 @@ const addHelp = ({commands}) => {
         embeds: [{
           color: 8359053,
           description: 'I can respond to well-formed questions about basic ' +
-              "Baha'i topics. As well, the following commands can help me " +
+              "Bahá'í topics. As well, the following commands can help me " +
               'process your requests. Make sure to mention me when trying ' +
               'to use them, like this: `@BahaiBot !help`',
           fields
@@ -62,6 +71,7 @@ const addHelp = ({commands}) => {
      * @returns {Promise<void>}
      */
     async slashCommand (interaction) {
+      /* c8 ignore next 3 -- TS guard */
       if (!interaction.inCachedGuild()) {
         return;
       }

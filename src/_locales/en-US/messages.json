@@ -40,7 +40,7 @@
       "message": "Query completed, posting Today in History."
     },
     "todayInHistoryResult": {
-      "message": "{bstar} Here's Bahaipedia's Today in History entry for {today}.\n\n {todayInHistoryResult}"
+      "message": "{bstar} Here's Bahaipedia's Today in History entry for {today}.\n\n{todayInHistoryResult}"
     },
     "hereIsQueryResult": {
       "message": "Here is the result of your query."

@@ -23,7 +23,7 @@ const response = {
     },
     fulfillment: {
       speech: 'I am an automated question and answer chatbot here to ' +
-        "answer your questions about the Baha'i Faith.",
+        "answer your questions about the Bahá'í Faith.",
       messages: [Array]
     }
   },
