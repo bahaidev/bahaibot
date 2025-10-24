@@ -268,4 +268,121 @@ describe('`interactionCreate`', function () {
       });
     }
   );
+
+  it(
+    '`interactionCreate` finds a ChatInputCommand (users)',
+    async function () {
+      const discord = new MockDiscord();
+      // @ts-expect-error Don't need a full mock
+      const {client} = await bot({client: discord.getClient()});
+      const checkedCommands = [];
+
+      /** @type {string} */
+      let message;
+
+      // @ts-expect-error Just mocking what we need
+      client.emit('interactionCreate', {
+        commandName: 'users',
+        guild: discord.guild,
+        inCachedGuild () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isChatInputCommand () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isStringSelectMenu () {
+          checkedCommands.push(true);
+          return false;
+        },
+        isAutocomplete () {
+          checkedCommands.push(true);
+          return false;
+        },
+        user: {
+          username: 'brettz9',
+          id: '410259427770499072'
+        },
+        reply (msg) {
+          message = /** @type {string} */ (msg);
+        }
+      });
+
+      // eslint-disable-next-line promise/avoid-new -- Delay test
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          expect(checkedCommands.length).to.equal(5);
+          expect(message).to.equal(
+            'There are currently 0 users online, ' +
+              'including 0 admin/mod/helper(s).'
+          );
+          resolve();
+        });
+      });
+    }
+  );
+
+  it(
+    '`interactionCreate` finds a ChatInputCommand (info)',
+    async function () {
+      const discord = new MockDiscord();
+      // @ts-expect-error Don't need a full mock
+      const {client} = await bot({client: discord.getClient()});
+      const checkedCommands = [];
+
+      /** @type {string} */
+      let message;
+
+      // @ts-expect-error Just mocking what we need
+      client.emit('interactionCreate', {
+        commandName: 'info',
+        isChatInputCommand () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isStringSelectMenu () {
+          checkedCommands.push(true);
+          return false;
+        },
+        isAutocomplete () {
+          checkedCommands.push(true);
+          return false;
+        },
+        reply (msg) {
+          message = /** @type {string} */ (msg);
+        }
+      });
+
+      // eslint-disable-next-line promise/avoid-new -- Delay test
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          expect(checkedCommands.length).to.equal(4);
+          expect(message).to.deep.equal({
+            embeds: [
+              {
+                data: {
+                  author: {
+                    // eslint-disable-next-line camelcase -- API
+                    icon_url: 'https://cdn.discordapp.com/avatars/user-id/user-avatar-url.webp',
+                    name: 'BahaiBot',
+                    url: undefined
+                  },
+                  description: "Bahá'í Bot for Discord\n",
+                  fields: [
+                    {
+                      inline: false,
+                      name: 'Support Server',
+                      value: '[Invite link](https://discord.gg/NE6dJaw)'
+                    }
+                  ]
+                }
+              }
+            ]
+          });
+          resolve();
+        });
+      });
+    }
+  );
 });

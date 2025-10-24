@@ -78,13 +78,13 @@ const getSocialInfo = ({
         name: '!users',
         value: 'Displays a count of online users.'
       },
-      /* c8 ignore next 76 -- Todo: Reenable when testing again */
       /**
        * @param {import('./getCommands.js').
        *   InputCommandOrSelectMenu} interaction
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
         if (!interaction.inCachedGuild()) {
           return;
         }
@@ -113,6 +113,7 @@ const getSocialInfo = ({
           (m) => m.presence?.status !== 'offline'
         ).size;
 
+        /* c8 ignore next 33 -- Todo: complete with testing */
         const allAdmins = guild?.members.cache.filter((m) => {
           return (
             m.roles.cache.some((r) => {
