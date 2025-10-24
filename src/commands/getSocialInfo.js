@@ -212,14 +212,12 @@ const getSocialInfo = ({
         const replies = [];
 
         const user = client.users.cache.find((val) => {
-          return val.username === sname;
+          return val.id === sname;
         });
 
         const haventSeen = () => {
           replies.push(`I haven't seen ${sname
-            ? sname.split(' ').map((name) => {
-              return `@${name}`;
-            }).join(' ')
+            ? Discord.userMention(sname)
             : ''
           } lately.`);
         };
@@ -236,33 +234,33 @@ const getSocialInfo = ({
             lastMessage,
             lastChannel
           } = await getLastUserMessage(message.guild, user);
+
           if (lastMessage) {
             const stat = (
               member.presence?.status === 'dnd'
                 ? 'busy'
-                // c8 ignore next -- Inconsistent? */
+                /* c8 ignore next -- Inconsistent? */
                 : member.presence?.status ?? 'offline'
             );
-            if (stat === 'offline') {
-              // User is invisible, so don't leak presence to channel
-              haventSeen();
-            } else {
-              const lastseen = new Date(lastMessage.createdAt);
-              const now = new Date();
-              const timedelta = (now > lastseen)
-                ? Number(now) - Number(lastseen)
-                : 0;
-              replies.push(
-                `@${sname} is now ${stat}, and was last seen in ${
-                  lastChannel
-                } ${istr(timedelta / 1000)} ago.`
-              );
-            }
+
+            const lastseen = new Date(lastMessage.createdAt);
+            const now = new Date();
+            const timedelta = (now > lastseen)
+              /* c8 ignore next -- This should be the condition we reach */
+              ? Number(now) - Number(lastseen)
+              : 0;
+            replies.push(
+              `${
+                Discord.userMention(sname)
+              } is now ${stat}, and was last seen in ${
+                lastChannel
+              } ${istr(timedelta / 1000)} ago.`
+            );
           } else {
             const stat = (
               member.presence?.status === 'dnd'
                 ? 'busy'
-                // c8 ignore next -- Inconsistent? */
+                /* c8 ignore next -- Inconsistent? */
                 : member.presence?.status ?? 'offline'
             );
             if (stat === 'offline') {
@@ -270,7 +268,9 @@ const getSocialInfo = ({
               haventSeen();
             } else {
               replies.push(
-                `@${sname} is now ${stat}; I haven't seen them lately.`
+                `${
+                  Discord.userMention(sname)
+                } is now ${stat}; I haven't seen them lately.`
               );
             }
           }
