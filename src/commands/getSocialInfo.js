@@ -1,6 +1,5 @@
 import istr from '../utils/istr.js';
 
-/* c8 ignore next 57 -- Todo: Reenable when testing again */
 /**
  * Finds the last message sent by a user, including threads, in a specific
  *   guild.
@@ -114,7 +113,6 @@ const getSocialInfo = ({
           (m) => m.presence?.status !== 'offline'
         ).size;
 
-        /* c8 ignore next 33 -- Todo: Reenable when testing again */
         const allAdmins = guild?.members.cache.filter((m) => {
           return (
             m.roles.cache.some((r) => {
@@ -228,7 +226,6 @@ const getSocialInfo = ({
 
         if (!user) {
           haventSeen();
-        /* c8 ignore next 50 -- Todo: Reenable when testing again */
         } else {
           const member = await message.guild.members.fetch({
             user,
@@ -256,7 +253,7 @@ const getSocialInfo = ({
                 ? Number(now) - Number(lastseen)
                 : 0;
               replies.push(
-                `${sname} is now ${stat}, and was last seen in ${
+                `@${sname} is now ${stat}, and was last seen in ${
                   lastChannel
                 } ${istr(timedelta / 1000)} ago.`
               );
@@ -273,7 +270,7 @@ const getSocialInfo = ({
               haventSeen();
             } else {
               replies.push(
-                `${sname} is now ${stat}; I haven't seen them lately.`
+                `@${sname} is now ${stat}; I haven't seen them lately.`
               );
             }
           }

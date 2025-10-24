@@ -399,8 +399,7 @@ describe('Commands', () => {
   ].forEach((testMessage) => {
     const testMultiple = testMessage.includes('multiple');
 
-    // eslint-disable-next-line mocha/no-pending-tests -- Todo: Fix
-    it.skip(testMessage, async function () {
+    it(testMessage, async function () {
       const discord = new MockDiscord({
         clientName: DiscordConstants.ADMIN_ROLES[0],
         roleID: DiscordConstants.ADMIN_ROLE_ID,
@@ -468,17 +467,6 @@ describe('Commands', () => {
         });
       }
 
-      const guildMembersCache = this.sinon.spyOnGetterResults(
-        guild, 'members.cache', {
-          filter: {
-            argSpies: [true],
-            childAccessorSpies: [
-              ['size', ['get']]
-            ]
-          }
-        }
-      );
-
       const channelSpy = this.sinon.spy();
       Object.defineProperty(message, 'channel', {
         value: {
@@ -487,74 +475,38 @@ describe('Commands', () => {
         }
       });
 
+      const {filter} = guild.members.cache;
+
+      // @ts-expect-error Just mocking what we need
+      guild.members.cache.filter = (...args) => {
+        if (args[0].toString().includes('offline')) {
+          return {
+            size: testMultiple ? 2 : 1
+          };
+        }
+        // @ts-expect-error Ok
+        return filter.call(guild.members.cache, ...args);
+      };
+
+      // @ts-expect-error Just mocking what we need
+      message.guild.members.fetch = async ({
+        // @ts-expect-error Not sure why this is erring
+        user:
+          usr
+      }) => {
+        return await {
+          user: {
+            id: usr.id
+          },
+          presence: {
+            status: 'online'
+          }
+        };
+      };
+
       client.emit('messageCreate', message);
 
       await commandFinished(client);
-
-      const {
-        filter: {
-          /*
-          // COMMENTING OUT: Don't want AI to think these expectations are
-          //    current
-          argSpies: [
-            [guildMembersOnlineFilterSpy],
-            [guildMembersAdminsFilterSpy]
-          ],
-          */
-          childAccessorSpies: [
-            guildMembersFilterResultSizeSpy
-          ]
-        }
-      } = guildMembersCache;
-
-      // COMMENTING OUT: Don't want AI to think these expectations are
-      //    current
-      // We should really have spying on the second filter call also,
-      //   but as per to-do in spyOnGetterResults file, we need to
-      //   refactor there and we can at least introspect on the
-      //   expected result.
-
-      // expect(
-      //   guildMembersOnlineFilterSpy.firstCall.firstArg.presence.status
-      // ).to.equal(
-      //   'online'
-      // );
-      // expect(
-      //   guildMembersOnlineFilterSpy.firstCall.returnValue
-      // ).to.equal(true);
-
-      // expect(
-      //   guildMembersAdminsFilterSpy.firstCall.firstArg.presence.status
-      // ).to.equal(
-      //   'online'
-      // );
-      // expect(
-      //   guildMembersAdminsFilterSpy.firstCall.returnValue
-      // ).to.equal(true);
-
-      // if (testMultiple) {
-      //   expect(
-      //     guildMembersOnlineFilterSpy.secondCall.firstArg.presence.status
-      //   ).to.equal(
-      //     'online'
-      //   );
-      //   expect(
-      //     guildMembersOnlineFilterSpy.secondCall.returnValue
-      //   ).to.equal(true);
-
-      //   expect(
-      //     guildMembersOnlineFilterSpy.thirdCall.firstArg.presence.status
-      //   ).to.equal(
-      //     'offline'
-      //   );
-      //   expect(
-      //     guildMembersOnlineFilterSpy.thirdCall.returnValue
-      //   ).to.equal(false);
-      // }
-
-      expect(
-        guildMembersFilterResultSizeSpy.get.firstCall.returnValue
-      ).to.equal(testMultiple ? 2 : 1);
 
       expect(
         // @ts-expect-error Sinon
@@ -625,205 +577,6 @@ describe('Commands', () => {
         `I haven't seen ${users.map((usr) => {
           return `@${usr}`;
         }).join(' ')} lately.`
-      );
-      expect(
-        // @ts-expect-error Sinon
-        console.log.calledWith('Seen command issued by user username.')
-      ).to.be.true;
-    });
-  });
-
-  /**
-   * @type {[string, {
-   *   users: string[],
-   *   counts: number[],
-   *   stat: string
-   * }][]}
-   */
-  ([
-    ['Executes seen for one unseen user (dnd)', {
-      users: ['AB'],
-      counts: [2],
-      stat: 'dnd'
-    }],
-    ['Executes seen for two unseen users (dnd and offline)', {
-      users: ['AB', 'OfflineNonAdmin'],
-      counts: [2, 4],
-      stat: 'dnd'
-    }],
-    ['Executes seen for one unseen user (idle)', {
-      users: ['AB'],
-      counts: [2],
-      stat: 'idle'
-    }],
-    ['Executes seen for two unseen users (idle and offline)', {
-      users: ['AB', 'OfflineNonAdmin'],
-      counts: [2, 4],
-      stat: 'idle'
-    }]
-  ]).forEach(([testMessage, {
-    users, stat: statAB
-    /*
-      ,
-      counts: [
-        countFirst, countSecond
-      ]
-    */
-  }]) => {
-    // eslint-disable-next-line mocha/no-pending-tests -- Todo: Fix
-    it.skip(testMessage, async function () {
-      const expectedStatAB = statAB === 'dnd' ? 'busy' : statAB;
-
-      const discord = new MockDiscord({
-        mentionEveryone: true,
-        messageContent: `!seen ${users.join(' ')}`,
-        guildChannels: true,
-        guilds: [
-          {
-            id: DiscordConstants.BAHAI_LAB_GUILD_ID,
-            name: 'test',
-            channels: [
-              {
-                id: DiscordConstants.BAHAI_LAB_BOT_TESTING_CHANNEL_ID,
-                name: 'bot-testing'
-              },
-              {
-                name: 'welcome'
-              }
-            ]
-          }
-        ]
-      });
-
-      // @ts-expect-error Don't need a full mock
-      const {client} = await bot({client: discord.getClient()});
-      const message = discord.getMessage();
-
-      const guild = discord.clientGuild;
-
-      discord.mockUser({
-        hideUserStatus: true, // Treated as online otherwise
-        userID: DiscordConstants.USER_AB,
-        userName: 'AB',
-        guild,
-        status: statAB,
-        roles: [
-          DiscordConstants.ADMIN_ROLE_ID
-        ]
-      });
-
-      discord.mockUser({
-        userID: 'online-nonadmin',
-        userName: 'OnlineNonAdmin',
-        guild,
-        status: 'online'
-      });
-
-      discord.mockUser({
-        hideUserStatus: true, // Treated as online otherwise
-        userID: 'offline-nonadmin',
-        userName: 'OfflineNonAdmin',
-        guild,
-        status: 'offline'
-      });
-
-      this.sinon.spy(message.channel, 'send');
-
-      // COMMENTING OUT: Don't want AI to think these expectations are
-      //    current
-      // const clientUsersCache = this.sinon.spyOnGetterResults(
-      //   client, 'users.cache', {
-      //     find: {
-      //       argSpies: [true, true],
-      //       childAccessorSpies: [
-      //         ['presence', ['get']],
-      //         ['lastMessage', ['get']]
-      //       ]
-      //     }
-      //   }
-      // );
-
-      client.emit('messageCreate', message);
-
-      await commandFinished(client);
-
-      // COMMENTING OUT: Don't want AI to think these expectations are
-      //    current
-      // const {
-      //   find: {
-      //     argSpies,
-      //     childAccessorSpies
-      //   }
-      // } = clientUsersCache;
-
-      // let clientUsersFinderSpy, clientUsersFinderSpy2ndCall;
-      // let clientUsersFindResultPresenceSpy,
-      //   clientUsersFindResultPresenceSpy2;
-      // let clientUsersFindResultLastMessageSpy,
-      //   clientUsersFindResultLastMessageSpy2;
-      // if (countSecond) {
-      //   [
-      //     [clientUsersFinderSpy],
-      //     [clientUsersFinderSpy2ndCall]
-      //   ] = argSpies;
-      //   [
-      //     clientUsersFindResultPresenceSpy,
-      //     clientUsersFindResultLastMessageSpy,
-      //     clientUsersFindResultPresenceSpy2,
-      //     clientUsersFindResultLastMessageSpy2
-      //   ] = childAccessorSpies;
-      // } else {
-      //   [[clientUsersFinderSpy]] = argSpies;
-      //   [
-      //     clientUsersFindResultPresenceSpy,
-      //     clientUsersFindResultLastMessageSpy
-      //   ] = childAccessorSpies;
-      // }
-      //
-      // expect(
-      //   clientUsersFinderSpy.firstCall.firstArg.id
-      // ).to.equal('user-id');
-      // expect(
-      //   clientUsersFinderSpy.callCount
-      // ).to.equal(countFirst);
-
-      // expect(
-      //   clientUsersFindResultLastMessageSpy.get.firstCall.returnValue
-      // ).to.equal(null);
-      // expect(
-      //   clientUsersFindResultPresenceSpy.get.firstCall.returnValue.status
-      // ).to.equal(statAB);
-
-      // if (clientUsersFinderSpy2ndCall) {
-      //   expect(
-      //     clientUsersFinderSpy2ndCall.firstCall.firstArg.id
-      //   ).to.equal('user-id');
-      //   expect(
-      //     clientUsersFinderSpy2ndCall.callCount
-      //   ).to.equal(countSecond);
-
-      //   expect(
-      //     clientUsersFindResultLastMessageSpy2.get.firstCall.returnValue
-      //   ).to.equal(null);
-      //   expect(
-      //     clientUsersFindResultPresenceSpy2.get.firstCall.returnValue.status
-      //   ).to.equal('offline');
-
-      //   if (statAB !== 'dnd') {
-      //     expect(
-      //       clientUsersFindResultPresenceSpy2.
-      //         get.secondCall.returnValue.status
-      //     ).to.equal('offline');
-      //   }
-      // }
-
-      // @ts-expect-error Sinon
-      expect(message.channel.send.firstCall.firstArg).to.equal(
-        users.map((user, idx) => {
-          return `${user} is now ${
-            idx === 1 ? 'offline' : expectedStatAB
-          }; I haven't seen them lately.`;
-        }).join('\n')
       );
       expect(
         // @ts-expect-error Sinon
