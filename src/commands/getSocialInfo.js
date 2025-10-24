@@ -177,13 +177,13 @@ const getSocialInfo = ({
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
         if (!interaction.inCachedGuild() || interaction.isStringSelectMenu()) {
           return;
         }
         await this.action?.({
           author: interaction.user,
-          content:
-            `<@${interaction.options.get('user')?.value}>`,
+          content: String(interaction.options.get('user')?.value),
           guild: interaction.guild,
           channel: {
             /**
@@ -214,7 +214,12 @@ const getSocialInfo = ({
         });
 
         const haventSeen = () => {
-          replies.push(`I haven't seen ${sname} lately.`);
+          replies.push(`I haven't seen ${sname
+            ? sname.split(' ').map((name) => {
+              return `@${name}`;
+            }).join(' ')
+            : ''
+          } lately.`);
         };
 
         if (!user) {

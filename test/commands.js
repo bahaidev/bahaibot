@@ -622,7 +622,9 @@ describe('Commands', () => {
       await commandFinished(client);
       // @ts-expect-error Sinon
       expect(message.channel.send.firstCall.firstArg).to.equal(
-        `I haven't seen ${users.join(' ')} lately.`
+        `I haven't seen ${users.map((usr) => {
+          return `@${usr}`;
+        }).join(' ')} lately.`
       );
       expect(
         // @ts-expect-error Sinon

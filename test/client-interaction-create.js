@@ -58,7 +58,7 @@ describe('`interactionCreate`', function () {
   );
 
   it(
-    '`interactionCreate` finds an autocomplete',
+    '`interactionCreate` finds an autocomplete (read)',
     async function () {
       const discord = new MockDiscord();
       // @ts-expect-error Don't need a full mock
@@ -96,7 +96,7 @@ describe('`interactionCreate`', function () {
   );
 
   it(
-    '`interactionCreate` finds a StringSelectMenu',
+    '`interactionCreate` finds a StringSelectMenu (rand-wiki)',
     async function () {
       const discord = new MockDiscord();
       // @ts-expect-error Don't need a full mock
@@ -146,7 +146,7 @@ describe('`interactionCreate`', function () {
   );
 
   it(
-    '`interactionCreate` finds a ChatInputCommand',
+    '`interactionCreate` finds a ChatInputCommand (echo)',
     async function () {
       const discord = new MockDiscord();
       // @ts-expect-error Don't need a full mock
@@ -198,6 +198,70 @@ describe('`interactionCreate`', function () {
           expect(optionName).to.equal('echo-text');
           expect(message).to.equal(
             "Here's what you said, brettz9: ``testing``"
+          );
+          resolve();
+        });
+      });
+    }
+  );
+
+  it(
+    '`interactionCreate` finds a ChatInputCommand (seen)',
+    async function () {
+      const discord = new MockDiscord();
+      // @ts-expect-error Don't need a full mock
+      const {client} = await bot({client: discord.getClient()});
+      const checkedCommands = [];
+
+      /** @type {string} */
+      let optionName;
+
+      /** @type {string} */
+      let message;
+
+      // @ts-expect-error Just mocking what we need
+      client.emit('interactionCreate', {
+        commandName: 'seen',
+        inCachedGuild () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isChatInputCommand () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isStringSelectMenu () {
+          checkedCommands.push(true);
+          return false;
+        },
+        isAutocomplete () {
+          checkedCommands.push(true);
+          return false;
+        },
+        user: {
+          username: 'brettz9',
+          id: '410259427770499072'
+        },
+        options: {
+          get (optName) {
+            optionName = optName;
+            return {
+              value: 'brettz9'
+            };
+          }
+        },
+        reply (msg) {
+          message = /** @type {string} */ (msg);
+        }
+      });
+
+      // eslint-disable-next-line promise/avoid-new -- Delay test
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          expect(checkedCommands.length).to.equal(6);
+          expect(optionName).to.equal('user');
+          expect(message).to.equal(
+            "I haven't seen @brettz9 lately."
           );
           resolve();
         });
