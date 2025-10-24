@@ -23,8 +23,7 @@
  */
 function getDialogflowAdapter ({
   doAIProcessing,
-  // Reenable when ready to test
-  /* c8 ignore next 4 */
+  /* c8 ignore next 4 -- Reenable when ready to test */
   projectAgentSessionPath = (projectID, sessionID) => {
     // This can be shaped differently
     return `${projectID}--${sessionID}`;
@@ -43,8 +42,7 @@ function getDialogflowAdapter ({
         this.keyFilename = keyFilename;
       }
 
-      // Reenable when ready to test
-      /* c8 ignore next 41 */
+      /* c8 ignore next 41 -- Reenable when ready to test */
       /**
        *
        * @param {object} cfg

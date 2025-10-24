@@ -148,9 +148,8 @@ async function getReader ({fs, settings}) {
       // Return the relevant section
       return file.chapters[index];
     }
-    /* c8 ignore next 4 */
-    // Unless a book has a missing chapter numbering, it seems this will be
-    //   unreachable
+    /* c8 ignore next 3 -- Unless a book has a missing chapter numbering,
+        it seems this will be unreachable */
     return "I know which work you're talking about, but I can't find that " +
       `section in it. Valid section numbers are from **1** to **${max}**.`;
   }
@@ -168,7 +167,7 @@ async function getReader ({fs, settings}) {
     // Disable this and test once other works are enabled besides the
     //   Hidden Words (which should not have any verses we could use
     //   exceeding our default `MAX_TEXT_LIMIT` setting)
-    /* c8 ignore next 22 */
+    /* c8 ignore next 22 -- Need texts besides Hidden Words */
     // If content string is greater than max limit
     while (str.length > l) {
       // Find the last position of space
@@ -220,7 +219,7 @@ async function getReader ({fs, settings}) {
       refName.toLowerCase() === 'hwp')
       ? `**${refNumber}. ${content.title}**\n`
       // Remove this and test once other works besides hwa/hwp enabled.
-      /* c8 ignore next */
+      /* c8 ignore next -- Need other words besides Hidden Words */
       : `**Chapter ${refNumber}, Para 1. ${content.title}**\n`;
 
     // Split text if large
@@ -251,7 +250,7 @@ async function getReader ({fs, settings}) {
         // Unreachable currently with the two Hidden Words options not
         //  having notes; remove this ignore and test when enabling
         //  other works that do have notes.
-        /* c8 ignore next 16 */
+        /* c8 ignore next 16 -- Hidden Words do not have notes */
         // If there are notes
         if (content.notes !== undefined && content.notes.length > 0) {
           let ntext = '';
@@ -376,7 +375,7 @@ async function getReader ({fs, settings}) {
       embedCreator(
         Discord, avatar, message, Number(index), refName, content
       );
-    /* c8 ignore next 6 */
+    /* c8 ignore next 6 -- See note below */
     // Unless a book has a missing chapter numbering, it seems this will be
     //   unreachable
     } else {

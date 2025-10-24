@@ -76,16 +76,15 @@ const getAdmin = ({
         {
           name: 'words',
           description: 'The words',
-          type: Discord.ApplicationCommandOptionType.String
+          type: Discord.ApplicationCommandOptionType.String,
+          required: true
         }
       ],
-      deleted: true, // Remove this line when functionality may be restored
       re: /!speak/iv,
       helpAdmin: {
         name: '!speak some words',
         value: 'Reads some words as speech'
       },
-      /* c8 ignore next 65 -- Todo: Incomplete */
       /**
        * @param {import('./getCommands.js').
        *   InputCommandOrSelectMenu} interaction
@@ -95,6 +94,8 @@ const getAdmin = ({
         if (!interaction.isCommand() || !interaction.inCachedGuild()) {
           return;
         }
+
+        const words = interaction.options.getString('words');
 
         await this.action?.({
           member: {
@@ -106,9 +107,10 @@ const getAdmin = ({
           author: interaction.user,
           content:
             `placeholder1 placeholder2 ${
-              interaction.options.get('words')?.value
+              words
             }`
         });
+        await interaction.reply(words ?? '');
       },
       /* eslint-disable require-await -- Easier */
       /**
@@ -138,9 +140,25 @@ const getAdmin = ({
         });
 
         const player = DiscordVoice.createAudioPlayer();
+        player.on('error', (error) => {
+          // eslint-disable-next-line no-console -- Debugging
+          console.error(`Error: ${error.message} with resource ${
+            // @ts-expect-error Ok
+            error.resource?.metadata?.title
+          }`);
+        });
+
+        // player.on('idle', () => {
+        //     // Optionally disconnect after speaking
+        //     // connection.destroy();
+        // });
+
+        const audioStream = discordTTS.getVoiceStream(words, {
+          lang: _.resolvedLocale.replace(/-US?/v, '')
+        });
 
         player.play(
-          DiscordVoice.createAudioResource(discordTTS.getVoiceStream(words))
+          DiscordVoice.createAudioResource(audioStream)
         );
         connection.subscribe(player);
 
@@ -318,7 +336,7 @@ const getAdmin = ({
           );
           try {
             return await guildCheckin();
-          /* c8 ignore next 4 */
+          /* c8 ignore next 4 -- How to simulate? */
           } catch (err) {
             // eslint-disable-next-line no-console -- CLI
             console.error('Error checking in', err);

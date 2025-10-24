@@ -18,8 +18,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
     let res;
     try {
       res = await wikiTools.bpGetToday();
-    // Shouldn't need catch
-    /* c8 ignore next 5 */
+    /* c8 ignore next 5 -- Shouldn't need catch */
     } catch (err) {
       // eslint-disable-next-line no-console -- CLI
       console.error('Error getting Bahaipedia Today', err);
@@ -78,8 +77,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
     let qr;
     try {
       qr = await wikiTools.wikiGetRandom(numResults, host, wikiPrefix);
-    // Shouldn't need catch
-    /* c8 ignore next 5 */
+    /* c8 ignore next 5 -- Shouldn't need catch */
     } catch (err) {
       // eslint-disable-next-line no-console -- CLI
       console.error('Error getting wiki random', err);
@@ -103,7 +101,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
           }](${res.url})**`,
           image: {
             url: res.img !== ''
-              /* c8 ignore next */
+              /* c8 ignore next -- Todo: Test? */
               ? res.img
               : ''
           }
@@ -142,8 +140,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
     let sr;
     try {
       sr = await wikiTools.wikiGetURL(kw, numResults, host, wikiPrefix);
-    // Errors should be caught internally by this method.
-    /* c8 ignore next 4 */
+    /* c8 ignore next 4 -- Errors should be caught internally by this method */
     } catch (err) {
       // eslint-disable-next-line no-console -- CLI
       console.error('Error getting', err);
@@ -171,7 +168,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
             }`,
           image: {
             url: res.img !== ''
-              /* c8 ignore next */
+              /* c8 ignore next -- Todo: Test? */
               ? res.img
               : ''
           }
@@ -293,8 +290,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
         await random(
           message, numResults, host, bstarString, sitename, wikiPrefix
         );
-      // Shouldn't err out.
-      /* c8 ignore next 5 */
+      /* c8 ignore next 5 -- Shouldn't err out */
       } catch (err) {
         // eslint-disable-next-line no-console -- CLI
         console.error('Error with random wiki', err);
@@ -309,8 +305,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
     ) {
       try {
         await todayInHistory(message, bstarString);
-      // Shouldn't err out.
-      /* c8 ignore next 5 */
+      /* c8 ignore next 5 -- Shouldn't err out */
       } catch (err) {
         // eslint-disable-next-line no-console -- CLI
         console.error('Error with today in history', err);
@@ -322,8 +317,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
           message, keywords, numResults, host,
           bstarString, sitename, wikiPrefix
         );
-      // Shouldn't err out.
-      /* c8 ignore next 5 */
+      /* c8 ignore next 5 -- Shouldn't err out */
       } catch (err) {
         // eslint-disable-next-line no-console -- CLI
         console.error('Error searching wiki', err);

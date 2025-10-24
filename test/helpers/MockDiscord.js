@@ -256,6 +256,7 @@ class MockDiscord {
         Discord.GatewayIntentBits.GuildMessages,
         Discord.GatewayIntentBits.MessageContent,
         Discord.GatewayIntentBits.GuildMembers,
+        Discord.GatewayIntentBits.GuildVoiceStates,
         Discord.GatewayIntentBits.GuildPresences
       ],
       partials: [Discord.Partials.GuildMember]

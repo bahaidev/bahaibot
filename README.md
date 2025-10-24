@@ -219,5 +219,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 1. Go through in-code to-dos
     1. Complete Bahá'í Writings commands (including Kitáb-i-Aqdas notes, Q&A,
         page numbers)
-    1. Fix `speak` and test
     1. complete i18nizing messages

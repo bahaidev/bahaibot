@@ -159,7 +159,7 @@ const registerCommands = async (client, localCommands, _) => {
 const bot = async ({
   checkins = false,
   locales = typeof navigator === 'undefined'
-    /* c8 ignore next 5 */
+    /* c8 ignore next 5 -- Browser */
     ? [defaultLocale]
     : [...navigator.languages.filter((locale) => {
       return supportedLocales.includes(locale);
@@ -198,12 +198,14 @@ const bot = async ({
 
   // Update local copy
   // Create an instance of a Discord client
-  const client = cl || /* c8 ignore next */ new Discord.Client({
+  const client = cl ||
+  /* c8 ignore next -- Mocks don't use */ new Discord.Client({
     intents: [
       Discord.GatewayIntentBits.Guilds,
       Discord.GatewayIntentBits.GuildMessages,
       Discord.GatewayIntentBits.MessageContent,
       Discord.GatewayIntentBits.GuildMembers,
+      Discord.GatewayIntentBits.GuildVoiceStates,
       Discord.GatewayIntentBits.GuildPresences
     ],
     partials: [Discord.Partials.GuildMember]

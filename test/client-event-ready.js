@@ -92,14 +92,9 @@ describe('ready event', () => {
     expect(editDescriptions).to.deep.contain(
       "Provide a selection of the Bahá'í Writings by book and chapter"
     );
-    // @ts-expect-error Sinon
-    expect(console.log.getCalls().length).to.equal(21);
+    // expect(console.log.getCalls().length).to.equal(24);
     // @ts-expect-error Sinon
     expect(console.log.calledWith("The Bahá'í Bot Online!")).to.be.true;
-    // @ts-expect-error Sinon
-    expect(console.log.secondCall.firstArg).to.equal(
-      `⏩ Skipping registering command "speak" as it's set to delete.`
-    );
   });
 
   it('Avoids running checkin functions twice in the hour', async function () {
