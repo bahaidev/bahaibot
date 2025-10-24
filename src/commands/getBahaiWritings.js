@@ -13,10 +13,9 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
 
   return /** @type {import('./getCommands.js').BotCommands} */ ({
     // Todo: Finish for other books
-    // Todo: Add for page, Q&A, note
     kitabIAqdas: {
       name: 'kitabiaqdas',
-      description: 'The Kitáb-i-Aqdas (Most Holy Book)',
+      description: 'The Kitáb-i-Aqdas (Most Holy Book) by paragraph number',
       options: [
         {
           name: 'paragraph-number',
@@ -39,6 +38,94 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
           `[Kitáb-i-Aqdas${verse ? `, paragraph ${verse}` : ''}](` +
           `https://bahai-library.com/writings/bahaullah/aqdas/kaall.html${
             verse ? `#par${verse}` : ''
+          })`
+        );
+      }
+    },
+    kitabIAqdasPage: {
+      name: 'kitabiaqdas-page',
+      description: 'The Kitáb-i-Aqdas (Most Holy Book) by page number',
+      options: [
+        {
+          name: 'page-number',
+          description: 'The page number',
+          type: Discord.ApplicationCommandOptionType.Integer
+        }
+      ],
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
+        if (interaction.isStringSelectMenu()) {
+          return;
+        }
+        const page = interaction.options.get('page-number')?.value;
+        await interaction.reply(
+          `[Kitáb-i-Aqdas${page ? `, page ${page}` : ''}](` +
+          `https://bahai-library.com/writings/bahaullah/aqdas/kaall.html${
+            page ? `#${page}` : ''
+          })`
+        );
+      }
+    },
+    kitabIAqdasQAndA: {
+      name: 'kitabiaqdas-qna',
+      description: 'The Kitáb-i-Aqdas (Most Holy Book) by Questions ' +
+        '& Answers number',
+      options: [
+        {
+          name: 'qna-number',
+          description: 'The Questions & Answers number',
+          type: Discord.ApplicationCommandOptionType.Integer
+        }
+      ],
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
+        if (interaction.isStringSelectMenu()) {
+          return;
+        }
+        const qna = interaction.options.get('qna-number')?.value;
+        await interaction.reply(
+          `[Kitáb-i-Aqdas Questions & Answers${qna ? `, no. ${qna}` : ''}](` +
+          `https://bahai-library.com/writings/bahaullah/aqdas/kaall.html${
+            qna ? `#q${qna}` : '#105'
+          })`
+        );
+      }
+    },
+    kitabIAqdasNote: {
+      name: 'kitabiaqdas-notes',
+      description: 'The Kitáb-i-Aqdas (Most Holy Book) by note number',
+      options: [
+        {
+          name: 'note-number',
+          description: 'The note number',
+          type: Discord.ApplicationCommandOptionType.Integer
+        }
+      ],
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
+        if (interaction.isStringSelectMenu()) {
+          return;
+        }
+        const note = interaction.options.get('note-number')?.value;
+        await interaction.reply(
+          `[Kitáb-i-Aqdas Notes${note ? `, no. ${note}` : ''}](` +
+          `https://bahai-library.com/writings/bahaullah/aqdas/kaall.html${
+            note ? `#note${note}` : '#165'
           })`
         );
       }
