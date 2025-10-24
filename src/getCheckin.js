@@ -136,7 +136,7 @@ function getCheckin ({
       // eslint-disable-next-line no-console -- CLI
       console.log(
         _('lastGreeting', {
-          relativeTime: istr(Math.floor(timedeltaSeconds)),
+          relativeTime: istr(_.resolvedLocale, Math.floor(timedeltaSeconds)),
           channels: channelList
         })
       );
@@ -179,7 +179,7 @@ function getCheckin ({
             /** @type {string} */ (_('uptimeGreet', {
               greet,
               now: now.toString(),
-              uptime: istr(Math.floor(uptime / 1000))
+              uptime: istr(_.resolvedLocale, Math.floor(uptime / 1000))
             }))
           ); // Check in
         } else {

@@ -254,7 +254,7 @@ const getSocialInfo = ({
                 Discord.userMention(sname)
               } is now ${stat}, and was last seen in ${
                 lastChannel
-              } ${istr(timedelta / 1000)} ago.`
+              } ${istr(_.resolvedLocale, timedelta / 1000)} ago.`
             );
           } else {
             const stat = (

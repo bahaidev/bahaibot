@@ -8,6 +8,9 @@ import getCheckin from './getCheckin.js';
 import {greets, happies} from './messages/messages.js';
 import * as DiscordConstants from './messages/DiscordConstants.js';
 import areCommandsDifferent from './utils/areCommandsDifferent.js';
+import {
+  ensureDurationFormatPolyfill
+} from './utils/ensureDurationFormatPolyfill.js';
 
 /**
  * @callback MessageListener
@@ -254,6 +257,8 @@ const bot = async ({
     localesBasePath: 'src',
     locales
   });
+
+  await ensureDurationFormatPolyfill();
 
   /**
    * @type {GetLocalizedSetting}

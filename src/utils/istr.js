@@ -4,45 +4,52 @@
 /**
  * Given time in seconds, creates pretty output in days, hours,
  *   minutes, and seconds.
- * @todo See about replacing with
- *   {@link https://github.com/tc39/proposal-intl-duration-format|Intl.DurationFormat}
- *   once it may be standardized and/or better polyfilled.
- * This should also be i18nized but should be able to get that easier by
- *   replacing with `Intl.DurationFormat` when available.
- * @param {Float} seconds
+ * @param {string} locale
+ * @param {Float} secs
  * @returns {string}
  */
-function istr (seconds) {
-  let sec = seconds;
-  const cid = Math.floor(sec / 86400);
-  sec %= 86400;
-  const cih = Math.floor(sec / 3600);
-  sec %= 3600;
-  const cim = Math.floor(sec / 60);
-  const cis = Math.floor(sec % 60);
-
-  let timestr = '';
-  if (Math.floor(seconds) === 0) {
-    timestr = '0s';
-  } else {
-    const noDays = cid === 0;
-    const noHours = cih === 0;
-    const noMinutes = cim === 0;
-    const noSeconds = cis === 0;
-
-    timestr += noDays ? '' : `${cid}d`;
-    timestr += (noDays || (noHours && noMinutes && noSeconds)) ? '' : ', ';
-    timestr += noHours ? '' : `${cih}h`;
-    timestr += (
-      noHours || (noMinutes && noSeconds)
-    )
-      ? ''
-      : ', ';
-    timestr += noMinutes ? '' : `${cim}m`;
-    timestr += (noMinutes || noSeconds) ? '' : ', ';
-    timestr += noSeconds ? '' : `${cis}s`;
+function istr (locale, secs) {
+  if (secs === 0) {
+    return '0s';
   }
-  return timestr;
+
+  let sec = secs;
+  const days = Math.floor(sec / 86400);
+  sec %= 86400;
+  const hours = Math.floor(sec / 3600);
+  sec %= 3600;
+  const minutes = Math.floor(sec / 60);
+  const seconds = Math.floor(sec % 60);
+
+  // Could extend to write for the following as well:
+  // years
+  // months
+  // weeks
+  // milliseconds
+  // microseconds
+  // nanoseconds
+
+  const format = {
+    days,
+    hours,
+    minutes,
+    seconds
+  };
+
+  return new Intl.DurationFormat(locale, {
+    style: 'narrow'
+  }).formatToParts(format).map(({type, value, unit}) => {
+    // We use `formatToParts` as we otherwise don't get the comma we want
+    if (type === 'literal' && value === ' ') {
+      return {
+        type,
+        value: ', '
+      };
+    }
+    return {type, value, unit};
+  }).reduce((str, {value}) => {
+    return str + value;
+  }, '');
 }
 
 export default istr;
