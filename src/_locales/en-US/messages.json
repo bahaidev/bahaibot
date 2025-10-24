@@ -53,6 +53,12 @@
     },
     "routerResponse": {
       "message": "Router response:"
+    },
+    "no_application_commands_found": {
+      "message": "No application commands found"
+    },
+    "not_in_a_voice_channel": {
+      "message": "Message member not in a voice channel with `channel`"
     }
   }
 }

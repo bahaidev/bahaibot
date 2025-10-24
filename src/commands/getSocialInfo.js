@@ -113,7 +113,7 @@ const getSocialInfo = ({
           (m) => m.presence?.status !== 'offline'
         ).size;
 
-        /* c8 ignore next 33 -- Todo: complete with testing */
+        /* c8 ignore next 33 -- Todo: Reenable when testing again */
         const allAdmins = guild?.members.cache.filter((m) => {
           return (
             m.roles.cache.some((r) => {

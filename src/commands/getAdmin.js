@@ -128,7 +128,7 @@ const getAdmin = ({
         const channel = message.member?.voice.channel;
         if (!channel) {
           // eslint-disable-next-line no-console -- CLI
-          console.log('Message member not in a voice channel with `channel`');
+          console.log(_('not_in_a_voice_channel'));
           return;
         }
         const connection = DiscordVoice.joinVoiceChannel({

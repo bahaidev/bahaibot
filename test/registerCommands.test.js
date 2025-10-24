@@ -1,13 +1,18 @@
 import {expect} from 'chai';
 import {registerCommands} from '../src/bot.js';
 
+const _ = () => {
+  return 'No application commands found';
+};
+
 describe('registerCommands', function () {
   it('handles missing application commands gracefully', async function () {
     const client = {application: undefined};
     const res = await registerCommands(
       // @ts-expect-error Deliberately bad argument
       client,
-      {}
+      {},
+      _
     );
     expect(res).to.equal(undefined);
   });
@@ -40,7 +45,8 @@ describe('registerCommands', function () {
       await registerCommands(
         // @ts-expect-error Just mocking what we need
         client,
-        localCommands
+        localCommands,
+        _
       );
       expect(created.length).to.equal(1);
       expect(created[0].name).to.equal('test');
@@ -71,7 +77,8 @@ describe('registerCommands', function () {
     await registerCommands(
       // @ts-expect-error Just mocking what we need
       client,
-      localCommands
+      localCommands,
+      _
     );
     expect(created.length).to.equal(0);
   });
@@ -119,7 +126,8 @@ describe('registerCommands', function () {
     await registerCommands(
       // @ts-expect-error Just mocking what we need
       client,
-      localCommands
+      localCommands,
+      _
     );
     expect(edits.length).to.equal(1);
     expect(edits[0].payload.description).to.equal('new');
@@ -163,7 +171,8 @@ describe('registerCommands', function () {
     await registerCommands(
       // @ts-expect-error Just mocking what we need
       client,
-      localCommands
+      localCommands,
+      _
     );
     expect(deletes.length).to.equal(1);
     expect(deletes[0]).to.equal('1');

@@ -385,7 +385,7 @@ describe('guildCheckin (FYI)', () => {
       const {toString: toStr} = Number.prototype;
       // eslint-disable-next-line no-extend-native -- Needed to spy
       Number.prototype.toString = function () {
-        if (this.valueOf() !== 1755) {
+        if (!new Error('error').stack?.includes('file-fetch')) {
           // eslint-disable-next-line @stylistic/max-len -- Long
           // eslint-disable-next-line no-extend-native -- Needed to finish spying
           Number.prototype.toString = toStr;

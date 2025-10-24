@@ -74,12 +74,13 @@ const supportedLocales = [
  * @see Adapted from {@link https://github.com/notunderctrl/discordjs-v14-series/tree/master/07%20-%20Command%20Handler}
  * @param {import('discord.js').Client} client
  * @param {import('./commands/getCommands.js').BotCommands} localCommands
+ * @param {import('intl-dom').I18NCallback} _
  */
-const registerCommands = async (client, localCommands) => {
+const registerCommands = async (client, localCommands, _) => {
   const applicationCommands = await client.application?.commands;
   if (!applicationCommands) {
     // eslint-disable-next-line no-console -- CLI
-    console.log('No application commands found');
+    console.log(_('no_application_commands_found'));
     return;
   }
   await applicationCommands.fetch();
@@ -320,7 +321,7 @@ const bot = async ({
     // eslint-disable-next-line no-console -- CLI
     console.log(_('BahaiBotOnline'));
 
-    await registerCommands(client, botCommands);
+    await registerCommands(client, botCommands, _);
 
     // To run immediately (as for testing), uncomment:
     // guildCheckin();
@@ -355,7 +356,7 @@ const bot = async ({
         //   recurring within the 8am EST (12pm UTC) window)
         guildCheckin();
       } /* else {
-        console.log('FAILED check');
+        // console.log('FAILED check');
       } */
       // Keep normal supplied interval (`fiftyMinutesInMilliseconds`); we could
       //   also just return `undefined`
