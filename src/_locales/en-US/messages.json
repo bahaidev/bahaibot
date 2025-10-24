@@ -59,6 +59,21 @@
     },
     "not_in_a_voice_channel": {
       "message": "Message member not in a voice channel with `channel`"
+    },
+    "user_command_issued_by": {
+      "message": "Users command issued by {username}."
+    },
+    "seen_command_issued_by": {
+      "message": "Seen command issued by {username}."
+    },
+    "deleted_command": {
+      "message": "🗑 Deleted command \"{name}\"."
+    },
+    "edited_command": {
+      "message": "🔁 Edited command \"{name}\"."
+    },
+    "registered_command": {
+      "message": "👍 Registered command \"{name}.\""
     }
   }
 }

@@ -64,10 +64,11 @@ async function getLastUserMessage (guild, user, limit = 100) {
 * @param {string[]} cfg.ADMIN_ROLES
 * @param {import('discord.js').Client} cfg.client
 * @param {import('discord.js')} cfg.Discord
+* @param {import('intl-dom').I18NCallback} cfg._
 * @returns {import('./getCommands.js').BotCommands}
 */
 const getSocialInfo = ({
-  ADMIN_ROLES, client, Discord
+  ADMIN_ROLES, client, Discord, _
 }) => {
   return {
     users: {
@@ -153,7 +154,9 @@ const getSocialInfo = ({
         );
 
         // eslint-disable-next-line no-console -- CLI
-        console.log(`Users command issued by ${message.author.username}.`);
+        console.log(_('user_command_issued_by', {
+          username: message.author.username
+        }));
       }
     },
     seen: {
@@ -279,7 +282,9 @@ const getSocialInfo = ({
         message.channel.send(replies.join('\n'));
 
         // eslint-disable-next-line no-console -- CLI
-        console.log(`Seen command issued by ${message.author.username}.`);
+        console.log(_('seen_command_issued_by', {
+          username: message.author.username
+        }));
       }
     }
   };

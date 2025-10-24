@@ -112,7 +112,7 @@ const getCommands = async function ({
 
   // eslint-disable-next-line @stylistic/max-len -- Long
   const objs = await Promise.all(/** @type {([string, () => BotCommands])[]} */ ([
-    ['socialInfo', () => getSocialInfo({ADMIN_ROLES, client, Discord})],
+    ['socialInfo', () => getSocialInfo({ADMIN_ROLES, client, _, Discord})],
     [
       'bahaiWritings',
       () => getBahaiWritings({fs, settings, client, Discord})

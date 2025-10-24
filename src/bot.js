@@ -102,7 +102,7 @@ const registerCommands = async (client, localCommands, _) => {
       if (localCommand.deleted) {
         await applicationCommands.delete(existingCommand.id);
         // eslint-disable-next-line no-console -- CLI
-        console.log(`🗑 Deleted command "${name}".`);
+        console.log(_('deleted_command', {name}));
         return;
       }
 
@@ -113,7 +113,7 @@ const registerCommands = async (client, localCommands, _) => {
         });
 
         // eslint-disable-next-line no-console -- CLI
-        console.log(`🔁 Edited command "${name}".`);
+        console.log(_('edited_command', {name}));
       }
     } else {
       if (localCommand.deleted) {
@@ -131,7 +131,7 @@ const registerCommands = async (client, localCommands, _) => {
       });
 
       // eslint-disable-next-line no-console -- CLI
-      console.log(`👍 Registered command "${name}."`);
+      console.log(_('registered_command', {name}));
     }
   }));
 };
