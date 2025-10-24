@@ -181,7 +181,6 @@ const bot = async ({
    * @type {GetSettings}
    */
   getSettings: defaultGetSettings,
-  /* c8 ignore next -- Todo: */
   getPath = (path) => path,
   // numberOfCommands = 1,
   commandInterval = 2000,

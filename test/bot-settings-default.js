@@ -43,4 +43,26 @@ describe('Bot', function () {
     );
     expect(settings).to.have.property('token');
   });
+
+  it('getPath default', async function () {
+    const {system, getSettings} = await bot({
+      fetch,
+      i18n,
+      striptags: (str) => stripHtml(str).result,
+      Discord,
+      fs,
+      // @ts-expect-error Just a mock
+      dialogflow: getDialogflowAdapter({
+        // @ts-expect-error Just a mock
+        doAIProcessing () {
+          //
+        }
+      })
+    });
+
+    const settings = getSettings?.(
+      /** @type {import('../src/discordBot.js').SettingsFile} */ (system)
+    );
+    expect(settings).to.have.property('token');
+  });
 });

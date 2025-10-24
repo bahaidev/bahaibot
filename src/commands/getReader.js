@@ -233,12 +233,12 @@ async function getReader ({fs, settings}) {
       const embed = new Discord.EmbedBuilder();
 
       // Set colors and data
-      /* c8 ignore next -- Todo */
+      /* c8 ignore next -- Set in settings */
       embed.setColor(colorBorder ?? null);
       embed.setAuthor({
         name: `${library.list[library.index[refName]].title} by ` +
         `${library.list[library.index[refName]].author}`,
-        /* c8 ignore next -- Todo */
+        /* c8 ignore next -- A guard as is apparently present */
         iconURL: avatar ?? undefined
       });
 
