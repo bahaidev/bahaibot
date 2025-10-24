@@ -1,7 +1,8 @@
 // Todo: i18nize messages within `getBahaiWikis.js`, `getReader.js`,
-//   `messages.js`, and the command files.
+//        and `messages.js`.
 // Todo: i18nize behavior of `getWikiTools.js`, `getBahaiWikis.js`
-// Todo: i18nize `message.channel.send()` and `interaction.reply()`
+// Todo: i18nize `message.channel.send()` and `interaction.reply()` (the
+//        command files)
 
 import getSocialInfo from './getSocialInfo.js';
 import getBahaiWritings from './getBahaiWritings.js';
