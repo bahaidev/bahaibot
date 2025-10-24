@@ -30,12 +30,16 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
         if (interaction.isStringSelectMenu()) {
           return;
         }
         const verse = interaction.options.get('paragraph-number')?.value;
         await interaction.reply(
-          `[Kitáb-i-Aqdas${verse ? `, paragraph ${verse}` : ''}](https://bahai-library.com/writings/bahaullah/aqdas/kaall.html#par${verse ?? ''})`
+          `[Kitáb-i-Aqdas${verse ? `, paragraph ${verse}` : ''}](` +
+          `https://bahai-library.com/writings/bahaullah/aqdas/kaall.html${
+            verse ? `#par${verse}` : ''
+          })`
         );
       }
     },
@@ -96,9 +100,12 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
         if (!interaction.isChatInputCommand()) {
           return;
         }
+
+        /* c8 ignore next 2 -- Required so fallback should not be necessary */
         const book = interaction.options.getString('book') ?? '';
         const chapter = interaction.options.getInteger('chapter') ?? '';
         await this.action?.({
@@ -150,6 +157,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
         if (!interaction.inCachedGuild()) {
           return;
         }

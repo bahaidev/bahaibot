@@ -299,7 +299,6 @@ describe('`interactionCreate`', function () {
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
-      /** @type {string} */
       let optionName = '';
 
       /** @type {string} */

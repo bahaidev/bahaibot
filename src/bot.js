@@ -374,7 +374,6 @@ const bot = async ({
       //   return;
       // }
       const message = /** @type {import('discord.js').Message<true>} */ (msg);
-
       // Collect userID
       // Ensure that the bot is being messaged
       if (client.user && message.mentions.has(client.user)) {

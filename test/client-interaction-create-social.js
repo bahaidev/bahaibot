@@ -13,7 +13,6 @@ describe('`interactionCreate` social', function () {
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
-      /** @type {string} */
       let optionName = '';
 
       /** @type {string} */
@@ -72,7 +71,6 @@ describe('`interactionCreate` social', function () {
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
-      /** @type {string} */
       let optionName = '';
 
       /** @type {string} */
@@ -202,7 +200,6 @@ describe('`interactionCreate` social', function () {
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
-      /** @type {string} */
       let optionName = '';
 
       /** @type {string} */
@@ -339,7 +336,6 @@ describe('`interactionCreate` social', function () {
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
-      /** @type {string} */
       let optionName = '';
 
       /** @type {string} */
@@ -470,7 +466,6 @@ describe('`interactionCreate` social', function () {
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
-      /** @type {string} */
       let optionName = '';
 
       /** @type {string} */
@@ -633,7 +628,6 @@ describe('`interactionCreate` social', function () {
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
-      /** @type {string} */
       let optionName = '';
 
       /** @type {string} */

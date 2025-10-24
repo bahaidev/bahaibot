@@ -133,7 +133,6 @@ describe('`interactionCreate` Bahá\'í wiki', function () {
       /** @type {import('discord.js').InteractionReplyOptions} */
       let message = {};
 
-      /** @type {string} */
       let optionName = '';
 
       // @ts-expect-error Just mocking what we need

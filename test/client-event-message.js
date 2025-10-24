@@ -248,26 +248,165 @@ describe('Client event (message)', function () {
     }
   );
 
-  it.skip(
-    'Passes bracketed syntax command (`notMentioned` without a check)',
+  /* eslint-disable jsdoc/reject-any-type -- Arbitrary */
+  /**
+   * @typedef {any} AnyType
+   */
+  /* eslint-enable jsdoc/reject-any-type -- Arbitrary */
+
+  it(
+    'Passes bracketed syntax command (`notMentioned`)',
     async function () {
-      const discord = new MockDiscord({
-        messageContent: 'Here is a bracketed link: [[God]].'
+      const discord = new MockDiscord();
+
+      /** @type {Record<string, (...args: AnyType[]) => void>} */
+      const handlers = {};
+      const {client} = await bot({client: {
+        // @ts-expect-error Just mock what we need
+        on (ev, handler) {
+          handlers[ev] = handler;
+        },
+        // @ts-expect-error Just mock what we need
+        emit (ev, ...args) {
+          handlers[ev](...args);
+        },
+        // @ts-expect-error Just mock what we need
+        login () {
+          //
+        }
+      }});
+
+      const message = discord.mockMessage({
+        content: 'Here is a bracketed link: [[God]].'
       });
 
-      // @ts-expect-error Don't need a full mock
-      const {client} = await bot({client: discord.getClient()});
-
-      const message = discord.getMessage();
-
-      this.sinon.spy(message, 'react');
+      this.sinon.spy(message.channel, 'send');
 
       // console.log('message', message);
       client.emit('messageCreate', message);
 
       await setTimeout();
       // @ts-expect-error Sinon
-      expect(message.react.firstCall.firstArg).to.equal('☕');
+      expect(message.channel.send.firstCall.firstArg.content).to.equal(
+        '[God](https://bahaipedia.org/God)'
+      );
+    }
+  );
+
+  it(
+    'Passes b9 bracketed syntax command (`notMentioned`)',
+    async function () {
+      const discord = new MockDiscord();
+
+      /** @type {Record<string, (...args: AnyType[]) => void>} */
+      const handlers = {};
+      const {client} = await bot({client: {
+        // @ts-expect-error Just mock what we need
+        on (ev, handler) {
+          handlers[ev] = handler;
+        },
+        // @ts-expect-error Just mock what we need
+        emit (ev, ...args) {
+          handlers[ev](...args);
+        },
+        // @ts-expect-error Just mock what we need
+        login () {
+          //
+        }
+      }});
+
+      const message = discord.mockMessage({
+        content: 'Here is a bracketed link: [[b9:God]].'
+      });
+
+      this.sinon.spy(message.channel, 'send');
+
+      // console.log('message', message);
+      client.emit('messageCreate', message);
+
+      await setTimeout();
+      // @ts-expect-error Sinon
+      expect(message.channel.send.firstCall.firstArg.content).to.equal(
+        '[God](https://bahai9.com/wiki/God)'
+      );
+    }
+  );
+
+  it(
+    'Passes bm bracketed syntax command (`notMentioned`)',
+    async function () {
+      const discord = new MockDiscord();
+
+      /** @type {Record<string, (...args: AnyType[]) => void>} */
+      const handlers = {};
+      const {client} = await bot({client: {
+        // @ts-expect-error Just mock what we need
+        on (ev, handler) {
+          handlers[ev] = handler;
+        },
+        // @ts-expect-error Just mock what we need
+        emit (ev, ...args) {
+          handlers[ev](...args);
+        },
+        // @ts-expect-error Just mock what we need
+        login () {
+          //
+        }
+      }});
+
+      const message = discord.mockMessage({
+        content: "Here is a bracketed link: [[bm:Bahá'u'lláh]]."
+      });
+
+      this.sinon.spy(message.channel, 'send');
+
+      // console.log('message', message);
+      client.emit('messageCreate', message);
+
+      await setTimeout();
+      // @ts-expect-error Sinon
+      expect(message.channel.send.firstCall.firstArg.content).to.equal(
+        "[Bahá'u'lláh](https://bahai.media/Category:Bah%C3%A1'u'll%C3%A1h)"
+      );
+    }
+  );
+
+  it(
+    'Passes bw bracketed syntax command (`notMentioned`)',
+    async function () {
+      const discord = new MockDiscord();
+
+      /** @type {Record<string, (...args: AnyType[]) => void>} */
+      const handlers = {};
+      const {client} = await bot({client: {
+        // @ts-expect-error Just mock what we need
+        on (ev, handler) {
+          handlers[ev] = handler;
+        },
+        // @ts-expect-error Just mock what we need
+        emit (ev, ...args) {
+          handlers[ev](...args);
+        },
+        // @ts-expect-error Just mock what we need
+        login () {
+          //
+        }
+      }});
+
+      const message = discord.mockMessage({
+        content: 'Here is a bracketed link: [[bw:Star of the West]].'
+      });
+
+      this.sinon.spy(message.channel, 'send');
+
+      // console.log('message', message);
+      client.emit('messageCreate', message);
+
+      await setTimeout();
+      // @ts-expect-error Sinon
+      expect(message.channel.send.firstCall.firstArg.content).to.equal(
+        '[Star of the West](https://bahai.works/Star%20of%20the%20West)'
+      );
     }
   );
 

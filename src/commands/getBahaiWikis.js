@@ -576,6 +576,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
        */
       async action (message) {
         const prefixRegex = /^(?<prefix>b9|bm|bw|bp):/v;
+        /* c8 ignore next 2 -- TS */
         const {bpText = ''} = message.content.match(bpLink.re)?.groups ?? {};
         const {prefix = ''} = bpText.match(prefixRegex)?.groups ?? {};
         const wikiText = bpText.replace(prefixRegex, '');
@@ -591,6 +592,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
         await message.channel.send({
           content
         });
+      /* c8 ignore next -- c8 bug? */
       }
     }
   };
