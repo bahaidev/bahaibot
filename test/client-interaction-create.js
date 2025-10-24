@@ -3,6 +3,7 @@
 import {setTimeout} from 'node:timers/promises';
 import {expect} from 'chai';
 import MockDiscord from './helpers/MockDiscord.js';
+import commandFinished from './helpers/commandFinished.js';
 import bot from '../src/discordBot.js';
 import * as DiscordConstants from '../src/messages/DiscordConstants.js';
 
@@ -161,7 +162,7 @@ describe('`interactionCreate`', function () {
         }
       });
 
-      await setTimeout(3000);
+      await commandFinished(client);
       expect(/** @type {import('discord.js').APIEmbed} */ (
         reply.embeds?.[0]
       )?.description).includes(
@@ -234,7 +235,7 @@ describe('`interactionCreate`', function () {
         }
       });
 
-      await setTimeout(3000);
+      await commandFinished(client);
       expect(checkedCommands.length).to.equal(6);
       expect(/** @type {import('discord.js').APIEmbed} */ (
         reply

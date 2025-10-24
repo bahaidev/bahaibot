@@ -217,6 +217,5 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
     of user for full context of the Writings and support speech synthesis
 
 1. Go through in-code to-dos
-    1. Complete Bahá'í Writings commands (including Kitáb-i-Aqdas notes, Q&A,
-        page numbers)
+    1. Complete Bahá'í Writings commands
     1. complete i18nizing messages

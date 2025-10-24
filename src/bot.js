@@ -309,6 +309,7 @@ const bot = async ({
     }
 
     await commandObject?.slashCommand?.(interaction);
+    client.emit('bahaibot:command-finished');
   });
 
   /**

@@ -1,6 +1,5 @@
-// eslint-disable-next-line no-shadow -- Ok
-import {setTimeout} from 'node:timers/promises';
 import {expect} from 'chai';
+import commandFinished from './helpers/commandFinished.js';
 import MockDiscord from './helpers/MockDiscord.js';
 import bot from '../src/discordBot.js';
 import * as DiscordConstants from '../src/messages/DiscordConstants.js';
@@ -76,7 +75,7 @@ describe('`interactionCreate` Bahá\'í wiki', function () {
         }
       });
 
-      await setTimeout(3000);
+      await commandFinished(client);
       expect(checkedCommands.length).to.equal(5);
       expect(message.content).to.equal(
         'Here is the result of your query.'
@@ -174,7 +173,7 @@ describe('`interactionCreate` Bahá\'í wiki', function () {
         }
       });
 
-      await setTimeout(3000);
+      await commandFinished(client);
       expect(checkedCommands.length).to.equal(6);
       expect(optionName).to.equal('keywords');
       expect(message.content).to.equal(
