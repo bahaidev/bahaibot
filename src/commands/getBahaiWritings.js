@@ -14,7 +14,8 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
 
   const ret = /** @type {import('./getCommands.js').BotCommands} */ ({
     // NOTE: If we need to remove these, we can add `deleted` property to them,
-    //        or invoke `client.application.commands.set([]);`
+    //        or invoke `client.application.commands.set([]);`, bearing in mind
+    //        the 200 day Discord limit on new commands
     ...searchEngines.filter(({keyword}) => {
       // Remove those we already have below
       return !['ka', 'kap', 'kan', 'kaq'].includes(keyword);
