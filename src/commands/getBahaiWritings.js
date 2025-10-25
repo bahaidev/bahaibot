@@ -1,4 +1,5 @@
 import getReader from './getReader.js';
+import {searchEngines} from './searchEngines.js';
 
 /**
  * @param {object} cfg
@@ -11,8 +12,59 @@ import getReader from './getReader.js';
 const getBahaiWritings = async ({fs, settings, client, Discord}) => {
   const reader = await getReader({fs, settings});
 
-  return /** @type {import('./getCommands.js').BotCommands} */ ({
-    // Todo: Finish for other books
+  const ret = /** @type {import('./getCommands.js').BotCommands} */ ({
+    // NOTE: If we need to remove these, we can add `deleted` property to them,
+    //        or invoke `client.application.commands.set([]);`
+    ...searchEngines.filter(({keyword}) => {
+      // Remove those we already have below
+      return !['ka', 'kap', 'kan', 'kaq'].includes(keyword);
+    }).slice(
+      // Discord has a limit on number of shortcuts
+      0, 70
+    ).reduce((obj, {short_name: shortName, keyword, url}) => {
+      const simplifiedName = shortName.
+        toLowerCase().
+        normalize('NFD').replaceAll(/\p{Mark}/gv, '').
+        replaceAll(/\W/gv, '-').
+        // Max length per Discord
+        slice(0, 32);
+      return {
+        ...obj,
+        [simplifiedName]: {
+          name: simplifiedName,
+          description: `${shortName} (shortcut: ${keyword})`,
+          options: [
+            {
+              name: 'search-term-or-number',
+              description: 'The number or search term',
+              type: Discord.ApplicationCommandOptionType.String
+            }
+          ],
+          /**
+           * @param {import('./getCommands.js').
+           *   InputCommandOrSelectMenu} interaction
+           * @returns {Promise<void>}
+           */
+          async slashCommand (interaction) {
+            /* c8 ignore next 3 -- TS guard */
+            if (interaction.isStringSelectMenu()) {
+              return;
+            }
+            const verse = interaction.options.getString(
+              'search-term-or-number'
+            );
+            await interaction.reply(
+              `[${shortName}${verse ? `, ${verse}` : ''}]` +
+              `(${
+                verse
+                  ? url.replaceAll('%s', encodeURIComponent(verse) ?? '')
+                  : ''
+              })`
+            );
+          }
+        }
+      };
+    }, {}),
     kitabIAqdas: {
       name: 'kitabiaqdas',
       description: 'The Kitáb-i-Aqdas (Most Holy Book) by paragraph number',
@@ -295,6 +347,10 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       }
     }
   });
+
+  console.log('ret', ret);
+
+  return ret;
 };
 
 export default getBahaiWritings;
