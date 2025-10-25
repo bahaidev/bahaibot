@@ -97,6 +97,7 @@ const system = JSON.parse(
 );
 const {webhookURL} = getSettings(system);
 
+/* c8 ignore next 26 -- Emergencies only */
 const notifyDiscordChannel = async () => {
   if (webhookURL) {
     const webhookClient = new Discord.WebhookClient({
