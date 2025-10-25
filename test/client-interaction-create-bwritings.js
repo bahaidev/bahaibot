@@ -6,23 +6,19 @@ import bot from '../src/discordBot.js';
 
 describe('`interactionCreate` Bahá\'í Writings', function () {
   it(
-    '`interactionCreate` finds a ChatInputCommand (kitabiaqdas)',
+    '`interactionCreate` finds an autocomplete (works-by-bahaullah-or-the-bab)',
     async function () {
       const discord = new MockDiscord();
       // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
-
-      let message = '';
-
-      let optionName = '';
-
+      let filteredChoicesRan = false;
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
-        commandName: 'kitabiaqdas',
+        commandName: 'works-by-bahaullah-or-the-bab',
         isChatInputCommand () {
           checkedCommands.push(true);
-          return true;
+          return false;
         },
         isStringSelectMenu () {
           checkedCommands.push(true);
@@ -30,49 +26,50 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
         },
         isAutocomplete () {
           checkedCommands.push(true);
-          return false;
-        },
-        user: {
-          username: 'brettz9',
-          id: '410259427770499072'
+          return true;
         },
         options: {
-          get (optName) {
-            optionName = optName;
+          getFocused () {
+            return 'gwbs';
+          }
+        },
+        respond (filteredChoices) {
+          expect(filteredChoices.length).to.equal(1);
+          filteredChoicesRan = true;
+        }
+      });
+
+      await commandFinished(client);
+      expect(checkedCommands.length).to.equal(5);
+      expect(filteredChoicesRan).to.be.true;
+    }
+  );
+
+  it(
+    '`interactionCreate` finds a ChatInputCommand (works-by-abdul-baha)',
+    async function () {
+      const discord = new MockDiscord();
+      // @ts-expect-error Don't need a full mock
+      const {client} = await bot({client: discord.getClient()});
+      const checkedCommands = [];
+
+      /** @type {import('discord.js').InteractionReplyOptions} */
+      let message = {};
+
+      // @ts-expect-error Just mocking what we need
+      client.emit('interactionCreate', {
+        commandName: 'works-by-abdul-baha',
+        user: {username: 'abc'},
+        options: {
+          getString () {
+            return '15';
+          },
+          get () {
             return {
-              value: 5
+              value: 'abl'
             };
           }
         },
-        reply (msg) {
-          message = /** @type {string} */ (msg);
-        }
-      });
-
-      await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
-      expect(optionName).to.equal('paragraph-number');
-      expect(message).to.equal(
-        '[Kitáb-i-Aqdas, paragraph 5](https://bahai-library.com/writings/bahaullah/aqdas/kaall.html#par5)'
-      );
-    }
-  );
-
-  it(
-    '`interactionCreate` finds a ChatInputCommand (kitabiaqdas no verse)',
-    async function () {
-      const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
-      const {client} = await bot({client: discord.getClient()});
-      const checkedCommands = [];
-
-      let message = '';
-
-      let optionName = '';
-
-      // @ts-expect-error Just mocking what we need
-      client.emit('interactionCreate', {
-        commandName: 'kitabiaqdas',
         isChatInputCommand () {
           checkedCommands.push(true);
           return true;
@@ -85,98 +82,52 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
           checkedCommands.push(true);
           return false;
         },
-        user: {
-          username: 'brettz9',
-          id: '410259427770499072'
+        inCachedGuild () {
+          checkedCommands.push(true);
+          return true;
         },
+        reply (msg) {
+          // eslint-disable-next-line @stylistic/max-len -- Long
+          message = /** @type {import('discord.js').InteractionReplyOptions} */ (
+            msg
+          );
+        }
+      });
+
+      await commandFinished(client);
+      expect(checkedCommands.length).to.equal(5);
+      expect(message).to.equal(
+        '[\'Abdu\'l-Baha in London, 15](https://bahai-library.com/writings/abdulbaha/abl/abdulbahalondon.html#15)'
+      );
+    }
+  );
+
+  it(
+    '`interactionCreate` finds a ChatInputCommand ' +
+      '(works-by-abdul-baha, no selection)',
+    async function () {
+      const discord = new MockDiscord();
+      // @ts-expect-error Don't need a full mock
+      const {client} = await bot({client: discord.getClient()});
+      const checkedCommands = [];
+
+      /** @type {import('discord.js').InteractionReplyOptions} */
+      let message = {};
+
+      // @ts-expect-error Just mocking what we need
+      client.emit('interactionCreate', {
+        commandName: 'works-by-abdul-baha',
+        user: {username: 'abc'},
         options: {
-          get (optName) {
-            optionName = optName;
+          getString () {
             return undefined;
-          }
-        },
-        reply (msg) {
-          message = /** @type {string} */ (msg);
-        }
-      });
-
-      await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
-      expect(optionName).to.equal('paragraph-number');
-      expect(message).to.equal(
-        '[Kitáb-i-Aqdas](https://bahai-library.com/writings/bahaullah/aqdas/kaall.html)'
-      );
-    }
-  );
-
-  it(
-    '`interactionCreate` finds a ChatInputCommand (kitabiaqdas-page)',
-    async function () {
-      const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
-      const {client} = await bot({client: discord.getClient()});
-      const checkedCommands = [];
-
-      let message = '';
-
-      let optionName = '';
-
-      // @ts-expect-error Just mocking what we need
-      client.emit('interactionCreate', {
-        commandName: 'kitabiaqdas-page',
-        isChatInputCommand () {
-          checkedCommands.push(true);
-          return true;
-        },
-        isStringSelectMenu () {
-          checkedCommands.push(true);
-          return false;
-        },
-        isAutocomplete () {
-          checkedCommands.push(true);
-          return false;
-        },
-        user: {
-          username: 'brettz9',
-          id: '410259427770499072'
-        },
-        options: {
-          get (optName) {
-            optionName = optName;
+          },
+          get () {
             return {
-              value: 5
+              value: 'abl'
             };
           }
         },
-        reply (msg) {
-          message = /** @type {string} */ (msg);
-        }
-      });
-
-      await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
-      expect(optionName).to.equal('page-number');
-      expect(message).to.equal(
-        '[Kitáb-i-Aqdas, page 5](https://bahai-library.com/writings/bahaullah/aqdas/kaall.html#5)'
-      );
-    }
-  );
-
-  it(
-    '`interactionCreate` finds a ChatInputCommand (kitabiaqdas-page no page)',
-    async function () {
-      const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
-      const {client} = await bot({client: discord.getClient()});
-      const checkedCommands = [];
-
-      let message = '';
-
-      let optionName = '';
-
-      // @ts-expect-error Just mocking what we need
-      client.emit('interactionCreate', {
-        commandName: 'kitabiaqdas-page',
         isChatInputCommand () {
           checkedCommands.push(true);
           return true;
@@ -189,235 +140,22 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
           checkedCommands.push(true);
           return false;
         },
-        user: {
-          username: 'brettz9',
-          id: '410259427770499072'
-        },
-        options: {
-          get (optName) {
-            optionName = optName;
-            return undefined;
-          }
-        },
-        reply (msg) {
-          message = /** @type {string} */ (msg);
-        }
-      });
-
-      await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
-      expect(optionName).to.equal('page-number');
-      expect(message).to.equal(
-        '[Kitáb-i-Aqdas](https://bahai-library.com/writings/bahaullah/aqdas/kaall.html)'
-      );
-    }
-  );
-
-  it(
-    '`interactionCreate` finds a ChatInputCommand (kitabiaqdas-qna)',
-    async function () {
-      const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
-      const {client} = await bot({client: discord.getClient()});
-      const checkedCommands = [];
-
-      let message = '';
-
-      let optionName = '';
-
-      // @ts-expect-error Just mocking what we need
-      client.emit('interactionCreate', {
-        commandName: 'kitabiaqdas-qna',
-        isChatInputCommand () {
+        inCachedGuild () {
           checkedCommands.push(true);
           return true;
         },
-        isStringSelectMenu () {
-          checkedCommands.push(true);
-          return false;
-        },
-        isAutocomplete () {
-          checkedCommands.push(true);
-          return false;
-        },
-        user: {
-          username: 'brettz9',
-          id: '410259427770499072'
-        },
-        options: {
-          get (optName) {
-            optionName = optName;
-            return {
-              value: 5
-            };
-          }
-        },
         reply (msg) {
-          message = /** @type {string} */ (msg);
+          // eslint-disable-next-line @stylistic/max-len -- Long
+          message = /** @type {import('discord.js').InteractionReplyOptions} */ (
+            msg
+          );
         }
       });
 
       await commandFinished(client);
       expect(checkedCommands.length).to.equal(5);
-      expect(optionName).to.equal('qna-number');
       expect(message).to.equal(
-        '[Kitáb-i-Aqdas Questions & Answers, no. 5](https://bahai-library.com/writings/bahaullah/aqdas/kaall.html#q5)'
-      );
-    }
-  );
-
-  it(
-    '`interactionCreate` finds a ChatInputCommand (kitabiaqdas-qna no number)',
-    async function () {
-      const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
-      const {client} = await bot({client: discord.getClient()});
-      const checkedCommands = [];
-
-      let message = '';
-
-      let optionName = '';
-
-      // @ts-expect-error Just mocking what we need
-      client.emit('interactionCreate', {
-        commandName: 'kitabiaqdas-qna',
-        isChatInputCommand () {
-          checkedCommands.push(true);
-          return true;
-        },
-        isStringSelectMenu () {
-          checkedCommands.push(true);
-          return false;
-        },
-        isAutocomplete () {
-          checkedCommands.push(true);
-          return false;
-        },
-        user: {
-          username: 'brettz9',
-          id: '410259427770499072'
-        },
-        options: {
-          get (optName) {
-            optionName = optName;
-            return undefined;
-          }
-        },
-        reply (msg) {
-          message = /** @type {string} */ (msg);
-        }
-      });
-
-      await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
-      expect(optionName).to.equal('qna-number');
-      expect(message).to.equal(
-        '[Kitáb-i-Aqdas Questions & Answers](https://bahai-library.com/writings/bahaullah/aqdas/kaall.html#105)'
-      );
-    }
-  );
-
-  it(
-    '`interactionCreate` finds a ChatInputCommand (kitabiaqdas-notes)',
-    async function () {
-      const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
-      const {client} = await bot({client: discord.getClient()});
-      const checkedCommands = [];
-
-      let message = '';
-
-      let optionName = '';
-
-      // @ts-expect-error Just mocking what we need
-      client.emit('interactionCreate', {
-        commandName: 'kitabiaqdas-notes',
-        isChatInputCommand () {
-          checkedCommands.push(true);
-          return true;
-        },
-        isStringSelectMenu () {
-          checkedCommands.push(true);
-          return false;
-        },
-        isAutocomplete () {
-          checkedCommands.push(true);
-          return false;
-        },
-        user: {
-          username: 'brettz9',
-          id: '410259427770499072'
-        },
-        options: {
-          get (optName) {
-            optionName = optName;
-            return {
-              value: 5
-            };
-          }
-        },
-        reply (msg) {
-          message = /** @type {string} */ (msg);
-        }
-      });
-
-      await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
-      expect(optionName).to.equal('note-number');
-      expect(message).to.equal(
-        '[Kitáb-i-Aqdas Notes, no. 5](https://bahai-library.com/writings/bahaullah/aqdas/kaall.html#note5)'
-      );
-    }
-  );
-
-  it(
-    '`interactionCreate` finds a ChatInputCommand (kitabiaqdas-notes ' +
-      'no number)',
-    async function () {
-      const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
-      const {client} = await bot({client: discord.getClient()});
-      const checkedCommands = [];
-
-      let message = '';
-
-      let optionName = '';
-
-      // @ts-expect-error Just mocking what we need
-      client.emit('interactionCreate', {
-        commandName: 'kitabiaqdas-notes',
-        isChatInputCommand () {
-          checkedCommands.push(true);
-          return true;
-        },
-        isStringSelectMenu () {
-          checkedCommands.push(true);
-          return false;
-        },
-        isAutocomplete () {
-          checkedCommands.push(true);
-          return false;
-        },
-        user: {
-          username: 'brettz9',
-          id: '410259427770499072'
-        },
-        options: {
-          get (optName) {
-            optionName = optName;
-            return undefined;
-          }
-        },
-        reply (msg) {
-          message = /** @type {string} */ (msg);
-        }
-      });
-
-      await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
-      expect(optionName).to.equal('note-number');
-      expect(message).to.equal(
-        '[Kitáb-i-Aqdas Notes](https://bahai-library.com/writings/bahaullah/aqdas/kaall.html#165)'
+        '[\'Abdu\'l-Baha in London](https://bahai-library.com/writings/abdulbaha/abl/abdulbahalondon.html#)'
       );
     }
   );

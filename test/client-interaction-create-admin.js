@@ -4,6 +4,7 @@ import {setTimeout} from 'node:timers/promises';
 import {expect} from 'chai';
 import {createSandbox} from 'sinon';
 import MockDiscord from './helpers/MockDiscord.js';
+import commandFinished from './helpers/commandFinished.js';
 import bot from '../src/discordBot.js';
 
 describe('`interactionCreate` admin', function () {
@@ -40,7 +41,7 @@ describe('`interactionCreate` admin', function () {
         }
       });
 
-      await setTimeout();
+      await commandFinished(client);
       expect(checkedCommands.length).to.equal(4);
     }
   );
@@ -95,7 +96,7 @@ describe('`interactionCreate` admin', function () {
         }
       });
 
-      await setTimeout();
+      await commandFinished(client);
       expect(checkedCommands.length).to.equal(6);
       expect(optionNames).to.deep.equal(['channel', 'message']);
       expect(message).to.equal(
@@ -129,7 +130,10 @@ describe('`interactionCreate` admin', function () {
               /* eslint-disable promise/prefer-await-to-callbacks -- API */
               /**
                * @param {string} ev
-               * @param {(ev: string, info: {}) => void} cb
+               * @param {(
+               *   ev: string,
+               *   info: {resource: {metadata: {title: string}}}
+               * ) => void} cb
                */
               async on (ev, cb) {
                 await setTimeout();
@@ -162,6 +166,12 @@ describe('`interactionCreate` admin', function () {
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
         commandName: 'speak',
+        editReply (msg) {
+          message = /** @type {string} */ (msg);
+        },
+        deferReply () {
+          //
+        },
         inCachedGuild () {
           checkedCommands.push(true);
           return true;
@@ -199,13 +209,10 @@ describe('`interactionCreate` admin', function () {
           getString () {
             return 'some words';
           }
-        },
-        reply (msg) {
-          message = /** @type {string} */ (msg);
         }
       });
 
-      await setTimeout();
+      await commandFinished(client);
       expect(checkedCommands.length).to.equal(6);
       // @ts-expect-error Sinon
       expect(console.log.firstCall.firstArg).to.have.string(
@@ -240,7 +247,8 @@ describe('`interactionCreate` admin', function () {
           // @ts-expect-error Don't need a full mock
           createAudioPlayer () {
             return {
-              /* eslint-disable promise/prefer-await-to-callbacks -- API */
+              // eslint-disable-next-line @stylistic/max-len -- Long
+              /* eslint-disable promise/prefer-await-to-callbacks, jsdoc/ts-no-empty-object-type -- API */
               /**
                * @param {string} ev
                * @param {(ev: string, info: {}) => void} cb
@@ -250,7 +258,8 @@ describe('`interactionCreate` admin', function () {
 
                 // eslint-disable-next-line n/no-callback-literal -- API
                 cb('idle', {});
-                /* eslint-enable promise/prefer-await-to-callbacks -- API */
+                // eslint-disable-next-line @stylistic/max-len -- Long
+                /* eslint-enable promise/prefer-await-to-callbacks, jsdoc/ts-no-empty-object-type -- API */
               },
 
               play () {
@@ -270,6 +279,12 @@ describe('`interactionCreate` admin', function () {
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
         commandName: 'speak',
+        editReply (msg) {
+          message = /** @type {string} */ (msg);
+        },
+        deferReply () {
+          //
+        },
         inCachedGuild () {
           checkedCommands.push(true);
           return true;
@@ -308,12 +323,12 @@ describe('`interactionCreate` admin', function () {
             return 'some words';
           }
         },
-        reply (msg) {
-          message = /** @type {string} */ (msg);
+        reply () {
+          //
         }
       });
 
-      await setTimeout();
+      await commandFinished(client);
       expect(checkedCommands.length).to.equal(6);
       // @ts-expect-error Sinon
       expect(console.log.firstCall.firstArg).to.have.string(
@@ -341,6 +356,12 @@ describe('`interactionCreate` admin', function () {
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
         commandName: 'speak',
+        editReply (msg) {
+          message = /** @type {string} */ (msg);
+        },
+        deferReply () {
+          //
+        },
         inCachedGuild () {
           checkedCommands.push(true);
           return true;
@@ -366,19 +387,19 @@ describe('`interactionCreate` admin', function () {
             return 'some words';
           }
         },
-        reply (msg) {
-          message = /** @type {string} */ (msg);
+        reply () {
+          //
         }
       });
 
-      await setTimeout();
+      await commandFinished(client);
       expect(checkedCommands.length).to.equal(6);
       // @ts-expect-error Sinon
       expect(console.log.firstCall.firstArg).to.have.string(
-        'Message member not in a voice channel with `channel`'
+        'Message member not in a voice channel'
       );
       expect(message).to.equal(
-        '(Was not able to speak)'
+        'Message member not in a voice channel'
       );
     }
   );
@@ -397,6 +418,12 @@ describe('`interactionCreate` admin', function () {
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
         commandName: 'speak',
+        editReply (msg) {
+          message = /** @type {string} */ (msg);
+        },
+        deferReply () {
+          //
+        },
         inCachedGuild () {
           checkedCommands.push(true);
           return true;
@@ -422,15 +449,15 @@ describe('`interactionCreate` admin', function () {
             return 'some words';
           }
         },
-        reply (msg) {
-          message = /** @type {string} */ (msg);
+        reply () {
+          //
         }
       });
 
-      await setTimeout();
+      await commandFinished(client);
       expect(checkedCommands.length).to.equal(6);
       expect(message).to.equal(
-        '(Was not able to speak)'
+        'Action only for admins'
       );
     }
   );

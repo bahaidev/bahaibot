@@ -77,6 +77,9 @@
     },
     "was_not_able_to_speak": {
       "message": "(Was not able to speak)"
+    },
+    "action_only_for_admins": {
+      "message": "Action only for admins"
     }
   }
 }

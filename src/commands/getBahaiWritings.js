@@ -1,6 +1,44 @@
 import getReader from './getReader.js';
 import {searchEngines} from './searchEngines.js';
 
+const worksByBahaullahOrTheBab = new Set([
+  'dor', 'esw', 'gdm', 'gwb', 'gwbs', 'hw', 'hwa', 'hwp', 'ka', 'kan',
+  'kap', 'kaq', 'ki', 'kip', 'pb', 'pm', 'pms', 'slh', 'sv', 'swb',
+  'tb', 'tu'
+]);
+
+const worksByAbdulBaha = new Set([
+  'abl', 'adp', 'fwu', 'mf', 'pt', 'pup', 'saq', 'saqc', 'saqp', 'sdc',
+  'swab', 'swabs', 'tab', 'taf', 'tdp', 'tn', 'wt'
+]);
+
+const worksByShoghiEffendi = new Set([
+  'adj', 'aro', 'ba', 'bng', 'cf', 'dg', 'dnd', 'gpb', 'he', 'lanz',
+  'ldg1', 'ldg2', 'ma', 'man', 'mbw', 'mc', 'mc2', 'msei', 'pass', 'pdc',
+  'pdcp', 'syn', 'tdh', 'ud', 'wob'
+  // 'manyear',
+]);
+
+const worksByOthersAndCompilations = new Set([
+  'b9', 'bcommons', 'bib', 'bk', 'bl', 'blb', 'bnews', 'bpedia', 'br', 'bs',
+  'bwf', 'bworks', 'cl', 'blaze', 'bne', 'bp', 'db', 'ddbc', 'log', 'bss',
+  'logn', 'sow', 'qur', 'w'
+]);
+
+const worksByAuthorSiteOrCollectionSearch = new Set([
+  'b9s', 'bcommonss', 'bibs', 'bloc', 'blbs', 'bls', 'bnewss', 'bos',
+  'bpedias', 'bstorys',
+  'btag', 'bworkss', 'bws', 'bdate', 'bauthor', 'btitle', 'cat', 'cchron',
+  'chron', 'qurs',
+  'sows', 'uhjs', 'ws'
+]);
+/*
+const worksByRandom = new Set([
+  // By random:
+  'b9randcat', 'bpediarandcat', 'mediarandcat', 'worksrandcat'
+]);
+*/
+
 /**
  * @param {object} cfg
  * @param {import('../integratedClientServerBot.js').LimitedFs} cfg.fs
@@ -12,179 +50,171 @@ import {searchEngines} from './searchEngines.js';
 const getBahaiWritings = async ({fs, settings, client, Discord}) => {
   const reader = await getReader({fs, settings});
 
-  const ret = /** @type {import('./getCommands.js').BotCommands} */ ({
+  /*
+    "While the overall number of potential subcommands can be quite high
+    (e.g., 100 top-level commands * 25 subcommand groups * 25 subcommands
+    per group = 62,500), there is also a 4000-character limit that applies
+    to the combined string length of all subcommands within a command group."
+  */
+
+  const filteredSearchEngines = searchEngines.filter(({keyword}) => {
+    return ![
+      // Remove duplicates
+      'b', 'blg',
+      // Remove less necessary (whose group will otherwise run into 25
+      //   option limit)
+      'manyear'
+    ].includes(keyword);
+  });
+
+  const groupedEngines = Object.groupBy(filteredSearchEngines, ({keyword}) => {
+    return worksByBahaullahOrTheBab.has(keyword)
+      ? 'worksByBahaullahOrTheBab'
+      : worksByAbdulBaha.has(keyword)
+        ? 'worksByAbdulBaha'
+        : worksByShoghiEffendi.has(keyword)
+          ? 'worksByShoghiEffendi'
+          : worksByOthersAndCompilations.has(keyword)
+            ? 'worksByOthersAndCompilations'
+            : worksByAuthorSiteOrCollectionSearch.has(keyword)
+              ? 'worksByAuthorSiteOrCollectionSearch'
+              : 'worksByRandom';
+  });
+
+  // Works by section/selection -> works -> section/selection
+
+  /**
+   * @param {keyof groupedEngines} type
+   */
+  const mixinWorks = (type) => {
+    return {
+      /**
+       * @param {import('discord.js').AutocompleteInteraction<
+       *   import('discord.js').CacheType
+       * >} interaction
+       * @returns {Promise<void>}
+       */
+      async autocomplete (interaction) {
+        // Get the value the user is typing
+        const focusedValue = interaction.options.getFocused();
+
+        // eslint-disable-next-line @stylistic/max-len -- Long
+        const filtered = /** @type {import('./searchEngines.js').SearchEngine[]} */ (
+          groupedEngines[type]
+        ).filter(
+          ({
+            keyword, short_name: shortName
+          }) => shortName.startsWith(focusedValue) ||
+            keyword.startsWith(focusedValue)
+        );
+
+        await interaction.respond(
+          filtered.map(({keyword, short_name: shortName}) => {
+            return {
+              name: shortName, value: keyword
+            };
+          })
+        );
+      },
+      options: [
+        {
+          name: 'work',
+          description: 'The work',
+          type: Discord.ApplicationCommandOptionType.String,
+          autocomplete: true,
+          required: true
+        },
+        {
+          name: 'section-selection',
+          description:
+            'The page, paragraph, or selection',
+          type: Discord.ApplicationCommandOptionType.String,
+          required: true
+        }
+      ],
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
+        if (!interaction.isChatInputCommand()) {
+          return;
+        }
+
+        /* c8 ignore next 4 -- Required so fallback should not be necessary */
+        const keyword = (
+          /** @type {string} */
+          (interaction.options.get('work')?.value) ?? ''
+        );
+
+        const {url, short_name: work} = searchEngines.find(({keyword: kw}) => {
+          return keyword === kw;
+        }) ?? /* c8 ignore next 3 -- TS */ {
+          url: '',
+          // eslint-disable-next-line camelcase -- API
+          short_name: ''
+        };
+
+        // Could be like `1-1-1`
+        const sectionSelection = interaction.options.getString(
+          'section-selection'
+        ) ?? '';
+
+        await interaction.reply(
+          `[${work}${sectionSelection ? `, ${sectionSelection}` : ''}]` +
+          `(${
+            sectionSelection
+              ? url.replaceAll(
+                '%s', encodeURIComponent(sectionSelection)
+              )
+              : url.replaceAll('%s', '')
+          })`
+        );
+      }
+    };
+  };
+
+  const newlyGroupedEngines =
+    /** @type {import('./getCommands.js').BotCommands} */ ({
+      worksByBahaullahOrTheBab: {
+        name: 'works-by-bahaullah-or-the-bab',
+        description: 'Works by Bahá\'u\'lláh or the Báb',
+        ...mixinWorks('worksByBahaullahOrTheBab')
+      },
+      worksByAbdulBaha: {
+        name: 'works-by-abdul-baha',
+        description: 'Works by \'Abdu\'l-Bahá',
+        ...mixinWorks('worksByAbdulBaha')
+      },
+      worksByShoghiEffendi: {
+        name: 'works-by-shoghi-effendi',
+        description: 'Works by Shoghi Effendi',
+        ...mixinWorks('worksByShoghiEffendi')
+      },
+      worksByOthersAndCompilations: {
+        name: 'works-by-others',
+        description: 'Works by others and compilations',
+        ...mixinWorks('worksByOthersAndCompilations')
+      },
+      worksByRandom: {
+        name: 'works-random',
+        description: 'Works randomly selected',
+        ...mixinWorks('worksByRandom')
+      },
+      worksByAuthorSiteOrCollectionSearch: {
+        name: 'works-search',
+        description: 'Works by author, site, or collection search',
+        ...mixinWorks('worksByAuthorSiteOrCollectionSearch')
+      }
+    });
+
+  return /** @type {import('./getCommands.js').BotCommands} */ ({
+    ...newlyGroupedEngines,
     // NOTE: If we need to remove these, we can add `deleted` property to them,
     //        or invoke `client.application.commands.set([]);`, bearing in mind
     //        the 200 day Discord limit on new commands
-    ...searchEngines.filter(({keyword}) => {
-      // Remove those we already have below
-      return !['ka', 'kap', 'kan', 'kaq'].includes(keyword);
-    }).slice(
-      // Discord has a limit on number of shortcuts
-      0, 70
-    ).reduce((obj, {short_name: shortName, keyword, url}) => {
-      const simplifiedName = shortName.
-        toLowerCase().
-        normalize('NFD').replaceAll(/\p{Mark}/gv, '').
-        replaceAll(/\W/gv, '-').
-        // Max length per Discord
-        slice(0, 32);
-      return {
-        ...obj,
-        [simplifiedName]: {
-          name: simplifiedName,
-          // Todo: Remove this when converted to subcommands
-          deleted: true,
-          description: `${shortName} (shortcut: ${keyword})`,
-          options: [
-            {
-              name: 'search-term-or-number',
-              description: 'The number or search term',
-              type: Discord.ApplicationCommandOptionType.String
-            }
-          ],
-          /**
-           * @param {import('./getCommands.js').
-           *   InputCommandOrSelectMenu} interaction
-           * @returns {Promise<void>}
-           */
-          async slashCommand (interaction) {
-            /* c8 ignore next 3 -- TS guard */
-            if (interaction.isStringSelectMenu()) {
-              return;
-            }
-            const verse = interaction.options.getString(
-              'search-term-or-number'
-            );
-            await interaction.reply(
-              `[${shortName}${verse ? `, ${verse}` : ''}]` +
-              `(${
-                verse
-                  ? url.replaceAll('%s', encodeURIComponent(verse) ?? '')
-                  : ''
-              })`
-            );
-          }
-        }
-      };
-    }, {}),
-    kitabIAqdas: {
-      name: 'kitabiaqdas',
-      description: 'The Kitáb-i-Aqdas (Most Holy Book) by paragraph number',
-      options: [
-        {
-          name: 'paragraph-number',
-          description: 'The paragraph number',
-          type: Discord.ApplicationCommandOptionType.Integer
-        }
-      ],
-      /**
-       * @param {import('./getCommands.js').
-       *   InputCommandOrSelectMenu} interaction
-       * @returns {Promise<void>}
-       */
-      async slashCommand (interaction) {
-        /* c8 ignore next 3 -- TS guard */
-        if (interaction.isStringSelectMenu()) {
-          return;
-        }
-        const verse = interaction.options.get('paragraph-number')?.value;
-        await interaction.reply(
-          `[Kitáb-i-Aqdas${verse ? `, paragraph ${verse}` : ''}](` +
-          `https://bahai-library.com/writings/bahaullah/aqdas/kaall.html${
-            verse ? `#par${verse}` : ''
-          })`
-        );
-      }
-    },
-    kitabIAqdasPage: {
-      name: 'kitabiaqdas-page',
-      description: 'The Kitáb-i-Aqdas (Most Holy Book) by page number',
-      options: [
-        {
-          name: 'page-number',
-          description: 'The page number',
-          type: Discord.ApplicationCommandOptionType.Integer
-        }
-      ],
-      /**
-       * @param {import('./getCommands.js').
-       *   InputCommandOrSelectMenu} interaction
-       * @returns {Promise<void>}
-       */
-      async slashCommand (interaction) {
-        /* c8 ignore next 3 -- TS guard */
-        if (interaction.isStringSelectMenu()) {
-          return;
-        }
-        const page = interaction.options.get('page-number')?.value;
-        await interaction.reply(
-          `[Kitáb-i-Aqdas${page ? `, page ${page}` : ''}](` +
-          `https://bahai-library.com/writings/bahaullah/aqdas/kaall.html${
-            page ? `#${page}` : ''
-          })`
-        );
-      }
-    },
-    kitabIAqdasQAndA: {
-      name: 'kitabiaqdas-qna',
-      description: 'The Kitáb-i-Aqdas (Most Holy Book) by Questions ' +
-        '& Answers number',
-      options: [
-        {
-          name: 'qna-number',
-          description: 'The Questions & Answers number',
-          type: Discord.ApplicationCommandOptionType.Integer
-        }
-      ],
-      /**
-       * @param {import('./getCommands.js').
-       *   InputCommandOrSelectMenu} interaction
-       * @returns {Promise<void>}
-       */
-      async slashCommand (interaction) {
-        /* c8 ignore next 3 -- TS guard */
-        if (interaction.isStringSelectMenu()) {
-          return;
-        }
-        const qna = interaction.options.get('qna-number')?.value;
-        await interaction.reply(
-          `[Kitáb-i-Aqdas Questions & Answers${qna ? `, no. ${qna}` : ''}](` +
-          `https://bahai-library.com/writings/bahaullah/aqdas/kaall.html${
-            qna ? `#q${qna}` : '#105'
-          })`
-        );
-      }
-    },
-    kitabIAqdasNote: {
-      name: 'kitabiaqdas-notes',
-      description: 'The Kitáb-i-Aqdas (Most Holy Book) by note number',
-      options: [
-        {
-          name: 'note-number',
-          description: 'The note number',
-          type: Discord.ApplicationCommandOptionType.Integer
-        }
-      ],
-      /**
-       * @param {import('./getCommands.js').
-       *   InputCommandOrSelectMenu} interaction
-       * @returns {Promise<void>}
-       */
-      async slashCommand (interaction) {
-        /* c8 ignore next 3 -- TS guard */
-        if (interaction.isStringSelectMenu()) {
-          return;
-        }
-        const note = interaction.options.get('note-number')?.value;
-        await interaction.reply(
-          `[Kitáb-i-Aqdas Notes${note ? `, no. ${note}` : ''}](` +
-          `https://bahai-library.com/writings/bahaullah/aqdas/kaall.html${
-            note ? `#note${note}` : '#165'
-          })`
-        );
-      }
-    },
     randomWritings: {
       name: 'rand-writings',
       description: "A link to a random selection from the Bahá'í Writings",
@@ -350,10 +380,6 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       }
     }
   });
-
-  console.log('ret', ret);
-
-  return ret;
 };
 
 export default getBahaiWritings;

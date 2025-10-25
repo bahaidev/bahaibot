@@ -310,6 +310,7 @@ const bot = async ({
 
     if (interaction.isAutocomplete()) {
       await commandObject?.autocomplete?.(interaction);
+      client.emit('bahaibot:command-finished');
       return;
     }
 

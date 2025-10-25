@@ -101,7 +101,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
           }](${res.url})**`,
           image: {
             url: res.img !== ''
-              /* c8 ignore next -- Todo: Test? */
+              /* c8 ignore next -- MW API */
               ? res.img
               : ''
           }
@@ -168,7 +168,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
             }`,
           image: {
             url: res.img !== ''
-              /* c8 ignore next -- Todo: Test? */
+              /* c8 ignore next -- MW API */
               ? res.img
               : ''
           }

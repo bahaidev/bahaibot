@@ -2,8 +2,16 @@
  * @file Obtained from {@link https://bahai-library.com/zamir/realbookmarks2-json.html}.
  */
 
+/**
+ * @typedef {{
+ *   short_name: string,
+ *   keyword: string,
+ *   url: string
+ * }} SearchEngine
+ */
+
 /* eslint-disable camelcase -- Original source */
-const searchEngines = [
+const searchEngines = /** @type {SearchEngine[]} */ ([
   {
     short_name: 'Days of Remembrance',
     keyword: 'dor',
@@ -188,11 +196,6 @@ const searchEngines = [
     short_name: 'Blue Letter Bible Search',
     keyword: 'blbs',
     url: 'https://www.blueletterbible.org/search/search.cfm?Criteria=%s&t=KJV#s=s_primary_0_1'
-  },
-  {
-    short_name: 'Bahiyyih Khanum',
-    keyword: 'bk',
-    url: 'https://bahai-library.com/books/bahiyyih.khanum/bkall.html#%s'
   },
   {
     short_name: "Baha'i Library",
@@ -599,6 +602,6 @@ const searchEngines = [
     keyword: 'wt',
     url: 'https://bahai-library.com/writings/abdulbaha/wt/wtall.html#%s'
   }
-];
+]);
 
 export {searchEngines};

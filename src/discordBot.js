@@ -87,7 +87,7 @@ const getPath = (path) => {
 */
 const getSettings = (sys) => {
   return process.argv.includes('--production')
-    /* c8 ignore next */
+    /* c8 ignore next -- Not needed for testing */
     ? sys.production
     : sys.development;
 };
@@ -97,7 +97,7 @@ const system = JSON.parse(
 );
 const {webhookURL} = getSettings(system);
 
-/* c8 ignore next 26 -- Emergencies only */
+/* c8 ignore next 32 -- Emergencies only */
 /**
  * @param {string} msg
  */
@@ -136,9 +136,9 @@ process.on('beforeExit', async (code) => {
 /** @type {string[]} */
 let locales;
 const localeIndex = process.argv.indexOf('--locales');
-// Ignoring flag coverage as seem unable to override even `global.process`
-//   during unit testing
-/* c8 ignore next 3 */
+
+/* c8 ignore next 4 -- Ignoring flag coverage as seem unable to override
+    even `global.process` during unit testing */
 if (localeIndex !== -1) {
   locales = [process.argv[localeIndex + 1]];
 }
