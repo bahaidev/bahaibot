@@ -26,6 +26,21 @@ import {stripHtml} from 'string-strip-html';
 import bot from './bot.js';
 
 /**
+ * @callback GetPath
+ * @param {string} path
+ * @returns {string}
+ */
+
+/**
+* @type {GetPath}
+*/
+const getPath = (path) => {
+  return join(process.cwd(), path);
+};
+
+
+/**
+ * Get the `webhookURL` from channel settings -> Integrations -> Webhooks.
  * @typedef {{
  *   PROJECT_JSON?: string,
  *   PROJECT_ID?: string,
@@ -33,6 +48,7 @@ import bot from './bot.js';
  *   ADMIN_PERMISSION?: string,
  *   ADMIN_IDS?: string[],
  *   ADMIN_ROLES?: string[],
+ *   webhookURL?: string,
  *   enabledCommandGroups?: string[],
  *   disabledCommandGroups?: string[],
  *   token?: string,
@@ -66,6 +82,48 @@ import bot from './bot.js';
  * }} SettingsFile
  */
 
+/**
+* @param {SettingsFile} sys
+*/
+const getSettings = (sys) => {
+  return process.argv.includes('--production')
+    /* c8 ignore next */
+    ? sys.production
+    : sys.development;
+};
+
+const system = JSON.parse(
+  await fs.readFile(getPath('settings.json'), 'utf8')
+);
+const {webhookURL} = getSettings(system);
+
+const notifyDiscordChannel = async () => {
+  if (webhookURL) {
+    const webhookClient = new Discord.WebhookClient({
+      url: webhookURL
+    });
+
+    await webhookClient.send({
+      content: 'The bot service went down!'
+    });
+  }
+};
+
+process.on('uncaughtException', async (err) => {
+  // eslint-disable-next-line no-console -- Debugging
+  console.error('Uncaught Exception:', err);
+
+  await notifyDiscordChannel();
+
+  process.exit(1);
+});
+
+process.on('beforeExit', async () => {
+  // eslint-disable-next-line no-console -- Debugging
+  console.log('Exiting');
+  await notifyDiscordChannel();
+});
+
 // GET LOCALE
 
 /** @type {string[]} */
@@ -83,29 +141,6 @@ const checkins = process.argv.includes('--checkins');
 
 // Needed by intl-dom
 setFetch(fileFetch);
-
-/**
- * @callback GetPath
- * @param {string} path
- * @returns {string}
- */
-
-/**
-* @type {GetPath}
-*/
-const getPath = (path) => {
-  return join(process.cwd(), path);
-};
-
-/**
-* @param {SettingsFile} sys
-*/
-const getSettings = (sys) => {
-  return process.argv.includes('--production')
-    /* c8 ignore next */
-    ? sys.production
-    : sys.development;
-};
 
 /**
  * This is created separately from `index.js` so as to allow testing files to

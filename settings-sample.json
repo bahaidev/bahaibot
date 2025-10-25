@@ -3,6 +3,7 @@
     "token": "",
     "embedColor": 16732271,
     "embedTextLimit": 2000,
+    "webhookURL": "",
     "PROJECT_ID": "<the-dialogflow-agent-id, i.e.: baha-i-qna-2-xxxxxx",
     "PROJECT_JSON": "<the-dialogflow-agent-credentials-json-file, i.e.: baha-i-qna-2-xxxxxx-xxxxxxxxxxx.json"
   },
@@ -10,6 +11,7 @@
     "token": "",
     "embedColor": 16732271,
     "embedTextLimit": 2000,
+    "webhookURL": "",
     "PROJECT_ID": "<the-dialogflow-agent-id, i.e.: baha-i-qna-2-xxxxxx",
     "PROJECT_JSON": "<the-dialogflow-agent-credentials-json-file, i.e.: baha-i-qna-2-xxxxxx-xxxxxxxxxxx.json"
   }
