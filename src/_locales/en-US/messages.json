@@ -58,7 +58,7 @@
       "message": "No application commands found"
     },
     "not_in_a_voice_channel": {
-      "message": "Message member not in a voice channel with `channel`"
+      "message": "Message member not in a voice channel"
     },
     "user_command_issued_by": {
       "message": "Users command issued by {username}."

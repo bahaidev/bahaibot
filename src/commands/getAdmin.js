@@ -98,6 +98,8 @@ const getAdmin = ({
 
         const words = interaction.options.getString('words');
 
+        await interaction.deferReply({ephemeral: true});
+
         const spoken = await this.action?.({
           member: {
             // @ts-expect-error Just use what we need
@@ -111,12 +113,13 @@ const getAdmin = ({
               words
             }`
         });
-        await interaction.reply(
-          spoken
+
+        await interaction.editReply(
+          typeof spoken === 'boolean' && spoken
             /* c8 ignore next -- Should be present */
             ? words ?? ''
             : /** @type {string} */ (
-              _('was_not_able_to_speak')
+              spoken || _('was_not_able_to_speak')
             )
         );
       },
@@ -124,13 +127,13 @@ const getAdmin = ({
       /**
        * Reads some scripture.
        * @param {import('discord.js').Message<true>} message
-       * @returns {Promise<boolean>}
+       * @returns {Promise<boolean|string>}
        */
       // @ts-expect-error We re-use this function, so not wanting void here
       async action (message) {
         /* eslint-enable require-await -- Easier */
         if (!ADMIN_IDS.includes(message.author.id)) {
-          return false;
+          return /** @type {string} */ (_('action_only_for_admins'));
         }
 
         const words = message.content.split(' ').slice(2).join(' ');
@@ -140,7 +143,7 @@ const getAdmin = ({
         if (!channel) {
           // eslint-disable-next-line no-console -- CLI
           console.log(_('not_in_a_voice_channel'));
-          return false;
+          return /** @type {string} */ (_('not_in_a_voice_channel'));
         }
         const connection = DiscordVoice.joinVoiceChannel({
           channelId: channel.id,

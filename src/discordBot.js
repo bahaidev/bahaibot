@@ -98,14 +98,17 @@ const system = JSON.parse(
 const {webhookURL} = getSettings(system);
 
 /* c8 ignore next 26 -- Emergencies only */
-const notifyDiscordChannel = async () => {
+/**
+ * @param {string} msg
+ */
+const notifyDiscordChannel = async (msg) => {
   if (webhookURL) {
     const webhookClient = new Discord.WebhookClient({
       url: webhookURL
     });
 
     await webhookClient.send({
-      content: 'The bot service went down!'
+      content: `The bot service went down! Error: ${msg}`
     });
   }
 };
@@ -114,15 +117,18 @@ process.on('uncaughtException', async (err) => {
   // eslint-disable-next-line no-console -- Debugging
   console.error('Uncaught Exception:', err);
 
-  await notifyDiscordChannel();
+  const errStr = err.toString();
+  const idx = errStr.lastIndexOf('\n');
+  const errString = idx === -1 ? errStr : errStr.slice(0, idx);
+  await notifyDiscordChannel(errString);
 
   process.exit(1);
 });
 
-process.on('beforeExit', async () => {
+process.on('beforeExit', async (code) => {
   // eslint-disable-next-line no-console -- Debugging
   console.log('Exiting');
-  await notifyDiscordChannel();
+  await notifyDiscordChannel(`Error \`beforeExit\` code: ${String(code)}`);
 });
 
 // GET LOCALE

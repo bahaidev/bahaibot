@@ -33,6 +33,8 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
         ...obj,
         [simplifiedName]: {
           name: simplifiedName,
+          // Todo: Remove this when converted to subcommands
+          deleted: true,
           description: `${shortName} (shortcut: ${keyword})`,
           options: [
             {
