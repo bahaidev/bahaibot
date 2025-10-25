@@ -5508,7 +5508,7 @@ var distExports = requireDist();
 
 /**
  * @param {object} cfg
- * @param {globalThis.fetch|import('node-fetch').default} cfg.fetch
+ * @param {globalThis.fetch} cfg.fetch
  * @param {import('intl-dom').I18NCallback} cfg._
  * @param {StripTags} cfg.striptags
  * @returns {BotWikiTools}
@@ -5555,7 +5555,7 @@ function getWikiTools ({
       try {
         const tResponse = await (await fetch(tUrl)).json();
         const rawText = tResponse.parse.text['*'].split('</center>\n');
-        /* c8 ignore next -- Todo */
+        /* c8 ignore next -- Which page to use? */
         const text = striptags(rawText.length > 1 ? rawText[1] : rawText[0]);
         // console.log(text);
         // console.log(uUrl);
@@ -5832,22 +5832,107 @@ function istr (seconds) {
 }
 
 /**
+ * Finds the last message sent by a user, including threads, in a specific
+ *   guild.
+ * @param {import('discord.js').Guild} guild The guild to search.
+ * @param {import('discord.js').User} user The user to find the last
+ *   message for.
+ * @param {number} limit
+ * @returns {Promise<{
+ *   lastMessage: import('discord.js').Message|null,
+ *   lastChannel: import('discord.js').Channel|null
+ * }>} The last message,
+ *   or null if not found.
+ */
+async function getLastUserMessage (guild, user, limit = 100) {
+  /** @type {import('discord.js').Message|null} */
+  let lastMessage = null;
+  /** @type {import('discord.js').Channel|null} */
+  let lastChannel = null;
+
+  // Get all text and news channels.
+  const textChannels = guild.channels.cache.filter((c) => c.isTextBased());
+
+  // Create an array of all channels and threads to check.
+  const channelsAndThreads = [...textChannels.values()];
+
+  // Fetch all active threads in the guild and add them to the array.
+  const activeThreads = await guild.channels.fetchActiveThreads();
+  channelsAndThreads.push(...activeThreads.threads.values());
+
+  // Now, iterate through all channels and threads.
+  await Promise.all(channelsAndThreads.map(async (channel) => {
+    let messages;
+    try {
+      // Fetch the last (default 100) messages in the channel or thread.
+      messages = await channel.messages.fetch({limit});
+    } catch (err) {
+      // Ignore moderator-only channels
+      return;
+    }
+
+    // Find the most recent message by the target user in this batch.
+    const userMessage = messages.filter(
+      (m) => m.author.id === user.id
+    ).first();
+
+    // Compare it to the current latest message found.
+    if (userMessage &&
+      (!lastMessage ||
+        userMessage.createdTimestamp > lastMessage.createdTimestamp)
+    ) {
+      lastMessage = userMessage;
+      lastChannel = channel;
+    }
+  }));
+
+  return {lastMessage, lastChannel};
+}
+
+/**
 * @param {object} cfg
 * @param {string[]} cfg.ADMIN_ROLES
 * @param {import('discord.js').Client} cfg.client
+* @param {import('discord.js')} cfg.Discord
+* @param {import('intl-dom').I18NCallback} cfg._
 * @returns {import('./getCommands.js').BotCommands}
 */
 const getSocialInfo = ({
-  ADMIN_ROLES, client
+  ADMIN_ROLES, client, Discord, _
 }) => {
   return {
     users: {
+      name: 'users',
+      description: 'Displays a count of online users',
       re: /!users\b/iv,
-      // helpInfo: {
-      //  name: '!users',
-      //  value: 'Displays a count of online users.'
-      // }
-      /* c8 ignore next 52 -- Reenable when testing again */
+      helpExtra: {
+        name: '!users',
+        value: 'Displays a count of online users.'
+      },
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
+        if (!interaction.inCachedGuild()) {
+          return;
+        }
+        await this.action?.({
+          author: interaction.user,
+          guild: interaction.guild,
+          channel: {
+            /**
+             * @param {string} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
+      },
       /**
        * Users gives the number of online users.
        * @param {import('discord.js').Message<true>} message
@@ -5872,7 +5957,7 @@ const getSocialInfo = ({
         for (const admin of allAdmins) {
           // eslint-disable-next-line no-await-in-loop -- Convenient
           const member = await guild.members.fetch({
-            user: admin,
+            user: admin[1].user,
             withPresences: true
           });
 
@@ -5898,15 +5983,52 @@ const getSocialInfo = ({
         );
 
         // eslint-disable-next-line no-console -- CLI
-        console.log(`Users command issued by ${message.author.username}.`);
+        console.log(_('user_command_issued_by', {
+          username: message.author.username
+        }));
       }
     },
     seen: {
+      name: 'seen',
+      description: 'Displays the last time a user was seen online.',
+      options: [
+        {
+          name: 'user',
+          description: 'The user to check',
+          type: Discord.ApplicationCommandOptionType.User,
+          required: true
+        }
+      ],
       re: /!seen\b/iv,
-      // helpInfo: {
-      //  name: '!seen',
-      //  value: 'Displays the last time a user was seen online.'
-      // },
+      helpExtra: {
+        name: '!seen',
+        value: 'Displays the last time a user was seen online.'
+      },
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
+        if (!interaction.inCachedGuild() || interaction.isStringSelectMenu()) {
+          return;
+        }
+        await this.action?.({
+          author: interaction.user,
+          content: String(interaction.options.get('user')?.value),
+          guild: interaction.guild,
+          channel: {
+            /**
+             * @param {string} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
+      },
       /**
        * Seen returns the last time a user sent a message.
        * @param {import('discord.js').Message<true>} message
@@ -5918,64 +6040,79 @@ const getSocialInfo = ({
             word.includes('847456996738334730') || word === '!seen')
         ).join(' ');
 
-        // const {guild} = message;
-        // const userOnline = guild.members.cache.filter(
-        //  (m) => m.presence.status === 'online').size;
-        // let userStatus = '';
         const replies = [];
 
         const user = client.users.cache.find((val) => {
-          return val.username === sname;
+          return val.id === sname;
         });
-        if (!user) {
-          replies.push(`I haven't seen ${sname} lately.`);
-        /* c8 ignore next 41 -- Reenable when testing again */
-        } else {
-          // userStatus = user.presence.status;
 
+        const haventSeen = () => {
+          replies.push(`I haven't seen ${sname
+            ? Discord.userMention(sname)
+            : ''
+          } lately.`);
+        };
+
+        if (!user) {
+          haventSeen();
+        } else {
           const member = await message.guild.members.fetch({
             user,
             withPresences: true
           });
-          const {channel} = message;
-          const messages = await channel.messages.fetch({limit: 100});
-          const userMessages = messages.filter(
-            (msg) => msg.author.id === user.id
-          );
-          const lastUserMessage = userMessages.first();
 
-          if (lastUserMessage) {
+          const {
+            lastMessage,
+            lastChannel
+          } = await getLastUserMessage(message.guild, user);
+
+          if (lastMessage) {
             const stat = (
               member.presence?.status === 'dnd'
                 ? 'busy'
-                : member.presence?.status
+                /* c8 ignore next -- Inconsistent? */
+                : member.presence?.status ?? 'offline'
             );
-            const lastseen = new Date(lastUserMessage.createdAt);
+
+            const lastseen = new Date(lastMessage.createdAt);
             const now = new Date();
             const timedelta = (now > lastseen)
+              /* c8 ignore next -- This should be the condition we reach */
               ? Number(now) - Number(lastseen)
               : 0;
             replies.push(
-              `${sname} is now ${stat}, and was last seen in ${
-                channel
+              `${
+                Discord.userMention(sname)
+              } is now ${stat}, and was last seen in ${
+                lastChannel
               } ${istr(timedelta / 1000)} ago.`
             );
           } else {
             const stat = (
               member.presence?.status === 'dnd'
                 ? 'busy'
-                : member.presence?.status
+                /* c8 ignore next -- Inconsistent? */
+                : member.presence?.status ?? 'offline'
             );
-            replies.push(
-              `${sname} is now ${stat}; I haven't seen them lately.`
-            );
+            if (stat === 'offline') {
+              // User is invisible, so don't leak presence to channel
+              haventSeen();
+            } else {
+              replies.push(
+                `${
+                  Discord.userMention(sname)
+                } is now ${stat}; I haven't seen them lately.`
+              );
+            }
           }
         }
 
         message.channel.send(replies.join('\n'));
 
         // eslint-disable-next-line no-console -- CLI
-        console.log(`Seen command issued by ${message.author.username}.`);
+        console.log(_('seen_command_issued_by', {
+          username: message.author.username
+        }));
       }
     }
   };
@@ -6013,7 +6150,8 @@ const getSocialInfo = ({
  *   showList: ShowList,
  *   readBook: ReadBook,
  *   readRandom: ReadRandom,
- *   reader: Reader
+ *   reader: Reader,
+ *   getAvailableRandomOptions: () => string[]
  * }} ReaderInfo
  */
 
@@ -6104,6 +6242,13 @@ async function getReader ({fs, settings}) {
   // FUNCTIONS
 
   /**
+   * @returns {string[]}
+   */
+  const getAvailableRandomOptions = () => {
+    return availableRandomOptions;
+  };
+
+  /**
    * Checks whether file exists.
    * @param {LibraryFileWithChapters} file Name of the file based on the
    *   library_listing
@@ -6123,9 +6268,8 @@ async function getReader ({fs, settings}) {
       // Return the relevant section
       return file.chapters[index];
     }
-    /* c8 ignore next 4 */
-    // Unless a book has a missing chapter numbering, it seems this will be
-    //   unreachable
+    /* c8 ignore next 3 -- Unless a book has a missing chapter numbering,
+        it seems this will be unreachable */
     return "I know which work you're talking about, but I can't find that " +
       `section in it. Valid section numbers are from **1** to **${max}**.`;
   }
@@ -6143,7 +6287,7 @@ async function getReader ({fs, settings}) {
     // Disable this and test once other works are enabled besides the
     //   Hidden Words (which should not have any verses we could use
     //   exceeding our default `MAX_TEXT_LIMIT` setting)
-    /* c8 ignore next 22 */
+    /* c8 ignore next 22 -- Need texts besides Hidden Words */
     // If content string is greater than max limit
     while (str.length > l) {
       // Find the last position of space
@@ -6195,7 +6339,7 @@ async function getReader ({fs, settings}) {
       refName.toLowerCase() === 'hwp')
       ? `**${refNumber}. ${content.title}**\n`
       // Remove this and test once other works besides hwa/hwp enabled.
-      /* c8 ignore next */
+      /* c8 ignore next -- Need other words besides Hidden Words */
       : `**Chapter ${refNumber}, Para 1. ${content.title}**\n`;
 
     // Split text if large
@@ -6208,12 +6352,12 @@ async function getReader ({fs, settings}) {
       const embed = new Discord.EmbedBuilder();
 
       // Set colors and data
-      /* c8 ignore next -- Todo */
+      /* c8 ignore next -- Set in settings */
       embed.setColor(colorBorder ?? null);
       embed.setAuthor({
         name: `${library.list[library.index[refName]].title} by ` +
         `${library.list[library.index[refName]].author}`,
-        /* c8 ignore next -- Todo */
+        /* c8 ignore next -- A guard as is apparently present */
         iconURL: avatar ?? undefined
       });
 
@@ -6226,7 +6370,7 @@ async function getReader ({fs, settings}) {
         // Unreachable currently with the two Hidden Words options not
         //  having notes; remove this ignore and test when enabling
         //  other works that do have notes.
-        /* c8 ignore next 16 */
+        /* c8 ignore next 16 -- Hidden Words do not have notes */
         // If there are notes
         if (content.notes !== undefined && content.notes.length > 0) {
           let ntext = '';
@@ -6351,7 +6495,7 @@ async function getReader ({fs, settings}) {
       embedCreator(
         Discord, avatar, message, Number(index), refName, content
       );
-    /* c8 ignore next 6 */
+    /* c8 ignore next 6 -- See note below */
     // Unless a book has a missing chapter numbering, it seems this will be
     //   unreachable
     } else {
@@ -6399,7 +6543,8 @@ async function getReader ({fs, settings}) {
     showList,
     readBook,
     readRandom,
-    reader
+    reader,
+    getAvailableRandomOptions
   };
 }
 
@@ -6414,8 +6559,204 @@ async function getReader ({fs, settings}) {
 const getBahaiWritings = async ({fs, settings, client, Discord}) => {
   const reader = await getReader({fs, settings});
 
-  return {
+  return /** @type {import('./getCommands.js').BotCommands} */ ({
+    // Todo: Finish for other books
+    kitabIAqdas: {
+      name: 'kitabiaqdas',
+      description: 'The Kitáb-i-Aqdas (Most Holy Book) by paragraph number',
+      options: [
+        {
+          name: 'paragraph-number',
+          description: 'The paragraph number',
+          type: Discord.ApplicationCommandOptionType.Integer
+        }
+      ],
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
+        if (interaction.isStringSelectMenu()) {
+          return;
+        }
+        const verse = interaction.options.get('paragraph-number')?.value;
+        await interaction.reply(
+          `[Kitáb-i-Aqdas${verse ? `, paragraph ${verse}` : ''}](` +
+          `https://bahai-library.com/writings/bahaullah/aqdas/kaall.html${
+            verse ? `#par${verse}` : ''
+          })`
+        );
+      }
+    },
+    kitabIAqdasPage: {
+      name: 'kitabiaqdas-page',
+      description: 'The Kitáb-i-Aqdas (Most Holy Book) by page number',
+      options: [
+        {
+          name: 'page-number',
+          description: 'The page number',
+          type: Discord.ApplicationCommandOptionType.Integer
+        }
+      ],
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
+        if (interaction.isStringSelectMenu()) {
+          return;
+        }
+        const page = interaction.options.get('page-number')?.value;
+        await interaction.reply(
+          `[Kitáb-i-Aqdas${page ? `, page ${page}` : ''}](` +
+          `https://bahai-library.com/writings/bahaullah/aqdas/kaall.html${
+            page ? `#${page}` : ''
+          })`
+        );
+      }
+    },
+    kitabIAqdasQAndA: {
+      name: 'kitabiaqdas-qna',
+      description: 'The Kitáb-i-Aqdas (Most Holy Book) by Questions ' +
+        '& Answers number',
+      options: [
+        {
+          name: 'qna-number',
+          description: 'The Questions & Answers number',
+          type: Discord.ApplicationCommandOptionType.Integer
+        }
+      ],
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
+        if (interaction.isStringSelectMenu()) {
+          return;
+        }
+        const qna = interaction.options.get('qna-number')?.value;
+        await interaction.reply(
+          `[Kitáb-i-Aqdas Questions & Answers${qna ? `, no. ${qna}` : ''}](` +
+          `https://bahai-library.com/writings/bahaullah/aqdas/kaall.html${
+            qna ? `#q${qna}` : '#105'
+          })`
+        );
+      }
+    },
+    kitabIAqdasNote: {
+      name: 'kitabiaqdas-notes',
+      description: 'The Kitáb-i-Aqdas (Most Holy Book) by note number',
+      options: [
+        {
+          name: 'note-number',
+          description: 'The note number',
+          type: Discord.ApplicationCommandOptionType.Integer
+        }
+      ],
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
+        if (interaction.isStringSelectMenu()) {
+          return;
+        }
+        const note = interaction.options.get('note-number')?.value;
+        await interaction.reply(
+          `[Kitáb-i-Aqdas Notes${note ? `, no. ${note}` : ''}](` +
+          `https://bahai-library.com/writings/bahaullah/aqdas/kaall.html${
+            note ? `#note${note}` : '#165'
+          })`
+        );
+      }
+    },
+    randomWritings: {
+      name: 'rand-writings',
+      description: "A link to a random selection from the Bahá'í Writings",
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        await interaction.reply(
+          `<[Random Bahá'í Writings](https://bahai-library.com/random)>`
+        );
+      }
+    },
     readBook: {
+      name: 'read',
+      description:
+        "Provide a selection of the Bahá'í Writings by book and chapter",
+      /**
+       * @param {import('discord.js').AutocompleteInteraction<
+       *   import('discord.js').CacheType
+       * >} interaction
+       * @returns {Promise<void>}
+       */
+      async autocomplete (interaction) {
+        // Get the value the user is typing
+        const focusedValue = interaction.options.getFocused();
+        const choices = reader.getAvailableRandomOptions();
+
+        const filtered = choices.filter(
+          (choice) => choice.startsWith(focusedValue)
+        );
+        await interaction.respond(
+          filtered.map((choice) => ({name: choice, value: choice}))
+        );
+      },
+      options: [
+        {
+          name: 'book',
+          description: 'The book to select',
+          type: Discord.ApplicationCommandOptionType.String,
+          autocomplete: true,
+          required: true
+        },
+        {
+          name: 'chapter',
+          description: 'The chapter',
+          type: Discord.ApplicationCommandOptionType.Integer,
+          required: true
+        }
+      ],
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
+        if (!interaction.isChatInputCommand()) {
+          return;
+        }
+
+        /* c8 ignore next 2 -- Required so fallback should not be necessary */
+        const book = interaction.options.getString('book') ?? '';
+        const chapter = interaction.options.getInteger('chapter') ?? '';
+        await this.action?.({
+          content: `!read ${book} ${chapter}`,
+          channel: {
+            /**
+             * @param {string} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
+      },
+
       re: /\bread (?<refName>\S.+) (?<index>[\-.\d]+)\b/iv,
       /**
        * Reads some scripture.
@@ -6442,7 +6783,31 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
       }
     },
     readRandom: {
+      name: 'read-random',
+      description: "Provide a random selection of the Bahá'í Writings",
       re: /\bread random$/iv,
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
+        if (!interaction.inCachedGuild()) {
+          return;
+        }
+        await this.action?.({
+          channel: {
+            /**
+             * @param {string} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
+      },
       /**
        *
        * @param {import('discord.js').Message<true>} message
@@ -6477,7 +6842,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
         return reader.reader(message);
       }
     }
-  };
+  });
 };
 
 /**
@@ -6485,9 +6850,10 @@ const getBahaiWritings = async ({fs, settings, client, Discord}) => {
  * @param {import('../getWikiTools.js').BotWikiTools} cfg.wikiTools
  * @param {import('discord.js').Client} cfg.client
  * @param {import('intl-dom').I18NCallback} cfg._
+ * @param {import('discord.js')} cfg.Discord
  * @returns {import('./getCommands.js').BotCommands}
  */
-const getBahaiWikis = function ({wikiTools, client, _}) {
+const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
   // Private methods
 
   /**
@@ -6499,8 +6865,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
     let res;
     try {
       res = await wikiTools.bpGetToday();
-    // Shouldn't need catch
-    /* c8 ignore next 5 */
+    /* c8 ignore next 5 -- Shouldn't need catch */
     } catch (err) {
       // eslint-disable-next-line no-console -- CLI
       console.error('Error getting Bahaipedia Today', err);
@@ -6524,7 +6889,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
             bstarString
           }Here's Bahaipedia's Today in History entry for ${
             md
-          }, ${message.author.username}:\n\n ${res}`
+          }, ${message.author.username}:\n\n${res}`
         }]
       });
       return;
@@ -6559,8 +6924,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
     let qr;
     try {
       qr = await wikiTools.wikiGetRandom(numResults, host, wikiPrefix);
-    // Shouldn't need catch
-    /* c8 ignore next 5 */
+    /* c8 ignore next 5 -- Shouldn't need catch */
     } catch (err) {
       // eslint-disable-next-line no-console -- CLI
       console.error('Error getting wiki random', err);
@@ -6584,7 +6948,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
           }](${res.url})**`,
           image: {
             url: res.img !== ''
-              /* c8 ignore next */
+              /* c8 ignore next -- Todo: Test? */
               ? res.img
               : ''
           }
@@ -6623,8 +6987,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
     let sr;
     try {
       sr = await wikiTools.wikiGetURL(kw, numResults, host, wikiPrefix);
-    // Errors should be caught internally by this method.
-    /* c8 ignore next 4 */
+    /* c8 ignore next 4 -- Errors should be caught internally by this method */
     } catch (err) {
       // eslint-disable-next-line no-console -- CLI
       console.error('Error getting', err);
@@ -6652,7 +7015,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
             }`,
           image: {
             url: res.img !== ''
-              /* c8 ignore next */
+              /* c8 ignore next -- Todo: Test? */
               ? res.img
               : ''
           }
@@ -6684,7 +7047,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
    * @returns {Promise<void>}
    */
   async function bahaipediaAction (message, {forceToday} = {}) {
-    const bwikiMatch = /!(?:bp|pedia|b9|bahai9|bm|media|img)/gvi;
+    const bwikiMatch = /!(?:bp|pedia|b9|bahai9|bm|media|img|bw|bworks)/gvi;
     // const flag = /-([1-5]|r|rnd|rand|t|tih|today)/gvi;
 
     const words = message.content.split(' ');
@@ -6731,6 +7094,9 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
       } else if (bm.re.test(message.content)) {
         host = 'bahai.media';
         sitename = 'Bahaimedia';
+      } else if (bw.re.test(message.content)) {
+        host = 'bahai.works';
+        sitename = 'Bahaiworks';
       }
 
       // find the rand flag
@@ -6751,7 +7117,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
 
       const nrIdx = words.findIndex((i) => i.match(nrRgx));
       if (nrIdx !== -1) {
-        numResults = Number(words[nrIdx]);
+        numResults = Math.abs(Number(words[nrIdx]));
         // remove this word
         words.splice(nrIdx, 1);
       }
@@ -6771,8 +7137,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
         await random(
           message, numResults, host, bstarString, sitename, wikiPrefix
         );
-      // Shouldn't err out.
-      /* c8 ignore next 5 */
+      /* c8 ignore next 5 -- Shouldn't err out */
       } catch (err) {
         // eslint-disable-next-line no-console -- CLI
         console.error('Error with random wiki', err);
@@ -6787,8 +7152,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
     ) {
       try {
         await todayInHistory(message, bstarString);
-      // Shouldn't err out.
-      /* c8 ignore next 5 */
+      /* c8 ignore next 5 -- Shouldn't err out */
       } catch (err) {
         // eslint-disable-next-line no-console -- CLI
         console.error('Error with today in history', err);
@@ -6800,8 +7164,7 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
           message, keywords, numResults, host,
           bstarString, sitename, wikiPrefix
         );
-      // Shouldn't err out.
-      /* c8 ignore next 5 */
+      /* c8 ignore next 5 -- Shouldn't err out */
       } catch (err) {
         // eslint-disable-next-line no-console -- CLI
         console.error('Error searching wiki', err);
@@ -6815,10 +7178,40 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
 
   const today = {
     re: /!today\b/iv,
+    name: 'today',
+    description: "Displays a list of events from today's date " +
+      'in history, via Bahaipedia.',
     helpInfo: {
       name: '!today',
       value: "Displays a list of events from today's date " +
           'in history, via Bahaipedia.'
+    },
+    /**
+     * @param {import('./getCommands.js').InputCommandOrSelectMenu} interaction
+     * @returns {Promise<void>}
+     */
+    async slashCommand (interaction) {
+      /* c8 ignore next 3 -- TS guard */
+      if (!interaction.inCachedGuild()) {
+        return;
+      }
+      await this.action?.({
+        author: interaction.user,
+        content: '!today',
+        // @ts-expect-error No-op
+        react () {
+          // No-op as no need for emoji response to slash command
+        },
+        channel: {
+          /**
+           * @param {string} reply
+           */
+          // @ts-expect-error Just mocking what we need
+          send (reply) {
+            interaction.reply(reply);
+          }
+        }
+      });
     },
     /**
      * @param {import('discord.js').Message<true>} message
@@ -6829,7 +7222,56 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
     }
   };
 
+  const options = [
+    {
+      name: 'keywords',
+      description: 'The search keywords',
+      type: Discord.ApplicationCommandOptionType.String,
+      required: true
+    }
+  ];
+
+  /**
+   * @param {string} prefix
+   */
+  const getSlashCommand = (prefix) => {
+    /**
+     * @this {import('./getCommands.js').BotCommand}
+     * @param {import('./getCommands.js').InputCommandOrSelectMenu} interaction
+     * @returns {Promise<void>}
+     */
+    return async function slashCommand (interaction) {
+      /* c8 ignore next 3 -- TS guard */
+      if (!interaction.inCachedGuild() || interaction.isStringSelectMenu()) {
+        return;
+      }
+      await this.action?.({
+        author: interaction.user,
+        content: /** @type {string} */ (
+          `${prefix} ${interaction.options.get('keywords')?.value}`
+        ),
+        // @ts-expect-error No-op
+        react () {
+          // No-op as no need for emoji response to slash command
+        },
+        channel: {
+          /**
+           * @param {string} reply
+           */
+          // @ts-expect-error Just mocking what we need
+          send (reply) {
+            interaction.reply(reply);
+          }
+        }
+      });
+    };
+  };
+
   const b9 = {
+    name: 'b9',
+    description: 'bahai9.com search',
+    options,
+    slashCommand: getSlashCommand('!b9'),
     re: /!(?:b9|bahai9)\b/iv,
     /**
      * @param {import('discord.js').Message<true>} message
@@ -6841,6 +7283,10 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   };
 
   const bm = {
+    name: 'bm',
+    description: 'bahai.media search',
+    options,
+    slashCommand: getSlashCommand('!bm'),
     re: /!(?:bm|media|img)\b/iv,
     /**
      * @param {import('discord.js').Message<true>} message
@@ -6852,23 +7298,158 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
   };
 
   const bp = {
+    name: 'bp',
+    description: 'bahaipedia.org search',
+    options,
+    slashCommand: getSlashCommand('!bp'),
     re: /!(?:bp|pedia)\b/iv,
     action: bahaipediaAction,
     // This will be reused across several commands
     helpInfo: {
-      name: '!bp | !b9 | !bm [-rand | *‹keyword›*]',
+      name: '!bp | !b9 | !bm | !bw [-rand | *‹keyword›*]',
       value: 'Return a link to the top result for *keyword* on ' +
-          'Bahaipedia (`!bp`), Bahai9.com (`!b9`), or ' +
-          'Bahai.media (`!bm`); `-rand` displays a random ' +
+          'Bahaipedia (`!bp`), Bahai9.com (`!b9`), ' +
+          'Bahai.media (`!bm`), or Bahai.works; `-rand` displays a random ' +
           'article (or file).'
     }
   };
 
+  const bw = {
+    name: 'bw',
+    description: 'bahai.works search',
+    options,
+    slashCommand: getSlashCommand('!bw'),
+    re: /!(?:bw|bworks)\b/iv,
+    /**
+     * @param {import('discord.js').Message<true>} message
+     * @returns {Promise<void>}
+     */
+    async action (message) {
+      return await bahaipediaAction(message);
+    }
+  };
+
+  // This is only for slash commands, as the indidivual items allow random for
+  //   the Bot dialogues
+  const randomWiki = /** @type {import('./getCommands.js').BotCommand} */ ({
+    name: 'rand-wiki',
+    description: 'A random wiki selection',
+    /**
+     * @param {import('discord.js').Message<true>} message
+     * @returns {Promise<void>}
+     */
+    async action (message) {
+      return await bahaipediaAction(message);
+    },
+    /**
+     * @param {import('./getCommands.js').InputCommandOrSelectMenu} interaction
+     * @returns {Promise<void>}
+     */
+    async slashCommand (interaction) {
+      if (interaction.isStringSelectMenu()) {
+        await this.action?.({
+          author: interaction.user,
+          content: /** @type {string} */ (
+            `!${interaction.values[0]} -rand`
+          ),
+          // @ts-expect-error No-op
+          react () {
+            // No-op as no need for emoji response to slash command
+          },
+          channel: {
+            /**
+             * @param {import('discord.js').MessagePayload} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
+        return;
+      }
+      if (interaction.isChatInputCommand()) {
+        const selectMenu = new Discord.StringSelectMenuBuilder().
+          setCustomId('rand-wiki_site').
+          setPlaceholder('Choose a site!').
+          addOptions(
+            new Discord.StringSelectMenuOptionBuilder().
+              setLabel('bahaipedia.org').setValue('bp'),
+            new Discord.StringSelectMenuOptionBuilder().
+              setLabel('bahai9.com').setValue('b9'),
+            new Discord.StringSelectMenuOptionBuilder().
+              setLabel('bahai.media').setValue('bm'),
+            new Discord.StringSelectMenuOptionBuilder().
+              setLabel('bahai.works').setValue('bw')
+          );
+
+        const row = new (
+          /**
+           * @type {typeof import('discord.js').ActionRowBuilder<
+           *   import('discord.js').StringSelectMenuBuilder
+           * >}
+           */ (Discord.ActionRowBuilder)
+        )().addComponents(selectMenu);
+
+        await interaction.reply({
+          content: 'Random wiki:',
+          components: [row],
+          flags: Discord.MessageFlags.Ephemeral
+        });
+      }
+    }
+  });
+
+  const bpLink = {
+    re: /\[\[(?<bpText>.*?)\]\]/v,
+    notMentioned: {
+      /**
+       * If welcome AND a user are mentioned.
+       * @param {import('discord.js').Message<true>} message
+       * @returns {boolean}
+       */
+      check (message) {
+        return bpLink.re.test(message.content);
+      },
+      /**
+       * @param {import('discord.js').Message<true>} message
+       * @returns {Promise<void>}
+       */
+      async action (message) {
+        const prefixRegex = /^(?<prefix>b9|bm|bw|bp):/v;
+        /* c8 ignore next 2 -- TS */
+        const {bpText = ''} = message.content.match(bpLink.re)?.groups ?? {};
+        const {prefix = ''} = bpText.match(prefixRegex)?.groups ?? {};
+        const wikiText = bpText.replace(prefixRegex, '');
+        const content = `[${wikiText}](https://${
+          prefix === 'b9'
+            ? 'bahai9.com/wiki/'
+            : prefix === 'bm'
+              ? 'bahai.media/Category:'
+              : prefix === 'bw'
+                ? 'bahai.works/'
+                : 'bahaipedia.org/'
+        }${encodeURIComponent(wikiText)})`;
+        await message.channel.send({
+          content
+        });
+      /* c8 ignore next -- c8 bug? */
+      }
+    }
+  };
+
   return {
+    // @ts-expect-error TS bug?
     bp,
     today,
+    // @ts-expect-error TS bug?
     b9,
-    bm
+    // @ts-expect-error TS bug?
+    bm,
+    // @ts-expect-error TS bug?
+    bw,
+    randomWiki,
+    bpLink
   };
 };
 
@@ -6882,36 +7463,42 @@ const getBahaiWikis = function ({wikiTools, client, _}) {
 /**
  * @type {PuppetTool}
  */
-function puppet ({content, guild, author, /* member, */ channel}, permissions) {
+function puppet ({
+  content, guild, /* author, member, */ channel
+  // eslint-disable-next-line no-unused-vars -- Keeping signature for now
+}, permissions) {
   // Transmit message as:
   // !puppet <CHANNEL> | <MESSAGE>
-  if (
-    author.id === permissions.authorID
+  // if (author.id !== permissions.authorID
 
   // Reenable this if we allow `getCommands.js` to pass in arbitrary users
   // or are using this file elsewhere
-  // || member.permissions.has(permissions.permission)
-  ) {
-    const regex = /!puppet (?<userChannel>\S.+) \| (?<msg>\S.+)/iv;
-    const echo = content.match(regex);
+  // && !member.permissions.has(permissions.permission)
+  // ) {
+  //   return;
+  // }
 
-    // Did regex pass
-    if (echo) {
-      // eslint-disable-next-line @stylistic/max-len -- Long
-      const {userChannel, msg} = /** @type {{userChannel: string, msg: string}} */ (
-        echo.groups
+  const regex = /!puppet (?<userChannel>\S.+) \| (?<msg>\S.+)/iv;
+  const echo = content.match(regex);
+
+  // Did regex pass
+  if (echo) {
+    // eslint-disable-next-line @stylistic/max-len -- Long
+    const {userChannel, msg} = /** @type {{userChannel: string, msg: string}} */ (
+      echo.groups
+    );
+
+    const destination = guild?.channels.cache.find(
+      (val) => val.name === userChannel
+    );
+
+    // Does the channel exist?
+    if (destination && destination.isTextBased()) {
+      destination.send(msg);
+    } else {
+      channel.send(
+        `Channel ${userChannel} does not exist or is not text-based!`
       );
-
-      const destination = guild?.channels.cache.find(
-        (val) => val.name === userChannel
-      );
-
-      // Does the channel exist?
-      if (destination && destination.isTextBased()) {
-        destination.send(msg);
-      } else {
-        channel.send(`Channel ${userChannel} does not exist!`);
-      }
     }
   }
 }
@@ -6924,6 +7511,7 @@ function puppet ({content, guild, author, /* member, */ channel}, permissions) {
  * @param {import('../getCheckin.js').GuildCheckin} cfg.guildCheckin
  * @param {import('intl-dom').I18NCallback} cfg._
  * @param {import('discord-tts')} cfg.discordTTS
+ * @param {import('discord.js')} cfg.Discord
  * @param {Pick<import('@discordjs/voice'),
  *   "joinVoiceChannel"|"createAudioPlayer"|
  *   "createAudioResource">} cfg.DiscordVoice
@@ -6931,30 +7519,73 @@ function puppet ({content, guild, author, /* member, */ channel}, permissions) {
  */
 const getAdmin = ({
   ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR,
+  Discord,
   DiscordVoice,
   discordTTS, guildCheckin, _
 }) => {
   return {
     speak: {
+      name: 'speak',
+      description: 'Reads some words as speech',
+      options: [
+        {
+          name: 'words',
+          description: 'The words',
+          type: Discord.ApplicationCommandOptionType.String,
+          required: true
+        }
+      ],
       re: /!speak/iv,
-      /*
-      helpInfo: {
+      helpAdmin: {
         name: '!speak some words',
         value: 'Reads some words as speech'
       },
-      */
-      /* c8 ignore next 40 */
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS */
+        if (interaction.isStringSelectMenu() || !interaction.inCachedGuild()) {
+          return;
+        }
+
+        const words = interaction.options.getString('words');
+
+        const spoken = await this.action?.({
+          member: {
+            // @ts-expect-error Just use what we need
+            voice: {
+              channel: interaction.member?.voice?.channel
+            }
+          },
+          author: interaction.user,
+          content:
+            `placeholder1 placeholder2 ${
+              words
+            }`
+        });
+        await interaction.reply(
+          spoken
+            /* c8 ignore next -- Should be present */
+            ? words ?? ''
+            : /** @type {string} */ (
+              _('was_not_able_to_speak')
+            )
+        );
+      },
       /* eslint-disable require-await -- Easier */
       /**
        * Reads some scripture.
        * @param {import('discord.js').Message<true>} message
-       * @returns {Promise<void>}
+       * @returns {Promise<boolean>}
        */
+      // @ts-expect-error We re-use this function, so not wanting void here
       async action (message) {
         /* eslint-enable require-await -- Easier */
-        // Todo: Needs testing
         if (!ADMIN_IDS.includes(message.author.id)) {
-          return;
+          return false;
         }
 
         const words = message.content.split(' ').slice(2).join(' ');
@@ -6962,9 +7593,9 @@ const getAdmin = ({
         // Todo: Abstract out code so browser can instead use `SpeechSynthesis`
         const channel = message.member?.voice.channel;
         if (!channel) {
-          // eslint-disable-next-line no-console -- Debugging
-          console.log('Message member not in a voice channel with `channel`');
-          return;
+          // eslint-disable-next-line no-console -- CLI
+          console.log(_('not_in_a_voice_channel'));
+          return false;
         }
         const connection = DiscordVoice.joinVoiceChannel({
           channelId: channel.id,
@@ -6974,19 +7605,93 @@ const getAdmin = ({
 
         const player = DiscordVoice.createAudioPlayer();
 
-        player.play(
-          DiscordVoice.createAudioResource(discordTTS.getVoiceStream(words))
-        );
-        connection.subscribe(player);
+        // eslint-disable-next-line no-console -- CLI
+        console.log(_('speakingBegun'));
+
+        // eslint-disable-next-line promise/avoid-new -- API
+        return new Promise((resolve) => {
+          player.on('error', (error) => {
+            // eslint-disable-next-line no-console -- Debugging
+            console.error(`Error: ${error.message} with resource ${
+              /* c8 ignore next 2 -- Bug? */
+              // @ts-expect-error Ok
+              error.resource?.metadata?.title
+            }`);
+            resolve(false);
+          });
+          // @ts-expect-error Ok
+          player.on('idle', () => {
+            // Optionally disconnect after speaking
+            // connection.destroy();
+            resolve(true);
+          });
+
+          const audioStream = discordTTS.getVoiceStream(words, {
+            lang: _.resolvedLocale.replace(/-US?/v, '')
+          });
+
+          player.play(
+            DiscordVoice.createAudioResource(audioStream)
+          );
+          connection.subscribe(player);
 
         // console.error(_('speechError'), err);
-
-        // eslint-disable-next-line no-console -- Debugging
-        console.log(_('speakingBegun'));
+        });
       }
     },
     puppet: {
+      name: 'puppet',
+      description: 'Allows administrators to puppeteer a bot, channeling a ' +
+        'message to another channel',
       re: /!puppet (?:\S.+) \| (?:\S.+)/iv,
+      helpAdmin: {
+        name: '!puppet userChannel | message',
+        value: 'Allows administrators to puppeteer a bot, channeling a ' +
+          'message to another channel'
+      },
+      options: [
+        {
+          name: 'channel',
+          description: 'The channel into which to send a message',
+          type: Discord.ApplicationCommandOptionType.Channel,
+          required: true
+        },
+        {
+          name: 'message',
+          description: 'The message to send',
+          type: Discord.ApplicationCommandOptionType.String,
+          required: true
+        }
+      ],
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
+        if (!interaction.inCachedGuild() || interaction.isStringSelectMenu()) {
+          return;
+        }
+        await this.action?.({
+          author: interaction.user,
+          content: /** @type {string} */ (
+            `!puppet ${interaction.options.get('channel')?.value} | ${
+              interaction.options.get('message')?.value
+            }`
+          ),
+          guild: interaction.guild,
+          channel: {
+            /**
+             * @param {string} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
+      },
       /**
        * Puppet enables the administrators + bot developers to puppeteer a bot
        * Must be positioned on top so it can handle sub requests listed below.
@@ -6996,8 +7701,7 @@ const getAdmin = ({
       action (message) {
         if (ADMIN_IDS.includes(message.author.id)) {
           // Puppet handling
-          puppet(message, {
-            authorID: PUPPET_AUTHOR});
+          puppet(message);
 
           // eslint-disable-next-line no-console -- CLI
           console.log(
@@ -7007,7 +7711,48 @@ const getAdmin = ({
       }
     },
     echo: {
+      name: 'echo',
+      description: 'Just echoes back the words supplied.',
+      options: [
+        {
+          name: 'echo-text',
+          description: 'The text to echo back',
+          type: Discord.ApplicationCommandOptionType.String,
+          required: true
+        }
+      ],
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
+        if (interaction.isStringSelectMenu()) {
+          return;
+        }
+
+        await this.action?.({
+          author: interaction.user,
+          content: /** @type {string} */ (
+            interaction.options.get('echo-text')?.value
+          ),
+          channel: {
+            /**
+             * @param {string} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
+      },
       re: /!echo\b/iv,
+      helpAdmin: {
+        name: '!echo words',
+        value: 'Just echoes back the words supplied.'
+      },
       /**
        * Echo what was said.
        * @param {import('discord.js').Message<true>} message
@@ -7029,7 +7774,24 @@ const getAdmin = ({
       }
     },
     checkin: {
+      name: 'checkin',
+      description: 'Checks in to send a greeting to a bot-testing channel',
       re: /!checkin\b/iv,
+      helpAdmin: {
+        name: '!checkin',
+        value: 'Checks in to send a greeting to a bot-testing channel'
+      },
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        // @ts-expect-error Just supplying what we need
+        await this.action?.({
+          author: interaction.user
+        });
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {Promise<void>}
@@ -7042,7 +7804,7 @@ const getAdmin = ({
           );
           try {
             return await guildCheckin();
-          /* c8 ignore next 4 */
+          /* c8 ignore next 4 -- How to simulate? */
           } catch (err) {
             // eslint-disable-next-line no-console -- CLI
             console.error('Error checking in', err);
@@ -7071,7 +7833,31 @@ const getBahaiInfo = ({client, Discord}) => {
       },
     */
     info: {
+      name: 'info',
+      description: 'Provides a link to the support server',
       re: /!info/iv,
+      helpExtra: {
+        name: '!info',
+        value: 'Provides a link to the support server'
+      },
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        await this.action?.({
+          channel: {
+            /**
+             * @param {string} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -7105,6 +7891,10 @@ const getBahaiInfo = ({client, Discord}) => {
     },
     badi: {
       re: /\bbad[íi]\b/iv,
+      helpExtra: {
+        name: 'badi',
+        value: 'Provides a link to the illustrious Bahá\'í youth'
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -7126,9 +7916,10 @@ const getBahaiInfo = ({client, Discord}) => {
 /**
  * @param {object} cfg
  * @param {import('discord.js').Client} cfg.client
+ * @param {string} cfg.BSTAR_EMOJI_ID_LAB
  * @returns {import('./getCommands.js').BotCommands}
  */
-const getBahaiSalutations = ({client}) => {
+const getBahaiSalutations = ({client, BSTAR_EMOJI_ID_LAB}) => {
   /**
    * @param {import('discord.js').Message<true>} message
    * @returns {import('discord.js').GuildEmoji|undefined}
@@ -7144,6 +7935,10 @@ const getBahaiSalutations = ({client}) => {
     // GREETINGS //
     abha: {
       re: /\b(?:all[aá]h['’´\-]?[uo]?['’´\-]?abh[aá]|abh[aá])/iv,
+      helpExtra: {
+        name: 'allahuabha',
+        value: "Sends the Bahá'í greeting, Alláh'u'Abhá"
+      },
       /**
        * Alláh-u-Abhá!
        * @param {import('discord.js').Message<true>} message
@@ -7178,6 +7973,10 @@ const getBahaiSalutations = ({client}) => {
     },
     nawruz: {
       re: /\b(?:(?:happy|joyous)\s?n[ao]w[\- ]?ro?[uú]z|n[ao]w[\- ]?ro?[uú]z\s?(?:m[uo]b[aá]r[aá]k))\b/iv,
+      helpExtra: {
+        name: 'nawruz',
+        value: "Sends a greeting for the Bahá'í Holy Day Naw-Rúz"
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -7196,6 +7995,11 @@ const getBahaiSalutations = ({client}) => {
     },
     ridvan: {
       re: /\b(?:(?:happy|joyous)\s?r[ie][ḍdz][vw][aá]n|r[ie][ḍdz][vw][aá]n\s?(?:m[uo]b[aá]r[aá]k))\b/iv,
+      helpExtra: {
+        name: 'ridvan',
+        value: "Sends a greeting for the Bahá'í Holy Day Ridván"
+      },
+
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -7203,6 +8007,32 @@ const getBahaiSalutations = ({client}) => {
       action (message) {
         const star = reactToStar(message);
         message.channel.send(`Happy Ridván! ${star ? star.toString() : ''}`);
+      }
+    },
+    ninePointedStar: {
+      re: /\u{1F7D9}/u,
+      helpExtra: {
+        name: '\u{1F7D9}',
+        value: "Sends a greeting via a Bahá'í symbol, the nine-pointed star"
+      },
+      /**
+       * Nine-pointed-star (should be at the end so everything else is
+       *   processed first).
+       * @param {import('discord.js').Message<true>} message
+       * @returns {void}
+       */
+      action (message) {
+        message.channel.send(`<:bstar:${BSTAR_EMOJI_ID_LAB}>`);
+      },
+      notMentioned: {
+        /**
+         * @param {import('discord.js').Message<true>} message
+         * @returns {void}
+         */
+        action (message) {
+          // message.react('\u{1F7D9}');
+          message.react(`<:bstar:${BSTAR_EMOJI_ID_LAB}>`);
+        }
       }
     }
   };
@@ -7215,6 +8045,10 @@ const getSalutations = () => {
   return {
     sup: {
       re: /\b(?:su+p|wh[au]+[sz]+[au]+p|(?:(?:what|wut)['’´]?s (?:up|new|good|gud|cookin[g'’´])))\b/iv,
+      helpExtra: {
+        name: 'sup',
+        value: "Sends the greeting 'What's up'"
+      },
       /**
        * What's up?
        * @param {import('discord.js').Message<true>} message
@@ -7244,6 +8078,10 @@ const getSalutations = () => {
     },
     morning: {
       re: /\bgood morning\b/iv,
+      helpExtra: {
+        name: 'good morning',
+        value: "Sends the greeting 'Good morning'"
+      },
       /**
        * Good morning.
        * @param {import('discord.js').Message<true>} message
@@ -7257,6 +8095,10 @@ const getSalutations = () => {
     },
     afternoon: {
       re: /\bgood afternoon\b/iv,
+      helpExtra: {
+        name: 'good afternoon',
+        value: "Sends the greeting 'Good afternoon'"
+      },
       /**
        * Good afternoon.
        * @param {import('discord.js').Message<true>} message
@@ -7268,6 +8110,10 @@ const getSalutations = () => {
     },
     evening: {
       re: /\bgood evening\b/iv,
+      helpExtra: {
+        name: 'good evening',
+        value: "Sends the greeting 'Good evening'"
+      },
       /**
        * Good evening.
        * @param {import('discord.js').Message<true>} message
@@ -7279,6 +8125,10 @@ const getSalutations = () => {
     },
     hello: {
       re: /\b(?:h[uea]llo|hi|hi there|howdy|yo|heya|sal[aá]{1,2}m)\b/iv,
+      helpExtra: {
+        name: 'hello',
+        value: "Sends the greeting 'Hello'"
+      },
       /**
        * Hello.
        * @param {import('discord.js').Message<true>} message
@@ -7290,6 +8140,10 @@ const getSalutations = () => {
     },
     welcome: {
       re: /^(?:everyone|everybody)?\W*(?:please|pleez|pls|plz)?\W*(?:\W*welcome|.*>+\W*welcome\b|.*\bwb\b)/iv,
+      helpExtra: {
+        name: 'welcome',
+        value: "Sends the greeting 'Welcome'"
+      },
       /**
        * Welcome.
        * @param {import('discord.js').Message<true>} message
@@ -7328,6 +8182,10 @@ const getLightHearted = () => {
     /* OTHER CHIT-CHAT */
     coffee: {
       re: /\u{2615}/u,
+      helpExtra: {
+        name: '\u{2615}',
+        value: 'Sends a coffee cup emoji'
+      },
       /**
        * Coffee (should be at the end so everything else is processed first).
        * @param {import('discord.js').Message<true>} message
@@ -7348,6 +8206,10 @@ const getLightHearted = () => {
     },
     tea: {
       re: /\u{1F375}/u,
+      helpExtra: {
+        name: '\u{1F375}',
+        value: 'Sends a tea emoji'
+      },
       /**
        * Tea (should be at the end so everything else is processed first).
        * @param {import('discord.js').Message<true>} message
@@ -7368,6 +8230,10 @@ const getLightHearted = () => {
     },
     popcorn: {
       re: /\u{1F37F}/u,
+      helpExtra: {
+        name: '\u{1F37F}',
+        value: 'Sends a popcorn emoji'
+      },
       /**
        * Popcorn (should be at the end so everything else is processed first).
        * @param {import('discord.js').Message<true>} message
@@ -7389,6 +8255,10 @@ const getLightHearted = () => {
     // Lulz (should be at the end so everything else is processed first).
     unladen: {
       re: /\bunladen\sswallow\b/iv,
+      helpExtra: {
+        name: 'unladen swallow',
+        value: 'Prompt for a Monty Python response'
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -7401,6 +8271,10 @@ const getLightHearted = () => {
     },
     bruh: {
       re: /\bbruh\b/iv,
+      helpExtra: {
+        name: 'bruh',
+        value: 'Sends a Bruh'
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -7411,6 +8285,10 @@ const getLightHearted = () => {
     },
     goodbot: {
       re: /\bgood\s?bot\b/iv,
+      helpExtra: {
+        name: 'good bot',
+        value: 'Praises the bot'
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -7422,6 +8300,10 @@ const getLightHearted = () => {
     },
     badbot: {
       re: /\bbad\s?bot\b/iv,
+      helpExtra: {
+        name: 'bad bot',
+        value: 'Criticizes the bot'
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -7433,6 +8315,10 @@ const getLightHearted = () => {
     },
     repeating: {
       re: /\brepeating yourself\b/iv,
+      helpExtra: {
+        name: 'repeating yourself',
+        value: 'Indicate the bot is repeating itself'
+      },
       /**
        * Repeating.
        * @param {import('discord.js').Message<true>} message
@@ -7462,6 +8348,10 @@ const getLightHearted = () => {
     },
     santacat: {
       re: /\b(?:my|santa['’´]?s)\scat\b/iv,
+      helpExtra: {
+        name: 'santa cat',
+        value: 'Makes reference to a Santa cat'
+      },
       /**
        * @param {import('discord.js').Message<true>} message
        * @returns {void}
@@ -7481,6 +8371,10 @@ const getLightHearted = () => {
     },
     ping: {
       re: /\bping\b/iv,
+      helpExtra: {
+        name: 'ping',
+        value: 'Pings the bot'
+      },
       /**
        * Ping message.
        * @param {import('discord.js').Message<true>} message
@@ -7596,19 +8490,44 @@ const getDefaultCommand = ({
 };
 
 /**
+ * @typedef {{name: string, value: string}} BotHelpField
+ */
+
+/**
  * @param {object} cfg
  * @param {import('./getCommands.js').BotCommands} cfg.commands
  */
 const addHelp = ({commands}) => {
-  /**
-  * @typedef {{name: string, value: string}} BotHelpField
-  */
-
   const help = {
+    name: 'help',
+    description: 'List available help commands',
     re: /!help\b/iv,
     helpInfo: {
       name: '!help',
-      value: 'Displays help text.'
+      value: 'Displays help text. For more commands, use ' +
+                '`!helpextras` and `!helpadmin`'
+    },
+    /**
+     * @param {import('./getCommands.js').InputCommandOrSelectMenu} interaction
+     * @returns {Promise<void>}
+     */
+    async slashCommand (interaction) {
+      /* c8 ignore next 3 -- TS guard */
+      if (!interaction.inCachedGuild()) {
+        return;
+      }
+      await this.action?.({
+        author: interaction.user,
+        channel: {
+          /**
+           * @param {string} reply
+           */
+          // @ts-expect-error Just mocking what we need
+          send (reply) {
+            interaction.reply(reply);
+          }
+        }
+      });
     },
     /**
      * @param {import('discord.js').Message<true>} message
@@ -7621,7 +8540,7 @@ const addHelp = ({commands}) => {
         embeds: [{
           color: 8359053,
           description: 'I can respond to well-formed questions about basic ' +
-              "Baha'i topics. As well, the following commands can help me " +
+              "Bahá'í topics. As well, the following commands can help me " +
               'process your requests. Make sure to mention me when trying ' +
               'to use them, like this: `@BahaiBot !help`',
           fields
@@ -7630,7 +8549,106 @@ const addHelp = ({commands}) => {
     }
   };
 
+  const helpextras = {
+    name: 'helpextras',
+    description: 'Displays help text for rarer commands.',
+    re: /!helpextras\b/iv,
+    helpInfo: {
+      name: '!helpextras',
+      value: 'Displays help text for rarer commands.'
+    },
+    /**
+     * @param {import('./getCommands.js').InputCommandOrSelectMenu} interaction
+     * @returns {Promise<void>}
+     */
+    async slashCommand (interaction) {
+      /* c8 ignore next 3 -- TS guard */
+      if (!interaction.inCachedGuild()) {
+        return;
+      }
+      await this.action?.({
+        author: interaction.user,
+        channel: {
+          /**
+           * @param {string} reply
+           */
+          // @ts-expect-error Just mocking what we need
+          send (reply) {
+            interaction.reply(reply);
+          }
+        }
+      });
+    },
+    /**
+     * @param {import('discord.js').Message<true>} message
+     * @returns {void}
+     */
+    action (message) {
+      message.channel.send({
+        content: `Here are the instructions you ` +
+                    `need, ${message.author.username}.`,
+        embeds: [{
+          color: 8359053,
+          description: 'The following commands can help me ' +
+              'process your requests. Make sure to mention me when trying ' +
+              'to use them, like this: `@BahaiBot !helpextras`',
+          fields: fieldsExtra
+        }]
+      });
+    }
+  };
+
+  const helpadmin = {
+    name: 'helpadmin',
+    description: 'List available help commands available only to admins.',
+    re: /!helpadmin\b/iv,
+    helpInfo: {
+      name: '!helpadmin',
+      value: 'Displays help text for commands available only to admins.'
+    },
+    /**
+     * @param {import('./getCommands.js').InputCommandOrSelectMenu} interaction
+     * @returns {Promise<void>}
+     */
+    async slashCommand (interaction) {
+      if (!interaction.inCachedGuild()) {
+        return;
+      }
+      await this.action?.({
+        author: interaction.user,
+        channel: {
+          /**
+           * @param {string} reply
+           */
+          // @ts-expect-error Just mocking what we need
+          send (reply) {
+            interaction.reply(reply);
+          }
+        }
+      });
+    },
+    /**
+     * @param {import('discord.js').Message<true>} message
+     * @returns {void}
+     */
+    action (message) {
+      message.channel.send({
+        content: `Here are the instructions you ` +
+                    `need, ${message.author.username}.`,
+        embeds: [{
+          color: 8359053,
+          description: 'The following administrator commands can help me ' +
+              'process your requests. Make sure to mention me when trying ' +
+              'to use them, like this: `@BahaiBot !helpextras`',
+          fields: fieldsAdmin
+        }]
+      });
+    }
+  };
+
   commands.help = help;
+  commands.helpextras = helpextras;
+  commands.helpadmin = helpadmin;
 
   /**
    * @type {BotHelpField[]}
@@ -7640,6 +8658,26 @@ const addHelp = ({commands}) => {
       return helpInfo;
     }).filter(Boolean)
   );
+
+  /**
+   * @type {BotHelpField[]}
+   */
+  const fieldsExtra = /** @type {BotHelpField[]} */ (
+    Object.values(commands).map(({helpExtra}) => {
+      return helpExtra;
+    }).filter(Boolean)
+  );
+
+  /**
+   * @type {BotHelpField[]}
+   */
+  const fieldsAdmin = /** @type {BotHelpField[]} */ (
+    Object.values(commands).map(({helpAdmin}) => {
+      return helpAdmin;
+    }).filter(Boolean)
+  );
+
+  return commands;
 };
 
 // DISCORD ID CONSTANTS
@@ -7654,12 +8692,14 @@ const BAHAI_FYI_HELP_TEAM = '644722296929648641'; // @Help
 
 const BAHAI_LAB_GUILD_ID = '325981722082672661'; // Bahá'í Lab
 const BAHAI_LAB_BOT_TESTING_CHANNEL_ID = '391408369891672064'; // #bot-testing
+const BSTAR_EMOJI_ID_LAB = '327468698032013312';
 
 const USER_AB = '309427494778306560';
 
 const ADMIN_IDS = [
   USER_AB,
-  '324993843005227008' // dragfyre
+  '324993843005227008', // dragfyre
+  '410259427770499072' // brettz9
 ];
 
 const ADMIN_ROLES = [
@@ -7669,8 +8709,10 @@ const ADMIN_ROLES = [
 const ADMIN_PERMISSION = 'ADMINISTRATOR';
 
 // Todo: i18nize messages within `getBahaiWikis.js`, `getReader.js`,
-//   `messages.js`, and the command files.
+//        and `messages.js`.
 // Todo: i18nize behavior of `getWikiTools.js`, `getBahaiWikis.js`
+// Todo: i18nize `message.channel.send()` and `interaction.reply()` (the
+//        command files)
 
 
 /**
@@ -7692,12 +8734,38 @@ const ADMIN_PERMISSION = 'ADMINISTRATOR';
 */
 
 /**
-* @typedef {object} BotCommand
-* @property {RegExp} re
-* @property {ActionBehavior} action
-* @property {NotMentionedCommand} [notMentioned]
-* @property {{name: string, value: string}} [helpInfo]
-*/
+ * @typedef {import('discord.js').ChatInputCommandInteraction<
+ *   import('discord.js').CacheType
+ * > | import('discord.js').StringSelectMenuInteraction<
+ *   import('discord.js').CacheType
+ * >} InputCommandOrSelectMenu
+ */
+
+/**
+ * @typedef {object} BotCommand
+ * @property {RegExp} [re]
+ * @property {string} [name]
+ * @property {string} [description]
+ * @property {(
+ *   interaction: InputCommandOrSelectMenu
+ * ) => Promise<void>} [slashCommand]
+ * @property {import('discord.js').
+ *   _AddUndefinedToPossiblyUndefinedPropertiesOfInterface<
+ *     import('discord.js').APIApplicationCommandOption[] | undefined
+ *   >} [options]
+ * @property {(
+ *   interaction: import('discord.js').AutocompleteInteraction<
+ *   import('discord.js').CacheType
+ * >
+ * ) => Promise<void>} [autocomplete]
+ * @property {boolean} [deleted]
+ * @property {ActionBehavior} [action]
+ * @property {NotMentionedCommand} [notMentioned]
+ * @property {{name: string, value: string}} [helpInfo] For use with !help
+ * @property {{name: string, value: string}} [helpExtra] For use with
+ *   !helpextras
+ * @property {{name: string, value: string}} [helpAdmin] For use with !helpAdmin
+ */
 
 /**
 * @typedef {Object<string,BotCommand>} BotCommands
@@ -7744,18 +8812,21 @@ const getCommands = async function ({
 
   // eslint-disable-next-line @stylistic/max-len -- Long
   const objs = await Promise.all(/** @type {([string, () => BotCommands])[]} */ ([
-    ['socialInfo', () => getSocialInfo({ADMIN_ROLES: ADMIN_ROLES$1, client})],
+    ['socialInfo', () => getSocialInfo({ADMIN_ROLES: ADMIN_ROLES$1, client, _, Discord})],
     [
       'bahaiWritings',
       () => getBahaiWritings({fs, settings, client, Discord})
     ],
-    ['bahaiWikis', () => getBahaiWikis({wikiTools, client, _})],
+    ['bahaiWikis', () => getBahaiWikis({wikiTools, client, _, Discord})],
     ['admin', () => getAdmin({
       ADMIN_IDS: ADMIN_IDS$1, ADMIN_PERMISSION: ADMIN_PERMISSION$1, PUPPET_AUTHOR, guildCheckin, _,
-      discordTTS, DiscordVoice
+      discordTTS, DiscordVoice, Discord
     })],
     ['bahaiInfo', () => getBahaiInfo({client, Discord})],
-    ['bahaiSalutations', () => getBahaiSalutations({client})],
+    ['bahaiSalutations', () => getBahaiSalutations({
+      client,
+      BSTAR_EMOJI_ID_LAB: BSTAR_EMOJI_ID_LAB
+    })],
     ['salutations', () => getSalutations()],
     ['lightHearted', () => getLightHearted()]
   ]).map(async ([name, cmd]) => {
@@ -8113,9 +9184,115 @@ function getCheckin ({
   };
 }
 
-// Todo: Ought to do a review to ensure all Promise APIs are awaited or at
-//   least flagged as deliberately not awaiting
+/**
+ * @license MIT
+ * @see Adapted from {@link https://github.com/notunderctrl/discordjs-v14-series/tree/master/07%20-%20Command%20Handler}
+ * @param {import('discord.js').ApplicationCommand<
+ *   {guild: import('discord.js').GuildResolvable
+ * }>} existingCommand
+ * @param {Partial<Pick<import('discord.js').ApplicationCommand<
+ *   {guild: import('discord.js').GuildResolvable
+ * }>, "description"|"options">>} localCommand
+ * @returns {boolean}
+ */
+const areCommandsDifferent = (existingCommand, localCommand) => {
+  /**
+   * @param {readonly import('discord.js').
+   *   ApplicationCommandOptionChoiceData[]} existingChoices
+   * @param {readonly import('discord.js').
+   *   ApplicationCommandOptionChoiceData[]} localChoices
+   * @returns {boolean}
+   */
+  const areChoicesDifferent = (existingChoices, localChoices) => {
+    for (const localChoice of localChoices) {
+      const existingChoice = existingChoices?.find(
+        (choice) => choice.name === localChoice.name
+      );
 
+      if (!existingChoice) {
+        return true;
+      }
+
+      if (localChoice.value !== existingChoice.value) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  /**
+   * @param {import('discord.js').ApplicationCommand<
+   *   {guild: import('discord.js').GuildResolvable
+   * }>['options']} existingOptions
+   * @param {import('discord.js').ApplicationCommand<
+   *   {guild: import('discord.js').GuildResolvable
+   * }>['options']} localOptions
+   * @returns {boolean}
+   */
+  const areOptionsDifferent = (existingOptions, localOptions) => {
+    for (const localOption of localOptions) {
+      const existingOption = existingOptions?.find(
+        (option) => option.name === localOption.name
+      );
+
+      if (!existingOption) {
+        return true;
+      }
+
+      if (
+        localOption.description !== existingOption.description ||
+        localOption.type !== existingOption.type ||
+        (
+          ('required' in localOption && localOption.required) || false) !==
+            ('required' in existingOption && existingOption.required) ||
+              (('choices' in localOption &&
+                localOption.choices?.length) || 0) !==
+                  (('choices' in existingOption &&
+                    existingOption.choices?.length) || 0) ||
+                      areChoicesDifferent(
+                        ('choices' in existingOption &&
+                          existingOption.choices) || [],
+                        ('choices' in localOption && localOption.choices) || []
+                      )
+      ) {
+        return true;
+      }
+      // If this option itself has nested options (subcommands or groups),
+      // compare them recursively.
+      // If this option itself has nested options (subcommands or groups),
+      // compare them recursively.
+      if ('options' in localOption || 'options' in existingOption) {
+        let localNested = [];
+        if ('options' in localOption && Array.isArray(localOption.options)) {
+          localNested = localOption.options;
+        }
+
+        let existingNested = [];
+        if (
+          'options' in existingOption &&
+          Array.isArray(existingOption.options)
+        ) {
+          existingNested = existingOption.options;
+        }
+
+        if (localNested.length !== existingNested.length) {
+          return true;
+        }
+
+        if (areOptionsDifferent(existingNested, localNested)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  return (
+    existingCommand.description !== localCommand.description ||
+    existingCommand.options?.length !== (localCommand.options?.length || 0) ||
+    areOptionsDifferent(existingCommand.options, localCommand.options || [])
+  );
+};
 
 /**
  * @callback MessageListener
@@ -8129,8 +9306,7 @@ function getCheckin ({
  * @typedef {object} BotOptions
  * @property {boolean} [checkins=false]
  * @property {string[]} [locales=["en-US"]]
- * @property {globalThis.fetch|import('node-fetch').
- *   default} [fetch=globalThis.fetch]
+ * @property {globalThis.fetch} [fetch=globalThis.fetch]
  * @property {typeof import('intl-dom').i18n} [i18n=globalThis?.intlDom?.i18n]
  * @property {import('./getWikiTools.js').
  *   StripTags} [striptags=globalThis.striptags]
@@ -8179,6 +9355,73 @@ const supportedLocales = [
 ];
 
 /**
+ * @license MIT
+ * @see Adapted from {@link https://github.com/notunderctrl/discordjs-v14-series/tree/master/07%20-%20Command%20Handler}
+ * @param {import('discord.js').Client} client
+ * @param {import('./commands/getCommands.js').BotCommands} localCommands
+ * @param {import('intl-dom').I18NCallback} _
+ */
+const registerCommands = async (client, localCommands, _) => {
+  const applicationCommands = await client.application?.commands;
+  if (!applicationCommands) {
+    // eslint-disable-next-line no-console -- CLI
+    console.log(_('no_application_commands_found'));
+    return;
+  }
+  await applicationCommands.fetch();
+
+  await Promise.all(Object.values(localCommands).map(async (localCommand) => {
+    const {name, description, options} = localCommand;
+
+    if (!name || !description) {
+      return;
+    }
+
+    const existingCommand = await applicationCommands.cache.find(
+      (cmd) => {
+        return cmd.name === name;
+      }
+    );
+
+    if (existingCommand) {
+      if (localCommand.deleted) {
+        await applicationCommands.delete(existingCommand.id);
+        // eslint-disable-next-line no-console -- CLI
+        console.log(_('deleted_command', {name}));
+        return;
+      }
+
+      if (areCommandsDifferent(existingCommand, localCommand)) {
+        await applicationCommands.edit(existingCommand.id, {
+          description,
+          options
+        });
+
+        // eslint-disable-next-line no-console -- CLI
+        console.log(_('edited_command', {name}));
+      }
+    } else {
+      if (localCommand.deleted) {
+        // eslint-disable-next-line no-console -- CLI
+        console.log(
+          `⏩ Skipping registering command "${name}" as it's set to delete.`
+        );
+        return;
+      }
+
+      await applicationCommands.create({
+        name,
+        description,
+        options
+      });
+
+      // eslint-disable-next-line no-console -- CLI
+      console.log(_('registered_command', {name}));
+    }
+  }));
+};
+
+/**
  * @template {object} T
  * @template {keyof T} Keys
  * @typedef {T & Required<Pick<T, Keys>>} WithRequired
@@ -8201,7 +9444,7 @@ const supportedLocales = [
 const bot = async ({
   checkins = false,
   locales = typeof navigator === 'undefined'
-    /* c8 ignore next 5 */
+    /* c8 ignore next 5 -- Browser */
     ? [defaultLocale]
     : [...navigator.languages.filter((locale) => {
       return supportedLocales.includes(locale);
@@ -8223,7 +9466,6 @@ const bot = async ({
    * @type {GetSettings}
    */
   getSettings: defaultGetSettings,
-  /* c8 ignore next -- Todo? */
   getPath = (path) => path,
   // numberOfCommands = 1,
   commandInterval = 2000,
@@ -8241,14 +9483,17 @@ const bot = async ({
 
   // Update local copy
   // Create an instance of a Discord client
-  const client = cl || /* c8 ignore next */ new Discord.Client({
+  const client = cl ||
+  /* c8 ignore next -- Mocks don't use */ new Discord.Client({
     intents: [
       Discord.GatewayIntentBits.Guilds,
       Discord.GatewayIntentBits.GuildMessages,
       Discord.GatewayIntentBits.MessageContent,
       Discord.GatewayIntentBits.GuildMembers,
+      Discord.GatewayIntentBits.GuildVoiceStates,
       Discord.GatewayIntentBits.GuildPresences
-    ]
+    ],
+    partials: [Discord.Partials.GuildMember]
   });
 
   // Import the .json settings (use this when JSON importing is standard in
@@ -8320,16 +9565,50 @@ const bot = async ({
     fs, settings, discordTTS, DiscordVoice
   });
 
+  client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isChatInputCommand() &&
+      !interaction.isStringSelectMenu() &&
+      !interaction.isAutocomplete()) {
+      return;
+    }
+
+    const commandObject = interaction.isAutocomplete()
+      ? Object.values(botCommands).find((cmd) => {
+        return cmd.name === interaction.commandName;
+      })
+      : interaction.isStringSelectMenu()
+        ? Object.values(botCommands).find((cmd) => {
+          return cmd.name === interaction.customId.split('_')[0];
+        })
+        : Object.values(botCommands).find((cmd) => {
+          return cmd.name === interaction.commandName;
+        });
+
+    if (!commandObject) {
+      return;
+    }
+
+    if (interaction.isAutocomplete()) {
+      await commandObject?.autocomplete?.(interaction);
+      return;
+    }
+
+    await commandObject?.slashCommand?.(interaction);
+    client.emit('bahaibot:command-finished');
+  });
+
   /**
   * @callback ReadyListener
-  * @returns {void}
+  * @returns {Promise<void>}
   */
 
   // The ready event is vital, it means that your bot will only start
   //  reacting to information from Discord _after_ ready is emitted
-  client.on('clientReady', /** @type {ReadyListener} */ () => {
+  client.on('clientReady', /** @type {ReadyListener} */ async () => {
     // eslint-disable-next-line no-console -- CLI
     console.log(_('BahaiBotOnline'));
+
+    await registerCommands(client, botCommands, _);
 
     // To run immediately (as for testing), uncomment:
     // guildCheckin();
@@ -8364,7 +9643,7 @@ const bot = async ({
         //   recurring within the 8am EST (12pm UTC) window)
         guildCheckin();
       } /* else {
-        console.log('FAILED check');
+        // console.log('FAILED check');
       } */
       // Keep normal supplied interval (`fiftyMinutesInMilliseconds`); we could
       //   also just return `undefined`
@@ -8383,7 +9662,6 @@ const bot = async ({
       //   return;
       // }
       const message = /** @type {import('discord.js').Message<true>} */ (msg);
-
       // Collect userID
       // Ensure that the bot is being messaged
       if (client.user && message.mentions.has(client.user)) {
@@ -8395,11 +9673,11 @@ const bot = async ({
           // console.log('Command info',
           //  command.re, message.content, command.re.test(message.content)
           // );
-          if (command.re.test(message.content)) {
+          if (command.re?.test(message.content)) {
             try {
               // eslint-disable-next-line @stylistic/max-len -- Long
               // eslint-disable-next-line no-await-in-loop -- Needs to be in series
-              await command.action(message);
+              await command.action?.(message);
             /* c8 ignore start */
             } catch (err) {
               // eslint-disable-next-line no-console -- CLI
@@ -8424,7 +9702,7 @@ const bot = async ({
           return cmd.notMentioned;
         });
         for (const {re, notMentioned} of notMentionedCommands) {
-          if (re.test(message.content) &&
+          if (re?.test(message.content) &&
             (!notMentioned?.check ||
               // Any extra checks
               notMentioned.check(message))
@@ -8604,10 +9882,6 @@ function integratedClientServerBot (args) {
     i18n,
     /** @type {import('./getWikiTools.js').StripTags} */
     striptags: (str) => fe(str).result,
-    // Todo: See about using https://github.com/mishushakov/dialogflow-web-v2
-    //   to pass in as is (or with an adapter as needed) for our `dialogflow`
-    //   argument, allowing the user to only neeed to pass in their own
-    //   `Discord`
     ...args
   });
 }
