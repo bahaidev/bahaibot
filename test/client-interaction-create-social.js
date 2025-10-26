@@ -48,8 +48,14 @@ describe('`interactionCreate` social', function () {
             };
           }
         },
-        reply (msg) {
+        deferReply () {
+          //
+        },
+        editReply (msg) {
           message = /** @type {string} */ (msg);
+        },
+        reply () {
+          //
         }
       });
 
@@ -176,8 +182,14 @@ describe('`interactionCreate` social', function () {
             };
           }
         },
-        reply (msg) {
+        deferReply () {
+          //
+        },
+        editReply (msg) {
           message = /** @type {string} */ (msg);
+        },
+        reply () {
+          //
         }
       });
 
@@ -311,8 +323,14 @@ describe('`interactionCreate` social', function () {
             };
           }
         },
-        reply (msg) {
+        deferReply () {
+          //
+        },
+        editReply (msg) {
           message = /** @type {string} */ (msg);
+        },
+        reply () {
+          //
         }
       });
 
@@ -439,8 +457,14 @@ describe('`interactionCreate` social', function () {
             };
           }
         },
-        reply (msg) {
+        deferReply () {
+          //
+        },
+        editReply (msg) {
           message = /** @type {string} */ (msg);
+        },
+        reply () {
+          //
         }
       });
 
@@ -599,8 +623,14 @@ describe('`interactionCreate` social', function () {
             };
           }
         },
-        reply (msg) {
+        deferReply () {
+          //
+        },
+        editReply (msg) {
           message = /** @type {string} */ (msg);
+        },
+        reply () {
+          //
         }
       });
 
@@ -760,8 +790,14 @@ describe('`interactionCreate` social', function () {
             };
           }
         },
-        reply (msg) {
+        deferReply () {
+          //
+        },
+        editReply (msg) {
           message = /** @type {string} */ (msg);
+        },
+        reply () {
+          //
         }
       });
 
