@@ -98,7 +98,9 @@ const getAdmin = ({
 
         const words = interaction.options.getString('words');
 
-        await interaction.deferReply({ephemeral: true});
+        await interaction.deferReply({
+          flags: Discord.MessageFlags.Ephemeral
+        });
 
         const spoken = await this.action?.({
           member: {

@@ -183,6 +183,9 @@ const getSocialInfo = ({
         if (!interaction.inCachedGuild() || interaction.isStringSelectMenu()) {
           return;
         }
+        await interaction.deferReply({
+          flags: Discord.MessageFlags.Ephemeral
+        });
         await this.action?.({
           author: interaction.user,
           content: String(interaction.options.get('user')?.value),
@@ -193,7 +196,7 @@ const getSocialInfo = ({
              */
             // @ts-expect-error Just mocking what we need
             send (reply) {
-              interaction.reply(reply);
+              interaction.editReply(reply);
             }
           }
         });
