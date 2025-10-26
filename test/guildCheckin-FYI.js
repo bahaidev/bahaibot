@@ -21,10 +21,6 @@ const discordOptions = {
           name: 'general'
         },
         {
-          id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-          name: 'irc-bridge'
-        },
-        {
           id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
           name: 'study-hall'
         }
@@ -45,6 +41,7 @@ const discordOptions = {
 describe('guildCheckin (FYI)', () => {
   beforeEach(function () {
     this.sinon = createSandbox();
+    // @ts-ignore We want it here
     this.sinon.spyOnGetterResults = spyOnGetterResults;
   });
   afterEach(function () {
@@ -98,7 +95,7 @@ describe('guildCheckin (FYI)', () => {
     await fs.writeFile('greet.guild.txt', '');
     const opts = /** @type {discordOptions} */ (jsonClone(discordOptions));
 
-    // Remove #general, #irc-bridge, #study-hall
+    // Remove #general (FYI) and #study-hall
     opts.guilds[0].channels = [];
 
     const discord = new MockDiscord(
@@ -150,10 +147,6 @@ describe('guildCheckin (FYI)', () => {
     );
 
     expect(guildChannelsGetterSpy.secondCall.firstArg).to.equal(
-      DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID
-    );
-
-    expect(guildChannelsGetterSpy.thirdCall.firstArg).to.equal(
       DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID
     );
 
@@ -189,7 +182,7 @@ describe('guildCheckin (FYI)', () => {
     );
     // @ts-expect-error Sinon
     expect(console.log.secondCall.firstArg).to.have.string(
-      'Last greeting to #general, #irc-bridge, and #study-hall'
+      'Last greeting to #general and #study-hall'
     );
 
     // @ts-expect-error Sinon
@@ -198,21 +191,17 @@ describe('guildCheckin (FYI)', () => {
     );
     // @ts-expect-error Sinon
     expect(console.log.getCall(3).firstArg).to.have.string(
-      "Bahá'í.FYI #irc-bridge found"
-    );
-    // @ts-expect-error Sinon
-    expect(console.log.getCall(4).firstArg).to.have.string(
       "Bahá'í.FYI #study-hall found"
     );
 
     // @ts-expect-error Sinon
-    expect(console.log.getCall(5).firstArg).to.have.string(
+    expect(console.log.getCall(4).firstArg).to.have.string(
       'Query completed, posting Today in History.'
     );
 
     // @ts-expect-error Sinon
-    expect(console.log.getCall(6).firstArg).to.have.string(
-      'Greeting sent to #general, #irc-bridge, and #study-hall.'
+    expect(console.log.getCall(5).firstArg).to.have.string(
+      'Greeting sent to #general and #study-hall.'
     );
   });
 
@@ -241,7 +230,7 @@ describe('guildCheckin (FYI)', () => {
 
     // @ts-expect-error Sinon
     expect(console.log.secondCall.firstArg).to.equal(
-      'First greet for #general, #irc-bridge, and #study-hall'
+      'First greet for #general and #study-hall'
     );
 
     // @ts-expect-error Sinon
@@ -288,8 +277,7 @@ describe('guildCheckin (FYI)', () => {
       get: {
         simpleSpy: guildChannelsGetterSpy,
         childSpies: [
-          guildChannelsGetResultSendSpy, guildChannelsGetResultSendSpy2,
-          guildChannelsGetResultSendSpy3
+          guildChannelsGetResultSendSpy, guildChannelsGetResultSendSpy2
         ]
       }
     } = guildChannelsCache;
@@ -304,7 +292,6 @@ describe('guildCheckin (FYI)', () => {
 
     [
       'BAHAI_FYI_GENERAL_CHANNEL_ID',
-      'BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID',
       'BAHAI_FYI_STUDY_HALL_CHANNEL_ID'
     ].forEach((constant, idx) => {
       /* eslint-disable import/namespace -- Safe */
@@ -327,16 +314,12 @@ describe('guildCheckin (FYI)', () => {
       /everyone|everybody|Alláh|cooking/v
     );
 
-    expect(guildChannelsGetResultSendSpy2.firstCall.firstArg).to.match(
-      /Hello|everyone|everybody|Alláh|cooking/v
-    );
-
-    expect(guildChannelsGetResultSendSpy3.firstCall.firstArg.content).to.equal(
+    expect(guildChannelsGetResultSendSpy2.firstCall.firstArg.content).to.equal(
       'Here is the result of your query.'
     );
 
     expect(
-      guildChannelsGetResultSendSpy3.firstCall.firstArg.embeds[0].description
+      guildChannelsGetResultSendSpy2.firstCall.firstArg.embeds[0].description
     ).to.have.string(
       "Here's Bahaipedia's Today in History entry for"
     ).and.to.have.string(
@@ -345,7 +328,7 @@ describe('guildCheckin (FYI)', () => {
 
     // @ts-expect-error Sinon
     expect(console.log.calledWith(
-      'Greeting sent to #general, #irc-bridge, and #study-hall.'
+      'Greeting sent to #general and #study-hall.'
     )).to.be.true;
   });
 
@@ -428,7 +411,6 @@ describe('guildCheckin (FYI)', () => {
 
       [
         'BAHAI_FYI_GENERAL_CHANNEL_ID',
-        'BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID',
         'BAHAI_FYI_STUDY_HALL_CHANNEL_ID'
       ].forEach((constant, idx) => {
         /* eslint-disable import/namespace -- Safe */

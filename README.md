@@ -174,14 +174,20 @@ checkinGuilds = [
         })
       },
       {
-        id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-        greetings: getLocalizedSetting('fyiCheckin-ircBridge', {
-          defaultValue: greets.fyiCheckin.ircBridge
-        })
-      },
-      {
         id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
         bpToday: true
+      }
+    ]
+  },
+  {
+    guildID: DiscordConstants.BAHAI_WIKIS_GUILD_ID,
+    guildName: "Bahá'í Wikis",
+    guildChannels: [
+      {
+        id: DiscordConstants.BAHAI_WIKIS_GENERAL_CHANNEL_ID,
+        greetings: getLocalizedSetting('bahaiWikisCheckin-general', {
+          defaultValue: greets.fyiCheckin.general
+        })
       }
     ]
   }
@@ -220,9 +226,6 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
     1. complete i18nizing messages
 
 1. Other to-dos per @dragfyre
-    1. Confirm daily hello post
-        1. Could also say hello when coming online
-    1. Remove #irc-bridge and add ⁠👋┊general on Bahá'í wikis server
     1.  `/read` defaults to return a link to a page from a book, OR displays
         the Hidden Word in an embed if the Hidden Words are chosen; search
         individual books, possibly by `/page` or `/para` or some sort of

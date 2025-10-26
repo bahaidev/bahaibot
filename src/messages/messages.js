@@ -13,16 +13,6 @@ const greets = {
       "What's up, everyone?", "What's good, everyone?",
       "Hey everyone, what's new?", "Hey everybody, what's up?",
       "Hey, what's up everyone?", "Hi everybody, what's up?"
-    ],
-    ircBridge: [
-      'Hello IRC.', 'Hi, everybody.', 'Hi, everyone.',
-      'Hi there, everyone!', 'Hello, everyone.',
-      'Hello there, everyone.', 'Alláh-u-Abhá!',
-      'Alláh-u-Abhá, IRC.', 'Alláh-u-Abhá, everyone.',
-      "What's cooking, everybody?", "Hey all, what's cooking?",
-      "What's up, everyone?", "What's good, everyone?",
-      "Hey everyone, what's new?", "Hey everybody, what's up?",
-      "Hey, what's up everyone?", "Hi everybody, what's up?"
     ]
   },
   guildMemberAdd: [

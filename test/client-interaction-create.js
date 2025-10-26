@@ -114,10 +114,6 @@ describe('`interactionCreate`', function () {
                 name: 'general'
               },
               {
-                id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-                name: 'irc-bridge'
-              },
-              {
                 id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
                 name: 'study-hall'
               }
@@ -185,10 +181,6 @@ describe('`interactionCreate`', function () {
               {
                 id: DiscordConstants.BAHAI_FYI_GENERAL_CHANNEL_ID,
                 name: 'general'
-              },
-              {
-                id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-                name: 'irc-bridge'
               },
               {
                 id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,

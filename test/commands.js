@@ -787,10 +787,6 @@ describe('Commands', () => {
               name: 'general'
             },
             {
-              id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-              name: 'irc-bridge'
-            },
-            {
               id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
               name: 'study-hall'
             }
@@ -862,10 +858,6 @@ describe('Commands', () => {
             {
               id: DiscordConstants.BAHAI_FYI_GENERAL_CHANNEL_ID,
               name: 'general'
-            },
-            {
-              id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-              name: 'irc-bridge'
             },
             {
               id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
@@ -941,10 +933,6 @@ describe('Commands', () => {
               name: 'general'
             },
             {
-              id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-              name: 'irc-bridge'
-            },
-            {
               id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
               name: 'study-hall'
             }
@@ -1018,10 +1006,6 @@ describe('Commands', () => {
               name: 'general'
             },
             {
-              id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-              name: 'irc-bridge'
-            },
-            {
               id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
               name: 'study-hall'
             }
@@ -1090,10 +1074,6 @@ describe('Commands', () => {
             {
               id: DiscordConstants.BAHAI_FYI_GENERAL_CHANNEL_ID,
               name: 'general'
-            },
-            {
-              id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-              name: 'irc-bridge'
             },
             {
               id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
@@ -1166,10 +1146,6 @@ describe('Commands', () => {
             {
               id: DiscordConstants.BAHAI_FYI_GENERAL_CHANNEL_ID,
               name: 'general'
-            },
-            {
-              id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-              name: 'irc-bridge'
             },
             {
               id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
@@ -1248,10 +1224,6 @@ describe('Commands', () => {
               name: 'general'
             },
             {
-              id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-              name: 'irc-bridge'
-            },
-            {
               id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
               name: 'study-hall'
             }
@@ -1324,10 +1296,6 @@ describe('Commands', () => {
               name: 'general'
             },
             {
-              id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-              name: 'irc-bridge'
-            },
-            {
               id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
               name: 'study-hall'
             }
@@ -1394,10 +1362,6 @@ describe('Commands', () => {
             {
               id: DiscordConstants.BAHAI_FYI_GENERAL_CHANNEL_ID,
               name: 'general'
-            },
-            {
-              id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-              name: 'irc-bridge'
             },
             {
               id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
@@ -1472,10 +1436,6 @@ describe('Commands', () => {
             {
               id: DiscordConstants.BAHAI_FYI_GENERAL_CHANNEL_ID,
               name: 'general'
-            },
-            {
-              id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-              name: 'irc-bridge'
             },
             {
               id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
@@ -1553,10 +1513,6 @@ describe('Commands', () => {
               name: 'general'
             },
             {
-              id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-              name: 'irc-bridge'
-            },
-            {
               id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
               name: 'study-hall'
             }
@@ -1628,10 +1584,6 @@ describe('Commands', () => {
               name: 'general'
             },
             {
-              id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-              name: 'irc-bridge'
-            },
-            {
               id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
               name: 'study-hall'
             }
@@ -1701,10 +1653,6 @@ describe('Commands', () => {
             {
               id: DiscordConstants.BAHAI_FYI_GENERAL_CHANNEL_ID,
               name: 'general'
-            },
-            {
-              id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-              name: 'irc-bridge'
             },
             {
               id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
@@ -1847,10 +1795,6 @@ describe('Commands', () => {
               name: 'general'
             },
             {
-              id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-              name: 'irc-bridge'
-            },
-            {
               id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
               name: 'study-hall'
             }
@@ -1902,10 +1846,6 @@ describe('Commands', () => {
             {
               id: DiscordConstants.BAHAI_FYI_GENERAL_CHANNEL_ID,
               name: 'general'
-            },
-            {
-              id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-              name: 'irc-bridge'
             },
             {
               id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,

@@ -51,14 +51,20 @@ function getCheckin ({
             })
           },
           {
-            id: DiscordConstants.BAHAI_FYI_IRC_BRIDGE_CHANNEL_ID,
-            greetings: getLocalizedSetting('fyiCheckin-ircBridge', {
-              defaultValue: greets.fyiCheckin.ircBridge
-            })
-          },
-          {
             id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
             bpToday: true
+          }
+        ]
+      },
+      {
+        guildID: DiscordConstants.BAHAI_WIKIS_GUILD_ID,
+        guildName: "Bahá'í Wikis",
+        guildChannels: [
+          {
+            id: DiscordConstants.BAHAI_WIKIS_GENERAL_CHANNEL_ID,
+            greetings: getLocalizedSetting('bahaiWikisCheckin-general', {
+              defaultValue: greets.fyiCheckin.general
+            })
           }
         ]
       }
@@ -85,7 +91,11 @@ function getCheckin ({
         guildName: /** @type {string} */ (guildName)
       }));
 
-      channels = guildChannels.map((guildChannel) => {
+      if (!channels) {
+        channels = [];
+      }
+
+      channels.push(...guildChannels.map((guildChannel) => {
         const {
           id: guildChannelID, greetings
         } = guildChannel;
@@ -104,7 +114,7 @@ function getCheckin ({
         };
       }).filter(({channel}) => {
         return channel;
-      });
+      }));
 
       if (!channels.length) {
         return;
