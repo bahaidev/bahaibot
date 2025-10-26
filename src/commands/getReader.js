@@ -77,9 +77,10 @@
  * @param {object} cfg
  * @param {import('../integratedClientServerBot.js').LimitedFs} cfg.fs
  * @param {import('../discordBot.js').Settings} cfg.settings
+ * @param {import('intl-dom').I18NCallback} cfg._
  * @returns {Promise<ReaderInfo>}
  */
-async function getReader ({fs, settings}) {
+async function getReader ({fs, settings, _}) {
   // IMPORT FILES
 
   /**
@@ -150,8 +151,9 @@ async function getReader ({fs, settings}) {
     }
     /* c8 ignore next 3 -- Unless a book has a missing chapter numbering,
         it seems this will be unreachable */
-    return "I know which work you're talking about, but I can't find that " +
-      `section in it. Valid section numbers are from **1** to **${max}**.`;
+    return /** @type {string} */ (_('know_which_work_but_cant_find', {
+      max
+    }));
   }
 
   /**
@@ -326,16 +328,17 @@ async function getReader ({fs, settings}) {
     const content = showListing();
 
     message.channel.send({
-      content: `The following texts are available in my ` +
-                      `library, ${message.author.username}.`,
+      content: /** @type {string} */ (
+        _('following_texts_available_in_library', {
+          username: message.author.username
+        })
+      ),
       embeds: [{
         color: 8359053,
-        description: '\nTo read from one of these texts, mention the ' +
-            "book name and the section you're interested in. For example, " +
-            'to read the 12th Arabic Hidden Word, say: `!read HWA 12`.',
+        description: /** @type {string} */ (_('to_read_mention_book_name')),
         fields: [
           {
-            name: 'Available Texts',
+            name: /** @type {string} */ (_('available_texts')),
             value: content
           }
         ]
@@ -410,9 +413,7 @@ async function getReader ({fs, settings}) {
     // Inform the user they need to provide the correct input.
     // This is the default false conditions
     message.channel.send(
-      "I couldn't understand your request. Make sure you format your " +
-      'request like this: ``read <work> <section number>``. To see the ' +
-      'list of works in my library, type ``read list``.'
+      /** @type {string} */ (_('couldnt_understand_request'))
     );
   }
 

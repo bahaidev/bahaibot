@@ -94,7 +94,7 @@ function getWikiTools ({
         return text;
       } catch (error) {
         // eslint-disable-next-line no-console -- CLI
-        console.error('Error retrieving JSON for today URL', tUrl, error);
+        console.error(_('error_retrieving_json_for_today_url'), tUrl, error);
         return '';
       }
     },
@@ -145,7 +145,7 @@ function getWikiTools ({
         };
       } catch (error) {
         // eslint-disable-next-line no-console -- CLI
-        console.error('Error retrieving random wiki URL', rUrl, error);
+        console.error(_('error_retrieving_random_wiki_url'), rUrl, error);
         return '';
       }
     },
@@ -247,7 +247,7 @@ function getWikiTools ({
         return false;
       } catch (error) {
         // eslint-disable-next-line no-console -- CLI
-        console.error('Error retrieving wiki search URL', sUrl, error);
+        console.error(_('error_retrieving_wiki_search_url'), sUrl, error);
         return undefined;
       }
     }
@@ -308,7 +308,7 @@ function getWikiTools ({
         return false;
       } catch (error) {
         // eslint-disable-next-line no-console -- CLI
-        console.error('Error retrieving Bahaipedia page info', url, error);
+        console.error(_('Error retrieving Bahaipedia page info'), url, error);
         return undefined;
       }
     },

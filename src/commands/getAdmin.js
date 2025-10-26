@@ -173,11 +173,12 @@ const getAdmin = ({
         return new Promise((resolve) => {
           player.on('error', (error) => {
             // eslint-disable-next-line no-console -- Debugging
-            console.error(`Error: ${error.message} with resource ${
+            console.error(_('error_with_resource', {
+              message: error.message,
               /* c8 ignore next 2 -- Bug? */
               // @ts-expect-error Ok
-              error.resource?.metadata?.title
-            }`);
+              title: error.resource?.metadata?.title ?? ''
+            }));
             resolve(false);
           });
           // @ts-expect-error Ok
@@ -378,7 +379,7 @@ const getAdmin = ({
           /* c8 ignore next 4 -- How to simulate? */
           } catch (err) {
             // eslint-disable-next-line no-console -- CLI
-            console.error('Error checking in', err);
+            console.error(_('error_checking_in'), err);
           }
         }
 

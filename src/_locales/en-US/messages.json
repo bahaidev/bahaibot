@@ -80,6 +80,66 @@
     },
     "action_only_for_admins": {
       "message": "Action only for admins"
+    },
+    "query_completed": {
+      "message": "Query completed."
+    },
+    "result": {
+      "message": "Result:"
+    },
+    "bp_command_issued_by": {
+      "message": "BP command issued by {username}."
+    },
+    "search_completed": {
+      "message": "Search completed: {keywords} => {title}"
+    },
+    "error_checking_in": {
+      "message": "Error checking in"
+    },
+    "error_with_resource": {
+      "message": "Error: {message} with resource {title}"
+    },
+    "error_retrieving_json_for_today_url": {
+      "message": "Error retrieving JSON for today URL"
+    },
+    "error_retrieving_random_wiki_url": {
+      "message": "Error retrieving random wiki URL"
+    },
+    "error_retrieving_wiki_search_url": {
+      "message": "Error retrieving wiki search URL"
+    },
+    "error_getting_bahaipedia_today": {
+      "message": "Error getting Bahaipedia Today"
+    },
+    "error_getting_wiki_random": {
+      "message": "Error getting wiki random"
+    },
+    "error_getting": {
+      "message": "Error getting"
+    },
+    "error_with_random_wiki": {
+      "message": "Error with random wiki"
+    },
+    "error_with_today_in_history": {
+      "message": "Error with today in history"
+    },
+    "error_searching_wiki": {
+      "message": "Error searching wiki"
+    },
+    "know_which_work_but_cant_find": {
+      "message": "I know which work you're talking about, but I can't find that section in it. Valid section numbers are from **1** to **{max}**."
+    },
+    "couldnt_understand_request": {
+      "message": "I couldn't understand your request. Make sure you format your request like this: ``read <work> <section number>``. To see the list of works in my library, type ``read list``."
+    },
+    "available_texts": {
+      "message": "Available Texts"
+    },
+    "to_read_mention_book_name": {
+      "message": "\nTo read from one of these texts, mention the book name and the section you're interested in. For example, to read the 12th Arabic Hidden Word, say: `!read HWA 12`."
+    },
+    "following_texts_available_in_library": {
+      "message": "The following texts are available in my library, {username}."
     }
   }
 }

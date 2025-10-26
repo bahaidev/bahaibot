@@ -17,7 +17,6 @@ export default [
       'sonarjs/pseudo-random': 0,
       'prefer-template': ['error'],
 
-      // Can remove this when to-dos are done
       'unicorn/expiring-todo-comments': ['warn', {
         allowWarningComments: false, terms: ['todo']
       }],

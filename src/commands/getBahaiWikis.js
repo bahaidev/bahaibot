@@ -21,13 +21,13 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
     /* c8 ignore next 5 -- Shouldn't need catch */
     } catch (err) {
       // eslint-disable-next-line no-console -- CLI
-      console.error('Error getting Bahaipedia Today', err);
+      console.error(_('error_getting_bahaipedia_today'), err);
       return;
     }
     // console.log(pi);
     if (res) {
       // eslint-disable-next-line no-console -- CLI
-      console.log('Query completed.');
+      console.log(_('query_completed'));
       /** @type {Intl.DateTimeFormatOptions} */
       const options = {month: 'long', day: 'numeric'};
       const date = Date.now();
@@ -80,14 +80,13 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
     /* c8 ignore next 5 -- Shouldn't need catch */
     } catch (err) {
       // eslint-disable-next-line no-console -- CLI
-      console.error('Error getting wiki random', err);
+      console.error(_('error_getting_wiki_random'), err);
       return;
     }
     const res = qr && qr.title && qr;
-    // console.log(pi);
     if (res) {
       // eslint-disable-next-line no-console -- CLI
-      console.log('Query completed.');
+      console.log(_('query_completed'));
       message.channel.send({
         content: 'Here is the result of your query.',
         embeds: [{
@@ -126,7 +125,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
 
   /**
    * @param {import('discord.js').Message<true>} message
-   * @param {string} kw
+   * @param {string} keywords
    * @param {import('../getWikiTools.js').Integer} numResults
    * @param {string} host
    * @param {string} bstarString
@@ -135,23 +134,26 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
    * @returns {Promise<void>}
    */
   const search = async function (
-    message, kw, numResults, host, bstarString, sitename, wikiPrefix
+    message, keywords, numResults, host, bstarString, sitename, wikiPrefix
   ) {
     let sr;
     try {
-      sr = await wikiTools.wikiGetURL(kw, numResults, host, wikiPrefix);
+      sr = await wikiTools.wikiGetURL(keywords, numResults, host, wikiPrefix);
     /* c8 ignore next 4 -- Errors should be caught internally by this method */
     } catch (err) {
       // eslint-disable-next-line no-console -- CLI
-      console.error('Error getting', err);
+      console.error(_('error_getting'), err);
     }
     // eslint-disable-next-line no-console -- CLI
-    console.log('Result:', sr);
+    console.log(_('result'), sr);
     const res = typeof sr === 'object' && sr?.title && sr;
     // console.log(pi);
     if (res) {
       // eslint-disable-next-line no-console -- CLI
-      console.log(`Search completed: ${kw} => ${res.title}`);
+      console.log(_('search_completed', {
+        keywords,
+        title: res.title
+      }));
       const regex = /<span class="searchmatch">|<\/span>/gvi;
       const snip = res.snippet?.replaceAll(regex, '**');
       message.channel.send({
@@ -168,7 +170,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
             }
 
 [See all search results…](https://${host}/index.php?search=insource%3A${
-  encodeURIComponent(kw)
+  encodeURIComponent(keywords)
 }&title=Special%3ASearch&go=Go&ns0=1)`,
           image: {
             url: res.img !== ''
@@ -297,7 +299,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
       /* c8 ignore next 5 -- Shouldn't err out */
       } catch (err) {
         // eslint-disable-next-line no-console -- CLI
-        console.error('Error with random wiki', err);
+        console.error(_('error_with_random_wiki'), err);
         return;
       }
     // today in history
@@ -312,7 +314,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
       /* c8 ignore next 5 -- Shouldn't err out */
       } catch (err) {
         // eslint-disable-next-line no-console -- CLI
-        console.error('Error with today in history', err);
+        console.error(_('error_with_today_in_history'), err);
         return;
       }
     } else if (searchRegex.test(keywords)) {
@@ -324,13 +326,15 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
       /* c8 ignore next 5 -- Shouldn't err out */
       } catch (err) {
         // eslint-disable-next-line no-console -- CLI
-        console.error('Error searching wiki', err);
+        console.error(_('error_searching_wiki'), err);
         return;
       }
     }
 
     // eslint-disable-next-line no-console -- CLI
-    console.log(`BP command issued by ${message.author.username}.`);
+    console.log(_('bp_command_issued_by', {
+      username: message.author.username
+    }));
   }
 
   const today = {

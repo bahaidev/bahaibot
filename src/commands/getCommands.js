@@ -1,6 +1,5 @@
-// Todo: i18nize messages within `getBahaiWikis.js`, `getReader.js`,
-//        and `messages.js`.
-// Todo: i18nize behavior of `getWikiTools.js`, `getBahaiWikis.js`
+// Todo: i18nize messages within `getReader.js` and `messages.js`.
+// Todo: i18nize behavior of `getWikiTools.js`, `getBahaiWikis.js` (and books of `getReader.js`)
 // Todo: i18nize `message.channel.send()` and `interaction.reply()` (the
 //        command files)
 
@@ -117,7 +116,7 @@ const getCommands = async function ({
     ['socialInfo', () => getSocialInfo({ADMIN_ROLES, client, _, Discord})],
     [
       'bahaiWritings',
-      () => getBahaiWritings({fs, settings, client, Discord})
+      () => getBahaiWritings({fs, settings, client, _, Discord})
     ],
     ['bahaiWikis', () => getBahaiWikis({wikiTools, client, _, Discord})],
     ['admin', () => getAdmin({

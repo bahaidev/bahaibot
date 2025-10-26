@@ -45,10 +45,11 @@ const worksByRandom = new Set([
  * @param {import('../discordBot.js').Settings} cfg.settings
  * @param {import('discord.js').Client} cfg.client
  * @param {import('discord.js')} cfg.Discord
+ * @param {import('intl-dom').I18NCallback} cfg._
  * @returns {Promise<import('./getCommands.js').BotCommands>}
  */
-const getBahaiWritings = async ({fs, settings, client, Discord}) => {
-  const reader = await getReader({fs, settings});
+const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
+  const reader = await getReader({fs, settings, _});
 
   /*
     "While the overall number of potential subcommands can be quite high

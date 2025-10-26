@@ -197,15 +197,17 @@ describe('`interactionCreate` admin', function () {
               /**
                * @param {string} ev
                * @param {(
-               *   ev: string,
-               *   info: {resource: {metadata: {title: string}}}
+               *   info: {
+               *     message: string,
+               *     resource: {metadata: {title: string}}
+               *   }
                * ) => void} cb
                */
               async on (ev, cb) {
                 await setTimeout();
 
-                // eslint-disable-next-line n/no-callback-literal -- API
-                cb('error', {
+                cb({
+                  message: '',
                   resource: {
                     metadata: {
                       title: ''
@@ -317,13 +319,12 @@ describe('`interactionCreate` admin', function () {
               /* eslint-disable promise/prefer-await-to-callbacks, jsdoc/ts-no-empty-object-type -- API */
               /**
                * @param {string} ev
-               * @param {(ev: string, info: {}) => void} cb
+               * @param {(info: {}) => void} cb
                */
               async on (ev, cb) {
                 await setTimeout();
 
-                // eslint-disable-next-line n/no-callback-literal -- API
-                cb('idle', {});
+                cb({message: ''});
                 // eslint-disable-next-line @stylistic/max-len -- Long
                 /* eslint-enable promise/prefer-await-to-callbacks, jsdoc/ts-no-empty-object-type -- API */
               },

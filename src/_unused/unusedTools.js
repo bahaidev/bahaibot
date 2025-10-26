@@ -43,7 +43,8 @@ async findID (id, db) {
     s = await db.once('value');
   } catch (err) {
     // eslint-disable-next-line no-console -- CLI
-    console.error('Error in `findID`, calling `db.once()`', err);
+    console.error(_('error_in_findid_calling_dbonce'), err);
+      // 'Error in `findID`, calling `db.once()`'
     return false;
   }
   if (s.hasChild(id)) {
@@ -51,7 +52,7 @@ async findID (id, db) {
     let dataset = s.val();
     dataset = dataset[id];
     // eslint-disable-next-line no-console -- CLI
-    console.log('ID successfully found');
+    console.log(_('id_successfully_found'));
     return dataset;
   }
 
