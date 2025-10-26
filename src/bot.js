@@ -386,7 +386,11 @@ const bot = async ({
       const message = /** @type {import('discord.js').Message<true>} */ (msg);
       // Collect userID
       // Ensure that the bot is being messaged
-      if (client.user && message.mentions.has(client.user)) {
+      if (client.user && message.mentions.has(client.user) &&
+        !message.author.bot &&
+        // @everyone or @here
+        !message.mentions.everyone
+      ) {
         if (isUserAbusive(message)) {
           client.emit('bahaibot:command-finished');
           return;
@@ -416,7 +420,9 @@ const bot = async ({
             break;
           }
         }
-      } else if (!disableNotMentioned) { // If the Bot is NOT Mentioned
+      } else if (
+        !disableNotMentioned && !message.author.bot
+      ) { // If the Bot is NOT Mentioned
         const notMentionedCommands = Object.values(
           botCommands
         ).filter((cmd) => {

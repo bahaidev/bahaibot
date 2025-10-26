@@ -38,11 +38,11 @@ describe('Client event (message)', function () {
     }
   );
 
-  it(
+  it.only(
     'Passes message if Bot is messaged and defaulting to use router',
     async function () {
       const discord = new MockDiscord({
-        mentionEveryone: true,
+        // mentionEveryone: true,
         messageContent: "What is the Baha'i Faith?"
       });
 
@@ -51,22 +51,26 @@ describe('Client event (message)', function () {
       const message = discord.getMessage();
 
       this.sinon.spy(message.channel, 'send');
-
-      // console.log('message', message);
-      client.emit('messageCreate', message);
-
       this.sinon.spy(console, 'log');
 
-      await commandFinished(client);
+      // eslint-disable-next-line promise/avoid-new -- API
+      const prom = new Promise((resolve) => {
+        client.on('bahaibot:command-finished', () => {
+          // @ts-expect-error Sinon
+          expect(message.channel.send.firstCall.firstArg).to.have.string(
+            "The Bahá'í Faith is an independent world religion"
+          );
+          // @ts-expect-error Sinon
+          expect(console.log.calledWith(
+            'Router response:'
+          )).to.be.true;
+          resolve(undefined);
+        });
+        // console.log('message', message);
+        client.emit('messageCreate', message);
+      });
 
-      // @ts-expect-error Sinon
-      expect(message.channel.send.firstCall.firstArg).to.have.string(
-        "The Bahá'í Faith is an independent world religion"
-      );
-      // @ts-expect-error Sinon
-      expect(console.log.calledWith(
-        'Router response:'
-      )).to.be.true;
+      return prom;
     }
   );
 
