@@ -34,7 +34,12 @@ function puppet ({
     );
 
     const destination = guild?.channels.cache.find(
-      (val) => val.name === userChannel
+      (val) => {
+        if (userChannel.startsWith('<#') || (/^\d+$/v).test(userChannel)) {
+          return val.id === userChannel.replace(/^<#/v, '').replace(/>$/v, '');
+        }
+        return val.name === userChannel;
+      }
     );
 
     // Does the channel exist?
