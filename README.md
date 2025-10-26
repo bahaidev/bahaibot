@@ -196,7 +196,7 @@ checkinGuilds = [
 
 ## Building one's own implemenations
 
-See [implementation-notes.md](./docs/implementation-notes.md).
+See [implementation-notes.md](./implementation-notes.md).
 
 ### A.I. Integration
 
@@ -225,13 +225,13 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 1. Go through in-code to-dos
     1. complete i18nizing messages
 
-1. Augment Dialogflow fallbacks with Bahaipedia search: A new intent called 
-   "General knowledge" has been created in Dialogflow. When the bot gets 
-   results back from Dialogflow, it should check to see if this intent has 
-   been matched: (i.e. `["queryResult"]["intent"]["displayName"] == 
-   "General knowledge"`). If it has, it should follow up its own response 
-   with a Bahaipedia search for the given phrase. Ex.: A user message reading 
-   "Who was Robert Turner" would trigger the general knowledge intent and 
+1. Augment Dialogflow fallbacks with Bahaipedia search: A new intent called
+   "General knowledge" has been created in Dialogflow. When the bot gets
+   results back from Dialogflow, it should check to see if this intent has
+   been matched: (i.e. `["queryResult"]["intent"]["displayName"] ==
+   "General knowledge"`). If it has, it should follow up its own response
+   with a Bahaipedia search for the given phrase. Ex.: A user message reading
+   "Who was Robert Turner" would trigger the general knowledge intent and
    follow up with the same results as `/bp Robert Turner`.
 
 1. Other to-dos per @dragfyre

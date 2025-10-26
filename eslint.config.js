@@ -6,6 +6,7 @@ export default [
     ignores: [
       'coverage',
       'dist',
+      'docs',
       '.idea'
     ]
   },

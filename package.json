@@ -52,6 +52,7 @@
     "nodemon": "^3.1.10",
     "rollup": "^4.52.5",
     "sinon": "^21.0.0",
+    "typedoc": "^0.28.14",
     "typescript": "^5.9.3"
   },
   "engines": {
@@ -64,6 +65,7 @@
     "prepublishOnly": "pnpm i && pnpm rollup",
     "tsc": "tsc",
     "rollup": "rollup -c",
+    "typedoc": "typedoc",
     "lint": "eslint --ext=js,md,html .",
     "lint-arg-fix": "eslint --fix --ext=js,md,html",
     "lint-json-arg-fix": "eslint --config=eslint.config.json.js --fix --ext=json",
