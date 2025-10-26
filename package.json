@@ -2,7 +2,7 @@
   "name": "bahaibot",
   "version": "0.3.0",
   "description": "A bot made for Bahá'í discourses",
-  "main": "index.js",
+  "main": "src/index.js",
   "type": "module",
   "exports": {
     ".": "./src/index.js",
