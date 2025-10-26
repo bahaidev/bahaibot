@@ -110,7 +110,8 @@ const getSocialInfo = ({
       async action (message) {
         const {guild} = message;
         const onlineCount = guild?.members.cache.filter(
-          (m) => m.presence?.status !== 'offline'
+          (m) => m.presence?.status !== 'offline' &&
+            m.presence?.status !== undefined
         ).size;
 
         const allAdmins = guild?.members.cache.filter((m) => {
