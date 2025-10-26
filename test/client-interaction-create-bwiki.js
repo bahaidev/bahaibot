@@ -33,7 +33,6 @@ describe('`interactionCreate` Bahá\'í wiki', function () {
           }
         ]
       });
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -117,7 +116,6 @@ describe('`interactionCreate` Bahá\'í wiki', function () {
           }
         ]
       });
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 

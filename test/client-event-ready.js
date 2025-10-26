@@ -29,7 +29,6 @@ describe('ready event', () => {
 
   it('ready event logs', async function () {
     const discord = new MockDiscord();
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
     this.sinon.spy(console, 'log');
     // @ts-expect-error Bug?
@@ -48,7 +47,6 @@ describe('ready event', () => {
 
   it('ready event registers commands', async function () {
     const discord = new MockDiscord();
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     let fetched = false;
@@ -165,7 +163,6 @@ describe('ready event', () => {
 
     this.sinon.spy(console, 'log');
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -263,7 +260,6 @@ describe('ready event', () => {
 
     this.sinon.spy(console, 'log');
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       checkins: true,
       exitNoThrow: true,

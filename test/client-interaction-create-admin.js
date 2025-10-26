@@ -19,7 +19,6 @@ describe('`interactionCreate` admin', function () {
     '`interactionCreate` finds a ChatInputCommand (checkin)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -50,7 +49,6 @@ describe('`interactionCreate` admin', function () {
     '`interactionCreate` finds a ChatInputCommand (puppet)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -350,7 +348,6 @@ describe('`interactionCreate` admin', function () {
     '`interactionCreate` finds a ChatInputCommand (speak attempt non-voice)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -414,7 +411,6 @@ describe('`interactionCreate` admin', function () {
     '`interactionCreate` finds a ChatInputCommand (speak attempt non-admin)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 

@@ -9,7 +9,6 @@ describe('`interactionCreate` social', function () {
     '`interactionCreate` finds a ChatInputCommand (seen)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -67,7 +66,6 @@ describe('`interactionCreate` social', function () {
     '`interactionCreate` finds a ChatInputCommand (seen) (found idle)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -196,7 +194,6 @@ describe('`interactionCreate` social', function () {
     '`interactionCreate` finds a ChatInputCommand (seen) (found dnd)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -332,7 +329,6 @@ describe('`interactionCreate` social', function () {
     '`interactionCreate` finds a ChatInputCommand (seen) (found offline)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -462,7 +458,6 @@ describe('`interactionCreate` social', function () {
       'dnd with lastMessage)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -624,7 +619,6 @@ describe('`interactionCreate` social', function () {
       'offline with lastMessage)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -785,7 +779,6 @@ describe('`interactionCreate` social', function () {
     '`interactionCreate` finds a ChatInputCommand (users)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 

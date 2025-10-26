@@ -71,7 +71,6 @@ describe('guildCheckin (Lab)', () => {
 
     const {
       guildCheckin
-    // @ts-expect-error Don't need a full mock
     } = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -129,7 +128,6 @@ describe('guildCheckin (Lab)', () => {
       }
     );
 
-    // @ts-expect-error Don't need a full mock
     const {guildCheckin} = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -164,7 +162,6 @@ describe('guildCheckin (Lab)', () => {
     );
 
     const client = discord.getClient();
-    // @ts-expect-error Don't need all for mock
     const {guildCheckin} = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -192,7 +189,6 @@ describe('guildCheckin (Lab)', () => {
 
     const client = discord.getClient();
 
-    // @ts-expect-error Don't need a full mock
     const {guildCheckin} = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -233,7 +229,6 @@ describe('guildCheckin (Lab)', () => {
 
     this.sinon.spy(console, 'log');
 
-    // @ts-expect-error Don't need a full mock
     const {guildCheckin} = await bot({
       checkins: true,
       exitNoThrow: true,
@@ -320,7 +315,6 @@ describe('guildCheckin (Lab)', () => {
         return toStr.call(this);
       };
 
-      // @ts-expect-error Don't need a full mock
       const {guildCheckin} = await bot({
         checkins: true,
         exitNoThrow: true,
@@ -375,7 +369,6 @@ describe('guildCheckin (Lab)', () => {
     );
     const {
       guildCheckin
-    // @ts-expect-error Don't need a full mock
     } = await bot({
       checkins: true,
       exitNoThrow: true,

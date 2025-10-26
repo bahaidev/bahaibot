@@ -25,7 +25,6 @@ describe('Client event (message)', function () {
     async function () {
       const discord = new MockDiscord();
 
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
 
       const message = discord.getMessage();
@@ -47,7 +46,6 @@ describe('Client event (message)', function () {
         messageContent: "What is the Baha'i Faith?"
       });
 
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
 
       const message = discord.getMessage();
@@ -83,7 +81,6 @@ describe('Client event (message)', function () {
           "is the Baha'i Faith?"
       });
 
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
 
       const message = discord.getMessage();
@@ -117,7 +114,6 @@ describe('Client event (message)', function () {
         messageContent: `<@${DiscordConstants.BAHAI_BOT_ID}> Who am I?`
       });
 
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
 
       const message = discord.getMessage();
@@ -161,7 +157,6 @@ describe('Client event (message)', function () {
           `<@!${DiscordConstants.BAHAI_BOT_ID}>?`
       });
 
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
 
       const message = discord.getMessage();
@@ -201,7 +196,6 @@ describe('Client event (message)', function () {
         messageContent: 'where am I?'
       });
 
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
 
       const message = discord.getMessage();
@@ -233,7 +227,6 @@ describe('Client event (message)', function () {
         messageContent: '☕'
       });
 
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
 
       const message = discord.getMessage();
@@ -415,7 +408,6 @@ describe('Client event (message)', function () {
       messageContent: 'welcome'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -434,7 +426,6 @@ describe('Client event (message)', function () {
       mentionEveryone: true
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const channelSpy = this.sinon.spy();

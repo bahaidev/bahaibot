@@ -22,6 +22,7 @@ import {
  * This lets us also update the `client` value and dependent code against
  * a unit testing mock client.
  * @typedef {object} BotOptions
+ * @property {boolean} [enableReporting=false]
  * @property {boolean} [checkins=false]
  * @property {string[]} [locales=["en-US"]]
  * @property {globalThis.fetch} [fetch=globalThis.fetch]

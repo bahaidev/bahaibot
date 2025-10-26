@@ -9,7 +9,6 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
     '`interactionCreate` finds an autocomplete (works-by-bahaullah-or-the-bab)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
       let filteredChoicesRan = false;
@@ -49,7 +48,6 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
     '`interactionCreate` finds a ChatInputCommand (works-by-abdul-baha)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -107,7 +105,6 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
       '(works-by-abdul-baha, no selection)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -164,7 +161,6 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
     '`interactionCreate` finds a ChatInputCommand (rand-writings)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -206,7 +202,6 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
     '`interactionCreate` finds a ChatInputCommand (read)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -273,7 +268,6 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
     '`interactionCreate` finds a ChatInputCommand (read-random)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 

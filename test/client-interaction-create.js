@@ -12,7 +12,6 @@ describe('`interactionCreate`', function () {
     '`interactionCreate` is ignored if not of the expected type',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
       // @ts-expect-error Just mocking what we need
@@ -38,7 +37,6 @@ describe('`interactionCreate`', function () {
     '`interactionCreate` fails to find autocomplete',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
       // @ts-expect-error Just mocking what we need
@@ -65,7 +63,6 @@ describe('`interactionCreate`', function () {
     '`interactionCreate` finds an autocomplete (read)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
       let filteredChoicesRan = false;
@@ -127,7 +124,6 @@ describe('`interactionCreate`', function () {
           }
         ]
       });
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -196,7 +192,6 @@ describe('`interactionCreate`', function () {
           }
         ]
       });
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -288,7 +283,6 @@ describe('`interactionCreate`', function () {
     '`interactionCreate` finds a ChatInputCommand (echo)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -342,7 +336,6 @@ describe('`interactionCreate`', function () {
     '`interactionCreate` finds a ChatInputCommand (info)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -399,7 +392,6 @@ describe('`interactionCreate`', function () {
     '`interactionCreate` finds a ChatInputCommand (help)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -491,7 +483,6 @@ describe('`interactionCreate`', function () {
     '`interactionCreate` finds a ChatInputCommand (helpextras)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 
@@ -646,7 +637,6 @@ describe('`interactionCreate`', function () {
     '`interactionCreate` finds a ChatInputCommand (helpadmin)',
     async function () {
       const discord = new MockDiscord();
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
       const checkedCommands = [];
 

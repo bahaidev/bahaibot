@@ -97,12 +97,13 @@ const system = JSON.parse(
 );
 const {webhookURL} = getSettings(system);
 
+let enableReporting = false;
 /* c8 ignore next 32 -- Emergencies only */
 /**
  * @param {string} msg
  */
 const notifyDiscordChannel = async (msg) => {
-  if (webhookURL) {
+  if (webhookURL && enableReporting) {
     const webhookClient = new Discord.WebhookClient({
       url: webhookURL
     });
@@ -152,10 +153,13 @@ setFetch(fileFetch);
 /**
  * This is created separately from `index.js` so as to allow testing files to
  * have Discord conveniently baked in, requiring case-by-case overrides only.
- * @param {import('./bot.js').BotOptions} [args]
+ * @param {Partial<import('./bot.js').BotOptions>} [args]
  * @returns {Promise<import('./bot.js').BotResponse>}
  */
 function discordBot (args) {
+  if (args?.enableReporting) {
+    enableReporting = true;
+  }
   return bot({
     checkins,
     locales,

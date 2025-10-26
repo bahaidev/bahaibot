@@ -29,7 +29,6 @@ describe('Commands', () => {
       messageContent: '!help'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -56,7 +55,6 @@ describe('Commands', () => {
       messageContent: '!help'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       commandInterval: 1,
       client: discord.getClient()
@@ -93,7 +91,6 @@ describe('Commands', () => {
       messageContent: '!helpextras'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -118,7 +115,6 @@ describe('Commands', () => {
       messageContent: '!helpadmin'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -145,7 +141,6 @@ describe('Commands', () => {
         messageContent: 'good evening'
       });
 
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({
         client: discord.getClient(),
         /**
@@ -182,7 +177,6 @@ describe('Commands', () => {
         messageContent: 'good evening'
       });
 
-      // @ts-expect-error Just need to mock some properties
       const {client} = await bot({
         client: discord.getClient(),
         /**
@@ -217,7 +211,6 @@ describe('Commands', () => {
       messageContent: '!info'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -271,7 +264,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -342,7 +334,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -421,7 +412,6 @@ describe('Commands', () => {
         ]
       });
 
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({
         client: discord.getClient()
       });
@@ -530,7 +520,6 @@ describe('Commands', () => {
       messageContent: '!seen'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -560,7 +549,6 @@ describe('Commands', () => {
         messageContent: `!seen ${users.join(' ')}`
       });
 
-      // @ts-expect-error Don't need a full mock
       const {client} = await bot({client: discord.getClient()});
 
       const message = discord.getMessage();
@@ -589,7 +577,6 @@ describe('Commands', () => {
       messageContent: '!read'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -611,7 +598,6 @@ describe('Commands', () => {
       messageContent: '!read oops 2'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -633,7 +619,6 @@ describe('Commands', () => {
       messageContent: '!read hwa 2'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -667,7 +652,6 @@ describe('Commands', () => {
       messageContent: '!read hwp 1'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -701,7 +685,6 @@ describe('Commands', () => {
       messageContent: '!read list'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -740,7 +723,6 @@ describe('Commands', () => {
       messageContent: '!read random'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -801,7 +783,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       checkins: true,
       client: discord.getClient()
@@ -874,7 +855,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       checkins: true,
       client: discord.getClient()
@@ -947,7 +927,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       checkins: true,
       client: discord.getClient()
@@ -1020,7 +999,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       // eslint-disable-next-line require-await -- Check throwing async
       async fetch () {
@@ -1090,7 +1068,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       checkins: true,
       client: discord.getClient()
@@ -1162,7 +1139,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       checkins: true,
       client: discord.getClient()
@@ -1238,7 +1214,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       checkins: true,
       client: discord.getClient()
@@ -1306,7 +1281,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       checkins: true,
       client: discord.getClient()
@@ -1378,7 +1352,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       checkins: true,
       client: discord.getClient()
@@ -1452,7 +1425,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       checkins: true,
       client: discord.getClient()
@@ -1527,7 +1499,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       // eslint-disable-next-line require-await -- Check throwing async
       async fetch () {
@@ -1598,7 +1569,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       // eslint-disable-next-line require-await -- Check throwing async
       async fetch () {
@@ -1669,7 +1639,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       checkins: true,
       client: discord.getClient()
@@ -1711,7 +1680,6 @@ describe('Commands', () => {
       messageContent: '!echo'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -1737,7 +1705,6 @@ describe('Commands', () => {
       userName: 'AB'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -1760,7 +1727,6 @@ describe('Commands', () => {
       messageContent: '!checkin'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -1803,7 +1769,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       checkins: true,
       client: discord.getClient()
@@ -1856,7 +1821,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       checkins: true,
       client: discord.getClient()
@@ -1886,7 +1850,6 @@ describe('Commands', () => {
       messageContent: 'ping'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -1907,7 +1870,6 @@ describe('Commands', () => {
       messageContent: 'sup'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -1963,7 +1925,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2042,7 +2003,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2105,7 +2065,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const guild = discord.clientGuild;
@@ -2187,7 +2146,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2257,7 +2215,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2312,7 +2269,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2404,7 +2360,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2464,7 +2419,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2553,7 +2507,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2630,7 +2583,6 @@ describe('Commands', () => {
       ]
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2667,7 +2619,6 @@ describe('Commands', () => {
       messageContent: 'good morning'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2690,7 +2641,6 @@ describe('Commands', () => {
       messageContent: 'good afternoon'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2713,7 +2663,6 @@ describe('Commands', () => {
       messageContent: 'good evening'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2736,7 +2685,6 @@ describe('Commands', () => {
       messageContent: 'howdy'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2759,7 +2707,6 @@ describe('Commands', () => {
       messageContent: 'Welcome'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2783,7 +2730,6 @@ describe('Commands', () => {
       messageContent: 'welcome'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const guild = discord.clientGuild;
@@ -2822,7 +2768,6 @@ describe('Commands', () => {
         messageContent: 'welcome'
       });
 
-      // @ts-expect-error Just need some mock properties
       const {client} = await bot({
         client: discord.getClient(),
         /**
@@ -2871,7 +2816,6 @@ describe('Commands', () => {
       messageContent: '\u{1F7D9}'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2891,7 +2835,6 @@ describe('Commands', () => {
       messageContent: '\u{1F7D9}'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2912,7 +2855,6 @@ describe('Commands', () => {
       messageContent: '\u{2615}'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2933,7 +2875,6 @@ describe('Commands', () => {
       messageContent: '\u{1F375}'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2953,7 +2894,6 @@ describe('Commands', () => {
       messageContent: '\u{1F375}'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2974,7 +2914,6 @@ describe('Commands', () => {
       messageContent: '\u{1F37F}'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -2994,7 +2933,6 @@ describe('Commands', () => {
       messageContent: '\u{1F37F}'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -3015,7 +2953,6 @@ describe('Commands', () => {
       messageContent: 'unladen swallow'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -3036,7 +2973,6 @@ describe('Commands', () => {
       messageContent: 'bruh'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -3057,7 +2993,6 @@ describe('Commands', () => {
       messageContent: 'good bot'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -3083,7 +3018,6 @@ describe('Commands', () => {
       messageContent: 'badbot'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -3109,7 +3043,6 @@ describe('Commands', () => {
       messageContent: 'repeating yourself'
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();
@@ -3141,7 +3074,6 @@ describe('Commands', () => {
       messageContent: "santa's cat"
     });
 
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({client: discord.getClient()});
 
     const message = discord.getMessage();

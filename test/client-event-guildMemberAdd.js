@@ -24,7 +24,6 @@ describe('guildMemberAdd event', () => {
   });
   it('guildMemberAdd event (non-existing channel)', async function () {
     const discord = new MockDiscord();
-    // @ts-expect-error Don't need a full mock
     const {client} = await bot({
       client: discord.getClient()
     });
@@ -107,7 +106,6 @@ describe('guildMemberAdd event', () => {
       }
     );
 
-    // @ts-expect-error Don't need a full mock
     await bot({client});
     client.emit('guildMemberAdd', discord.getGuildMember());
 
@@ -234,7 +232,6 @@ describe('guildMemberAdd event', () => {
       }
     );
 
-    // @ts-expect-error Don't need a full mock
     await bot({client});
     client.emit('guildMemberAdd', discord.getGuildMember());
 

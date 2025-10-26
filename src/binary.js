@@ -2,4 +2,6 @@
 
 import discordBot from './discordBot.js';
 
-await discordBot();
+await discordBot({
+  enableReporting: true
+});
