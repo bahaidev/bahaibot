@@ -3,12 +3,12 @@
  * @callback PuppetTool
  * @param {import('discord.js').Message<true>} message
  * @param {{authorID: string, permission: string}} permissions
- * @returns {void}
+ * @returns {Promise<string>}
  */
 /**
  * @type {PuppetTool}
  */
-function puppet ({
+async function puppet ({
   content, guild, /* author, member, */ channel
   // eslint-disable-next-line no-unused-vars -- Keeping signature for now
 }, permissions) {
@@ -44,13 +44,17 @@ function puppet ({
 
     // Does the channel exist?
     if (destination && destination.isTextBased()) {
-      destination.send(msg);
-    } else {
-      channel.send(
-        `Channel ${userChannel} does not exist or is not text-based!`
-      );
+      await destination.send(msg);
+      return msg;
     }
+
+    const message =
+      `Channel ${userChannel} does not exist or is not text-based!`;
+    await channel.send(message);
+    return message;
   }
+
+  return '';
 }
 
 /**
@@ -228,7 +232,11 @@ const getAdmin = ({
         if (!interaction.inCachedGuild() || interaction.isStringSelectMenu()) {
           return;
         }
-        await this.action?.({
+
+        await interaction.deferReply({
+          flags: Discord.MessageFlags.Ephemeral
+        });
+        const reply = await this.action?.({
           author: interaction.user,
           content: /** @type {string} */ (
             `!puppet ${interaction.options.get('channel')?.value} | ${
@@ -237,35 +245,36 @@ const getAdmin = ({
           ),
           guild: interaction.guild,
           channel: {
-            /**
-             * @param {string} reply
-             */
             // @ts-expect-error Just mocking what we need
-            send (reply) {
-              interaction.reply(reply);
+            send () {
+              // No-op
             }
           }
         });
+        await interaction.editReply(reply ?? '');
       },
       /**
        * Puppet enables the administrators + bot developers to puppeteer a bot
        * Must be positioned on top so it can handle sub requests listed below.
        * @param {import('discord.js').Message<true>} message
-       * @returns {void}
+       * @returns {Promise<string>}
        */
-      action (message) {
+      // @ts-expect-error We pass it for `slashCommand`
+      async action (message) {
         if (ADMIN_IDS.includes(message.author.id)) {
-          // Puppet handling
-          puppet(message, {
-            authorID: PUPPET_AUTHOR,
-            permission: ADMIN_PERMISSION
-          });
-
           // eslint-disable-next-line no-console -- CLI
           console.log(
             `Puppet command issued by ${message.author.username}.`
           );
+
+          // Puppet handling
+          return await puppet(message, {
+            authorID: PUPPET_AUTHOR,
+            permission: ADMIN_PERMISSION
+          });
         }
+
+        return '';
       }
     },
     echo: {

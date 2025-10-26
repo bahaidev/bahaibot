@@ -91,8 +91,14 @@ describe('`interactionCreate` admin', function () {
             };
           }
         },
-        reply (msg) {
+        editReply (msg) {
           message = /** @type {string} */ (msg);
+        },
+        deferReply () {
+          //
+        },
+        reply () {
+          //
         }
       });
 
