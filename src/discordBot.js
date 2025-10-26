@@ -157,6 +157,7 @@ setFetch(fileFetch);
  * @returns {Promise<import('./bot.js').BotResponse>}
  */
 function discordBot (args) {
+  /* c8 ignore next 3 -- For binary use only */
   if (args?.enableReporting) {
     enableReporting = true;
   }
