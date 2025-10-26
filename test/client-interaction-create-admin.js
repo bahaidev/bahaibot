@@ -110,6 +110,68 @@ describe('`interactionCreate` admin', function () {
   );
 
   it(
+    '`interactionCreate` finds a ChatInputCommand (puppet by non-admin)',
+    async function () {
+      const discord = new MockDiscord();
+      const {client} = await bot({client: discord.getClient()});
+      const checkedCommands = [];
+
+      /** @type {string[]} */
+      const optionNames = [];
+
+      /** @type {string} */
+      let message = '';
+
+      // @ts-expect-error Just mocking what we need
+      client.emit('interactionCreate', {
+        commandName: 'puppet',
+        inCachedGuild () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isChatInputCommand () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isStringSelectMenu () {
+          checkedCommands.push(true);
+          return false;
+        },
+        isAutocomplete () {
+          checkedCommands.push(true);
+          return false;
+        },
+        user: {
+          username: 'NonAdminUser',
+          id: '123456789012345678'
+        },
+        options: {
+          get (optName) {
+            optionNames.push(optName);
+            return {
+              value: optName === 'channel' ? 'bot-testing' : 'hello'
+            };
+          }
+        },
+        editReply (msg) {
+          message = /** @type {string} */ (msg);
+        },
+        deferReply () {
+          //
+        },
+        reply () {
+          //
+        }
+      });
+
+      await commandFinished(client);
+      expect(checkedCommands.length).to.equal(6);
+      expect(optionNames).to.deep.equal(['channel', 'message']);
+      expect(message).to.equal('');
+    }
+  );
+
+  it(
     '`interactionCreate` finds a ChatInputCommand (speak by admin with error)',
     async function () {
       const discord = new MockDiscord();

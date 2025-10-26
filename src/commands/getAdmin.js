@@ -27,34 +27,36 @@ async function puppet ({
   const echo = content.match(regex);
 
   // Did regex pass
-  if (echo) {
-    // eslint-disable-next-line @stylistic/max-len -- Long
-    const {userChannel, msg} = /** @type {{userChannel: string, msg: string}} */ (
-      echo.groups
-    );
-
-    const destination = guild?.channels.cache.find(
-      (val) => {
-        if (userChannel.startsWith('<#') || (/^\d+$/v).test(userChannel)) {
-          return val.id === userChannel.replace(/^<#/v, '').replace(/>$/v, '');
-        }
-        return val.name === userChannel;
-      }
-    );
-
-    // Does the channel exist?
-    if (destination && destination.isTextBased()) {
-      await destination.send(msg);
-      return msg;
-    }
-
-    const message =
-      `Channel ${userChannel} does not exist or is not text-based!`;
-    await channel.send(message);
-    return message;
+  /* c8 ignore next 3 -- Just a guard as should not be possible */
+  if (!echo) {
+    return '';
   }
 
-  return '';
+
+  const {userChannel, msg} = /** @type {{userChannel: string, msg: string}} */ (
+    echo.groups
+  );
+
+  const destination = guild?.channels.cache.find(
+    (val) => {
+      if (userChannel.startsWith('<#') || (/^\d+$/v).test(userChannel)) {
+        return val.id === userChannel.replace(/^<#/v, '').replace(/>$/v, '');
+      }
+      return val.name === userChannel;
+    }
+  );
+
+  // Does the channel exist?
+  if (destination && destination.isTextBased()) {
+    await destination.send(msg);
+    /* c8 ignore next 2 -- Above will throw given lack of tokens */
+    return msg;
+  }
+
+  const message =
+    `Channel ${userChannel} does not exist or is not text-based!`;
+  await channel.send(message);
+  return message;
 }
 
 /**
@@ -251,6 +253,8 @@ const getAdmin = ({
             }
           }
         });
+
+        /* c8 ignore next -- TS */
         await interaction.editReply(reply ?? '');
       },
       /**
@@ -377,6 +381,7 @@ const getAdmin = ({
             console.error('Error checking in', err);
           }
         }
+
         return undefined;
       }
     }

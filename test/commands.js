@@ -310,6 +310,208 @@ describe('Commands', () => {
     expect(channelSpy.firstCall).to.be.null;
   });
 
+  it('Fails to execute puppet by non-admin', async function () {
+    const discord = new MockDiscord({
+      mentionEveryone: true,
+      messageContent: '!puppet bot-testing | hello',
+      userID: '123456789012345678',
+      userName: 'NonAdminUser',
+      guildChannels: true,
+      guilds: [
+        {
+          id: DiscordConstants.BAHAI_LAB_GUILD_ID,
+          name: 'test',
+          channels: [
+            {
+              id: DiscordConstants.BAHAI_LAB_BOT_TESTING_CHANNEL_ID,
+              name: 'bot-testing'
+            },
+            {
+              name: 'welcome'
+            }
+          ]
+        }
+      ]
+    });
+
+    const {client} = await bot({client: discord.getClient()});
+
+    const message = discord.getMessage();
+
+    const guild = discord.clientGuild;
+
+    const guildChannelsCache = this.sinon.spyOnGetterResults(
+      guild, 'channels.cache', {
+        find: {
+          argSpies: [true],
+          childSpies: ['send']
+        }
+      }
+    );
+
+    const channelSpy = this.sinon.spy();
+    Object.defineProperty(message, 'channel', {
+      value: {
+        guild,
+        send: channelSpy
+      }
+    });
+
+    client.emit('messageCreate', message);
+
+    await commandFinished(client);
+    const {
+      find
+    } = guildChannelsCache;
+    expect(find.argSpies).to.be.undefined;
+
+    expect(
+      // @ts-expect-error Sinon
+      console.log.firstCall
+    ).to.be.null;
+    expect(channelSpy.firstCall).to.be.null;
+  });
+
+  it('Executes puppet with channel number', async function () {
+    const discord = new MockDiscord({
+      mentionEveryone: true,
+      messageContent: '!puppet 391408369891672064 | hello',
+      userID: DiscordConstants.USER_AB,
+      userName: 'AB',
+      guildChannels: true,
+      guilds: [
+        {
+          id: DiscordConstants.BAHAI_LAB_GUILD_ID,
+          name: 'test',
+          channels: [
+            {
+              id: DiscordConstants.BAHAI_LAB_BOT_TESTING_CHANNEL_ID,
+              name: 'bot-testing'
+            },
+            {
+              name: 'welcome'
+            }
+          ]
+        }
+      ]
+    });
+
+    const {client} = await bot({client: discord.getClient()});
+
+    const message = discord.getMessage();
+
+    const guild = discord.clientGuild;
+    const guildChannelsCache = this.sinon.spyOnGetterResults(
+      guild, 'channels.cache', {
+        find: {
+          argSpies: [true],
+          childSpies: ['send']
+        }
+      }
+    );
+
+    const channelSpy = this.sinon.spy();
+    Object.defineProperty(message, 'channel', {
+      value: {
+        guild,
+        send: channelSpy
+      }
+    });
+
+    client.emit('messageCreate', message);
+
+    await commandFinished(client);
+    const {
+      find: {
+        argSpies: [[guildChannelsFinderSpy]],
+        childSpies: [guildChannelsFindResultSendSpy]
+      }
+    } = guildChannelsCache;
+    expect(guildChannelsFinderSpy.firstCall.firstArg.name).to.equal(
+      'bot-testing'
+    );
+    expect(guildChannelsFinderSpy.firstCall.returnValue).to.equal(true);
+    expect(guildChannelsFindResultSendSpy.firstCall.firstArg).to.equal(
+      'hello'
+    );
+
+    expect(
+      // @ts-expect-error Sinon
+      console.log.calledWith('Puppet command issued by AB.')
+    ).to.be.true;
+    expect(channelSpy.firstCall).to.be.null;
+  });
+
+  it('Executes puppet with channel number code', async function () {
+    const discord = new MockDiscord({
+      mentionEveryone: true,
+      messageContent: '!puppet <#391408369891672064> | hello',
+      userID: DiscordConstants.USER_AB,
+      userName: 'AB',
+      guildChannels: true,
+      guilds: [
+        {
+          id: DiscordConstants.BAHAI_LAB_GUILD_ID,
+          name: 'test',
+          channels: [
+            {
+              id: DiscordConstants.BAHAI_LAB_BOT_TESTING_CHANNEL_ID,
+              name: 'bot-testing'
+            },
+            {
+              name: 'welcome'
+            }
+          ]
+        }
+      ]
+    });
+
+    const {client} = await bot({client: discord.getClient()});
+
+    const message = discord.getMessage();
+
+    const guild = discord.clientGuild;
+    const guildChannelsCache = this.sinon.spyOnGetterResults(
+      guild, 'channels.cache', {
+        find: {
+          argSpies: [true],
+          childSpies: ['send']
+        }
+      }
+    );
+
+    const channelSpy = this.sinon.spy();
+    Object.defineProperty(message, 'channel', {
+      value: {
+        guild,
+        send: channelSpy
+      }
+    });
+
+    client.emit('messageCreate', message);
+
+    await commandFinished(client);
+    const {
+      find: {
+        argSpies: [[guildChannelsFinderSpy]],
+        childSpies: [guildChannelsFindResultSendSpy]
+      }
+    } = guildChannelsCache;
+    expect(guildChannelsFinderSpy.firstCall.firstArg.name).to.equal(
+      'bot-testing'
+    );
+    expect(guildChannelsFinderSpy.firstCall.returnValue).to.equal(true);
+    expect(guildChannelsFindResultSendSpy.firstCall.firstArg).to.equal(
+      'hello'
+    );
+
+    expect(
+      // @ts-expect-error Sinon
+      console.log.calledWith('Puppet command issued by AB.')
+    ).to.be.true;
+    expect(channelSpy.firstCall).to.be.null;
+  });
+
   it('Executes puppet with bad name', async function () {
     const discord = new MockDiscord({
       mentionEveryone: true,
@@ -468,6 +670,9 @@ describe('Commands', () => {
       // @ts-expect-error Just mocking what we need
       guild.members.cache.filter = (...args) => {
         if (args[0].toString().includes('offline')) {
+          // Gets some coverage but we can't modify `args`
+          // @ts-expect-error Ok
+          filter.call(guild.members.cache, ...args);
           return {
             size: testMultiple ? 2 : 1
           };
@@ -1734,10 +1939,12 @@ describe('Commands', () => {
     this.sinon.spy(message.channel, 'send');
 
     client.emit('messageCreate', message);
+    await commandFinished(client);
     expect(
       // @ts-expect-error Sinon
       message.channel.send.firstCall
     ).to.be.null;
+
     expect(
       // @ts-expect-error Sinon
       console.log.notCalled

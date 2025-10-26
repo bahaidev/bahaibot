@@ -110,8 +110,11 @@ const getSocialInfo = ({
       async action (message) {
         const {guild} = message;
         const onlineCount = guild?.members.cache.filter(
-          (m) => m.presence?.status !== 'offline' &&
-            m.presence?.status !== undefined && !m.user.bot
+          (m) => {
+            /* c8 ignore next 2 -- Can't find a way to override in tests */
+            return m.presence?.status !== 'offline' &&
+              m.presence?.status !== undefined && !m.user.bot;
+          }
         ).size;
 
         const allAdmins = guild?.members.cache.filter((m) => {
