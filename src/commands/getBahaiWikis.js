@@ -165,7 +165,11 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
               message.author.username
             }:\n\n **[${res.title}](${res.url})**\n\n${
               snip
-            }`,
+            }
+
+[See all search results…](https://${host}/index.php?search=insource%3A${
+  encodeURIComponent(kw)
+}&title=Special%3ASearch&go=Go&ns0=1)`,
           image: {
             url: res.img !== ''
               /* c8 ignore next -- MW API */

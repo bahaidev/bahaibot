@@ -233,8 +233,6 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
     1. `/library` returns a search link to the Baha'i Reference Library
         (i.e. bahai.org)
     1. `/blo` returns a search link to Baha'i Library Online
-    1. `/bp`, `/bw`, `/bm`, `/b9` do what they do but also add the search
-        links at bottom
     1. `/rand` and `/randcat` take wikis as input and return a random page;
         `/randcat` also takes a category name - not sure whether we should
         remove the `-rand` flag from `/bp`, `/bw`, `/bm`, `/b9`
