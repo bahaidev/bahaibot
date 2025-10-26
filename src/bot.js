@@ -388,6 +388,7 @@ const bot = async ({
       // Ensure that the bot is being messaged
       if (client.user && message.mentions.has(client.user)) {
         if (isUserAbusive(message)) {
+          client.emit('bahaibot:command-finished');
           return;
         }
         /* MAIN FUNCTIONS */
@@ -411,12 +412,10 @@ const bot = async ({
                 message.content, err
               );
             }
-            client.emit('bahaibot:command-finished');
             /* c8 ignore stop */
             break;
           }
         }
-        client.emit('bahaibot:command-finished');
       } else if (!disableNotMentioned) { // If the Bot is NOT Mentioned
         const notMentionedCommands = Object.values(
           botCommands
@@ -432,12 +431,12 @@ const bot = async ({
             // eslint-disable-next-line @stylistic/max-len -- Long
             // eslint-disable-next-line no-await-in-loop -- Needs to be in series
             await notMentioned?.action(message);
-            client.emit('bahaibot:command-finished');
             break;
           }
         }
-        client.emit('bahaibot:command-finished');
       }
+
+      client.emit('bahaibot:command-finished');
     }
   );
 
