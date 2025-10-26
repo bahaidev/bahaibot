@@ -824,7 +824,23 @@ describe('`interactionCreate` social', function () {
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
         commandName: 'users',
-        guild: discord.guild,
+        guild: {
+          ...discord.guild,
+          members: {
+            cache: {
+              filter () {
+                // Return an iterable with a size property
+                // (like a Collection/Map)
+                const result = /** @type {[] & {size: number}} */ ([]);
+                result.size = 0;
+                return result;
+              }
+            },
+            fetch () {
+              return null;
+            }
+          }
+        },
         inCachedGuild () {
           checkedCommands.push(true);
           return true;

@@ -38,11 +38,10 @@ describe('Client event (message)', function () {
     }
   );
 
-  it.only(
+  it(
     'Passes message if Bot is messaged and defaulting to use router',
     async function () {
       const discord = new MockDiscord({
-        // mentionEveryone: true,
         messageContent: "What is the Baha'i Faith?"
       });
 
@@ -80,7 +79,6 @@ describe('Client event (message)', function () {
     async function () {
       const discord = new MockDiscord({
         userID: DiscordConstants.BAHAI_DEV_BOT_ID,
-        mentionEveryone: true,
         messageContent: `<@${DiscordConstants.BAHAI_DEV_BOT_ID}> What ` +
           "is the Baha'i Faith?"
       });
@@ -114,7 +112,6 @@ describe('Client event (message)', function () {
     async function () {
       const discord = new MockDiscord({
         userID: DiscordConstants.BAHAI_DEV_BOT_ID,
-        mentionEveryone: true,
         messageContent: `<@${DiscordConstants.BAHAI_BOT_ID}> Who am I?`
       });
 
@@ -156,7 +153,6 @@ describe('Client event (message)', function () {
     async function () {
       const discord = new MockDiscord({
         userID: DiscordConstants.BAHAI_DEV_BOT_ID,
-        mentionEveryone: true,
         messageContent: `<@${DiscordConstants.BAHAI_DEV_BOT_ID}> Who is ` +
           `<@!${DiscordConstants.BAHAI_BOT_ID}>?`
       });
@@ -196,7 +192,6 @@ describe('Client event (message)', function () {
     'Falls back to help message if command not recognized',
     async function () {
       const discord = new MockDiscord({
-        mentionEveryone: true,
         messageContent: 'where am I?'
       });
 
@@ -228,7 +223,8 @@ describe('Client event (message)', function () {
     'Passes coffee command (`notMentioned` without a check)',
     async function () {
       const discord = new MockDiscord({
-        messageContent: '☕'
+        messageContent: '☕',
+        suppressMentions: true
       });
 
       const {client} = await bot({client: discord.getClient()});
@@ -254,7 +250,9 @@ describe('Client event (message)', function () {
   it(
     'Passes bracketed syntax command (`notMentioned`)',
     async function () {
-      const discord = new MockDiscord();
+      const discord = new MockDiscord({
+        suppressMentions: true
+      });
 
       /** @type {Record<string, (...args: AnyType[]) => void>} */
       const handlers = {};
@@ -293,7 +291,9 @@ describe('Client event (message)', function () {
   it(
     'Passes b9 bracketed syntax command (`notMentioned`)',
     async function () {
-      const discord = new MockDiscord();
+      const discord = new MockDiscord({
+        suppressMentions: true
+      });
 
       /** @type {Record<string, (...args: AnyType[]) => void>} */
       const handlers = {};
@@ -332,7 +332,9 @@ describe('Client event (message)', function () {
   it(
     'Passes bm bracketed syntax command (`notMentioned`)',
     async function () {
-      const discord = new MockDiscord();
+      const discord = new MockDiscord({
+        suppressMentions: true
+      });
 
       /** @type {Record<string, (...args: AnyType[]) => void>} */
       const handlers = {};
@@ -371,7 +373,9 @@ describe('Client event (message)', function () {
   it(
     'Passes bw bracketed syntax command (`notMentioned`)',
     async function () {
-      const discord = new MockDiscord();
+      const discord = new MockDiscord({
+        suppressMentions: true
+      });
 
       /** @type {Record<string, (...args: AnyType[]) => void>} */
       const handlers = {};
@@ -426,9 +430,7 @@ describe('Client event (message)', function () {
   });
 
   it('Reports errors with badly formed message', async function () {
-    const discord = new MockDiscord({
-      mentionEveryone: true
-    });
+    const discord = new MockDiscord();
 
     const {client} = await bot({client: discord.getClient()});
 

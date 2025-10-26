@@ -25,7 +25,6 @@ describe('Commands', () => {
 
   it('Executes help (default rate limit)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!help'
     });
 
@@ -51,7 +50,6 @@ describe('Commands', () => {
   // eslint-disable-next-line mocha/no-pending-tests -- Test is fine if run alone
   it.skip('Executes help (custom rate limit)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!help'
     });
 
@@ -87,7 +85,6 @@ describe('Commands', () => {
 
   it('Executes helpextras', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!helpextras'
     });
 
@@ -111,7 +108,6 @@ describe('Commands', () => {
 
   it('Executes helpadmin', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!helpadmin'
     });
 
@@ -137,7 +133,6 @@ describe('Commands', () => {
     "Doesn't execute a command if disabled",
     async function () {
       const discord = new MockDiscord({
-        mentionEveryone: true,
         messageContent: 'good evening'
       });
 
@@ -173,7 +168,6 @@ describe('Commands', () => {
     "Doesn't execute a command if not enabled",
     async function () {
       const discord = new MockDiscord({
-        mentionEveryone: true,
         messageContent: 'good evening'
       });
 
@@ -207,7 +201,6 @@ describe('Commands', () => {
 
   it('Executes info', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!info'
     });
 
@@ -242,7 +235,6 @@ describe('Commands', () => {
 
   it('Executes puppet', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!puppet bot-testing | hello',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -312,7 +304,6 @@ describe('Commands', () => {
 
   it('Fails to execute puppet by non-admin', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!puppet bot-testing | hello',
       userID: '123456789012345678',
       userName: 'NonAdminUser',
@@ -374,7 +365,6 @@ describe('Commands', () => {
 
   it('Executes puppet with channel number', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!puppet 391408369891672064 | hello',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -444,7 +434,6 @@ describe('Commands', () => {
 
   it('Executes puppet with channel number code', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!puppet <#391408369891672064> | hello',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -514,7 +503,6 @@ describe('Commands', () => {
 
   it('Executes puppet with bad name', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!puppet bad-name | hello',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -594,7 +582,6 @@ describe('Commands', () => {
       const discord = new MockDiscord({
         clientName: DiscordConstants.ADMIN_ROLES[0],
         roleID: DiscordConstants.ADMIN_ROLE_ID,
-        mentionEveryone: true,
         messageContent: '!users',
         guildChannels: true,
         guilds: [
@@ -721,7 +708,6 @@ describe('Commands', () => {
 
   it('Executes seen (no arguments)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!seen'
     });
 
@@ -750,7 +736,6 @@ describe('Commands', () => {
   ]).forEach(([testMessage, users]) => {
     it(testMessage, async function () {
       const discord = new MockDiscord({
-        mentionEveryone: true,
         messageContent: `!seen ${users.join(' ')}`
       });
 
@@ -778,7 +763,6 @@ describe('Commands', () => {
 
   it('read (missing arguments)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!read'
     });
 
@@ -799,7 +783,6 @@ describe('Commands', () => {
 
   it('read (bad arguments)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!read oops 2'
     });
 
@@ -820,7 +803,6 @@ describe('Commands', () => {
 
   it('read with reference and index', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!read hwa 2'
     });
 
@@ -853,7 +835,6 @@ describe('Commands', () => {
 
   it('read with reference and index (hwp)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!read hwp 1'
     });
 
@@ -886,7 +867,6 @@ describe('Commands', () => {
 
   it('read list', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!read list'
     });
 
@@ -924,7 +904,6 @@ describe('Commands', () => {
 
   it('read random', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!read random'
     });
 
@@ -959,7 +938,6 @@ describe('Commands', () => {
 
   it('b9 (random)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!b9 -rand',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -1031,7 +1009,6 @@ describe('Commands', () => {
 
   it('bw (random)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!bw -rand',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -1103,7 +1080,6 @@ describe('Commands', () => {
 
   it('bahaimedia (random)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!media -rand',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -1175,7 +1151,6 @@ describe('Commands', () => {
 
   it('b9 (random) with network problem', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!b9 -rand',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -1244,7 +1219,6 @@ describe('Commands', () => {
 
   it('b9 (search)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!b9 God',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -1315,7 +1289,6 @@ describe('Commands', () => {
 
   it('bahaimedia (search)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!media ‘Abdu’l-Bahá',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -1390,7 +1363,6 @@ describe('Commands', () => {
 
   it('bahaipedia (search)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!bp God',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -1461,7 +1433,6 @@ describe('Commands', () => {
 
   it("bahaipedia (search) (no Bahá'í star)", async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!bp God',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -1528,7 +1499,6 @@ describe('Commands', () => {
 
   it('bahaipedia (search) with word removal', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!bp God is great -2',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -1601,7 +1571,6 @@ describe('Commands', () => {
 
   it('bahaipedia (search) - no results', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!bp zoasfssafjklwerworieewio',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -1675,7 +1644,6 @@ describe('Commands', () => {
 
   it('b9 (search) with network problem', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!b9 God',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -1745,7 +1713,6 @@ describe('Commands', () => {
 
   it('bahaipedia (today in history) with network problem', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!bp -tih',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -1815,7 +1782,6 @@ describe('Commands', () => {
 
   it('today', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!today',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -1881,7 +1847,6 @@ describe('Commands', () => {
 
   it('echo (non-admin attempt)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!echo'
     });
 
@@ -1904,7 +1869,6 @@ describe('Commands', () => {
 
   it('echo (admin user)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!echo Hello',
       userID: DiscordConstants.USER_AB,
       userName: 'AB'
@@ -1928,7 +1892,6 @@ describe('Commands', () => {
 
   it('checkin (non-admin attempt)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!checkin'
     });
 
@@ -1953,7 +1916,6 @@ describe('Commands', () => {
 
   it('checkin (admin user)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!checkin',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -2005,7 +1967,6 @@ describe('Commands', () => {
 
   it('checkin (admin user) 2', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '!checkin',
       userID: DiscordConstants.USER_AB,
       userName: 'AB',
@@ -2053,7 +2014,6 @@ describe('Commands', () => {
 
   it('ping', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'ping'
     });
 
@@ -2073,7 +2033,6 @@ describe('Commands', () => {
 
   it('sup', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'sup'
     });
 
@@ -2107,7 +2066,6 @@ describe('Commands', () => {
 
   it('abha', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'allahuabha',
       guilds: [
         {
@@ -2189,7 +2147,6 @@ describe('Commands', () => {
 
   it('abha (no 9star)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'allahuabha',
       guilds: [
         {
@@ -2244,7 +2201,7 @@ describe('Commands', () => {
 
   it('abha (not mentioned)', async function () {
     const discord = new MockDiscord({
-      // mentionEveryone: true,
+      suppressMentions: true,
       addClientUser: false,
       messageContent: 'allahuabha',
       guilds: [
@@ -2328,7 +2285,6 @@ describe('Commands', () => {
 
   it('badi', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'badi',
       guilds: [
         {
@@ -2401,7 +2357,6 @@ describe('Commands', () => {
 
   it('badi (no 9-pointed star)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'badi',
       guilds: [
         {
@@ -2447,7 +2402,6 @@ describe('Commands', () => {
 
   it('nawruz', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'happy Naw Ruz',
       guilds: [
         {
@@ -2542,7 +2496,6 @@ describe('Commands', () => {
 
   it('nawruz (no 9star)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'happy Naw Ruz',
       guilds: [
         {
@@ -2601,7 +2554,6 @@ describe('Commands', () => {
 
   it('nawruz (no sabzi)', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'happy Naw Ruz',
       guilds: [
         {
@@ -2689,7 +2641,6 @@ describe('Commands', () => {
 
   it('ridvan', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'happy Ridvan',
       guilds: [
         {
@@ -2769,7 +2720,6 @@ describe('Commands', () => {
 
   it('ridvan 2', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'happy Ridvan',
       guilds: [
         {
@@ -2822,7 +2772,6 @@ describe('Commands', () => {
 
   it('morning', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'good morning'
     });
 
@@ -2844,7 +2793,6 @@ describe('Commands', () => {
 
   it('afternoon', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'good afternoon'
     });
 
@@ -2866,7 +2814,6 @@ describe('Commands', () => {
 
   it('evening', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'good evening'
     });
 
@@ -2888,7 +2835,6 @@ describe('Commands', () => {
 
   it('hello', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'howdy'
     });
 
@@ -2910,7 +2856,6 @@ describe('Commands', () => {
 
   it('welcome', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'Welcome'
     });
 
@@ -2932,7 +2877,7 @@ describe('Commands', () => {
 
   it('welcome (not mentioned)', async function () {
     const discord = new MockDiscord({
-      // mentionEveryone: true,
+      suppressMentions: true,
       addClientUser: false,
       messageContent: 'welcome'
     });
@@ -2970,7 +2915,7 @@ describe('Commands', () => {
     "welcome (not mentioned) doesn't work with `disableNotMentioned`",
     async function () {
       const discord = new MockDiscord({
-        // mentionEveryone: true,
+        suppressMentions: true,
         addClientUser: false,
         messageContent: 'welcome'
       });
@@ -3019,7 +2964,6 @@ describe('Commands', () => {
 
   it('ninePointedStar', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '\u{1F7D9}'
     });
 
@@ -3039,7 +2983,8 @@ describe('Commands', () => {
 
   it('ninePointedStar (not mentioned)', async function () {
     const discord = new MockDiscord({
-      messageContent: '\u{1F7D9}'
+      messageContent: '\u{1F7D9}',
+      suppressMentions: true
     });
 
     const {client} = await bot({client: discord.getClient()});
@@ -3058,7 +3003,6 @@ describe('Commands', () => {
 
   it('coffee', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '\u{2615}'
     });
 
@@ -3078,7 +3022,6 @@ describe('Commands', () => {
 
   it('tea', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '\u{1F375}'
     });
 
@@ -3098,7 +3041,8 @@ describe('Commands', () => {
 
   it('tea (not mentioned)', async function () {
     const discord = new MockDiscord({
-      messageContent: '\u{1F375}'
+      messageContent: '\u{1F375}',
+      suppressMentions: true
     });
 
     const {client} = await bot({client: discord.getClient()});
@@ -3117,7 +3061,6 @@ describe('Commands', () => {
 
   it('popcorn', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: '\u{1F37F}'
     });
 
@@ -3137,7 +3080,8 @@ describe('Commands', () => {
 
   it('popcorn (not mentioned)', async function () {
     const discord = new MockDiscord({
-      messageContent: '\u{1F37F}'
+      messageContent: '\u{1F37F}',
+      suppressMentions: true
     });
 
     const {client} = await bot({client: discord.getClient()});
@@ -3156,7 +3100,6 @@ describe('Commands', () => {
 
   it('unladen', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'unladen swallow'
     });
 
@@ -3176,7 +3119,6 @@ describe('Commands', () => {
 
   it('bruh', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'bruh'
     });
 
@@ -3196,7 +3138,6 @@ describe('Commands', () => {
 
   it('goodbot', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'good bot'
     });
 
@@ -3221,7 +3162,6 @@ describe('Commands', () => {
 
   it('badbot', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'badbot'
     });
 
@@ -3246,7 +3186,6 @@ describe('Commands', () => {
 
   it('repeating yourself', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: 'repeating yourself'
     });
 
@@ -3277,7 +3216,6 @@ describe('Commands', () => {
 
   it('santacat', async function () {
     const discord = new MockDiscord({
-      mentionEveryone: true,
       messageContent: "santa's cat"
     });
 

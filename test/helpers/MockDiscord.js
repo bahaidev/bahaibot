@@ -10,6 +10,10 @@ import * as Discord from 'discord.js';
  * @property {Guild[]} [guilds]
  * @property {boolean} [guildChannels]
  * @property {boolean} [mentionEveryone]
+ * @property {boolean} [suppressMentions]
+ * @property {{
+ *   member: import('discord.js').GuildMember
+ * }[]} [mentions]
  * @property {string} [messageContent]
  * @property {string} [userID]
  * @property {string} [roleID]
@@ -185,7 +189,11 @@ class MockDiscord {
     this.message = this.mockMessage({
       user: opts.messageUser,
       content: opts.messageContent,
-      mentionEveryone: opts.mentionEveryone
+      suppressMentions: opts.suppressMentions,
+      mentionEveryone: opts.mentionEveryone,
+      mentions: opts.mentions ?? [
+        {member: this.guildMember}
+      ]
     });
   }
 
@@ -509,13 +517,15 @@ class MockDiscord {
    * @param {object} cfg
    * @param {string} [cfg.content]
    * @param {boolean} [cfg.mentionEveryone]
+   * @param {boolean} [cfg.suppressMentions]
    * @param {import('discord.js').User} [cfg.user]
    * @param {{
    *   member: import('discord.js').GuildMember
    * }[]} [cfg.mentions]
    * @returns {import('discord.js').Message<true>}
    */
-  mockMessage ({content, mentionEveryone, user, mentions}) {
+  mockMessage ({content, mentionEveryone, user, mentions, suppressMentions}) {
+    // First, create the message instance with core fields
     // @ts-expect-error We need it for mocking
     const msg = new Discord.Message(this.client, {
       id: 100000n, // 'message-id',
@@ -535,7 +545,6 @@ class MockDiscord {
       attachments: [],
       edited_timestamp: null,
       reactions: [],
-      mentions,
       mention_roles: [],
       mention_everyone: Boolean(mentionEveryone),
       hit: false
@@ -546,6 +555,45 @@ class MockDiscord {
       configurable: true,
       value: this.textChannel
     });
+
+    if (!mentionEveryone && !suppressMentions) {
+      // Build a proper MessageMentions object so callers can use
+      // `message.mentions.users`, `message.mentions.has()`, and `.everyone`.
+      const users = new Discord.Collection();
+      const roles = new Discord.Collection();
+      const crosspostedChannels = new Discord.Collection();
+
+      if (Array.isArray(mentions)) {
+        for (const m of mentions) {
+          // Support the documented shape {member: GuildMember}
+          if (m && m.member) {
+            const gm = m.member;
+            // Ensure caches have the entities (helps some discord.js lookups)
+            if (gm.user) {
+              this.client.users.cache.set(gm.user.id, gm.user);
+            }
+            if (this.guild && gm.user) {
+              this.guild.members.cache.set(gm.user.id, gm);
+            }
+            users.set(gm.user.id, gm.user);
+          }
+        }
+      }
+
+      const msgMentions = this.mockMessageMentions({
+        message: msg,
+        users,
+        roles,
+        everyone: Boolean(mentionEveryone),
+        crosspostedChannels
+      });
+
+      // Override the readonly `mentions` with our constructed instance
+      Object.defineProperty(msg, 'mentions', {
+        configurable: true,
+        value: msgMentions
+      });
+    }
 
     return msg;
     // this.message.guild.members.add(this.guildMember);
