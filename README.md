@@ -218,3 +218,21 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 1. Go through in-code to-dos
     1. complete i18nizing messages
+
+1. Other to-dos per @dragfyre
+    1. Confirm daily hello post
+        1. Could also say hello when coming online
+    1. Remove #irc-bridge and add ⁠👋┊general on Bahá'í wikis server
+    1.  `/read` defaults to return a link to a page from a book, OR displays
+        the Hidden Word in an embed if the Hidden Words are chosen; search
+        individual books, possibly by `/page` or `/para` or some sort of
+        BibleBot thing that searches for formatted references
+    1. `/library` returns a search link to the Baha'i Reference Library
+        (i.e. bahai.org)
+    1. `/blo` returns a search link to Baha'i Library Online
+    1. `/bp`, `/bw`, `/bm`, `/b9` do what they do but also add the search
+        links at bottom
+    1. `/rand` and `/randcat` take wikis as input and return a random page;
+        `/randcat` also takes a category name - not sure whether we should
+        remove the `-rand` flag from `/bp`, `/bw`, `/bm`, `/b9`
+    1. `/help` - just update to show slash commands
