@@ -388,8 +388,10 @@ const bot = async ({
       // Ensure that the bot is being messaged
       if (client.user && message.mentions.has(client.user) &&
         !message.author.bot &&
-        // @everyone or @here
-        !message.mentions.everyone
+        // but not `@everyone` or `@here`
+        !message.mentions.everyone &&
+        // and not `@bots`
+        !message.content.includes('<@&1428570847148511272>')
       ) {
         if (isUserAbusive(message)) {
           client.emit('bahaibot:command-finished');

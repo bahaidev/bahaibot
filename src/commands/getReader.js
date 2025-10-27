@@ -149,7 +149,7 @@ async function getReader ({fs, settings, _}) {
       // Return the relevant section
       return file.chapters[index];
     }
-    /* c8 ignore next 3 -- Unless a book has a missing chapter numbering,
+    /* c8 ignore next 4 -- Unless a book has a missing chapter numbering,
         it seems this will be unreachable */
     return /** @type {string} */ (_('know_which_work_but_cant_find', {
       max
