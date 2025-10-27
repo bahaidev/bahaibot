@@ -94,7 +94,7 @@ const getLightHearted = () => {
       }
     },
     bruh: {
-      re: /\bbruh\b/iv,
+      re: /\b(bruh|bro)\b/iv,
       helpExtra: {
         name: 'bruh',
         value: 'Sends a Bruh'
