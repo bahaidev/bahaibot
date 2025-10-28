@@ -1,5 +1,6 @@
 // Todo: i18nize messages within `getReader.js` and `messages.js`.
-// Todo: i18nize behavior of `getWikiTools.js`, `getBahaiWikis.js` (and books of `getReader.js`)
+// Todo: i18nize behavior of `getWikiTools.js`, `getBahaiWikis.js` (and
+//        books of `getReader.js`)
 // Todo: i18nize `message.channel.send()` and `interaction.reply()` (the
 //        command files)
 
