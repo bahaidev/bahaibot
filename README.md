@@ -239,9 +239,6 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
         the Hidden Word in an embed if the Hidden Words are chosen; search
         individual books, possibly by `/page` or `/para` or some sort of
         BibleBot thing that searches for formatted references
-    1. `/library` returns a search link to the Baha'i Reference Library
-        (i.e. bahai.org)
-    1. `/blo` returns a search link to Baha'i Library Online
     1. `/rand` and `/randcat` take wikis as input and return a random page;
         `/randcat` also takes a category name - not sure whether we should
         remove the `-rand` flag from `/bp`, `/bw`, `/bm`, `/b9`

@@ -199,6 +199,100 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
   );
 
   it(
+    '`interactionCreate` finds a ChatInputCommand (library)',
+    async function () {
+      const discord = new MockDiscord();
+      const {client} = await bot({client: discord.getClient()});
+      const checkedCommands = [];
+
+      let message = '';
+
+      // @ts-expect-error Just mocking what we need
+      client.emit('interactionCreate', {
+        commandName: 'library',
+        isChatInputCommand () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isStringSelectMenu () {
+          checkedCommands.push(true);
+          return false;
+        },
+        isAutocomplete () {
+          checkedCommands.push(true);
+          return false;
+        },
+        user: {
+          username: 'brettz9',
+          id: '410259427770499072'
+        },
+        options: {
+          getString () {
+            return 'will of God';
+          }
+        },
+        reply (msg) {
+          message = /** @type {string} */ (msg);
+        }
+      });
+
+      await commandFinished(client);
+      expect(checkedCommands.length).to.equal(5);
+      expect(message).to.equal(
+        '[will of God](https://www.bahai.org/library/authoritative-texts/' +
+          'search?q=will%20of%20God)'
+      );
+    }
+  );
+
+  it(
+    '`interactionCreate` finds a ChatInputCommand (blo)',
+    async function () {
+      const discord = new MockDiscord();
+      const {client} = await bot({client: discord.getClient()});
+      const checkedCommands = [];
+
+      let message = '';
+
+      // @ts-expect-error Just mocking what we need
+      client.emit('interactionCreate', {
+        commandName: 'blo',
+        isChatInputCommand () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isStringSelectMenu () {
+          checkedCommands.push(true);
+          return false;
+        },
+        isAutocomplete () {
+          checkedCommands.push(true);
+          return false;
+        },
+        user: {
+          username: 'brettz9',
+          id: '410259427770499072'
+        },
+        options: {
+          getString () {
+            return 'will of God';
+          }
+        },
+        reply (msg) {
+          message = /** @type {string} */ (msg);
+        }
+      });
+
+      await commandFinished(client);
+      expect(checkedCommands.length).to.equal(5);
+      expect(message).to.equal(
+        '[will of God](https://www.google.com/search?client=firefox-b-d&q=' +
+          'site%3Abahai-library.com+will%20of%20God)'
+      );
+    }
+  );
+
+  it(
     '`interactionCreate` finds a ChatInputCommand (read)',
     async function () {
       const discord = new MockDiscord();

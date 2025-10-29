@@ -216,6 +216,71 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
     // NOTE: If we need to remove these, we can add `deleted` property to them,
     //        or invoke `client.application.commands.set([]);`, bearing in mind
     //        the 200 day Discord limit on new commands
+    library: {
+      name: 'library',
+      description: "A link to a search of the Bahá'í Writings " +
+        'on the official site',
+      options: [
+        {
+          name: 'search',
+          description: 'The search term',
+          type: Discord.ApplicationCommandOptionType.String,
+          required: true
+        }
+      ],
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
+        if (!interaction.isChatInputCommand()) {
+          return;
+        }
+
+        /* c8 ignore next -- Required so fallback should not be necessary */
+        const search = interaction.options.getString('search') ?? '';
+
+        await interaction.reply(
+          `[${search}](https://www.bahai.org/library/authoritative-texts/search?q=${
+            encodeURIComponent(search)
+          })`
+        );
+      }
+    },
+    blo: {
+      name: 'blo',
+      description: "A link to a search of Bahá'í Library Online",
+      options: [
+        {
+          name: 'search',
+          description: 'The search term',
+          type: Discord.ApplicationCommandOptionType.String,
+          required: true
+        }
+      ],
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        /* c8 ignore next 3 -- TS guard */
+        if (!interaction.isChatInputCommand()) {
+          return;
+        }
+
+        /* c8 ignore next -- Required so fallback should not be necessary */
+        const search = interaction.options.getString('search') ?? '';
+
+        await interaction.reply(
+          `[${search}](https://www.google.com/search?client=firefox-b-d&q=site%3Abahai-library.com+${
+            encodeURIComponent(search)
+          })`
+        );
+      }
+    },
     randomWritings: {
       name: 'rand-writings',
       description: "A link to a random selection from the Bahá'í Writings",
