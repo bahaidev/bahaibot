@@ -151,7 +151,6 @@ const getAdmin = ({
 
         const words = message.content.split(' ').slice(2).join(' ');
 
-        // Todo: Abstract out code so browser can instead use `SpeechSynthesis`
         const channel = message.member?.voice.channel;
         if (!channel) {
           // eslint-disable-next-line no-console -- CLI
