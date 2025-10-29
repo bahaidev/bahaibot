@@ -239,7 +239,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
         the Hidden Word in an embed if the Hidden Words are chosen; search
         individual books, possibly by `/page` or `/para` or some sort of
         BibleBot thing that searches for formatted references
-    1. `/rand` and `/randcat` take wikis as input and return a random page;
-        `/randcat` also takes a category name - not sure whether we should
-        remove the `-rand` flag from `/bp`, `/bw`, `/bm`, `/b9`
+    1. `/rand` takes wikis as input and returns a random page (already
+        present as `rand-wiki`);
+        not sure whether we should remove the `-rand` flag from
+        `/bp`, `/bw`, `/bm`, `/b9`
     1. `/help` - just update to show slash commands

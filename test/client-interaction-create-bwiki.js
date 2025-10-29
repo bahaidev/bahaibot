@@ -181,4 +181,166 @@ describe('`interactionCreate` Bahá\'í wiki', function () {
       );
     }
   );
+
+  it(
+    '`interactionCreate` finds a ChatInputCommand (randcat)',
+    async function () {
+      const discord = new MockDiscord({
+        guildChannels: true,
+        guilds: [
+          {
+            id: DiscordConstants.BAHAI_FYI_GUILD_ID,
+            name: "Bahá'í FYI",
+            channels: [
+              {
+                id: DiscordConstants.BAHAI_FYI_GENERAL_CHANNEL_ID,
+                name: 'general'
+              },
+              {
+                id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
+                name: 'study-hall'
+              }
+            ],
+            emojis: [
+              {
+                id: DiscordConstants.BSTAR_EMOJI_ID_LAB,
+                name: 'bstar'
+              }
+            ]
+          }
+        ]
+      });
+      const {client} = await bot({client: discord.getClient()});
+      const checkedCommands = [];
+
+      /** @type {import('discord.js').InteractionReplyOptions} */
+      let message = {};
+
+      // @ts-expect-error Just mocking what we need
+      client.emit('interactionCreate', {
+        commandName: 'randcat',
+        inCachedGuild () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isChatInputCommand () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isStringSelectMenu () {
+          checkedCommands.push(true);
+          return false;
+        },
+        isAutocomplete () {
+          checkedCommands.push(true);
+          return false;
+        },
+        user: {
+          username: 'brettz9',
+          id: '410259427770499072'
+        },
+        options: {
+          getString (optName) {
+            if (optName === 'wiki') {
+              return 'Bahai9.com';
+            }
+            // category
+            return 'Writings';
+          }
+        },
+        reply (msg) {
+          // eslint-disable-next-line @stylistic/max-len -- Long
+          message = /** @type {import('discord.js').InteractionReplyOptions} */ (
+            msg
+          );
+        }
+      });
+
+      await commandFinished(client);
+      expect(checkedCommands.length).to.equal(5);
+      expect(message).to.equal(
+        '[Bahai9.com](https://bahai9.com/wiki/Special:RandomInCategory/Writings)'
+      );
+    }
+  );
+
+  it(
+    '`interactionCreate` finds a ChatInputCommand (randcat autocomplete)',
+    async function () {
+      const discord = new MockDiscord({
+        guildChannels: true,
+        guilds: [
+          {
+            id: DiscordConstants.BAHAI_FYI_GUILD_ID,
+            name: "Bahá'í FYI",
+            channels: [
+              {
+                id: DiscordConstants.BAHAI_FYI_GENERAL_CHANNEL_ID,
+                name: 'general'
+              },
+              {
+                id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
+                name: 'study-hall'
+              }
+            ],
+            emojis: [
+              {
+                id: DiscordConstants.BSTAR_EMOJI_ID_LAB,
+                name: 'bstar'
+              }
+            ]
+          }
+        ]
+      });
+      const {client} = await bot({client: discord.getClient()});
+      const checkedCommands = [];
+
+      let filteredChoicesRan = false;
+
+      // @ts-expect-error Just mocking what we need
+      client.emit('interactionCreate', {
+        commandName: 'randcat',
+        inCachedGuild () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isChatInputCommand () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isStringSelectMenu () {
+          checkedCommands.push(true);
+          return false;
+        },
+        isAutocomplete () {
+          checkedCommands.push(true);
+          return true;
+        },
+        user: {
+          username: 'brettz9',
+          id: '410259427770499072'
+        },
+        options: {
+          getFocused () {
+            return 'Bahai9.com';
+          },
+          getString (optName) {
+            if (optName === 'wiki') {
+              return 'Bahai9.com';
+            }
+            // category
+            return 'Writings';
+          }
+        },
+        respond (filteredChoices) {
+          expect(filteredChoices.length).to.equal(1);
+          filteredChoicesRan = true;
+        }
+      });
+
+      await commandFinished(client);
+      expect(checkedCommands.length).to.equal(3);
+      expect(filteredChoicesRan).to.equal(true);
+    }
+  );
 });
