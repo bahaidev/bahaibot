@@ -214,16 +214,16 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## To-dos
 
-1. Waiting: Update to discord 15 when comes out
+1. Waiting: Update to discord.js v15.0.0 when comes out
+
+1. Go through in-code to-dos
+    1. complete i18nizing messages
 
 1. See about establishing maintenance of bot on own server
 
 1. See about any refactoring needed to allow to work with bahai-matrix-bot and
     easier for website; make website version support opening URLs on behalf
     of user for full context of the Writings and support speech synthesis
-
-1. Go through in-code to-dos
-    1. complete i18nizing messages
 
 1. Augment Dialogflow fallbacks with Bahaipedia search: A new intent called
    "General knowledge" has been created in Dialogflow. When the bot gets
