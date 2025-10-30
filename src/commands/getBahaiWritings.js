@@ -164,14 +164,18 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
         ) ?? '';
 
         await interaction.reply(
-          `[${work}${sectionSelection ? `, ${sectionSelection}` : ''}]` +
+          `${
+            type === 'worksByRandom' ? '<' : ''
+          }[${work}${sectionSelection ? `, ${sectionSelection}` : ''}]` +
           `(${
             sectionSelection
               ? url.replaceAll(
                 '%s', encodeURIComponent(sectionSelection)
               )
               : url.replaceAll('%s', '')
-          })`
+          })${
+            type === 'worksByRandom' ? '>' : ''
+          }`
         );
       }
     };

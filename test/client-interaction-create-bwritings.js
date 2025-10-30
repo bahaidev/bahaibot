@@ -158,6 +158,62 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
   );
 
   it(
+    '`interactionCreate` finds a ChatInputCommand (works-random)',
+    async function () {
+      const discord = new MockDiscord();
+      const {client} = await bot({client: discord.getClient()});
+      const checkedCommands = [];
+
+      /** @type {import('discord.js').InteractionReplyOptions} */
+      let message = {};
+
+      // @ts-expect-error Just mocking what we need
+      client.emit('interactionCreate', {
+        commandName: 'works-random',
+        user: {username: 'abc'},
+        options: {
+          getString () {
+            return 'Writings';
+          },
+          get () {
+            return {
+              value: 'b9randcat'
+            };
+          }
+        },
+        isChatInputCommand () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isStringSelectMenu () {
+          checkedCommands.push(true);
+          return false;
+        },
+        isAutocomplete () {
+          checkedCommands.push(true);
+          return false;
+        },
+        inCachedGuild () {
+          checkedCommands.push(true);
+          return true;
+        },
+        reply (msg) {
+          // eslint-disable-next-line @stylistic/max-len -- Long
+          message = /** @type {import('discord.js').InteractionReplyOptions} */ (
+            msg
+          );
+        }
+      });
+
+      await commandFinished(client);
+      expect(checkedCommands.length).to.equal(5);
+      expect(message).to.equal(
+        '<[Bahai9.com random category, Writings](https://bahai9.com/wiki/Special:RandomInCategory/Writings)>'
+      );
+    }
+  );
+
+  it(
     '`interactionCreate` finds a ChatInputCommand (rand-writings)',
     async function () {
       const discord = new MockDiscord();
