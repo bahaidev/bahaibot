@@ -61,7 +61,7 @@ describe('ready event', () => {
           // @ts-expect-error Just mocking what we need
           find (cmd) {
             return cmd({
-              name: 'read'
+              name: 'quote'
             });
           }
         },

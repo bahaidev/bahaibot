@@ -761,9 +761,9 @@ describe('Commands', () => {
     });
   });
 
-  it('read (missing arguments)', async function () {
+  it('quote (missing arguments)', async function () {
     const discord = new MockDiscord({
-      messageContent: '!read'
+      messageContent: '!quote'
     });
 
     const {client} = await bot({client: discord.getClient()});
@@ -781,9 +781,9 @@ describe('Commands', () => {
     ).to.have.string("I couldn't understand your request");
   });
 
-  it('read (bad arguments)', async function () {
+  it('quote (bad arguments)', async function () {
     const discord = new MockDiscord({
-      messageContent: '!read oops 2'
+      messageContent: '!quote oops 2'
     });
 
     const {client} = await bot({client: discord.getClient()});
@@ -801,9 +801,9 @@ describe('Commands', () => {
     ).to.be.true;
   });
 
-  it('read with reference and index', async function () {
+  it('quote with reference and index', async function () {
     const discord = new MockDiscord({
-      messageContent: '!read hwa 2'
+      messageContent: '!quote hwa 2'
     });
 
     const {client} = await bot({client: discord.getClient()});
@@ -833,9 +833,9 @@ describe('Commands', () => {
     );
   });
 
-  it('read with reference and index (hwp)', async function () {
+  it('quote with reference and index (hwp)', async function () {
     const discord = new MockDiscord({
-      messageContent: '!read hwp 1'
+      messageContent: '!quote hwp 1'
     });
 
     const {client} = await bot({client: discord.getClient()});
@@ -865,9 +865,9 @@ describe('Commands', () => {
     );
   });
 
-  it('read list', async function () {
+  it('quote list', async function () {
     const discord = new MockDiscord({
-      messageContent: '!read list'
+      messageContent: '!quote list'
     });
 
     const {client} = await bot({client: discord.getClient()});
@@ -887,10 +887,10 @@ describe('Commands', () => {
                       `library, user username.`,
       embeds: [{
         color: 8359053,
-        description: '\nTo read from one of these texts, mention the ' +
+        description: '\nTo quote from one of these texts, mention the ' +
             "book name and the section you're interested in. For " +
-            'example, to read the 12th Arabic Hidden Word, say: ' +
-            '`!read HWA 12`.',
+            'example, to quote the 12th Arabic Hidden Word, say: ' +
+            '`!quote HWA 12`.',
         fields: [
           {
             name: 'Available Texts',
@@ -902,9 +902,9 @@ describe('Commands', () => {
     });
   });
 
-  it('read random', async function () {
+  it('quote random', async function () {
     const discord = new MockDiscord({
-      messageContent: '!read random'
+      messageContent: '!quote random'
     });
 
     const {client} = await bot({client: discord.getClient()});

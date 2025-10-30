@@ -349,7 +349,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
   );
 
   it(
-    '`interactionCreate` finds a ChatInputCommand (read)',
+    '`interactionCreate` finds a ChatInputCommand (quote)',
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
@@ -360,7 +360,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
 
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
-        commandName: 'read',
+        commandName: 'quote',
         isChatInputCommand () {
           checkedCommands.push(true);
           return true;
@@ -415,7 +415,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
   );
 
   it(
-    '`interactionCreate` finds a ChatInputCommand (read-random)',
+    '`interactionCreate` finds a ChatInputCommand (quote-random)',
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
@@ -426,7 +426,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
 
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
-        commandName: 'read-random',
+        commandName: 'quote-random',
         inCachedGuild () {
           checkedCommands.push(true);
           return true;

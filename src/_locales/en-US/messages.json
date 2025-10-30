@@ -130,13 +130,13 @@
       "message": "I know which work you're talking about, but I can't find that section in it. Valid section numbers are from **1** to **{max}**."
     },
     "couldnt_understand_request": {
-      "message": "I couldn't understand your request. Make sure you format your request like this: ``read <work> <section number>``. To see the list of works in my library, type ``read list``."
+      "message": "I couldn't understand your request. Make sure you format your request like this: ``quote <work> <section number>``. To see the list of works in my library, type ``quote list``."
     },
     "available_texts": {
       "message": "Available Texts"
     },
     "to_read_mention_book_name": {
-      "message": "\nTo read from one of these texts, mention the book name and the section you're interested in. For example, to read the 12th Arabic Hidden Word, say: `!read HWA 12`."
+      "message": "\nTo quote from one of these texts, mention the book name and the section you're interested in. For example, to quote the 12th Arabic Hidden Word, say: `!quote HWA 12`."
     },
     "following_texts_available_in_library": {
       "message": "The following texts are available in my library, {username}."

@@ -299,8 +299,8 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
         );
       }
     },
-    readBook: {
-      name: 'read',
+    quoteBook: {
+      name: 'quote',
       description:
         "Provide a selection of the Bahá'í Writings by book and chapter",
       /**
@@ -351,7 +351,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
         const book = interaction.options.getString('book') ?? '';
         const chapter = interaction.options.getInteger('chapter') ?? '';
         await this.action?.({
-          content: `!read ${book} ${chapter}`,
+          content: `!quote ${book} ${chapter}`,
           channel: {
             /**
              * @param {string} reply
@@ -364,35 +364,35 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
         });
       },
 
-      re: /\bread (?<refName>\S.+) (?<index>[\-.\d]+)\b/iv,
+      re: /\bquote (?<refName>\S.+) (?<index>[\-.\d]+)\b/iv,
       /**
        * Reads some scripture.
        * @param {import('discord.js').Message<true>} message
        * @returns {Promise<void>}
        */
       async action (message) {
-        return await reader.readBook(
+        return await reader.quoteBook(
           message, /** @type {import('discord.js').ClientUser} */ (
             client.user
           ).avatarURL(), Discord
         );
       }
     },
-    showList: {
-      re: /\bread list$/iv,
+    quoteList: {
+      re: /\bquote list$/iv,
       /**
        *
        * @param {import('discord.js').Message<true>} message
        * @returns {Promise<void>}
        */
       async action (message) {
-        return await reader.showList(message);
+        return await reader.quoteList(message);
       }
     },
     readRandom: {
-      name: 'read-random',
+      name: 'quote-random',
       description: "Provide a random selection of the Bahá'í Writings",
-      re: /\bread random$/iv,
+      re: /\bquote random$/iv,
       /**
        * @param {import('./getCommands.js').
        *   InputCommandOrSelectMenu} interaction
@@ -430,14 +430,14 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
         );
       }
     },
-    read: {
-      re: /!read\b/iv,
+    quote: {
+      re: /!quote\b/iv,
       // This is reused for the other commands
       helpInfo: {
-        name: '!read [list | random | *‹text›* *‹chapter›*]',
-        value: 'Reads from the Bahá\'í Writings. Displays an excerpt ' +
+        name: '!quote [list | random | *‹text›* *‹chapter›*]',
+        value: 'Quotes from the Bahá\'í Writings. Displays an excerpt ' +
             'from given *chapter* of *text*. Available texts are ' +
-            'displayed using `!read list`; `!read random` displays ' +
+            'displayed using `!quote list`; `!quote random` displays ' +
             'a random passage from available texts.'
       },
       /**

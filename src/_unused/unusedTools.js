@@ -76,9 +76,9 @@ helpCmd (message) {
         'your requests.',
       fields: [
         {
-          name: 'read - Readings from the Bahá’í Writings',
+          name: 'quote - Readings from the Bahá’í Writings',
           value: 'For a list of available resources, say: ' +
-            '`@BahaiBot read list`'
+            '`@BahaiBot quote list`'
         }, {
           name: 'question - A tool for answering some basic questions',
           value: 'To ask a question, start with the word question ' +

@@ -60,7 +60,7 @@ describe('`interactionCreate`', function () {
   );
 
   it(
-    '`interactionCreate` finds an autocomplete (read)',
+    '`interactionCreate` finds an autocomplete (quote)',
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
@@ -68,7 +68,7 @@ describe('`interactionCreate`', function () {
       let filteredChoicesRan = false;
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
-        commandName: 'read',
+        commandName: 'quote',
         isChatInputCommand () {
           checkedCommands.push(true);
           return false;
@@ -439,11 +439,11 @@ describe('`interactionCreate`', function () {
               'when trying to use them, like this: `@BahaiBot !help`',
             fields: [
               {
-                name: '!read [list | random | *‹text›* *‹chapter›*]',
-                value: "Reads from the Bahá'í Writings. Displays an " +
+                name: '!quote [list | random | *‹text›* *‹chapter›*]',
+                value: "Quotes from the Bahá'í Writings. Displays an " +
                   'excerpt from given *chapter* of *text*. Available ' +
-                  'texts are displayed using `!read list`; ' +
-                  '`!read random` displays a random passage from ' +
+                  'texts are displayed using `!quote list`; ' +
+                  '`!quote random` displays a random passage from ' +
                   'available texts.'
               },
               {

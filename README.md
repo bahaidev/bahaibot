@@ -235,8 +235,5 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
    follow up with the same results as `/bp Robert Turner`.
 
 1. Other to-dos per @dragfyre
-    1.  `/read` defaults to return a link to a page from a book, OR displays
-        the Hidden Word in an embed if the Hidden Words are chosen; search
-        individual books, possibly by `/page` or `/para` or some sort of
-        BibleBot thing that searches for formatted references
+    1.  Some sort of BibleBot thing that searches for formatted references?
     1. `/help` - just update to show slash commands

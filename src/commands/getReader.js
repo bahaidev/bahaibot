@@ -1,13 +1,13 @@
 /* READER AND LIBRARY FILE */
 
 /**
- * @callback ShowList
+ * @callback QuoteList
  * @param {import('discord.js').Message<true>} message
  * @returns {void}
  */
 
 /**
- * @callback ReadBook
+ * @callback QuoteBook
  * @param {import('discord.js').Message<true>} message
  * @param {string|null} avatar
  * @param {import('discord.js')} Discord
@@ -27,8 +27,8 @@
  */
 /**
  * @typedef {{
- *   showList: ShowList,
- *   readBook: ReadBook,
+ *   quoteList: QuoteList,
+ *   quoteBook: QuoteBook,
  *   readRandom: ReadRandom,
  *   reader: Reader,
  *   getAvailableRandomOptions: () => string[]
@@ -118,7 +118,7 @@ async function getReader ({fs, settings, _}) {
 
   const availableRandomOptions = Object.keys(library.index);
 
-  const fileRegex = /\bread (?<refName>\S.+) (?<index>[\-.\d]+)\b/iv;
+  const fileRegex = /\bquote (?<refName>\S.+) (?<index>[\-.\d]+)\b/iv;
 
   // FUNCTIONS
 
@@ -283,7 +283,7 @@ async function getReader ({fs, settings, _}) {
    * Shows the listing of library items.
    * @returns {string}
    */
-  function showListing () {
+  function quoteListing () {
     // Initiatilze output string
     let output = '';
 
@@ -323,9 +323,9 @@ async function getReader ({fs, settings, _}) {
 
   // MODULES
 
-  /** @type {ShowList} */
-  function showList (message) {
-    const content = showListing();
+  /** @type {QuoteList} */
+  function quoteList (message) {
+    const content = quoteListing();
 
     message.channel.send({
       content: /** @type {string} */ (
@@ -346,8 +346,8 @@ async function getReader ({fs, settings, _}) {
     });
   }
 
-  /** @type {ReadBook} */
-  async function readBook (message, avatar, Discord) {
+  /** @type {QuoteBook} */
+  async function quoteBook (message, avatar, Discord) {
     // Collect user input
     const userInput = message.content;
 
@@ -421,8 +421,8 @@ async function getReader ({fs, settings, _}) {
    * @type {ReaderInfo}
    */
   return {
-    showList,
-    readBook,
+    quoteList,
+    quoteBook,
     readRandom,
     reader,
     getAvailableRandomOptions
