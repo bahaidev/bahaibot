@@ -218,7 +218,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
 
   const writingsReferences = {
     re: new RegExp(
-      `\\b(?<searchEngine>${
+      `^(?<searchEngine>${
         // Shouldn't need escaping as these are just our simple shortcuts
         searchEngines.map(({keyword}) => {
           return keyword;
@@ -259,7 +259,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
 
   const writingsReferencesLong = {
     re: new RegExp(
-      `\\b(?<searchEngine>${
+      `^(?<searchEngine>${
         // Shouldn't need escaping as these are just our simple shortcuts
         searchReferences.map(({reference}) => {
           return reference;
