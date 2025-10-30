@@ -251,7 +251,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
         await message.channel.send({
           content: `[${shortName} ${
             searchValue
-          }](${url?.replaceAll('%s', searchValue)})`
+          }](${url?.replaceAll('%s', encodeURIComponent(searchValue))})`
         });
       }
     }

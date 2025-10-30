@@ -148,7 +148,7 @@ const getCommands = async function ({
     }, {})
   );
 
-  addHelp({commands});
+  addHelp({commands, Discord});
 
   // After adding help to ensure `!help` has priority
   commands.default = getDefaultCommand({

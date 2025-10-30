@@ -461,7 +461,7 @@ describe('`interactionCreate`', function () {
               {
                 name: '!help',
                 value: 'Displays help text. For more commands, use ' +
-                  '`!helpextras` and `!helpadmin`'
+                  '`!helpextras`, `!helpadmin`, and `!helpshortcuts`'
               },
               {
                 name: '!helpextras',
@@ -471,6 +471,10 @@ describe('`interactionCreate`', function () {
                 name: '!helpadmin',
                 value: 'Displays help text for commands available ' +
                   'only to admins.'
+              },
+              {
+                name: '!helpshortcuts',
+                value: 'Displays help text for shortcuts to searches.'
               }
             ]
           }
@@ -681,7 +685,7 @@ describe('`interactionCreate`', function () {
             description: 'The following administrator commands can ' +
               'help me process your requests. Make sure to mention ' +
               'me when trying to use them, like this: ' +
-              '`@BahaiBot !helpextras`',
+              '`@BahaiBot !helpadmin`',
             fields: [
               {
                 name: '!speak some words',
