@@ -501,4 +501,36 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
       );
     }
   );
+
+  it(
+    '`message` finds not mentioned trigger (writingsReferencesLong)',
+    async function () {
+      const discord = new MockDiscord();
+      const {client} = await bot({client: discord.getClient()});
+      let sentContent = '';
+      // @ts-expect-error Just mocking what we need
+      client.emit('messageCreate', {
+        mentions: {
+          has () {
+            return false;
+          }
+        },
+        channel: {
+          /**
+           * @param {{content: string}} msg
+           */
+          send ({content}) {
+            sentContent = content;
+          }
+        },
+        content: 'Aqdas par 15',
+        author: {bot: false}
+      });
+
+      await commandFinished(client);
+      expect(sentContent).to.equal(
+        '[Kitab-i-Aqdas Paragraph 15](https://bahai-library.com/writings/bahaullah/aqdas/kaall.html#par15)'
+      );
+    }
+  );
 });

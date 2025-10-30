@@ -1,5 +1,6 @@
 import getQuoteReader from './getQuoteReader.js';
 import {searchEngines} from './searchEngines.js';
+import {searchReferences} from './searchReferences.js';
 
 const worksByBahaullahOrTheBab = new Set([
   'dor', 'esw', 'gdm', 'gwb', 'gwbs', 'hw', 'hwa', 'hwp', 'ka', 'kan',
@@ -256,6 +257,54 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
     }
   };
 
+  const writingsReferencesLong = {
+    re: new RegExp(
+      `\\b(?<searchEngine>${
+        // Shouldn't need escaping as these are just our simple shortcuts
+        searchReferences.map(({reference}) => {
+          return reference;
+        }).join('|')
+      }) (?<searchValue>.*$)`,
+      'v'
+    ),
+    notMentioned: {
+      /**
+       * @param {import('discord.js').Message<true>} message
+       * @returns {boolean}
+       */
+      check (message) {
+        return writingsReferencesLong.re.test(message.content);
+      },
+      /**
+       * @param {import('discord.js').Message<true>} message
+       * @returns {Promise<void>}
+       */
+      async action (message) {
+        const {
+          searchEngine,
+          searchValue
+        /* c8 ignore next -- Should always match */
+        } = writingsReferencesLong.re.exec(message.content)?.groups ?? {};
+        const {keyword} = searchReferences.find(({reference}) => {
+          return reference === searchEngine;
+        /* c8 ignore next -- Should always match */
+        }) ?? {};
+        const {
+          short_name: shortName,
+          url
+        } = searchEngines.find(({keyword: kw}) => {
+          return kw === keyword;
+        /* c8 ignore next -- Should always match */
+        }) ?? {};
+        await message.channel.send({
+          content: `[${shortName} ${
+            searchValue
+          }](${url?.replaceAll('%s', searchValue)})`
+        });
+      }
+    }
+  };
+
   return /** @type {import('./getCommands.js').BotCommands} */ ({
     ...newlyGroupedEngines,
     // NOTE: If we need to remove these, we can add `deleted` property to them,
@@ -490,7 +539,8 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
         return reader.reader(message);
       }
     },
-    writingsReferences
+    writingsReferences,
+    writingsReferencesLong
   });
 };
 
