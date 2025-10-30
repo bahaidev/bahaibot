@@ -469,4 +469,36 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
       ).to.equal(16732271);
     }
   );
+
+  it(
+    '`message` finds not mentioned trigger (writingsReferences)',
+    async function () {
+      const discord = new MockDiscord();
+      const {client} = await bot({client: discord.getClient()});
+      let sentContent = '';
+      // @ts-expect-error Just mocking what we need
+      client.emit('messageCreate', {
+        mentions: {
+          has () {
+            return false;
+          }
+        },
+        channel: {
+          /**
+           * @param {{content: string}} msg
+           */
+          send ({content}) {
+            sentContent = content;
+          }
+        },
+        content: 'kap:42',
+        author: {bot: false}
+      });
+
+      await commandFinished(client);
+      expect(sentContent).to.equal(
+        '[Kitab-i-Aqdas Paragraph 42](https://bahai-library.com/writings/bahaullah/aqdas/kaall.html#par42)'
+      );
+    }
+  );
 });

@@ -215,6 +215,47 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
       }
     });
 
+  const writingsReferences = {
+    re: new RegExp(
+      `\\b(?<searchEngine>${
+        // Shouldn't need escaping as these are just our simple shortcuts
+        searchEngines.map(({keyword}) => {
+          return keyword;
+        }).join('|')
+      }):(?<searchValue>\\d+)\\b`,
+      'v'
+    ),
+    notMentioned: {
+      /**
+       * @param {import('discord.js').Message<true>} message
+       * @returns {boolean}
+       */
+      check (message) {
+        return writingsReferences.re.test(message.content);
+      },
+      /**
+       * @param {import('discord.js').Message<true>} message
+       * @returns {Promise<void>}
+       */
+      async action (message) {
+        const {
+          searchEngine,
+          searchValue
+        /* c8 ignore next -- Should always match */
+        } = writingsReferences.re.exec(message.content)?.groups ?? {};
+        const {short_name: shortName, url} = searchEngines.find(({keyword}) => {
+          return keyword === searchEngine;
+        /* c8 ignore next -- Should always match */
+        }) ?? {};
+        await message.channel.send({
+          content: `[${shortName} ${
+            searchValue
+          }](${url?.replaceAll('%s', searchValue)})`
+        });
+      }
+    }
+  };
+
   return /** @type {import('./getCommands.js').BotCommands} */ ({
     ...newlyGroupedEngines,
     // NOTE: If we need to remove these, we can add `deleted` property to them,
@@ -448,7 +489,8 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
       action (message) {
         return reader.reader(message);
       }
-    }
+    },
+    writingsReferences
   });
 };
 
