@@ -97,7 +97,7 @@ describe('`interactionCreate`', function () {
   );
 
   it(
-    '`interactionCreate` finds a StringSelectMenu (rand-wiki)',
+    '`interactionCreate` finds a StringSelectMenu (rand)',
     async function () {
       const discord = new MockDiscord({
         guildChannels: true,
@@ -131,8 +131,8 @@ describe('`interactionCreate`', function () {
       let reply = {};
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
-        commandName: 'rand-wiki',
-        customId: 'rand-wiki_site',
+        commandName: 'rand',
+        customId: 'rand_site',
         values: ['b9'],
         user: {username: 'abc'},
         isChatInputCommand () {
@@ -165,7 +165,7 @@ describe('`interactionCreate`', function () {
   );
 
   it(
-    '`interactionCreate` finds a StringSelectMenu (rand-wiki chat input)',
+    '`interactionCreate` finds a StringSelectMenu (rand chat input)',
     async function () {
       const discord = new MockDiscord({
         guildChannels: true,
@@ -199,8 +199,8 @@ describe('`interactionCreate`', function () {
       let reply = {};
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
-        commandName: 'rand-wiki',
-        customId: 'rand-wiki_site',
+        commandName: 'rand',
+        customId: 'rand_site',
         values: ['b9'],
         user: {username: 'abc'},
         isChatInputCommand () {
@@ -232,7 +232,7 @@ describe('`interactionCreate`', function () {
             components: [
               {
                 data: {
-                  custom_id: 'rand-wiki_site',
+                  custom_id: 'rand_site',
                   placeholder: 'Choose a site!',
                   type: 3
                 },

@@ -493,7 +493,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
   // This is only for slash commands, as the indidivual items allow random for
   //   the Bot dialogues
   const randomWiki = /** @type {import('./getCommands.js').BotCommand} */ ({
-    name: 'rand-wiki',
+    name: 'rand',
     description: 'A random wiki selection',
     /**
      * @param {import('discord.js').Message<true>} message
@@ -531,7 +531,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
       }
       if (interaction.isChatInputCommand()) {
         const selectMenu = new Discord.StringSelectMenuBuilder().
-          setCustomId('rand-wiki_site').
+          setCustomId('rand_site').
           setPlaceholder('Choose a site!').
           addOptions(
             new Discord.StringSelectMenuOptionBuilder().
