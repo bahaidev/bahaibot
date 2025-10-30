@@ -80,7 +80,7 @@
  * @param {import('intl-dom').I18NCallback} cfg._
  * @returns {Promise<ReaderInfo>}
  */
-async function getReader ({fs, settings, _}) {
+async function getQuoteReader ({fs, settings, _}) {
   // IMPORT FILES
 
   /**
@@ -429,4 +429,4 @@ async function getReader ({fs, settings, _}) {
   };
 }
 
-export default getReader;
+export default getQuoteReader;

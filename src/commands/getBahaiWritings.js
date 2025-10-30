@@ -1,4 +1,4 @@
-import getReader from './getReader.js';
+import getQuoteReader from './getQuoteReader.js';
 import {searchEngines} from './searchEngines.js';
 
 const worksByBahaullahOrTheBab = new Set([
@@ -49,7 +49,7 @@ const worksByRandom = new Set([
  * @returns {Promise<import('./getCommands.js').BotCommands>}
  */
 const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
-  const reader = await getReader({fs, settings, _});
+  const reader = await getQuoteReader({fs, settings, _});
 
   /*
     "While the overall number of potential subcommands can be quite high
