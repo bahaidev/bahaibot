@@ -223,7 +223,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
         searchEngines.map(({keyword}) => {
           return keyword;
         }).join('|')
-      }):(?<searchValue>[\\d:\\-]+)\\b`,
+      }):(?<searchValue>.*)$`,
       'v'
     ),
     notMentioned: {
