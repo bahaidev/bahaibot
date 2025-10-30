@@ -158,7 +158,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
   );
 
   it(
-    '`interactionCreate` finds a ChatInputCommand (works-random)',
+    '`interactionCreate` finds a ChatInputCommand (randcat)',
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
@@ -169,7 +169,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
 
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
-        commandName: 'works-random',
+        commandName: 'randcat',
         user: {username: 'abc'},
         options: {
           getString () {

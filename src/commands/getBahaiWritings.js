@@ -204,8 +204,8 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
         ...mixinWorks('worksByOthersAndCompilations')
       },
       worksByRandom: {
-        name: 'works-random',
-        description: 'Works randomly selected',
+        name: 'randcat',
+        description: 'Works randomly selected (by category)',
         ...mixinWorks('worksByRandom')
       },
       worksByAuthorSiteOrCollectionSearch: {

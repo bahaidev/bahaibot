@@ -599,78 +599,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
     }
   };
 
-  const randcat = /** @type {import('./getCommands.js').BotCommands} */ ({
-    name: 'randcat',
-    description: "A link to a random page of the given Bahá'í " +
-      'wiki and category',
-    options: [
-      {
-        name: 'wiki',
-        description: 'The wiki for which one retrieves a random link',
-        type: Discord.ApplicationCommandOptionType.String,
-        required: true,
-        autocomplete: true
-      },
-      {
-        name: 'category',
-        description: 'The category for which one retrieves a random link',
-        type: Discord.ApplicationCommandOptionType.String,
-        required: true
-      }
-    ],
-    /**
-     * @param {import('discord.js').AutocompleteInteraction<
-     *   import('discord.js').CacheType
-     * >} interaction
-     * @returns {Promise<void>}
-     */
-    async autocomplete (interaction) {
-      // Get the value the user is typing
-      const focusedValue = interaction.options.getFocused();
-      const choices = [
-        'Bahaipedia.org',
-        'Bahai9.com',
-        'Bahai.media',
-        'Bahai.works'
-      ];
-
-      const filtered = choices.filter(
-        (choice) => choice.startsWith(focusedValue)
-      );
-      await interaction.respond(
-        filtered.map((choice) => ({name: choice, value: choice}))
-      );
-    },
-    /**
-     * @param {import('./getCommands.js').
-     *   InputCommandOrSelectMenu} interaction
-     * @returns {Promise<void>}
-     */
-    async slashCommand (interaction) {
-      /* c8 ignore next 3 -- TS guard */
-      if (!interaction.isChatInputCommand()) {
-        return;
-      }
-
-      /* c8 ignore next 2 -- Required so fallbacks should not be necessary */
-      const wiki = interaction.options.getString('wiki') ?? '';
-      const category = interaction.options.getString('category') ?? '';
-
-      const wikis = /** @type {Record<string, string>} */ ({
-        'Bahaipedia.org': 'https://bahaipedia.org',
-        'Bahai.media': 'https://bahai.media',
-        'Bahai.works': 'https://bahai.works',
-        'Bahai9.com': 'https://bahai9.com/wiki'
-      });
-
-      await interaction.reply(
-        `[${wiki}](${wikis[wiki]}/Special:RandomInCategory/${category})`
-      );
-    }
-  });
-
   return {
-    randcat,
     bp,
     today,
     b9,
