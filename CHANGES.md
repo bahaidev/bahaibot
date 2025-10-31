@@ -1,5 +1,9 @@
 # CHANGES for `bahaibot`
 
+## 0.4.1
+
+- fix `exports`
+
 ## 0.4.0
 
 - Numerous other features and fixes; see commit logs
