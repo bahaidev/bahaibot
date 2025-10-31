@@ -1,8 +1,12 @@
 # CHANGES for `bahaibot`
 
+## 0.4.2
+
+- fix: i18n path
+
 ## 0.4.1
 
-- fix `exports`
+- fix: `exports`
 
 ## 0.4.0
 

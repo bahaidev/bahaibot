@@ -255,7 +255,7 @@ const bot = async ({
   } = settings;
 
   const _ = await i18n({
-    localesBasePath: 'src',
+    localesBasePath: import.meta.dirname,
     locales
   });
 
