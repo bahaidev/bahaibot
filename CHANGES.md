@@ -1,7 +1,8 @@
 # CHANGES for `bahaibot`
 
-## 0.4.0 (Unreleased)
+## 0.4.0
 
+- Numerous other features and fixes; see commit logs
 - Build: Update
 - Linting: As per latest ash-nazg
 - npm: Update `@discordjs/opus` (patch), `@google-cloud/dialogflow` (major),
