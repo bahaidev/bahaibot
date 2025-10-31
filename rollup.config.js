@@ -15,24 +15,17 @@ import terser from '@rollup/plugin-terser';
  * @param {object} [config]
  * @param {boolean} [config.minifying]
  * @param {string} [config.format]
- * @param {boolean} [config.lite]
  * @returns {RollupConfig}
  */
 function getRollupObject ({
-  minifying = false, format = 'umd', lite = false
+  minifying = false, format = 'umd'
 } = {}) {
   const nonMinified = {
     input: './src/integratedClientServerBot.js',
     output: {
       format,
       sourcemap: minifying,
-      file: [
-        'dist/integratedClientServerBot',
-        lite ? '.lite' : '',
-        format === 'umd' ? '' : `.${format}`,
-        minifying ? '.min' : '',
-        '.js'
-      ].join('')
+      dir: 'dist'
     },
     plugins: [
       nodeResolve(),
