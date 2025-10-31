@@ -9,6 +9,80 @@ import * as DiscordConstants from '../src/messages/DiscordConstants.js';
 
 import spyOnGetterResults from './helpers/spyOnGetterResults.js';
 import jsonClone from './helpers/jsonClone.js';
+import {greets} from '../src/messages/messages.js';
+
+import {i18n, setFetch} from 'intl-dom';
+import fileFetch from 'file-fetch'; // For `intl-dom`
+// Needed by intl-dom
+setFetch(fileFetch);
+
+const _ = await i18n({
+  localesBasePath: 'src',
+  locales: ['en_US']
+});
+/** @type {import('../src/discordBot.js').Settings} */
+const settings = {
+  PROJECT_JSON: ''
+};
+
+/**
+ * @type {import('../src/bot.js').GetLocalizedSetting}
+ */
+const getLocalizedSetting = (key, {defaultValue} = {}) => {
+  /* c8 ignore next --- Not used? */
+  return settings?.locales?.[_.resolvedLocale][key] ||
+    defaultValue || _(key);
+};
+
+/** @type {import('../src/discordBot.js').Settings['checkinGuilds']} */
+const checkinGuilds = [
+  {
+    guildID: DiscordConstants.BAHAI_LAB_GUILD_ID,
+    guildName: /** @type {string} */ (getLocalizedSetting('labServerName')),
+    guildChannels: [
+      {
+        id: DiscordConstants.BAHAI_LAB_BOT_TESTING_CHANNEL_ID,
+        greetings: /** @type {string} */ (getLocalizedSetting('debugCheckin', {
+          defaultValue: greets.debugCheckin
+        })),
+        reportUptime: true
+      }
+    ]
+  },
+  {
+    guildID: DiscordConstants.BAHAI_FYI_GUILD_ID,
+    guildName: /** @type {string} */ (getLocalizedSetting('serverName')),
+    guildChannels: [
+      {
+        id: DiscordConstants.BAHAI_FYI_GENERAL_CHANNEL_ID,
+        greetings: /** @type {string} */ (
+          getLocalizedSetting('fyiCheckin-general', {
+            defaultValue: greets.fyiCheckin.general
+          })
+        )
+      },
+      {
+        id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
+        bpToday: true
+      }
+    ]
+  },
+  {
+    guildID: DiscordConstants.BAHAI_WIKIS_GUILD_ID,
+    guildName: "Bahá'í Wikis",
+    guildChannels: [
+      {
+        id: DiscordConstants.BAHAI_WIKIS_GENERAL_CHANNEL_ID,
+        greetings: /** @type {string} */ (
+          getLocalizedSetting('bahaiWikisCheckin-general', {
+            defaultValue: greets.fyiCheckin.general
+          })
+        )
+      }
+    ]
+  }
+];
+settings.checkinGuilds = checkinGuilds;
 
 const discordOptions = {
   guildChannels: true,
@@ -75,6 +149,7 @@ describe('guildCheckin (FYI)', () => {
       ]
     });
     const {guildCheckin} = await bot({
+      getSettings: () => settings,
       checkins: true,
       exitNoThrow: true,
       client: discord.getClient()
@@ -120,6 +195,7 @@ describe('guildCheckin (FYI)', () => {
     );
 
     const {guildCheckin} = await bot({
+      getSettings: () => settings,
       checkins: true,
       exitNoThrow: true,
       client
@@ -165,6 +241,7 @@ describe('guildCheckin (FYI)', () => {
     const client = discord.getClient();
 
     const {guildCheckin} = await bot({
+      getSettings: () => settings,
       checkins: true,
       exitNoThrow: true,
       client
@@ -216,6 +293,7 @@ describe('guildCheckin (FYI)', () => {
     const client = discord.getClient();
 
     const {guildCheckin} = await bot({
+      getSettings: () => settings,
       checkins: true,
       exitNoThrow: true,
       client
@@ -262,6 +340,7 @@ describe('guildCheckin (FYI)', () => {
     this.sinon.spy(console, 'log');
 
     const {guildCheckin} = await bot({
+      getSettings: () => settings,
       checkins: true,
       exitNoThrow: true,
       client
@@ -373,6 +452,7 @@ describe('guildCheckin (FYI)', () => {
       };
 
       const {guildCheckin} = await bot({
+        getSettings: () => settings,
         checkins: true,
         exitNoThrow: true,
         client
@@ -447,6 +527,7 @@ describe('guildCheckin (FYI)', () => {
     });
 
     const {guildCheckin} = await bot({
+      getSettings: () => settings,
       checkins: true,
       exitNoThrow: true,
       client: discord.getClient()

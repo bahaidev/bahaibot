@@ -69,7 +69,8 @@ const getPath = (path) => {
  *     guildChannels: {
  *       id: string,
  *       greetings?: string,
- *       bpToday?: boolean
+ *       bpToday?: boolean,
+ *       reportUptime?: boolean
  *     }[]
  *   }[]
  * }} Settings

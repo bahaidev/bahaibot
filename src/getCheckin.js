@@ -49,22 +49,6 @@ function getCheckin ({
             greetings: getLocalizedSetting('fyiCheckin-general', {
               defaultValue: greets.fyiCheckin.general
             })
-          },
-          {
-            id: DiscordConstants.BAHAI_FYI_STUDY_HALL_CHANNEL_ID,
-            bpToday: true
-          }
-        ]
-      },
-      {
-        guildID: DiscordConstants.BAHAI_WIKIS_GUILD_ID,
-        guildName: "Bahá'í Wikis",
-        guildChannels: [
-          {
-            id: DiscordConstants.BAHAI_WIKIS_GENERAL_CHANNEL_ID,
-            greetings: getLocalizedSetting('bahaiWikisCheckin-general', {
-              defaultValue: greets.fyiCheckin.general
-            })
           }
         ]
       }
@@ -220,6 +204,7 @@ function getCheckin ({
                 {month: 'long', day: 'numeric'}
               ]
             },
+            /* c8 ignore next -- Guard */
             bstar: bstar?.toString() ?? '',
             todayInHistoryResult
           }))
