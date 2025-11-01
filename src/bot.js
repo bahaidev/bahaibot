@@ -41,7 +41,7 @@ import {
  * @property {GetSettings} [getSettings]
  * @property {number} [commandInterval]
  * @property {import('discord.js-rate-limiter').RateLimiter} [rateLimiter]
- * @property {boolean} [exitNoThrow=false] Set to true for testing
+ * @property {boolean} [exitNoThrow=true] Set to true for testing
  */
 
 /**
@@ -189,7 +189,7 @@ const bot = async ({
   // numberOfCommands = 1,
   commandInterval = 2000,
   rateLimiter = new RateLimiter(1, commandInterval),
-  exitNoThrow = false
+  exitNoThrow = true
 }) => {
   /**
   * @param {import('discord.js').Message} message

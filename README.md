@@ -233,7 +233,3 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
    with a Bahaipedia search for the given phrase. Ex.: A user message reading
    "Who was Robert Turner" would trigger the general knowledge intent and
    follow up with the same results as `/bp Robert Turner`.
-
-1. Other to-dos per @dragfyre
-    1.  Some sort of BibleBot thing that searches for formatted references?
-    1. `/help` - just update to show slash commands
