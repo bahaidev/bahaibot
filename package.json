@@ -5,11 +5,26 @@
   "main": "src/index.js",
   "type": "module",
   "exports": {
-    ".": "./src/index.js",
-    "./bot": "./src/bot.js",
-    "./discordBot": "./src/discordBot.js",
-    "./getDialogflowAdapter": "./src/getDialogflowAdapter.js",
-    "./integratedClientServerBot": "./src/integratedClientServerBot.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./src/index.js"
+    },
+    "./bot": {
+      "types": "./dist/bot.d.ts",
+      "import": "./src/bot.js"
+    },
+    "./discordBot": {
+      "types": "./dist/discordBot.d.ts",
+      "import": "./src/discordBot.js"
+    },
+    "./getDialogflowAdapter": {
+      "types": "./dist/getDialogflowAdapter.d.ts",
+      "import": "./src/getDialogflowAdapter.js"
+    },
+    "./integratedClientServerBot": {
+      "types": "./dist/integratedClientServerBot.d.ts",
+      "import": "./src/integratedClientServerBot.js"
+    }
   },
   "bin": {
     "bahaibot": "./src/binary.js"
@@ -29,6 +44,7 @@
     "string-strip-html": "^13.5.0"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
     "@babel/core": "^7.28.5",
     "@babel/eslint-parser": "^7.28.5",
     "@babel/plugin-syntax-top-level-await": "^7.14.5",
@@ -62,9 +78,10 @@
     "last 2 chrome versions"
   ],
   "scripts": {
-    "prepublishOnly": "pnpm i && pnpm rollup",
+    "attw": "attw --pack",
+    "prepublishOnly": "pnpm i && pnpm rollup && npm run attw",
     "tsc": "tsc",
-    "rollup": "rm -Rf dist && rollup -c",
+    "rollup": "rm -Rf dist && rollup -c && tsc -p tsconfig-prod.json",
     "typedoc": "typedoc",
     "lint": "eslint --ext=js,md,html .",
     "lint-arg-fix": "eslint --fix --ext=js,md,html",
