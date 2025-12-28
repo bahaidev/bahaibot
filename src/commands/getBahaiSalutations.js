@@ -95,7 +95,7 @@ const getBahaiSalutations = ({client, BSTAR_EMOJI_ID_LAB}) => {
       }
     },
     ninePointedStar: {
-      re: /\u{1F7D9}/u,
+      re: /\u{1F7D9}/v,
       helpExtra: {
         name: '\u{1F7D9}',
         value: "Sends a greeting via a Bahá'í symbol, the nine-pointed star"

@@ -5,7 +5,7 @@ const getLightHearted = () => {
   return {
     /* OTHER CHIT-CHAT */
     coffee: {
-      re: /\u{2615}/u,
+      re: /\u{2615}/v,
       helpExtra: {
         name: '\u{2615}',
         value: 'Sends a coffee cup emoji'
@@ -29,7 +29,7 @@ const getLightHearted = () => {
       }
     },
     tea: {
-      re: /\u{1F375}/u,
+      re: /\u{1F375}/v,
       helpExtra: {
         name: '\u{1F375}',
         value: 'Sends a tea emoji'
@@ -53,7 +53,7 @@ const getLightHearted = () => {
       }
     },
     popcorn: {
-      re: /\u{1F37F}/u,
+      re: /\u{1F37F}/v,
       helpExtra: {
         name: '\u{1F37F}',
         value: 'Sends a popcorn emoji'

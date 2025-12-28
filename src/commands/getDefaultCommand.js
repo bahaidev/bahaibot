@@ -12,7 +12,7 @@ const getDefaultCommand = ({
   app, router, client, Discord, _, settings
 }) => {
   return {
-    re: /[\s\S]*/u, // Should always match
+    re: /[\s\S]*/v, // Should always match
     /**
      * @param {import('discord.js').Message<true>} message
      * @returns {Promise<void>}

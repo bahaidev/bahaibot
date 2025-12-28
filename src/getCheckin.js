@@ -71,7 +71,6 @@ function getCheckin ({
 
       // eslint-disable-next-line no-console -- CLI
       console.log(_('checkingIn', {
-        // eslint-disable-next-line object-shorthand -- TS
         guildName: /** @type {string} */ (guildName)
       }));
 
@@ -157,7 +156,6 @@ function getCheckin ({
     } of channels) {
       // eslint-disable-next-line no-console -- CLI
       console.log(_('channelFound', {
-        // eslint-disable-next-line object-shorthand -- TS
         guildName: /** @type {string} */ (guildName),
         channelName: /** @type {string} */ (channel?.name)
       }));
