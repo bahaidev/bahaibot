@@ -127,7 +127,7 @@
       "message": "Error searching wiki"
     },
     "know_which_work_but_cant_find": {
-      "message": "I know which work you're talking about, but I can't find that section in it. Valid section numbers are from **1** to **{max}**."
+      "message": "I know which work you're talking about, but I can't find that section in it. Valid section numbers are from **0** to **{max}**."
     },
     "couldnt_understand_request": {
       "message": "I couldn't understand your request. Make sure you format your request like this: ``quote <work> <section number>``. To see the list of works in my library, type ``quote list``."

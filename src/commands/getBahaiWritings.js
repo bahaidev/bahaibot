@@ -2,6 +2,11 @@ import getQuoteReader from './getQuoteReader.js';
 import {searchEngines} from './searchEngines.js';
 import {searchReferences} from './searchReferences.js';
 
+export const hiddenWordsLanguages = [
+  'Arabic', 'English', 'Spanish', 'French', 'Russian',
+  'Persian', 'Simplified Chinese'
+];
+
 const worksByBahaullahOrTheBab = new Set([
   'dor', 'esw', 'gdm', 'gwb', 'gwbs', 'hw', 'hwa', 'hwp', 'ka', 'kan',
   'kap', 'kaq', 'ki', 'kip', 'pb', 'pm', 'pms', 'slh', 'sv', 'swb',
@@ -401,11 +406,14 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
        */
       async autocomplete (interaction) {
         // Get the value the user is typing
-        const focusedValue = interaction.options.getFocused();
-        const choices = reader.getAvailableRandomOptions();
+        const focused = interaction.options.getFocused(true);
+
+        const choices = focused.name === 'language'
+          ? hiddenWordsLanguages
+          : reader.getAvailableRandomOptions();
 
         const filtered = choices.filter(
-          (choice) => choice.startsWith(focusedValue)
+          (choice) => choice.startsWith(focused.value)
         );
         await interaction.respond(
           filtered.map((choice) => ({name: choice, value: choice}))
@@ -424,6 +432,12 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
           description: 'The chapter',
           type: Discord.ApplicationCommandOptionType.Integer,
           required: true
+        },
+        {
+          name: 'language',
+          description: 'The content language',
+          type: Discord.ApplicationCommandOptionType.String,
+          autocomplete: true
         }
       ],
       /**
@@ -437,11 +451,13 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
           return;
         }
 
-        /* c8 ignore next 2 -- Required so fallback should not be necessary */
+        /* c8 ignore next 3 -- Required so fallback should not be necessary */
         const book = interaction.options.getString('book') ?? '';
         const chapter = interaction.options.getInteger('chapter') ?? '';
+        const language = interaction.options.getString('language') ?? 'English';
+
         await this.action?.({
-          content: `!quote ${book} ${chapter}`,
+          content: `!quote ${book} ${chapter} ${language}`,
           channel: {
             /**
              * @param {string} reply
@@ -454,7 +470,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
         });
       },
 
-      re: /\bquote (?<refName>\S.+) (?<index>[\-.\d]+)\b/iv,
+      re: /\bquote (?<refName>\S.+) (?<index>[\-.\d]+)(?<language> \w+)?/iv,
       /**
        * Reads some scripture.
        * @param {import('discord.js').Message<true>} message
@@ -482,7 +498,34 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
     readRandom: {
       name: 'quote-random',
       description: "Provide a random selection of the Bahá'í Writings",
-      re: /\bquote random$/iv,
+      re: /\bquote random(?: \w+)?$/iv,
+      /**
+       * @param {import('discord.js').AutocompleteInteraction<
+       *   import('discord.js').CacheType
+       * >} interaction
+       * @returns {Promise<void>}
+       */
+      async autocomplete (interaction) {
+        // Get the value the user is typing
+        const focusedValue = interaction.options.getFocused();
+
+        const choices = hiddenWordsLanguages;
+
+        const filtered = choices.filter(
+          (choice) => choice.startsWith(focusedValue)
+        );
+        await interaction.respond(
+          filtered.map((choice) => ({name: choice, value: choice}))
+        );
+      },
+      options: [
+        {
+          name: 'language',
+          description: 'The content language',
+          type: Discord.ApplicationCommandOptionType.String,
+          autocomplete: true
+        }
+      ],
       /**
        * @param {import('./getCommands.js').
        *   InputCommandOrSelectMenu} interaction
@@ -490,10 +533,13 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
        */
       async slashCommand (interaction) {
         /* c8 ignore next 3 -- TS guard */
-        if (!interaction.inCachedGuild()) {
+        if (!interaction.isChatInputCommand()) {
           return;
         }
+        const language = interaction.options.getString('language') ?? 'English';
+
         await this.action?.({
+          content: `quote random ${language}`,
           channel: {
             /**
              * @param {string} reply

@@ -45,7 +45,7 @@ export default [
   }),
   ...ashNazg(['sauron', 'node']).map((cfg) => {
     return {
-      files: ['src/discordBot.js', 'test/**/*.js'],
+      files: ['src/discordBot.js', 'test/**/*.js', 'dolt.js'],
       rules: {
         // Doesn't handle globals we use or some packages that rely
         //   on main file location for types instead of `package.json`

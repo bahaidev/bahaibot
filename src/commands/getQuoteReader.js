@@ -1,5 +1,11 @@
 /* READER AND LIBRARY FILE */
 
+import {hiddenWordsLanguages as languages} from './getBahaiWritings.js';
+
+/**
+ * @typedef {"English"} Language
+ */
+
 /**
  * @callback QuoteList
  * @param {import('discord.js').Message<true>} message
@@ -58,7 +64,7 @@
  *   title: string,
  *   paras: {
  *     id: number,
- *     text: string
+ *     English: string
  *   }[],
  *   notes: Footnote[]
  * }} Chapter
@@ -118,7 +124,7 @@ async function getQuoteReader ({fs, settings, _}) {
 
   const availableRandomOptions = Object.keys(library.index);
 
-  const fileRegex = /\bquote (?<refName>\S.+) (?<index>[\-.\d]+)\b/iv;
+  const fileRegex = /\bquote (?<refName>\S.+) (?<index>[\-.\d]+)(?: (?<language>\w+))?/iv;
 
   // FUNCTIONS
 
@@ -142,7 +148,8 @@ async function getQuoteReader ({fs, settings, _}) {
 
     // Setup index. It's subtracted by 1 due to array listing
     // 0 is the first element, 1 is the second, etc.
-    index = Number.parseInt(String(index)) - 1;
+    index = Number.parseInt(String(index)) -
+      (file.chapters[0].id === 0 ? 0 : 1);
 
     // If the index value is within the permitted range
     if (index > -1 && index < max) {
@@ -208,10 +215,11 @@ async function getQuoteReader ({fs, settings, _}) {
    * @param {import('../getWikiTools.js').Integer} refNumber
    * @param {string} refName
    * @param {Chapter} content
+   * @param {Language} language
    * @returns {void}
    */
   function embedCreator (
-    Discord, avatar, message, refNumber, refName, content
+    Discord, avatar, message, refNumber, refName, content, language
   ) {
     // Define the embed features
     let embedDescription = '';
@@ -224,8 +232,10 @@ async function getQuoteReader ({fs, settings, _}) {
       /* c8 ignore next -- Need other words besides Hidden Words */
       : `**Chapter ${refNumber}, Para 1. ${content.title}**\n`;
 
+    const lang = languages.includes(language) ? language : 'English';
+
     // Split text if large
-    const textDescriptionSplit = splitter(content.paras[0].text,
+    const textDescriptionSplit = splitter(content.paras[0][lang],
       MAX_TEXT_LIMIT);
 
     // Process the embed data based on the size of the text
@@ -356,7 +366,8 @@ async function getQuoteReader ({fs, settings, _}) {
     const {groups} = userInput.match(fileRegex) ?? {};
 
     let {refName} = /** @type {{refName: string}} */ (groups);
-    const {index} = /** @type {{index: string}} */ (groups);
+    const {index, language} =
+      /** @type {{index: string, language: Language}} */ (groups);
 
     // Make sure the file exists
     if (!Object.hasOwn(library.index, refName.toLowerCase())) {
@@ -376,7 +387,7 @@ async function getQuoteReader ({fs, settings, _}) {
     if (typeof content === 'object') {
       // Create the embed
       embedCreator(
-        Discord, avatar, message, Number(index), refName, content
+        Discord, avatar, message, Number(index), refName, content, language
       );
     /* c8 ignore next 6 -- See note below */
     // Unless a book has a missing chapter numbering, it seems this will be
@@ -398,14 +409,32 @@ async function getQuoteReader ({fs, settings, _}) {
     const file = await openFile(refName);
 
     // Generate random reference number
-    const randomNumber = Math.floor(Math.random() * file.chapters.length);
+    const randomNumber = Math.floor(
+      Math.random() * (
+        file.chapters.length +
+        (file.chapters[0].id === 0 ? 0 : 1)
+      )
+    );
 
     // Generate a random number based on the file length and pull content
     //  from file
     const content = /** @type {Chapter} */ (readFile(file, randomNumber));
 
+    const userInput = message.content;
+
+    // Pull the relevant data from the regex
+    /* c8 ignore next -- TS */
+    const {groups = {}} = userInput.match(
+      /\bquote random(?: (?<language>\w+))?/iv
+    ) ?? {groups: {}};
+
+    // eslint-disable-next-line prefer-destructuring -- TS
+    const language = /** @type {Language} */ (groups.language);
+
     // Create the embed
-    embedCreator(Discord, avatar, message, randomNumber, refName, content);
+    embedCreator(
+      Discord, avatar, message, randomNumber, refName, content, language
+    );
   }
 
   /** @type {Reader} */
