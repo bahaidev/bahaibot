@@ -149,6 +149,7 @@ async function getQuoteReader ({fs, settings, _}) {
     // Setup index. It's subtracted by 1 due to array listing
     // 0 is the first element, 1 is the second, etc.
     index = Number.parseInt(String(index)) -
+      /* c8 ignore next -- HWs only currently, so 0-based */
       (file.chapters[0].id === 0 ? 0 : 1);
 
     // If the index value is within the permitted range
@@ -412,6 +413,7 @@ async function getQuoteReader ({fs, settings, _}) {
     const randomNumber = Math.floor(
       Math.random() * (
         file.chapters.length +
+        /* c8 ignore next -- HWs only currently, so 0-based */
         (file.chapters[0].id === 0 ? 0 : 1)
       )
     );
