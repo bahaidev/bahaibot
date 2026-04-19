@@ -349,23 +349,13 @@
 			"paras": [
 				{
 					"id": 1,
-					"English": "In the eighth of the most holy lines, in the fifth Tablet of Paradise, He saith:",
-					"Arabic": "في السّطر الثّامن من أسطر القدس في اللّوح الخامس من ألواح الفردوس قال:",
-					"Spanish": "En la octava de las muy santas líneas, en la quinta Tabla del Paraíso, Él dice:",
-					"French": "À la huitième ligne des versets sacrés de la cinquième tablette du paradis, il dit :",
-					"Russian": "На восьмой из святейших строк, в пятой Скрижали Рая, Он речет:",
-					"Persian": "در سطر هشتم از اسطر قدس که در لوح پنجم از فردوس است میفرماید",
-					"Simplified Chinese": "在天堂书简第五篇，最神圣诗句的第八节，祂说道："
-				},
-				{
-					"id": 2,
-					"English": "O YE THAT ARE LYING AS DEAD ON THE COUCH OF HEEDLESSNESS! Ages have passed and your precious lives are well-nigh ended, yet not a single breath of purity hath reached Our court of holiness from you. Though immersed in the ocean of misbelief, yet with your lips ye profess the one true faith of God. Him whom I abhor ye have loved, and of My foe ye have made a friend. Notwithstanding, ye walk on My earth complacent and self-satisfied, heedless that My earth is weary of you and everything within it shunneth you. Were ye but to open your eyes, ye would, in truth, prefer a myriad griefs unto this joy, and would count death itself better than this life.",
-					"Arabic": "يا أموات فراش الغفلة مرّت القرون وبلغتم بأعماركم الغالية نهاياتها وما تصاعد منكم إلى ساحة قدسنا نَفَسٌ طاهر. غارقون في أبحر الشّرك وتردّدون بأفواهكم كلمة التّوحيد، عددتم مبغوضي محبوبكم واتّخذتم عدوّي صديقاً لكم، تمشي في أرضي بكمال الفرح والسّرور ولا تعلم بأنّ أرضي سئمتك وأن أشياء الأرض تولي منك الأدبار، ولو أنّك فتحت البصر لعملت أنّ مائة ألف حزنٍ خيرٌ لك من هذا السّرور، وعددت الفناء أطيب لك من هذه الحياة.",
-					"Spanish": "¡OH VOSOTROS QUE COMO MUERTOS YACÉIS EN EL LECHO DE LA NEGLIGENCIA! Han pasado edades y vuestras preciosas vidas casi han terminado, sin embargo ni un sólo hálito de pureza ha llegado de vosotros hasta nuestra corte de santidad. Aunque estáis sumergidos en el océano de la incredulidad, con vuestros labios profesáis la única y verdadera fe de Dios. Habéis amado a quien detesto y de mi enemigo habéis hecho un amigo. No obstante camináis sobre mi tierra complacidos y satisfechos de vosotros mismos, sin reparar en que mi tierra está cansada de vosotros y todo cuanto hay en ella os rehúye. Si abrierais vuestros ojos en verdad preferiríais una miríada de aflicciones a esta alegría y consideraríais la misma muerte mejor que la vida.",
-					"French": "Ô vous qui gisez comme des morts sur la couche de négligence ! Des siècles ont passé et votre vie précieuse approche de sa fin, mais de vous, aucun souffle pur n'est monté jusqu'à notre cour de sainteté. Plongés dans l'océan de l'erreur, vos lèvres confessent pourtant la seule vraie foi de Dieu. Celui que j'abhorre, vous l'aimez et de mon ennemi, vous vous faites un ami. Néanmoins vous foulez ma terre, suffisants et présomptueux, sans savoir qu'elle est lasse de vous et que tout en elle vous échappe. Ouvrez donc les yeux et vous comprendrez qu'une multitude de peines est vraiment préférable à cette joie et que la mort elle-même vaut mieux que cette vie.",
-					"Russian": "О ВЫ, ЛЕЖАЩИЕ, ПОДОБНО МЕРТВЕЦАМ, НА ОДРЕ НЕРАДЕНИЯ! Проходят века, и ваши драгоценные жизни близятся к концу, но ни единого дыхания чистоты не дошло от вас до Нашего двора святости. Хотя погружены вы в океан заблуждения, на устах у вас исповедание единой истинной веры в Бога. Того, кто противен Мне, вы возлюбили, и врага Моего соделали своим другом. И все же вы ходите по земле Моей, беспечные и самодовольные, не ведая о том, что земля Моя устала от вас и все сущее на ней вас отвергает. Когда бы открыли вы глаза, воистину, предпочли бы множество скорбей такой радости и сочли бы, что сама смерть лучше, нежели такая жизнь",
-					"Persian": "ای مردگان فراش غفلت قرنها گذشت و عمر گرانمایه را بانتها رسانده‌اید و نفس پاکی از شما بساحت قدس ما نیامد در ابحر شرک مستغرقید و کلمهٴ توحید بر زبان میرانید مبغوض مرا محبوب خود دانسته‌اید و دشمن مرا دوست خود گرفته‌اید و در ارض من بکمال خرّمی و سرور مشی مینمائید و غافل از آنکه زمین من از تو بیزار است و اشیای ارض از تو در گریز اگر فی‌الجمله بصر بگشائی صدهزار حزن را از این سرور خوشتر دانی و فنا را از این حیات نیکوتر شمری",
-					"Simplified Chinese": "你 们这些在疏失之榻上昏睡 的人啊！ 岁月流逝，你们宝贵的生命行将终止，却无丝毫纯洁气息自你们那里吹到我神圣天庭。你们沉溺于误信的汪洋，却口称信奉上帝之唯一真信仰。为我憎恶的，你们却对其示爱； 与我敌对的， 你们却与之交好。即便如此，你们照样走在我的大地上，洋洋得意，浑然不觉它已厌倦你们，其间万物皆避开你们。倘若你们睁开双眼，你们肯定宁受万千悲苦，也不愿享此欢乐，你们将会视死亡胜过今生。"
+					"English": "In the eighth of the most holy lines, in the fifth Tablet of Paradise, He saith: O YE THAT ARE LYING AS DEAD ON THE COUCH OF HEEDLESSNESS! Ages have passed and your precious lives are well-nigh ended, yet not a single breath of purity hath reached Our court of holiness from you. Though immersed in the ocean of misbelief, yet with your lips ye profess the one true faith of God. Him whom I abhor ye have loved, and of My foe ye have made a friend. Notwithstanding, ye walk on My earth complacent and self-satisfied, heedless that My earth is weary of you and everything within it shunneth you. Were ye but to open your eyes, ye would, in truth, prefer a myriad griefs unto this joy, and would count death itself better than this life.",
+					"Arabic": "في السّطر الثّامن من أسطر القدس في اللّوح الخامس من ألواح الفردوس قال: يا أموات فراش الغفلة مرّت القرون وبلغتم بأعماركم الغالية نهاياتها وما تصاعد منكم إلى ساحة قدسنا نَفَسٌ طاهر. غارقون في أبحر الشّرك وتردّدون بأفواهكم كلمة التّوحيد، عددتم مبغوضي محبوبكم واتّخذتم عدوّي صديقاً لكم، تمشي في أرضي بكمال الفرح والسّرور ولا تعلم بأنّ أرضي سئمتك وأن أشياء الأرض تولي منك الأدبار، ولو أنّك فتحت البصر لعملت أنّ مائة ألف حزنٍ خيرٌ لك من هذا السّرور، وعددت الفناء أطيب لك من هذه الحياة.",
+					"Spanish": "En la octava de las muy santas líneas, en la quinta Tabla del Paraíso, Él dice: ¡OH VOSOTROS QUE COMO MUERTOS YACÉIS EN EL LECHO DE LA NEGLIGENCIA! Han pasado edades y vuestras preciosas vidas casi han terminado, sin embargo ni un sólo hálito de pureza ha llegado de vosotros hasta nuestra corte de santidad. Aunque estáis sumergidos en el océano de la incredulidad, con vuestros labios profesáis la única y verdadera fe de Dios. Habéis amado a quien detesto y de mi enemigo habéis hecho un amigo. No obstante camináis sobre mi tierra complacidos y satisfechos de vosotros mismos, sin reparar en que mi tierra está cansada de vosotros y todo cuanto hay en ella os rehúye. Si abrierais vuestros ojos en verdad preferiríais una miríada de aflicciones a esta alegría y consideraríais la misma muerte mejor que la vida.",
+					"French": "À la huitième ligne des versets sacrés de la cinquième tablette du paradis, il dit : Ô vous qui gisez comme des morts sur la couche de négligence ! Des siècles ont passé et votre vie précieuse approche de sa fin, mais de vous, aucun souffle pur n'est monté jusqu'à notre cour de sainteté. Plongés dans l'océan de l'erreur, vos lèvres confessent pourtant la seule vraie foi de Dieu. Celui que j'abhorre, vous l'aimez et de mon ennemi, vous vous faites un ami. Néanmoins vous foulez ma terre, suffisants et présomptueux, sans savoir qu'elle est lasse de vous et que tout en elle vous échappe. Ouvrez donc les yeux et vous comprendrez qu'une multitude de peines est vraiment préférable à cette joie et que la mort elle-même vaut mieux que cette vie.",
+					"Russian": "На восьмой из святейших строк, в пятой Скрижали Рая, Он речет: О ВЫ, ЛЕЖАЩИЕ, ПОДОБНО МЕРТВЕЦАМ, НА ОДРЕ НЕРАДЕНИЯ! Проходят века, и ваши драгоценные жизни близятся к концу, но ни единого дыхания чистоты не дошло от вас до Нашего двора святости. Хотя погружены вы в океан заблуждения, на устах у вас исповедание единой истинной веры в Бога. Того, кто противен Мне, вы возлюбили, и врага Моего соделали своим другом. И все же вы ходите по земле Моей, беспечные и самодовольные, не ведая о том, что земля Моя устала от вас и все сущее на ней вас отвергает. Когда бы открыли вы глаза, воистину, предпочли бы множество скорбей такой радости и сочли бы, что сама смерть лучше, нежели такая жизнь",
+					"Persian": "در سطر هشتم از اسطر قدس که در لوح پنجم از فردوس است میفرماید ای مردگان فراش غفلت قرنها گذشت و عمر گرانمایه را بانتها رسانده‌اید و نفس پاکی از شما بساحت قدس ما نیامد در ابحر شرک مستغرقید و کلمهٴ توحید بر زبان میرانید مبغوض مرا محبوب خود دانسته‌اید و دشمن مرا دوست خود گرفته‌اید و در ارض من بکمال خرّمی و سرور مشی مینمائید و غافل از آنکه زمین من از تو بیزار است و اشیای ارض از تو در گریز اگر فی‌الجمله بصر بگشائی صدهزار حزن را از این سرور خوشتر دانی و فنا را از این حیات نیکوتر شمری",
+					"Simplified Chinese": "在天堂书简第五篇，最神圣诗句的第八节，祂说道： 你 们这些在疏失之榻上昏睡 的人啊！ 岁月流逝，你们宝贵的生命行将终止，却无丝毫纯洁气息自你们那里吹到我神圣天庭。你们沉溺于误信的汪洋，却口称信奉上帝之唯一真信仰。为我憎恶的，你们却对其示爱； 与我敌对的， 你们却与之交好。即便如此，你们照样走在我的大地上，洋洋得意，浑然不觉它已厌倦你们，其间万物皆避开你们。倘若你们睁开双眼，你们肯定宁受万千悲苦，也不愿享此欢乐，你们将会视死亡胜过今生。"
 				}
 			],
 			"notes": []
@@ -648,23 +638,13 @@
 			"paras": [
 				{
 					"id": 1,
-					"English": "In the first line of the Tablet it is recorded and written, and within the sanctuary of the tabernacle of God is hidden:",
-					"Arabic": "ذُكر في السّطر الأول من اللوح المذكور وسُطر وفي سرادق حفظ الله سُتر.",
-					"Spanish": "Está escrito y consta en la primera línea de la Tabla, y en el santuario del tabernáculo de Dios está oculto:",
-					"French": "Voici ce qui est gravé sur la première ligne de la tablette, et caché au cœur du tabernacle divin :",
-					"Russian": "В начальной строке Скрижали начертано и записано, и в святилище скинии Божией сокрыто:",
-					"Persian": "در سطر اوّل لوح مذکور و مسطور است و در سرادق حفظ الله مستور",
-					"Simplified Chinese": "在上帝圣帐的内殿里，秘藏着一部书简，其首节写道："
-				},
-				{
-					"id": 2,
-					"English": "O MY SERVANT! Abandon not for that which perisheth an everlasting dominion, and cast not away celestial sovereignty for a worldly desire. This is the river of everlasting life that hath flowed from the well-spring of the pen of the merciful; well is it with them that drink!",
-					"Arabic": "يا عبدي لا تُضيع بانزالةٍ ملكاً ليس له زوال ولا تفقد بالشّهوة سلطنة الفردوس. هذا كوثر الحيوان الذي جرى من معين قلم الرّحمن (طوبى للشّاربين).",
-					"Spanish": "¡OH MI SIERVO! No abandones un dominio sempiterno a cambio de aquello que perece, no deseches la soberanía celestial por un deseo mundano. Este es el río de vida eterna que ha fluido desde el manantial de la pluma del misericordioso.¡Dichosos aquellos que beben de él!",
-					"French": "Ô mon serviteur ! Ne renonce pas au royaume éternel pour ce qui périt et ne préfère pas un désir terrestre à une souveraineté céleste. Tel est le fleuve de vie éternelle qui sourd de la plume du Miséricordieux. Heureux ceux qui s'y abreuvent.",
-					"Russian": "О СЛУГА МОЙ! Не покидай владения непреходящего ради того, что тленно, и не отринь господства небесного ради мирского вожделения. Вот река вечной жизни, что вытекает из источника пера милосердного; благо тому, кто вкушает!",
-					"Persian": "ای بندهٔ من ملک بی‌زوال را بانزالی از دست منه و شاهنشهی فردوس را بشهوتی از دست مده اینست کوثر حیوان که از معین قلم رحمن ساری گشته طوبی للشّاربین",
-					"Simplified Chinese": "我 之仆人啊！ 莫为必朽之物放弃永生领土；莫为凡尘之欲抛却上天国度。此乃永生之河，流自慈悲者圣笔之泉；饮之者，有福了！"
+					"English": "In the first line of the Tablet it is recorded and written, and within the sanctuary of the tabernacle of God is hidden: O MY SERVANT! Abandon not for that which perisheth an everlasting dominion, and cast not away celestial sovereignty for a worldly desire. This is the river of everlasting life that hath flowed from the well-spring of the pen of the merciful; well is it with them that drink!",
+					"Arabic": "ذُكر في السّطر الأول من اللوح المذكور وسُطر وفي سرادق حفظ الله سُتر. يا عبدي لا تُضيع بانزالةٍ ملكاً ليس له زوال ولا تفقد بالشّهوة سلطنة الفردوس. هذا كوثر الحيوان الذي جرى من معين قلم الرّحمن (طوبى للشّاربين).",
+					"Spanish": "Está escrito y consta en la primera línea de la Tabla, y en el santuario del tabernáculo de Dios está oculto: ¡OH MI SIERVO! No abandones un dominio sempiterno a cambio de aquello que perece, no deseches la soberanía celestial por un deseo mundano. Este es el río de vida eterna que ha fluido desde el manantial de la pluma del misericordioso.¡Dichosos aquellos que beben de él!",
+					"French": "Voici ce qui est gravé sur la première ligne de la tablette, et caché au cœur du tabernacle divin : Ô mon serviteur ! Ne renonce pas au royaume éternel pour ce qui périt et ne préfère pas un désir terrestre à une souveraineté céleste. Tel est le fleuve de vie éternelle qui sourd de la plume du Miséricordieux. Heureux ceux qui s'y abreuvent.",
+					"Russian": "В начальной строке Скрижали начертано и записано, и в святилище скинии Божией сокрыто: О СЛУГА МОЙ! Не покидай владения непреходящего ради того, что тленно, и не отринь господства небесного ради мирского вожделения. Вот река вечной жизни, что вытекает из источника пера милосердного; благо тому, кто вкушает!",
+					"Persian": "در سطر اوّل لوح مذکور و مسطور است و در سرادق حفظ الله مستور ای بندهٔ من ملک بی‌زوال را بانزالی از دست منه و شاهنشهی فردوس را بشهوتی از دست مده اینست کوثر حیوان که از معین قلم رحمن ساری گشته طوبی للشّاربین",
+					"Simplified Chinese": "在上帝圣帐的内殿里，秘藏着一部书简，其首节写道： 我 之仆人啊！ 莫为必朽之物放弃永生领土；莫为凡尘之欲抛却上天国度。此乃永生之河，流自慈悲者圣笔之泉；饮之者，有福了！"
 				}
 			],
 			"notes": []
@@ -845,23 +825,13 @@
 			"paras": [
 				{
 					"id": 1,
-					"English": "In the third of the most holy lines writ and recorded in the Ruby Tablet by the pen of the unseen this is revealed:",
-					"Arabic": "يا أيّها الإخوان",
-					"Spanish": "En la tercera de las más sagradas líneas escritas y registradas por la pluma del invisible en la Tabla Rubí, se revela esto:",
-					"French": "À la troisième des lignes les plus sacrées, gravées sur la Tablette vermeille par la plume de l'invisible, ceci est révélé :",
-					"Russian": "В третьей из священнейших строк, записанных и начертанных в Рубиновой Скрижали пером Незримого, открыто сие:",
-					"Persian": "در سطر سیّم از اسطر قدس که در لوح یاقوتی از قلم خفیّ ثبت شده این است",
-					"Simplified Chinese": "在红宝石书简最神圣诗句的第三节，无形之笔写下了如此启示："
-				},
-				{
-					"id": 2,
-					"English": "O BRETHREN! Be forbearing one with another and set not your affections on things below. Pride not yourselves in your glory, and be not ashamed of abasement. By My beauty! I have created all things from dust, and to dust will I return them again.",
-					"Arabic": "فليدارِ بعضكم بعضاً، ولتفرغ قلوبكم من الدّنيا ولا تفتخروا بالعزّة، ومن الذّلّة لا تخجلوا فوجمالي لقد خلقتكم من التراب جميعاً وإلى التراب أعيدكم جميعاً.",
-					"Spanish": "¡OH HERMANOS! Sed indulgentes unos hacia otros y no pongáis vuestro afecto en las cosas del mundo. No os enorgullezcáis de vuestra gloria ni os avergoncéis de la humillación. ¡Por mi belleza! He creado todo del polvo y al polvo lo haré regresar.",
-					"French": "Ô frères ! Soyez indulgents les uns pour les autres et ne vous attachez pas aux choses d'ici-bas. Ne soyez pas fiers dans la gloire ni honteux dans l'infortune. Par ma beauté ! J'ai créé toutes choses de la poussière et je les renverrai à la poussière.",
-					"Russian": "О СОБРАТЬЯ! Будьте терпимы друг к другу и не привязывайтесь к низменным вещам. Не гордитесь в славе вашей и не стыдитесь в унижении. Красотою Моей клянусь! Я создал всякую вещь из праха и во прах ее возвращу",
-					"Persian": "ای برادران با یکدیگر مدارا نمائید و از دنیا دل بردارید بعزّت افتخار منمائید و از ذلّت ننگ مدارید قسم بجمالم که کل را از تراب خلق نمودم و البتّه بتراب برمیگردانم",
-					"Simplified Chinese": "兄 弟们啊！ 你们要彼此宽容，莫眷恋尘世之物。勿以荣耀而骄矜，莫为屈辱而羞耻。以我圣美之名！我用尘土创造万物，亦将使之复归尘土。"
+					"English": "In the third of the most holy lines writ and recorded in the Ruby Tablet by the pen of the unseen this is revealed: O BRETHREN! Be forbearing one with another and set not your affections on things below. Pride not yourselves in your glory, and be not ashamed of abasement. By My beauty! I have created all things from dust, and to dust will I return them again.",
+					"Arabic": "يا أيّها الإخوان فليدارِ بعضكم بعضاً، ولتفرغ قلوبكم من الدّنيا ولا تفتخروا بالعزّة، ومن الذّلّة لا تخجلوا فوجمالي لقد خلقتكم من التراب جميعاً وإلى التراب أعيدكم جميعاً.",
+					"Spanish": "En la tercera de las más sagradas líneas escritas y registradas por la pluma del invisible en la Tabla Rubí, se revela esto: ¡OH HERMANOS! Sed indulgentes unos hacia otros y no pongáis vuestro afecto en las cosas del mundo. No os enorgullezcáis de vuestra gloria ni os avergoncéis de la humillación. ¡Por mi belleza! He creado todo del polvo y al polvo lo haré regresar.",
+					"French": "À la troisième des lignes les plus sacrées, gravées sur la Tablette vermeille par la plume de l'invisible, ceci est révélé : Ô frères ! Soyez indulgents les uns pour les autres et ne vous attachez pas aux choses d'ici-bas. Ne soyez pas fiers dans la gloire ni honteux dans l'infortune. Par ma beauté ! J'ai créé toutes choses de la poussière et je les renverrai à la poussière.",
+					"Russian": "В третьей из священнейших строк, записанных и начертанных в Рубиновой Скрижали пером Незримого, открыто сие: О СОБРАТЬЯ! Будьте терпимы друг к другу и не привязывайтесь к низменным вещам. Не гордитесь в славе вашей и не стыдитесь в унижении. Красотою Моей клянусь! Я создал всякую вещь из праха и во прах ее возвращу",
+					"Persian": "در سطر سیّم از اسطر قدس که در لوح یاقوتی از قلم خفیّ ثبت شده این است ای برادران با یکدیگر مدارا نمائید و از دنیا دل بردارید بعزّت افتخار منمائید و از ذلّت ننگ مدارید قسم بجمالم که کل را از تراب خلق نمودم و البتّه بتراب برمیگردانم",
+					"Simplified Chinese": "在红宝石书简最神圣诗句的第三节，无形之笔写下了如此启示： 兄 弟们啊！ 你们要彼此宽容，莫眷恋尘世之物。勿以荣耀而骄矜，莫为屈辱而羞耻。以我圣美之名！我用尘土创造万物，亦将使之复归尘土。"
 				}
 			],
 			"notes": []

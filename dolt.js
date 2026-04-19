@@ -88,14 +88,29 @@ async function savePersianHiddenWords (lang, langCode) {
       text.replace(/^<p>/v, '').replace(/<\/p>$/v, '').split(/<\/p>\s*<p>/v)
     );
 
+    // These Persian Hidden Words have intros, so need to join
+    //   the "O Son of..." later
+    const hasIntro = [20, 37, 48].includes(idx);
+
     newPars.forEach((newPar, index) => {
-      // These Persian Hidden Words have intros, so need to join
-      //   the "O Son of..." later
-      const hasIntro = [20, 37, 48].includes(idx);
-      if (index === (hasIntro ? 2 : 1)) {
-        paras[(hasIntro ? 1 : 0)][lang] += ` ${newPar}`;
+      if (hasIntro) {
+        if (index >= 1) {
+          paras[0][lang] += ` ${newPar}`;
+        } else {
+          if (!paras[index]) {
+            paras[index] = {
+              id: index + 1
+            };
+          }
+          paras[index][lang] = newPar;
+        }
+        return;
+      }
+
+      if (index === 1) {
+        paras[0][lang] += ` ${newPar}`;
       } else {
-        const idex = index === 0 || (index === 1 && hasIntro)
+        const idex = index === 0
           ? index
           : index - 1;
         if (!paras[idex]) {
