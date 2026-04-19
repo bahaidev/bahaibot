@@ -144,7 +144,9 @@ async function getQuoteReader ({fs, settings, _}) {
    */
   function readFile (file, index) {
     // Collect size of file
-    const max = file.chapters.length;
+    const max = file.chapters.length -
+      /* c8 ignore next -- Hidden Words only currently, so 0-based */
+      (file.chapters[0].id === 0 ? 1 : 0);
 
     // Setup index. It's subtracted by 1 due to array listing
     // 0 is the first element, 1 is the second, etc.
