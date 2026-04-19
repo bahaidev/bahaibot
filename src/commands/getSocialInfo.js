@@ -88,6 +88,9 @@ const getSocialInfo = ({
         if (!interaction.inCachedGuild()) {
           return;
         }
+        await interaction.deferReply({
+          flags: Discord.MessageFlags.Ephemeral
+        });
         await this.action?.({
           author: interaction.user,
           guild: interaction.guild,
@@ -96,8 +99,7 @@ const getSocialInfo = ({
              * @param {string} reply
              */
             // @ts-expect-error Just mocking what we need
-            async send (reply) {
-              await interaction.deferReply();
+            send (reply) {
               interaction.editReply(reply);
             }
           }
