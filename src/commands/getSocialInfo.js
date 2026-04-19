@@ -96,8 +96,9 @@ const getSocialInfo = ({
              * @param {string} reply
              */
             // @ts-expect-error Just mocking what we need
-            send (reply) {
-              interaction.reply(reply);
+            async send (reply) {
+              await interaction.deferReply();
+              interaction.editReply(reply);
             }
           }
         });
