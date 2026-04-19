@@ -155,7 +155,7 @@ async function getQuoteReader ({fs, settings, _}) {
       (file.chapters[0].id === 0 ? 0 : 1);
 
     // If the index value is within the permitted range
-    if (index > -1 && index < max) {
+    if (index > -1 && index <= max) {
       // Return the relevant section
       return file.chapters[index];
     }
