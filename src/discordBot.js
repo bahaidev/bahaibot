@@ -2,9 +2,9 @@
 // Reference: If any bugs remaining from v11, see
 //   https://discordjs.guide/additional-info/changes-in-v12.html
 
-import * as fs from 'fs/promises';
+import * as fs from 'node:fs/promises';
 
-import {join} from 'path';
+import {join} from 'node:path';
 
 // Import the discord.js module
 import * as Discord from 'discord.js';

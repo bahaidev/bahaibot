@@ -1,5 +1,5 @@
-import * as fs from 'fs/promises';
-import {join} from 'path';
+import * as fs from 'node:fs/promises';
+import {join} from 'node:path';
 import {expect} from 'chai';
 import * as Discord from 'discord.js';
 import {i18n, setFetch} from 'intl-dom';

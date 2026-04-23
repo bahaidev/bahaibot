@@ -5,7 +5,7 @@
  */
 
 /* eslint-disable no-console -- Debugging */
-import {readFile, writeFile} from 'fs/promises';
+import {readFile, writeFile} from 'node:fs/promises';
 
 // eslint-disable-next-line @stylistic/max-len -- Long
 // eslint-disable-next-line n/no-unpublished-import -- Only for initial population

@@ -1,5 +1,5 @@
 /* eslint-disable no-console -- Testing console */
-import * as fs from 'fs/promises';
+import * as fs from 'node:fs/promises';
 import {expect} from 'chai';
 import {createSandbox} from 'sinon';
 
