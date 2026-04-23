@@ -498,7 +498,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
     readRandom: {
       name: 'quote-random',
       description: "Provide a random selection of the Bahá'í Writings",
-      re: /\bquote random(?: \w+)?$/iv,
+      re: /\bquote random(?: \w+)?(?: \w+)?$/iv,
       /**
        * @param {import('discord.js').AutocompleteInteraction<
        *   import('discord.js').CacheType
@@ -507,12 +507,14 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
        */
       async autocomplete (interaction) {
         // Get the value the user is typing
-        const focusedValue = interaction.options.getFocused();
+        const focused = interaction.options.getFocused(true);
 
-        const choices = hiddenWordsLanguages;
+        const choices = focused.name === 'language'
+          ? hiddenWordsLanguages
+          : reader.getAvailableRandomOptions();
 
         const filtered = choices.filter(
-          (choice) => choice.startsWith(focusedValue)
+          (choice) => choice.startsWith(focused.value)
         );
         await interaction.respond(
           filtered.map((choice) => ({name: choice, value: choice}))
@@ -522,6 +524,12 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
         {
           name: 'language',
           description: 'The content language',
+          type: Discord.ApplicationCommandOptionType.String,
+          autocomplete: true
+        },
+        {
+          name: 'book',
+          description: 'The book to select',
           type: Discord.ApplicationCommandOptionType.String,
           autocomplete: true
         }
@@ -536,10 +544,12 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
         if (!interaction.isChatInputCommand()) {
           return;
         }
+
         const language = interaction.options.getString('language') ?? 'English';
+        const book = interaction.options.getString('book') ?? '';
 
         await this.action?.({
-          content: `quote random ${language}`,
+          content: `quote random ${language} ${book}`,
           channel: {
             /**
              * @param {string} reply

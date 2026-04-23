@@ -403,10 +403,23 @@ async function getQuoteReader ({fs, settings, _}) {
 
   /** @type {ReadRandom} */
   async function readRandom (message, avatar, Discord) {
+    const userInput = message.content;
+
+    // Pull the relevant data from the regex
+    /* c8 ignore next -- TS */
+    const {groups = {}} = userInput.match(
+      /\bquote random(?: (?<language>\w+))?(?: (?<book>\w+))?/iv
+    ) ?? {groups: {}};
+
+    // eslint-disable-next-line prefer-destructuring -- TS
+    const language = /** @type {Language} */ (groups.language);
+
     // Select a random element
-    const refName = availableRandomOptions[
-      Math.floor(Math.random() * availableRandomOptions.length)
-    ];
+    const refName = groups.book && groups.book in availableRandomOptions
+      ? groups.book
+      : availableRandomOptions[
+        Math.floor(Math.random() * availableRandomOptions.length)
+      ];
 
     // Receive the file
     const file = await openFile(refName);
@@ -423,17 +436,6 @@ async function getQuoteReader ({fs, settings, _}) {
     // Generate a random number based on the file length and pull content
     //  from file
     const content = /** @type {Chapter} */ (readFile(file, randomNumber));
-
-    const userInput = message.content;
-
-    // Pull the relevant data from the regex
-    /* c8 ignore next -- TS */
-    const {groups = {}} = userInput.match(
-      /\bquote random(?: (?<language>\w+))?/iv
-    ) ?? {groups: {}};
-
-    // eslint-disable-next-line prefer-destructuring -- TS
-    const language = /** @type {Language} */ (groups.language);
 
     // Create the embed
     embedCreator(
