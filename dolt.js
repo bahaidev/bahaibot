@@ -1,3 +1,9 @@
+/**
+ * @file Overwrites Hidden Words files to add localized text. Requires
+ *    `DB_HOST`, etc. be set under `development` of `settings.json` and running
+ *    dolt server (`pnpm dolt`) in another tab.
+ */
+
 /* eslint-disable no-console -- Debugging */
 import {readFile, writeFile} from 'fs/promises';
 
