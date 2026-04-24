@@ -1,4 +1,5 @@
 import {getTodayJSON, getDate} from 'bahai-date-api';
+import {LocalBadiDate} from 'badidate';
 
 /**
  * @param {object} cfg
@@ -448,8 +449,8 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
            * @param {string} reply
            */
           // @ts-expect-error Just mocking what we need
-          send (reply) {
-            interaction.editReply(reply);
+          async send (reply) {
+            await interaction.editReply(reply);
           }
         }
       });
@@ -464,9 +465,52 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
       ).replace(/^!date\s+/v, '');
       const timestamp = Date.parse(dateString);
       if (Number.isNaN(timestamp)) {
-        // Todo: Convert from Badí' to Gregorian
+        // Currently accepts format like `15 5 (5), 100 (Asia/Jerusalem)`;
+        //   need to settle on proper format
+        const matches = (/(?<day>\d+) \w+ \((?<month>\w+)\), (?<year>\d+) \((?<timezoneId>[\w\/]+)\)/v).exec(
+          dateString
+        );
+
+        if (!matches || !matches.groups) {
+          await message.channel.send({
+            content: 'Unrecognized date format supplied'
+          });
+          return;
+        }
+
+        const {groups} = matches;
+
+        const {
+          day, month, year, timezoneId
+        } =
+          /**
+           * @type {{
+           *   day: string,
+           *   month: string,
+           *   year: string,
+           *   timezoneId: string
+           * }}
+           */
+          groups;
+
+        const localBadiDate = new LocalBadiDate({
+          day: Number.parseInt(day),
+          month: Number.parseInt(month),
+          year: Number.parseInt(year)
+        }, 0, 0, timezoneId);
+
+        const {gregorianDate} = localBadiDate.badiDate;
+
         await message.channel.send({
-          content: "Conversion from Badí' to Gregorian not yet supported"
+          content: 'Here is the result of your query.',
+          embeds: [{
+            color: 3447003,
+            description: `**Date ${dateString} in Gregorian: **\n\n${
+              gregorianDate.monthLong
+            } ${
+              gregorianDate.day
+            }, ${gregorianDate.year}`
+          }]
         });
       } else {
         const dte = new Date(timestamp);
