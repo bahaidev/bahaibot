@@ -1,3 +1,5 @@
+import istr from '../utils/istr.js';
+
 /**
  * Puppet Function.
  * @callback PuppetTool
@@ -79,6 +81,19 @@ const getAdmin = ({
   DiscordVoice,
   discordTTS, guildCheckin, _
 }) => {
+  const startTime = Date.now();
+  const startDate = new Date(startTime).toLocaleDateString(
+    _.resolvedLocale,
+    {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    }
+  );
+
   return {
     speak: {
       name: 'speak',
@@ -342,6 +357,57 @@ const getAdmin = ({
             `Echo command issued by ${message.author.username}.`
           );
         }
+      }
+    },
+    uptime: {
+      name: 'uptime',
+      // eslint-disable-next-line @stylistic/max-len -- Long
+      description: 'Reports the duration of time since the server has been online',
+      re: /!uptime/iv,
+      helpAdmin: {
+        name: '!uptime',
+        value: 'Reports the duration of time since the server has been online'
+      },
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        await this.action?.({
+          author: interaction.user,
+          channel: {
+            /**
+             * @param {string} reply
+             */
+            // @ts-expect-error Just mocking what we need
+            send (reply) {
+              interaction.reply(reply);
+            }
+          }
+        });
+      },
+      /**
+       * @param {import('discord.js').Message<true>} message
+       * @returns {Promise<void>}
+       */
+      async action (message) {
+        if (ADMIN_IDS.includes(message.author.id)) {
+          // eslint-disable-next-line no-console -- CLI
+          console.log(
+            `Uptime command issued by ${message.author.username}.`
+          );
+
+          const upTime = istr(
+            _.resolvedLocale, Math.floor((Date.now() - startTime) / 1000)
+          );
+
+          await message.channel.send(
+            `I have been online for ${upTime} (since ${startDate}).`
+          );
+        }
+
+        return undefined;
       }
     },
     checkin: {
