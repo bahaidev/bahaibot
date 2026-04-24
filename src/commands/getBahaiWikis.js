@@ -1,5 +1,6 @@
 import {getTodayJSON, getDate} from 'bahai-date-api';
 import {LocalBadiDate} from 'badidate';
+import {months, monthsL, monthsLAliases} from './badiMonths.js';
 
 /**
  * @param {object} cfg
@@ -465,17 +466,23 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
       ).replace(/^!date\s+/v, '');
       const timestamp = Date.parse(dateString);
       if (Number.isNaN(timestamp)) {
-        // Currently accepts format like `15 5 (5), 100 (Asia/Jerusalem)`;
+        // eslint-disable-next-line @stylistic/max-len -- Long
+        // Currently accepts format like `15 Qawl (Speech), 100 (Asia/Jerusalem)`;
         //   need to settle on proper format
-        const matches = (/(?<day>\d+) \w+ \((?<month>\w+)\), (?<year>\d+) \((?<timezoneId>[\w\/]+)\)/v).exec(
+        let matches = (/(?<day>\d+) [\w‘áíúṭẓ\-]+ \((?<month>[\w‘áíúṭẓ\-]+)\), (?<year>\d+) \((?<timezoneId>[\w\/]+)\)/v).exec(
           dateString
         );
 
         if (!matches || !matches.groups) {
-          await message.channel.send({
-            content: 'Unrecognized date format supplied'
-          });
-          return;
+          matches = (/(?<day>\d+) (?<month>[\w‘áíúṭẓ\-]+), (?<year>\d+) \((?<timezoneId>[\w\/]+)\)/v).exec(
+            dateString
+          );
+          if (!matches || !matches.groups) {
+            await message.channel.send({
+              content: 'Unrecognized date format supplied'
+            });
+            return;
+          }
         }
 
         const {groups} = matches;
@@ -495,7 +502,15 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
 
         const localBadiDate = new LocalBadiDate({
           day: Number.parseInt(day),
-          month: Number.parseInt(month),
+          month: (/\d+/v).test(month)
+            ? Number.parseInt(month)
+            : months.has(month)
+              ? months.get(month) ?? 1
+              : monthsL.has(month)
+                ? monthsL.get(month) ?? 1
+                : monthsLAliases.has(month)
+                  ? monthsLAliases.get(month) ?? 1
+                  : 1,
           year: Number.parseInt(year)
         }, 0, 0, timezoneId);
 

@@ -4,7 +4,7 @@
 
 - feat: Add Badí' date and long Gregorian date to `/today`
 - feat: export types
-- feat: Gregorian to Badí' `/date` conversion
+- feat: Gregorian to/from Badí' `/date` conversion
 - feat: add book option to `quote-random`
 - feat: add `/uptime`
 - feat: support language for `quote` and `quote-random`; ensure
