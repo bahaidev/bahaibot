@@ -408,10 +408,10 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
   const date = /** @type {import('./getCommands.js').BotCommand} */ ({
     re: /!date\b/iv,
     name: 'date',
-    description: 'Converts date from',
+    description: 'Converts date between Gregorian and Badí\'',
     helpInfo: {
       name: '!date',
-      value: 'Converts date from'
+      value: 'Converts date  between Gregorian and Badí\''
     },
     options: [
       {
@@ -459,7 +459,9 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
      * @returns {Promise<void>}
      */
     async action (message) {
-      const dateString = message.content.replace(/^!date\s+/v, '');
+      const dateString = message.content.replace(
+        /<.*>\s+/v, ''
+      ).replace(/^!date\s+/v, '');
       const timestamp = Date.parse(dateString);
       if (Number.isNaN(timestamp)) {
         // Todo: Convert from Badí' to Gregorian
