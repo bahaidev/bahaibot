@@ -462,6 +462,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
       const dateString = message.content.replace(/^!date\s+/v, '');
       const timestamp = Date.parse(dateString);
       if (Number.isNaN(timestamp)) {
+        // Todo: Convert from Badí' to Gregorian
         await message.channel.send({
           content: "Conversion from Badí' to Gregorian not yet supported"
         });
