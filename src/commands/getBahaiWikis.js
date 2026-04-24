@@ -1,4 +1,4 @@
-import {getTodayJSON} from 'bahai-date-api';
+import {getTodayJSON, getDate} from 'bahai-date-api';
 
 /**
  * @param {object} cfg
@@ -405,6 +405,103 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
     }
   };
 
+  const date = /** @type {import('./getCommands.js').BotCommand} */ ({
+    re: /!date\b/iv,
+    name: 'date',
+    description: 'Converts date from',
+    helpInfo: {
+      name: '!date',
+      value: 'Converts date from'
+    },
+    options: [
+      {
+        name: 'date',
+        description: 'The date to convert',
+        type: Discord.ApplicationCommandOptionType.String,
+        required: true
+      }
+    ],
+    /**
+     * @param {import('./getCommands.js').InputCommandOrSelectMenu} interaction
+     * @returns {Promise<void>}
+     */
+    async slashCommand (interaction) {
+      /* c8 ignore next 3 -- TS */
+      if (interaction.isStringSelectMenu() || !interaction.inCachedGuild()) {
+        return;
+      }
+      await interaction.deferReply({
+        flags: Discord.MessageFlags.Ephemeral
+      });
+
+      const dateString = interaction.options.getString('date') ?? '';
+
+      await this.action?.({
+        author: interaction.user,
+        content: `!date ${dateString.trim()}`,
+        // @ts-expect-error No-op
+        react () {
+          // No-op as no need for emoji response to slash command
+        },
+        channel: {
+          /**
+           * @param {string} reply
+           */
+          // @ts-expect-error Just mocking what we need
+          send (reply) {
+            interaction.editReply(reply);
+          }
+        }
+      });
+    },
+    /**
+     * @param {import('discord.js').Message<true>} message
+     * @returns {Promise<void>}
+     */
+    async action (message) {
+      const dateString = message.content.replace(/^!date\s+/v, '');
+      const timestamp = Date.parse(dateString);
+      if (Number.isNaN(timestamp)) {
+        await message.channel.send({
+          content: "Conversion from Badí' to Gregorian not yet supported"
+        });
+      } else {
+        const dte = new Date(timestamp);
+        const badiObj = getDate({
+          year: dte.getFullYear(),
+          month: dte.getMonth() + 1,
+          day: dte.getDate(),
+          hour: dte.getHours(),
+          minute: dte.getMinutes(),
+          second: dte.getSeconds()
+        });
+
+        const {
+          year,
+          month_name: monthName,
+          day,
+          timezone_id: timezoneId
+        } = badiObj.json.badi_date;
+
+        const badiString = `${day} ${
+          monthName.replace(
+            /<span style="text-decoration:underline">/v, '__'
+          ).replace(/<\/span>/v, '__')
+        }, ${year} (${timezoneId})`;
+
+        await message.channel.send({
+          content: 'Here is the result of your query.',
+          embeds: [{
+            color: 3447003,
+            description: `**Date ${dateString} in Badí': **\n\n${
+              badiString
+            }`
+          }]
+        });
+      }
+    }
+  });
+
   const options = [
     {
       name: 'keywords',
@@ -624,6 +721,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
   return {
     bp,
     today,
+    date,
     b9,
     bm,
     bw,
