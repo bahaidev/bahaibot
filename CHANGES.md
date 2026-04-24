@@ -1,5 +1,18 @@
 # CHANGES for `bahaibot`
 
+## 0.5.0
+
+- feat: Add badiDate and long Gregorian date to `/today`
+- feat: export types
+- feat: add book option to `quote-random`
+- feat: support language for quote and quote-random; ensure
+    HW has separate preambles and conclusion
+- fix: don't exit upon problem with setSaferInterval
+- fix: HW max
+- fix: defer reply for /users and /today
+- chore: update deps. and devDeps.
+- refactor: use `node:` prefix for Node imports
+
 ## 0.4.2
 
 - fix: i18n path

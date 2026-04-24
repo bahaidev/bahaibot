@@ -1,3 +1,5 @@
+import {getTodayJSON} from 'bahai-date-api';
+
 /**
  * @param {object} cfg
  * @param {import('../getWikiTools.js').BotWikiTools} cfg.wikiTools
@@ -28,17 +30,34 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
     if (res) {
       // eslint-disable-next-line no-console -- CLI
       console.log(_('query_completed'));
+
+      const date = Date.now();
+
       /** @type {Intl.DateTimeFormatOptions} */
       const options = {month: 'long', day: 'numeric'};
-      const date = Date.now();
       const md = new Intl.DateTimeFormat(
         _.resolvedLocale, options
       ).format(date);
+
+      /** @type {Intl.DateTimeFormatOptions} */
+      const optionsLong = {month: 'long', day: 'numeric', year: 'numeric'};
+      const dateLong = new Intl.DateTimeFormat(
+        _.resolvedLocale, optionsLong
+      ).format(date);
+
+      const {
+        day,
+        month_name: monthName,
+        year
+      } = getTodayJSON().json.badi_date;
+      // const badiDate = getTodayJSON().nowBadi.badiDate.format();
+      const badiDate = `${day} ${monthName}, ${year}`;
+
       message.channel.send({
         content: 'Here is the result of your query.',
         embeds: [{
           color: 3447003,
-          description: `${
+          description: `**Today's date: ${dateLong} • ${badiDate} **\n\n${
             bstarString
           }Here's Bahaipedia's Today in History entry for ${
             md
@@ -356,6 +375,9 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
       if (!interaction.inCachedGuild()) {
         return;
       }
+      await interaction.deferReply({
+        flags: Discord.MessageFlags.Ephemeral
+      });
       await this.action?.({
         author: interaction.user,
         content: '!today',
@@ -369,7 +391,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
            */
           // @ts-expect-error Just mocking what we need
           send (reply) {
-            interaction.reply(reply);
+            interaction.editReply(reply);
           }
         }
       });
