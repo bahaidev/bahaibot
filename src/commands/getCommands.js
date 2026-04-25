@@ -106,6 +106,11 @@ const getCommands = async function ({
     ADMIN_PERMISSION = DiscordConstants.ADMIN_PERMISSION,
     ADMIN_IDS = DiscordConstants.ADMIN_IDS,
     ADMIN_ROLES = DiscordConstants.ADMIN_ROLES,
+    BADI_DATE_CHANNELS = [
+      DiscordConstants.BAHAI_FYI_GUILD_ID,
+      DiscordConstants.BAHAI_LAB_GUILD_ID,
+      DiscordConstants.BAHAI_WIKIS_GUILD_ID
+    ],
     enabledCommandGroups = ['*'],
     disabledCommandGroups = []
   } = settings;
@@ -121,6 +126,8 @@ const getCommands = async function ({
     ],
     ['bahaiWikis', () => getBahaiWikis({wikiTools, client, _, Discord})],
     ['admin', () => getAdmin({
+      client,
+      BADI_DATE_CHANNELS,
       ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR, guildCheckin, _,
       discordTTS, DiscordVoice, Discord
     })],

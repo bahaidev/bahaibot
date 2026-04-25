@@ -48,6 +48,7 @@ const getPath = (path) => {
  *   ADMIN_PERMISSION?: string,
  *   ADMIN_IDS?: string[],
  *   ADMIN_ROLES?: string[],
+ *   BADI_DATE_CHANNELS?: string[],
  *   webhookURL?: string,
  *   enabledCommandGroups?: string[],
  *   disabledCommandGroups?: string[],

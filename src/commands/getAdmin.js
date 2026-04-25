@@ -1,3 +1,4 @@
+import {getTodayJSON} from 'bahai-date-api';
 import istr from '../utils/istr.js';
 
 /**
@@ -63,9 +64,11 @@ async function puppet ({
 
 /**
  * @param {object} cfg
+ * @param {import('discord.js').Client} cfg.client
  * @param {string[]} cfg.ADMIN_IDS
  * @param {string} cfg.ADMIN_PERMISSION
  * @param {string} cfg.PUPPET_AUTHOR
+ * @param {string[]} cfg.BADI_DATE_CHANNELS
  * @param {import('../getCheckin.js').GuildCheckin} cfg.guildCheckin
  * @param {import('intl-dom').I18NCallback} cfg._
  * @param {import('discord-tts')} cfg.discordTTS
@@ -76,7 +79,8 @@ async function puppet ({
  * @returns {import('./getCommands.js').BotCommands}
  */
 const getAdmin = ({
-  ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR,
+  client,
+  ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR, BADI_DATE_CHANNELS,
   Discord,
   DiscordVoice,
   discordTTS, guildCheckin, _
@@ -408,6 +412,91 @@ const getAdmin = ({
         }
 
         return undefined;
+      }
+    },
+    datetoggle: {
+      name: 'date-toggle',
+      description: 'Toggles whether to show the date as a channel',
+      re: /!date toggle\b/iv,
+      helpAdmin: {
+        name: '!date toggle',
+        value: 'Toggles whether to show the date as a channel'
+      },
+      /**
+       * @param {import('./getCommands.js').
+       *   InputCommandOrSelectMenu} interaction
+       * @returns {Promise<void>}
+       */
+      async slashCommand (interaction) {
+        // @ts-expect-error Just supplying what we need
+        await this.action?.({
+          author: interaction.user
+        });
+      },
+      /**
+       * @param {import('discord.js').Message<true>} message
+       * @returns {Promise<void>}
+       */
+      async action (message) {
+        if (!ADMIN_IDS.includes(message.author.id)) {
+          return;
+        }
+
+        for (const guildID of BADI_DATE_CHANNELS) {
+          const guild = client.guilds.cache.get(guildID);
+          if (!guild) {
+            continue;
+          }
+
+          const me = guild.members.me ??
+            // eslint-disable-next-line no-await-in-loop -- Needed per guild
+            await guild.members.fetchMe();
+          if (!me.permissions.has([
+            Discord.PermissionFlagsBits.ViewChannel,
+            Discord.PermissionFlagsBits.ManageChannels
+          ])) {
+            // eslint-disable-next-line no-console -- CLI
+            console.error(
+              `Skipping date toggle for guild ${guild.name} (${guild.id}): ` +
+              'the bot needs View Channel and Manage Channels permissions.'
+            );
+            continue;
+          }
+          // We found our guild (Bahá'í.FYI)
+
+          const targetChannel = guild.channels.cache.find(
+            (ch) => ch.name.startsWith("Bahá'í Date:")
+          );
+
+          const {json: {
+            badi_date: {
+              day,
+              month_name: monthName,
+              year
+            }
+            // greg_date: {
+            //   hour, minute, second
+            // }
+          }} = getTodayJSON();
+          const channelName = `Bahá'í Date: ${day} ${monthName}, ${year}`;
+
+          try {
+            // eslint-disable-next-line no-await-in-loop -- Easier
+            await (targetChannel
+              // ? targetChannel.edit({
+              //   name: channelName
+              // })
+              ? targetChannel.delete('Toggling date off')
+              : guild.channels.create({name: channelName}));
+          } catch (err) {
+            // eslint-disable-next-line no-console -- CLI
+            console.error(
+              `Failed to toggle the date channel for guild ` +
+              `${guild.name} (${guild.id}).`,
+              err
+            );
+          }
+        }
       }
     },
     checkin: {
