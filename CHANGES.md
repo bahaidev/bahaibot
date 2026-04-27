@@ -7,6 +7,7 @@
 - feat: Gregorian to/from Badí' `/date` conversion
 - feat: add book option to `quote-random`
 - feat: add `/uptime`
+- feat: add "Iqan" references
 - feat: support language for `quote` and `quote-random`; ensure
     HW has separate preambles and conclusion
 - fix: don't exit upon problem with `setSaferInterval`

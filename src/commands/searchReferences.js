@@ -11,5 +11,13 @@ export const searchReferences = [
   {
     reference: 'Aqdas',
     keyword: 'ka'
+  },
+  {
+    reference: 'Iqan par',
+    keyword: 'kip'
+  },
+  {
+    reference: 'Iqan',
+    keyword: 'ki'
   }
 ];
