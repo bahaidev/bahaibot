@@ -465,7 +465,7 @@ const getAdmin = ({
           // We found our guild (Bahá'í.FYI)
 
           const targetChannel = guild.channels.cache.find(
-            (ch) => ch.name.startsWith("Bahá'í Date:")
+            (ch) => ch.name.startsWith('bahai-date-')
           );
 
           const {json: {
@@ -478,7 +478,7 @@ const getAdmin = ({
             //   hour, minute, second
             // }
           }} = getTodayJSON();
-          const channelName = `Bahá'í Date: ${day} ${monthName}, ${year}`;
+          const channelName = `bahai-date-${day}-${monthName}-${year}`;
 
           try {
             // eslint-disable-next-line no-await-in-loop -- Easier
