@@ -462,7 +462,6 @@ const getAdmin = ({
             );
             continue;
           }
-          // We found our guild (Bahá'í.FYI)
 
           const targetChannel = guild.channels.cache.find(
             (ch) => ch.name.startsWith('bahai-date-')
