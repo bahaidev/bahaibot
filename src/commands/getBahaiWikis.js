@@ -413,7 +413,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
     description: 'Converts date between Gregorian and Badí\'',
     helpInfo: {
       name: '!date',
-      value: 'Converts date  between Gregorian and Badí\''
+      value: 'Converts date between Gregorian and Badí\''
     },
     options: [
       {
