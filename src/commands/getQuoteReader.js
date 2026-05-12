@@ -415,7 +415,7 @@ async function getQuoteReader ({fs, settings, _}) {
     const language = /** @type {Language} */ (groups.language);
 
     // Select a random element
-    const refName = groups.book && groups.book in availableRandomOptions
+    const refName = groups.book && availableRandomOptions.includes(groups.book)
       ? groups.book
       : availableRandomOptions[
         Math.floor(Math.random() * availableRandomOptions.length)
