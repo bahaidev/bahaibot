@@ -408,7 +408,7 @@ async function getQuoteReader ({fs, settings, _}) {
     // Pull the relevant data from the regex
     /* c8 ignore next -- TS */
     const {groups = {}} = userInput.match(
-      /\bquote random(?: (?<language>\w+))?(?: (?<book>\w+))?/iv
+      /\bquote random(?: (?<language>[\w\(\) ]+?))?(?: (?<book>\w+))?$/iv
     ) ?? {groups: {}};
 
     // eslint-disable-next-line prefer-destructuring -- TS

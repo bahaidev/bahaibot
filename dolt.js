@@ -42,8 +42,8 @@ await saveHiddenWords();
 async function saveHiddenWords () {
   const langCodes = ['ar', 'en', 'es', 'fr', 'ru', 'fa', 'zh-Hans'];
   const langs = /** @type {Language[]} */ ([
-    'Arabic', 'English', 'Spanish', 'French', 'Russian',
-    'Persian', 'Simplified Chinese'
+    'Arabic', 'Chinese (Simplified)', 'English', 'Spanish', 'French',
+    'Russian', 'Persian'
   ]);
 
   for (const [idx, lang] of langs.entries()) {

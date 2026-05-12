@@ -3,8 +3,8 @@ import {searchEngines} from './searchEngines.js';
 import {searchReferences} from './searchReferences.js';
 
 export const hiddenWordsLanguages = [
-  'Arabic', 'English', 'Spanish', 'French', 'Russian',
-  'Persian', 'Simplified Chinese'
+  'Arabic', 'Chinese (Simplified)', 'English', 'Spanish', 'French',
+  'Russian', 'Persian'
 ];
 
 const worksByBahaullahOrTheBab = new Set([
