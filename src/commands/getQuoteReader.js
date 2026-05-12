@@ -297,7 +297,7 @@ async function getQuoteReader ({fs, settings, _}) {
    * @returns {string}
    */
   function quoteListing () {
-    // Initiatilze output string
+    // Initialize output string
     let output = '';
 
     // Based on the global variable, pull the names and loop through the data
