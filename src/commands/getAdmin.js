@@ -86,6 +86,20 @@ const getAdmin = ({
   discordTTS, guildCheckin, _
 }) => {
   const immutableDateChannelIDs = new Map();
+  const dateToggleTimeouts = new Map();
+
+  /**
+   * Calculate milliseconds until the next day.
+   * @param {number} hour - Current hour (0-23)
+   * @param {number} minute - Current minute (0-59)
+   * @param {number} second - Current second (0-59)
+   * @returns {number} Milliseconds until next midnight
+   */
+  const calculateMsUntilNextDay = (hour, minute, second) => {
+    const secondsSinceStartOfDay = (hour * 3600) + (minute * 60) + second;
+    const secondsUntilMidnight = 86400 - secondsSinceStartOfDay;
+    return secondsUntilMidnight * 1000;
+  };
 
   const startTime = Date.now();
   const startDate = new Date(startTime).toLocaleDateString(
@@ -454,6 +468,11 @@ const getAdmin = ({
           return;
         }
 
+        // Check if this is a scheduled replacement call
+        const isScheduledReplacement =
+          // @ts-expect-error Custom property added for scheduled execution
+          message.__isScheduledReplacement === true;
+
         for (const guildID of BADI_DATE_CHANNELS) {
           const guild = client.guilds.cache.get(guildID);
           if (!guild) {
@@ -494,16 +513,53 @@ const getAdmin = ({
               day,
               month_name: monthName,
               year
+            },
+            greg_date: {
+              hour, minute, second
             }
-            // greg_date: {
-            //   hour, minute, second
-            // }
           }} = getTodayJSON();
           const channelName = `${day} ${monthName} ${year} BE`;
           let actionAttempted = 'none';
 
           try {
-            if (targetChannel) {
+            if (isScheduledReplacement) {
+              // In replacement mode, always delete old and create new
+              if (targetChannel) {
+                actionAttempted = 'delete';
+                // eslint-disable-next-line no-await-in-loop -- Easier
+                await targetChannel.delete(
+                  'Scheduled date channel replacement'
+                );
+                immutableDateChannelIDs.delete(guild.id);
+              }
+
+              // Now create the new channel with the current date
+              actionAttempted = 'create';
+              // eslint-disable-next-line no-await-in-loop -- Easier
+              await guild.channels.create({
+                name: channelName,
+                type: Discord.ChannelType.GuildVoice,
+                permissionOverwrites: [
+                  {
+                    id: me.id,
+                    allow: [
+                      Discord.PermissionFlagsBits.ViewChannel,
+                      Discord.PermissionFlagsBits.ManageChannels,
+                      Discord.PermissionFlagsBits.Connect,
+                      Discord.PermissionFlagsBits.Speak
+                    ]
+                  },
+                  {
+                    id: guild.roles.everyone.id,
+                    deny: [
+                      Discord.PermissionFlagsBits.Connect,
+                      Discord.PermissionFlagsBits.Speak
+                    ]
+                  }
+                ]
+              });
+              immutableDateChannelIDs.delete(guild.id);
+            } else if (targetChannel) {
               // Refresh in case cached roles/overwrites are stale.
               // eslint-disable-next-line no-await-in-loop -- Needed per guild
               const guildRefreshed = await guild.fetch();
@@ -646,6 +702,12 @@ const getAdmin = ({
               // eslint-disable-next-line no-await-in-loop -- Easier
               await targetChannelRefreshed.delete('Toggling date off');
               immutableDateChannelIDs.delete(guild.id);
+              // Clear any scheduled timeout when toggling off
+              const existingTimeoutToCancel = dateToggleTimeouts.get(guildID);
+              if (existingTimeoutToCancel) {
+                clearTimeout(existingTimeoutToCancel);
+                dateToggleTimeouts.delete(guildID);
+              }
             } else {
               if (anyDateChannel) {
                 // eslint-disable-next-line no-console -- CLI
@@ -696,6 +758,51 @@ const getAdmin = ({
               err
             );
           }
+
+          // Schedule next update at midnight
+          const msUntilNextDay = calculateMsUntilNextDay(hour, minute, second);
+          const nextUpdateTime = new Date(Date.now() + msUntilNextDay).
+            toLocaleString(_.resolvedLocale);
+
+          // Clear any existing timeout for this guild
+          const existingTimeout = dateToggleTimeouts.get(guildID);
+          if (existingTimeout) {
+            clearTimeout(existingTimeout);
+          }
+
+          // Schedule the next date channel update at midnight
+          const timeoutId = setTimeout(async () => {
+            // eslint-disable-next-line no-console -- CLI
+            console.log(
+              `Executing scheduled date toggle for guild ${guild.name} ` +
+              `(${guild.id}) at ${nextUpdateTime}.`
+            );
+            // Re-run the datetoggle action by calling getAdmin recursively
+            const adminCommands = getAdmin({
+              client,
+              ADMIN_IDS, ADMIN_PERMISSION, PUPPET_AUTHOR, BADI_DATE_CHANNELS,
+              Discord,
+              DiscordVoice,
+              discordTTS, guildCheckin, _
+            });
+            // Create a minimal message-like object for scheduled execution
+            // Flag as replacement mode to ensure channel is recreated
+            const mockMsg = {
+              author: {
+                id: PUPPET_AUTHOR
+              },
+              __isScheduledReplacement: true
+            };
+            // @ts-expect-error Custom mock for scheduled execution
+            await adminCommands.datetoggle.action?.(mockMsg);
+          }, msUntilNextDay);
+
+          dateToggleTimeouts.set(guildID, timeoutId);
+          // eslint-disable-next-line no-console -- CLI
+          console.log(
+            `Scheduled next date channel update for guild ${guild.name} ` +
+            `(${guild.id}) at ${nextUpdateTime}.`
+          );
         }
       }
     },
