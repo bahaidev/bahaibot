@@ -85,6 +85,8 @@ const getAdmin = ({
   DiscordVoice,
   discordTTS, guildCheckin, _
 }) => {
+  const immutableDateChannelIDs = new Map();
+
   const startTime = Date.now();
   const startDate = new Date(startTime).toLocaleDateString(
     _.resolvedLocale,
@@ -428,10 +430,20 @@ const getAdmin = ({
        * @returns {Promise<void>}
        */
       async slashCommand (interaction) {
+        await interaction.deferReply({
+          flags: Discord.MessageFlags.Ephemeral
+        });
+
         // @ts-expect-error Just supplying what we need
         await this.action?.({
           author: interaction.user
         });
+
+        await interaction.editReply(
+          /** @type {string} */ (
+            _('toggled_date')
+          )
+        );
       },
       /**
        * @param {import('discord.js').Message<true>} message
@@ -463,9 +475,19 @@ const getAdmin = ({
             continue;
           }
 
+          const anyDateChannel = guild.channels.cache.find(
+            (ch) => (/\d{3,} BE$/v).test(ch.name) &&
+              ch.type === Discord.ChannelType.GuildVoice
+          ) ?? null;
           const targetChannel = guild.channels.cache.find(
-            (ch) => ch.name.startsWith('bahai-date-')
-          );
+            // Without a date parser, we check that it ends with a year.
+            // We also require the channel to be manageable/deletable so we
+            // don't pin protected/system-like channels.
+            (ch) => (/\d{3,} BE$/v).test(ch.name) &&
+              ch.type === Discord.ChannelType.GuildVoice &&
+              (!('manageable' in ch) || ch.manageable) &&
+              (!('deletable' in ch) || ch.deletable)
+          ) ?? null;
 
           const {json: {
             badi_date: {
@@ -477,21 +499,200 @@ const getAdmin = ({
             //   hour, minute, second
             // }
           }} = getTodayJSON();
-          const channelName = `bahai-date-${day}-${monthName}-${year}`;
+          const channelName = `${day} ${monthName} ${year} BE`;
+          let actionAttempted = 'none';
 
           try {
-            // eslint-disable-next-line no-await-in-loop -- Easier
-            await (targetChannel
-              // ? targetChannel.edit({
-              //   name: channelName
-              // })
-              ? targetChannel.delete('Toggling date off')
-              : guild.channels.create({name: channelName}));
+            if (targetChannel) {
+              // Refresh in case cached roles/overwrites are stale.
+              // eslint-disable-next-line no-await-in-loop -- Needed per guild
+              const guildRefreshed = await guild.fetch();
+              // eslint-disable-next-line no-await-in-loop -- Needed per guild
+              const meRefreshed = await guild.members.fetchMe();
+              // eslint-disable-next-line no-await-in-loop -- Needed per channel
+              const targetChannelRefreshed = await guild.channels.fetch(
+                targetChannel.id
+              );
+              if (!targetChannelRefreshed) {
+                // eslint-disable-next-line no-console -- CLI
+                console.error(
+                  'Skipping date toggle delete for guild ' +
+                  `${guild.name} (${guild.id}) ` +
+                  `channel ${targetChannel.name} (${targetChannel.id}): ` +
+                  'channel could not be fetched before deletion.'
+                );
+                continue;
+              }
+
+              const requiredPermissions = [
+                Discord.PermissionFlagsBits.ViewChannel,
+                Discord.PermissionFlagsBits.ManageChannels
+              ];
+              const permissions = targetChannelRefreshed.permissionsFor(
+                meRefreshed
+              );
+              const missingPermissions = requiredPermissions.filter((perm) => {
+                return !permissions?.has(perm, false);
+              });
+              const parentName = targetChannelRefreshed.parent?.name ?? 'none';
+              const parentID = targetChannelRefreshed.parent?.id ?? 'none';
+
+              if (missingPermissions.length) {
+                // eslint-disable-next-line no-console -- CLI
+                console.error(
+                  'Skipping date toggle delete for guild ' +
+                  `${guild.name} (${guild.id}) ` +
+                  `channel ${targetChannelRefreshed.name} ` +
+                  `(${targetChannelRefreshed.id}): ` +
+                  `missing permissions ${missingPermissions.join(', ')}. ` +
+                  `Parent ${parentName} (${parentID}).`
+                );
+                continue;
+              }
+
+              if (
+                'deletable' in targetChannelRefreshed &&
+                !targetChannelRefreshed.deletable
+              ) {
+                const viewNoAdmin = permissions?.has(
+                  Discord.PermissionFlagsBits.ViewChannel,
+                  false
+                ) ?? false;
+                const manageNoAdmin = permissions?.has(
+                  Discord.PermissionFlagsBits.ManageChannels,
+                  false
+                ) ?? false;
+                const isNonManageable =
+                  'manageable' in targetChannelRefreshed &&
+                  !targetChannelRefreshed.manageable;
+                const isRepeatedImmutable = isNonManageable &&
+                  immutableDateChannelIDs.get(guild.id) ===
+                  targetChannelRefreshed.id;
+                if (isRepeatedImmutable) {
+                  continue;
+                }
+
+                // eslint-disable-next-line no-console -- CLI
+                console.error(
+                  'Skipping date toggle delete for guild ' +
+                  `${guild.name} (${guild.id}) ` +
+                  `channel ${targetChannelRefreshed.name} ` +
+                  `(${targetChannelRefreshed.id}): ` +
+                  `deletable=false (view=${String(viewNoAdmin)}, ` +
+                  `manage=${String(manageNoAdmin)}), ` +
+                  `parent ${parentName} (${parentID}).`
+                );
+
+                const linkedFlags = {
+                  isAfk:
+                    guildRefreshed.afkChannelId === targetChannelRefreshed.id,
+                  isSystem:
+                    guildRefreshed.systemChannelId ===
+                    targetChannelRefreshed.id,
+                  isRules:
+                    guildRefreshed.rulesChannelId === targetChannelRefreshed.id,
+                  isUpdates:
+                    guildRefreshed.publicUpdatesChannelId ===
+                    targetChannelRefreshed.id,
+                  isSafetyAlerts:
+                    guildRefreshed.safetyAlertsChannelId ===
+                    targetChannelRefreshed.id,
+                  isWidget:
+                    guildRefreshed.widgetChannelId ===
+                    targetChannelRefreshed.id
+                };
+                if (Object.values(linkedFlags).some(Boolean)) {
+                  const linkedFlagsString = JSON.stringify(linkedFlags);
+                  // eslint-disable-next-line no-console -- CLI
+                  console.error(
+                    'Date toggle channel is linked in guild settings; ' +
+                    `cannot delete until unlinked: ${linkedFlagsString}`
+                  );
+                }
+
+                if (isNonManageable) {
+                  immutableDateChannelIDs.set(
+                    guild.id,
+                    targetChannelRefreshed.id
+                  );
+                  // eslint-disable-next-line no-console -- CLI
+                  console.error(
+                    'Skipping rename for non-deletable date channel in guild ' +
+                    `${guild.name} (${guild.id}) ` +
+                    `channel ${targetChannelRefreshed.name} ` +
+                    `(${targetChannelRefreshed.id}): manageable=false.`
+                  );
+                  continue;
+                }
+
+                if (targetChannelRefreshed.name !== channelName) {
+                  actionAttempted = 'rename';
+                  // eslint-disable-next-line no-await-in-loop -- Easier
+                  await targetChannelRefreshed.edit({
+                    name: channelName,
+                    reason: 'Date channel is not deletable; renamed instead'
+                  });
+                  // eslint-disable-next-line no-console -- CLI
+                  console.log(
+                    'Renamed non-deletable date channel for guild ' +
+                    `${guild.name} (${guild.id}) to ${channelName}.`
+                  );
+                }
+
+                continue;
+              }
+
+              actionAttempted = 'delete';
+              // eslint-disable-next-line no-await-in-loop -- Easier
+              await targetChannelRefreshed.delete('Toggling date off');
+              immutableDateChannelIDs.delete(guild.id);
+            } else {
+              if (anyDateChannel) {
+                // eslint-disable-next-line no-console -- CLI
+                console.error(
+                  'Skipping date toggle create for guild ' +
+                  `${guild.name} (${guild.id}): ` +
+                  'a date channel already exists ' +
+                  `(${anyDateChannel.name}, ${anyDateChannel.id}).`
+                );
+                continue;
+              }
+
+              actionAttempted = 'create';
+              // eslint-disable-next-line no-await-in-loop -- Easier
+              await guild.channels.create({
+                name: channelName,
+                type: Discord.ChannelType.GuildVoice,
+                permissionOverwrites: [
+                  {
+                    id: me.id,
+                    allow: [
+                      Discord.PermissionFlagsBits.ViewChannel,
+                      Discord.PermissionFlagsBits.ManageChannels,
+                      Discord.PermissionFlagsBits.Connect,
+                      Discord.PermissionFlagsBits.Speak
+                    ]
+                  },
+                  {
+                    id: guild.roles.everyone.id,
+                    deny: [
+                      Discord.PermissionFlagsBits.Connect,
+                      Discord.PermissionFlagsBits.Speak
+                    ]
+                  }
+                ]
+              });
+              immutableDateChannelIDs.delete(guild.id);
+            }
           } catch (err) {
             // eslint-disable-next-line no-console -- CLI
             console.error(
-              `Failed to toggle the date channel for guild ` +
-              `${guild.name} (${guild.id}).`,
+              `Failed to ${actionAttempted} the date channel for guild ` +
+              `${guild.name} (${guild.id})${
+                targetChannel
+                  ? ` channel ${targetChannel.name} (${targetChannel.id})`
+                  : ''
+              }.`,
               err
             );
           }

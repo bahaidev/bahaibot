@@ -107,8 +107,8 @@ const getCommands = async function ({
     ADMIN_IDS = DiscordConstants.ADMIN_IDS,
     ADMIN_ROLES = DiscordConstants.ADMIN_ROLES,
     BADI_DATE_CHANNELS = [
-      DiscordConstants.BAHAI_FYI_GUILD_ID,
-      DiscordConstants.BAHAI_LAB_GUILD_ID,
+      // DiscordConstants.BAHAI_FYI_GUILD_ID,
+      // DiscordConstants.BAHAI_LAB_GUILD_ID,
       DiscordConstants.BAHAI_WIKIS_GUILD_ID
     ],
     enabledCommandGroups = ['*'],

@@ -140,6 +140,9 @@
     },
     "following_texts_available_in_library": {
       "message": "The following texts are available in my library, {username}."
+    },
+    "toggled_date": {
+      "message": "Toggled date"
     }
   }
 }
