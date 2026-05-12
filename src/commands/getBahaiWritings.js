@@ -498,7 +498,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
     readRandom: {
       name: 'quote-random',
       description: "Provide a random selection of the Bahá'í Writings",
-      re: /\bquote random(?: \w+)?(?: \w+)?$/iv,
+      re: /\bquote random(?: [\w\(\)]+?)?(?: \w+)?$/iv,
       /**
        * @param {import('discord.js').AutocompleteInteraction<
        *   import('discord.js').CacheType
