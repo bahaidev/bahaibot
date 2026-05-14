@@ -15,7 +15,8 @@
     "public/**/*.js",
     "src/**/*.js",
     "test/**/*.js",
-    "typings/*.d.ts"
+    "typings/*.d.ts",
+    "dolt-scripts/**/*.js"
   ],
   "exclude": ["node_modules", "rollup.config.js"]
 }

@@ -7,32 +7,12 @@
 /* eslint-disable no-console -- Debugging */
 import {readFile, writeFile} from 'node:fs/promises';
 
-// eslint-disable-next-line @stylistic/max-len -- Long
-// eslint-disable-next-line n/no-unpublished-import -- Only for initial population
-import knex from 'knex';
-// eslint-disable-next-line @stylistic/max-len -- Long
-// eslint-disable-next-line n/no-unpublished-import -- Only for initial population
-import cfg from './settings.json' with {type: 'json'};
+import {db} from './knex.js';
+import {langCodes, langs} from './langs.js';
 
 /**
- * @import {Language} from './src/commands/getQuoteReader.js';
+ * @import {Language} from '../src/commands/getQuoteReader.js';
  */
-
-const poolConfig = {min: 0, max: 7};
-
-const config = {
-  host: cfg.development.DB_HOST,
-  port: cfg.development.DB_PORT,
-  user: cfg.development.DB_USER,
-  password: cfg.development.DB_PASSWORD,
-  database: cfg.development.DB_NAME
-};
-
-const db = knex({
-  client: 'mysql2',
-  connection: config,
-  pool: poolConfig
-});
 
 await saveHiddenWords();
 
@@ -40,12 +20,6 @@ await saveHiddenWords();
  * @returns {Promise<void>}
  */
 async function saveHiddenWords () {
-  const langCodes = ['ar', 'en', 'es', 'fr', 'ru', 'fa', 'zh-Hans'];
-  const langs = /** @type {Language[]} */ ([
-    'Arabic', 'Chinese (Simplified)', 'English', 'Spanish', 'French',
-    'Russian', 'Persian'
-  ]);
-
   for (const [idx, lang] of langs.entries()) {
     // eslint-disable-next-line no-await-in-loop -- Sequential
     await savePersianHiddenWords(lang, langCodes[idx]);
