@@ -143,6 +143,9 @@
     },
     "toggled_date": {
       "message": "Toggled date"
+    },
+    "title_by_author": {
+      "message": "{title} by {author}"
     }
   }
 }

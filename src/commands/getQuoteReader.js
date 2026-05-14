@@ -1,9 +1,14 @@
 /* READER AND LIBRARY FILE */
 
+import {i18n} from 'intl-dom';
 import {hiddenWordsLanguages as languages} from './getBahaiWritings.js';
+import authors from '../../library/authors.json' with {type: 'json'};
+import {langs, langCodes} from '../../dolt-scripts/langs.js';
+
 
 /**
- * @typedef {"English"} Language
+ * @typedef {"Arabic"|"Chinese (Simplified)"|"English"|"Spanish"|"French"|
+ *   "Russian"|"Persian"} Language
  */
 
 /**
@@ -64,7 +69,13 @@ import {hiddenWordsLanguages as languages} from './getBahaiWritings.js';
  *   title: string,
  *   paras: {
  *     id: number,
- *     English: string
+ *     English: string,
+ *     Arabic: string,
+ *     "Chinese (Simplified)": string,
+ *     Spanish: string,
+ *     French: string,
+ *     Russian: string,
+ *     Persian: string
  *   }[],
  *   notes: Footnote[]
  * }} Chapter
@@ -72,8 +83,8 @@ import {hiddenWordsLanguages as languages} from './getBahaiWritings.js';
 
 /**
  * @typedef {{
- *   title: string,
- *   author: string,
+ *   title: Record<Language, string>,
+ *   author: "BH",
  *   url: string,
  *   chapters: Chapter[]
  * }} LibraryFileWithChapters
@@ -219,10 +230,13 @@ async function getQuoteReader ({fs, settings, _}) {
    * @param {string} refName
    * @param {Chapter} content
    * @param {Language} language
-   * @returns {void}
+   * @param {Record<Language, string>} title
+   * @param {"BH"} author
+   * @returns {Promise<void>}
    */
-  function embedCreator (
-    Discord, avatar, message, refNumber, refName, content, language
+  async function embedCreator (
+    Discord, avatar, message, refNumber, refName, content, language,
+    title, author
   ) {
     // Define the embed features
     let embedDescription = '';
@@ -241,6 +255,11 @@ async function getQuoteReader ({fs, settings, _}) {
     const textDescriptionSplit = splitter(content.paras[0][lang],
       MAX_TEXT_LIMIT);
 
+    const __ = await i18n({
+      localesBasePath: 'src',
+      locales: [langCodes[langs.indexOf(language)]]
+    });
+
     // Process the embed data based on the size of the text
     textDescriptionSplit.forEach((textDesc, i) => {
       // Re-create a new object for the next round of embed for super long text
@@ -250,8 +269,10 @@ async function getQuoteReader ({fs, settings, _}) {
       /* c8 ignore next -- Set in settings */
       embed.setColor(colorBorder ?? null);
       embed.setAuthor({
-        name: `${library.list[library.index[refName]].title} by ` +
-        `${library.list[library.index[refName]].author}`,
+        name: /** @type {string} */ (__('title_by_author', {
+          title: title[language],
+          author: authors[author][language]
+        })),
         /* c8 ignore next -- A guard as is apparently present */
         iconURL: avatar ?? undefined
       });
@@ -389,8 +410,9 @@ async function getQuoteReader ({fs, settings, _}) {
     // If condition based on data type returned
     if (typeof content === 'object') {
       // Create the embed
-      embedCreator(
-        Discord, avatar, message, Number(index), refName, content, language
+      await embedCreator(
+        Discord, avatar, message, Number(index), refName, content, language,
+        file.title, file.author
       );
     /* c8 ignore next 6 -- See note below */
     // Unless a book has a missing chapter numbering, it seems this will be
@@ -438,8 +460,9 @@ async function getQuoteReader ({fs, settings, _}) {
     const content = /** @type {Chapter} */ (readFile(file, randomNumber));
 
     // Create the embed
-    embedCreator(
-      Discord, avatar, message, randomNumber, refName, content, language
+    await embedCreator(
+      Discord, avatar, message, randomNumber, refName, content, language,
+      file.title, file.author
     );
   }
 

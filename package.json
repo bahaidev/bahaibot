@@ -98,6 +98,7 @@
     "dolt": "dolt sql-server --port 3307",
     "dolt-start": "node dolt-scripts/hidden-words.js",
     "dolt-titles": "node dolt-scripts/hidden-words-titles.js",
+    "dolt-authors": "node dolt-scripts/authors.js",
     "prepare": "husky",
     "test": "rm -Rf ./node_modules/.cache && c8 --check-coverage --statements 100 --lines 100 --functions 100 --branches 100 npm run mocha test/*.js"
   },

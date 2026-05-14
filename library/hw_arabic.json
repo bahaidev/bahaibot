@@ -1,6 +1,14 @@
 {
-	"title": "The Hidden Words (Arabic)",
-	"author": "Bahá'u'lláh",
+	"title": {
+		"English": "Arabic Hidden Words",
+		"Arabic": "الكلمات المكنونة العربية",
+		"Chinese (Simplified)": "隐言经(阿拉伯文)",
+		"Spanish": "Las Palabras Ocultas en árabe",
+		"French": "Les Paroles Cachées en arabe",
+		"Russian": "Сокровенные Слова (арабские)",
+		"Persian": "کلمات مکنونه عربی"
+	},
+	"author": "BH",
 	"url": "https://www.bahai.org/library/authoritative-texts/bahaullah/hidden-words/#r=hw_en-1",
 	"chapters": [
 		{

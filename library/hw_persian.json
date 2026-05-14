@@ -1,6 +1,14 @@
 {
-	"title": "The Hidden Words (Persian)",
-	"author": "Bahá'u'lláh",
+	"title": {
+		"English": "Persian Hidden Words",
+		"Arabic": "الكلمات المكنونة الفارسية",
+		"Chinese (Simplified)": "隐言经(波斯文)",
+		"Spanish": "Las Palabras Ocultas en persa",
+		"French": "Les Paroles Cachées en persan",
+		"Russian": "Сокровенные Слова (персидские)",
+		"Persian": "کلمات مکنونه فارسی"
+	},
+	"author": "BH",
 	"url": "https://www.bahai.org/library/authoritative-texts/bahaullah/hidden-words/#r=hw_en-2",
 	"chapters": [
 		{
