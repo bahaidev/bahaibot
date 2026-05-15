@@ -62,7 +62,10 @@ describe('`interactionCreate` Bahá\'í wiki', function () {
           username: 'brettz9',
           id: '410259427770499072'
         },
-        reply (msg) {
+        deferReply () {
+          //
+        },
+        editReply (msg) {
           // eslint-disable-next-line @stylistic/max-len -- Long
           message = /** @type {import('discord.js').InteractionReplyOptions} */ (
             msg
