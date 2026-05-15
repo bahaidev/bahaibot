@@ -378,8 +378,12 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
           id: '410259427770499072'
         },
         options: {
-          getString () {
-            return 'hwa';
+          getString (opt) {
+            if (opt === 'book') {
+              return 'hwa';
+            }
+
+            return 'English';
           },
           getInteger () {
             return 15;
@@ -398,7 +402,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
           data: {
             color: 16732271,
             author: {
-              name: 'The Arabic Hidden Words by Bahá’u’lláh',
+              name: "Arabic Hidden Words by Bahá'u'lláh",
               url: undefined,
               icon_url: 'https://cdn.discordapp.com/avatars/user-id/user-avatar-url.webp'
             },
@@ -442,6 +446,11 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
         isAutocomplete () {
           checkedCommands.push(true);
           return false;
+        },
+        options: {
+          getString () {
+            return 'English';
+          }
         },
         user: {
           username: 'brettz9',

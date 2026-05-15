@@ -415,6 +415,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
         const filtered = choices.filter(
           (choice) => choice.startsWith(focused.value)
         );
+
         await interaction.respond(
           filtered.map((choice) => ({name: choice, value: choice}))
         );

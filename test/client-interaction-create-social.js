@@ -861,7 +861,10 @@ describe('`interactionCreate` social', function () {
           username: 'brettz9',
           id: '410259427770499072'
         },
-        reply (msg) {
+        deferReply () {
+          //
+        },
+        editReply (msg) {
           message = /** @type {string} */ (msg);
         }
       });

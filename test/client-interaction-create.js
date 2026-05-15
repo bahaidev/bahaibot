@@ -83,7 +83,7 @@ describe('`interactionCreate`', function () {
         },
         options: {
           getFocused () {
-            return 'hwa';
+            return {value: 'hwa'};
           }
         },
         respond (filteredChoices) {
