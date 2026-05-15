@@ -480,6 +480,94 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
   );
 
   it(
+    '`interactionCreate` finds a ChatInputCommand (quote-random) ' +
+      'with autocomplete language',
+    async function () {
+      const discord = new MockDiscord();
+      const {client} = await bot({client: discord.getClient()});
+      const checkedCommands = [];
+      let filteredChoicesRan = false;
+
+      // @ts-expect-error Just mocking what we need
+      client.emit('interactionCreate', {
+        commandName: 'quote-random',
+        isChatInputCommand () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isAutocomplete () {
+          checkedCommands.push(true);
+          return true;
+        },
+        options: {
+          getFocused () {
+            return {
+              name: 'language',
+              value: 'Chinese (Simplified)'
+            };
+          }
+        },
+        user: {
+          username: 'brettz9',
+          id: '410259427770499072'
+        },
+        respond (filteredChoices) {
+          expect(filteredChoices.length).to.equal(1);
+          filteredChoicesRan = true;
+        }
+      });
+
+      await commandFinished(client);
+      expect(checkedCommands.length).to.equal(3);
+      expect(filteredChoicesRan).to.be.true;
+    }
+  );
+
+  it(
+    '`interactionCreate` finds a ChatInputCommand (quote-random) ' +
+      'with autocomplete book',
+    async function () {
+      const discord = new MockDiscord();
+      const {client} = await bot({client: discord.getClient()});
+      const checkedCommands = [];
+      let filteredChoicesRan = false;
+
+      // @ts-expect-error Just mocking what we need
+      client.emit('interactionCreate', {
+        commandName: 'quote-random',
+        isChatInputCommand () {
+          checkedCommands.push(true);
+          return true;
+        },
+        isAutocomplete () {
+          checkedCommands.push(true);
+          return true;
+        },
+        options: {
+          getFocused () {
+            return {
+              name: 'book',
+              value: 'hwp'
+            };
+          }
+        },
+        user: {
+          username: 'brettz9',
+          id: '410259427770499072'
+        },
+        respond (filteredChoices) {
+          expect(filteredChoices.length).to.equal(1);
+          filteredChoicesRan = true;
+        }
+      });
+
+      await commandFinished(client);
+      expect(checkedCommands.length).to.equal(3);
+      expect(filteredChoicesRan).to.be.true;
+    }
+  );
+
+  it(
     '`message` finds not mentioned trigger (writingsReferences)',
     async function () {
       const discord = new MockDiscord();
