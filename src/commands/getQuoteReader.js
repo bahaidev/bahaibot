@@ -238,27 +238,33 @@ async function getQuoteReader ({fs, settings, _}) {
     Discord, avatar, message, refNumber, refName, content, language,
     title, author
   ) {
+    const __ = await i18n({
+      localesBasePath: 'src',
+      locales: [langCodes[langs.indexOf(language)]]
+    });
+
     // Define the embed features
     let embedDescription = '';
 
     // Initialize output
     embedDescription = (refName.toLowerCase() === 'hwa' ||
       refName.toLowerCase() === 'hwp')
-      ? `**${refNumber}. ${content.title}**\n`
+      ? /** @type {string} */ (__('number_and_title', {
+        refNumber,
+        title: content.title
+      }))
       // Remove this and test once other works besides hwa/hwp enabled.
       /* c8 ignore next -- Need other words besides Hidden Words */
-      : `**Chapter ${refNumber}, Para 1. ${content.title}**\n`;
+      : /** @type {string} */ (__('chapter_and_para', {
+        refNumber,
+        title: content.title
+      }));
 
     const lang = languages.includes(language) ? language : 'English';
 
     // Split text if large
     const textDescriptionSplit = splitter(content.paras[0][lang],
       MAX_TEXT_LIMIT);
-
-    const __ = await i18n({
-      localesBasePath: 'src',
-      locales: [langCodes[langs.indexOf(language)]]
-    });
 
     // Process the embed data based on the size of the text
     textDescriptionSplit.forEach((textDesc, i) => {
@@ -292,12 +298,15 @@ async function getQuoteReader ({fs, settings, _}) {
           let ntext = '';
 
           for (const n of content.notes) {
-            ntext += `${n.fn}. ${n.note}\n`;
+            ntext += __('footnote', {
+              fn: n.fn,
+              note: n.note
+            });
           }
 
           if (ntext !== '') {
             embed.addFields({
-              name: 'Notes',
+              name: /** @type {string} */ (__('notes')),
               value: ntext,
               inline: false
             });

@@ -149,6 +149,18 @@
     },
     "quote_listing": {
       "message": "\n**{code}**: {title} ({author})"
+    },
+    "footnote": {
+      "message": "{fn}. {note}\n"
+    },
+    "notes": {
+      "message": "Notes"
+    },
+    "number_and_title": {
+      "message": "**{refNumber}. {title}**\n"
+    },
+    "chapter_and_para": {
+      "message": "**Chapter {refNumber}, Para 1. {title}**\n"
     }
   }
 }

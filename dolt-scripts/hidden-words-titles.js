@@ -43,7 +43,6 @@ async function savePersianHiddenWords (lang, langCode) {
 
   await writeFile(persianHWPath, `${JSON.stringify(json, null, '\t')}\n`);
 
-  // Todo: Incomplete
   console.log('title', lang, title);
 }
 
@@ -68,6 +67,5 @@ async function saveArabicHiddenWords (lang, langCode) {
 
   await writeFile(arabicHWPath, `${JSON.stringify(json, null, '\t')}\n`);
 
-  // Todo: Incomplete
   console.log('title', lang, title);
 }
