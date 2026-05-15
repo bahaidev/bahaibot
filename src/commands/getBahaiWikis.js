@@ -469,12 +469,12 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
         // eslint-disable-next-line @stylistic/max-len -- Long
         // Currently accepts format like `15 Qawl (Speech), 100 (Asia/Jerusalem)`;
         //   need to settle on proper format
-        let matches = (/(?<day>\d+) [\w‘áíúṭẓ\-]+ \((?<month>[\w‘áíúṭẓ\-]+)\), (?<year>\d+)(?: BE)?(?: \((?<timezoneId>[\w\/]+)\))?/v).exec(
+        let matches = (/(?<day>\d+) [\w‘áíúṭẓ\-]+ \((?<month>[\w‘áíúṭẓ\-]+)\),? (?<year>\d+)(?: BE)?(?: \((?<timezoneId>[\w\/]+)\))?/v).exec(
           dateString
         );
 
         if (!matches || !matches.groups) {
-          matches = (/(?<day>\d+) (?<month>[\w‘áíúṭẓ\-]+), (?<year>\d+)(?: BE)?(?: \((?<timezoneId>[\w\/]+)\))?/v).exec(
+          matches = (/(?<day>\d+) (?<month>[\w‘áíúṭẓ\-]+),? (?<year>\d+)(?: BE)?(?: \((?<timezoneId>[\w\/]+)\))?/v).exec(
             dateString
           );
           if (!matches || !matches.groups) {
