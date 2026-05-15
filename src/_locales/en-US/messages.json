@@ -146,6 +146,9 @@
     },
     "title_by_author": {
       "message": "{title} by {author}"
+    },
+    "quote_listing": {
+      "message": "\n**{code}**: {title} ({author})"
     }
   }
 }

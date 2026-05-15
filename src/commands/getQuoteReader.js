@@ -14,7 +14,7 @@ import {langs, langCodes} from '../../dolt-scripts/langs.js';
 /**
  * @callback QuoteList
  * @param {import('discord.js').Message<true>} message
- * @returns {void}
+ * @returns {Promise<void>}
  */
 
 /**
@@ -315,17 +315,31 @@ async function getQuoteReader ({fs, settings, _}) {
 
   /**
    * Shows the listing of library items.
-   * @returns {string}
+   * @returns {Promise<string>}
    */
-  function quoteListing () {
+  async function quoteListing () {
     // Initialize output string
     let output = '';
 
+    const language = 'English';
+    const __ = await i18n({
+      localesBasePath: 'src',
+      locales: [langCodes[langs.indexOf(language)]]
+    });
+
     // Based on the global variable, pull the names and loop through the data
     for (const element of library.list) {
-      output += `\n**${
-        element.code.toUpperCase()
-      }**: ${element.title} (${element.author})`;
+      // eslint-disable-next-line no-await-in-loop -- Easier
+      const file = await openFile(element.code);
+
+      const title = file.title[language];
+      const author = authors[file.author][language];
+
+      output += __('quote_listing', {
+        code: element.code.toUpperCase(),
+        title,
+        author
+      });
     }
 
     // Add additional space
@@ -358,8 +372,8 @@ async function getQuoteReader ({fs, settings, _}) {
   // MODULES
 
   /** @type {QuoteList} */
-  function quoteList (message) {
-    const content = quoteListing();
+  async function quoteList (message) {
+    const content = await quoteListing();
 
     message.channel.send({
       content: /** @type {string} */ (
