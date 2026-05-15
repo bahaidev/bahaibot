@@ -1,0 +1,166 @@
+{
+  "body": {
+    "BahaiBotOnline": {
+      "message": "The Bahá'í Bot Online!"
+    },
+    "serverName": {
+      "message": "Bahá'í.FYI"
+    },
+    "labServerName": {
+      "message": "Bahá'í Lab"
+    },
+    "guildMemberAddWelcome": {
+      "message": "{greet}, {userID}! Welcome to {serverName}. :wave:\n\nTo gain access to all channels, please take a moment to read the {rulesChannel}. When you're done, please ping {helpTeam} and let the help team know that you've read and accept the rules. {happy}"
+    },
+    "errorExecuting": {
+      "message": "Error executing command with message"
+    },
+    "checkingIn": {
+      "message": "Checking in on {guildName}."
+    },
+    "greetingSent": {
+      "message": "Greeting sent to {channels}."
+    },
+    "firstGreet": {
+      "message": "First greet for {channels}"
+    },
+    "lastGreeting": {
+      "message": "Last greeting to {channels}: {relativeTime} ago."
+    },
+    "uptimeGreet": {
+      "message": "{greet}, just checking in. *(timestamp: {now}; uptime: {uptime})*"
+    },
+    "errorWritingGuild": {
+      "message": "Error writing {guildFileName} file"
+    },
+    "channelFound": {
+      "message": "{guildName} #{channelName} found"
+    },
+    "postingTodayInHistory": {
+      "message": "Query completed, posting Today in History."
+    },
+    "todayInHistoryResult": {
+      "message": "{bstar} Here's Bahaipedia's Today in History entry for {today}.\n\n{todayInHistoryResult}"
+    },
+    "hereIsQueryResult": {
+      "message": "Here is the result of your query."
+    },
+    "speechError": {
+      "message": "There was a speech error."
+    },
+    "speakingBegun": {
+      "message": "Speaking has begun."
+    },
+    "routerResponse": {
+      "message": "Router response:"
+    },
+    "no_application_commands_found": {
+      "message": "No application commands found"
+    },
+    "not_in_a_voice_channel": {
+      "message": "Message member not in a voice channel"
+    },
+    "user_command_issued_by": {
+      "message": "Users command issued by {username}."
+    },
+    "seen_command_issued_by": {
+      "message": "Seen command issued by {username}."
+    },
+    "deleted_command": {
+      "message": "🗑 Deleted command \"{name}\"."
+    },
+    "edited_command": {
+      "message": "🔁 Edited command \"{name}\"."
+    },
+    "registered_command": {
+      "message": "👍 Registered command \"{name}\"."
+    },
+    "was_not_able_to_speak": {
+      "message": "(Was not able to speak)"
+    },
+    "action_only_for_admins": {
+      "message": "Action only for admins"
+    },
+    "query_completed": {
+      "message": "Query completed."
+    },
+    "result": {
+      "message": "Result:"
+    },
+    "bp_command_issued_by": {
+      "message": "BP command issued by {username}."
+    },
+    "search_completed": {
+      "message": "Search completed: {keywords} => {title}"
+    },
+    "error_checking_in": {
+      "message": "Error checking in"
+    },
+    "error_with_resource": {
+      "message": "Error: {message} with resource {title}"
+    },
+    "error_retrieving_json_for_today_url": {
+      "message": "Error retrieving JSON for today URL"
+    },
+    "error_retrieving_random_wiki_url": {
+      "message": "Error retrieving random wiki URL"
+    },
+    "error_retrieving_wiki_search_url": {
+      "message": "Error retrieving wiki search URL"
+    },
+    "error_getting_bahaipedia_today": {
+      "message": "Error getting Bahaipedia Today"
+    },
+    "error_getting_wiki_random": {
+      "message": "Error getting wiki random"
+    },
+    "error_getting": {
+      "message": "Error getting"
+    },
+    "error_with_random_wiki": {
+      "message": "Error with random wiki"
+    },
+    "error_with_today_in_history": {
+      "message": "Error with today in history"
+    },
+    "error_searching_wiki": {
+      "message": "Error searching wiki"
+    },
+    "know_which_work_but_cant_find": {
+      "message": "I know which work you're talking about, but I can't find that section in it. Valid section numbers are from **0** to **{max}**."
+    },
+    "couldnt_understand_request": {
+      "message": "I couldn't understand your request. Make sure you format your request like this: ``quote <work> <section number>``. To see the list of works in my library, type ``quote list``."
+    },
+    "available_texts": {
+      "message": "Available Texts"
+    },
+    "to_read_mention_book_name": {
+      "message": "\nTo quote from one of these texts, mention the book name and the section you're interested in. For example, to quote the 12th Arabic Hidden Word, say: `!quote HWA 12`."
+    },
+    "following_texts_available_in_library": {
+      "message": "The following texts are available in my library, {username}."
+    },
+    "toggled_date": {
+      "message": "Toggled date"
+    },
+    "title_by_author": {
+      "message": "{title} de {author}"
+    },
+    "quote_listing": {
+      "message": "\n**{code}**: {title} ({author})"
+    },
+    "footnote": {
+      "message": "{fn}. {note}\n"
+    },
+    "notes": {
+      "message": "Notes"
+    },
+    "number_and_title": {
+      "message": "**{refNumber}. {title}**\n"
+    },
+    "chapter_and_para": {
+      "message": "**Chapter {refNumber}, Para 1. {title}**\n"
+    }
+  }
+}

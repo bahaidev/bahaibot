@@ -274,6 +274,7 @@ async function getQuoteReader ({fs, settings, _}) {
       // Set colors and data
       /* c8 ignore next -- Set in settings */
       embed.setColor(colorBorder ?? null);
+
       embed.setAuthor({
         name: /** @type {string} */ (__('title_by_author', {
           title: title[language],
@@ -456,8 +457,7 @@ async function getQuoteReader ({fs, settings, _}) {
       /\bquote random(?: (?<language>[\w\(\) ]+?))?(?: (?<book>\w+))?$/iv
     ) ?? {groups: {}};
 
-    // eslint-disable-next-line prefer-destructuring -- TS
-    const language = /** @type {Language} */ (groups.language);
+    const language = /** @type {Language} */ (groups.language.trim());
 
     // Select a random element
     const refName = groups.book && availableRandomOptions.includes(groups.book)
