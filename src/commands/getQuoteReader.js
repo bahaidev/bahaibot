@@ -238,9 +238,11 @@ async function getQuoteReader ({fs, settings, _}) {
     Discord, avatar, message, refNumber, refName, content, language,
     title, author
   ) {
+    const lang = languages.includes(language) ? language : 'English';
+
     const __ = await i18n({
       localesBasePath: 'src',
-      locales: [langCodes[langs.indexOf(language)]]
+      locales: [langCodes[langs.indexOf(lang)]]
     });
 
     // Define the embed features
@@ -260,8 +262,6 @@ async function getQuoteReader ({fs, settings, _}) {
         title: content.title
       }));
 
-    const lang = languages.includes(language) ? language : 'English';
-
     // Split text if large
     const textDescriptionSplit = splitter(content.paras[0][lang],
       MAX_TEXT_LIMIT);
@@ -277,8 +277,8 @@ async function getQuoteReader ({fs, settings, _}) {
 
       embed.setAuthor({
         name: /** @type {string} */ (__('title_by_author', {
-          title: title[language],
-          author: authors[author][language]
+          title: title[lang],
+          author: authors[author][lang]
         })),
         /* c8 ignore next -- A guard as is apparently present */
         iconURL: avatar ?? undefined
@@ -457,7 +457,7 @@ async function getQuoteReader ({fs, settings, _}) {
       /\bquote random(?: (?<language>[\w\(\) ]+?))?(?: (?<book>\w+))?$/iv
     ) ?? {groups: {}};
 
-    const language = /** @type {Language} */ (groups.language.trim());
+    const language = /** @type {Language} */ (groups.language?.trim() ?? '');
 
     // Select a random element
     const refName = groups.book && availableRandomOptions.includes(groups.book)
