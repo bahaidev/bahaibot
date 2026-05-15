@@ -459,6 +459,10 @@ describe('`interactionCreate`', function () {
                   'history, via Bahaipedia.'
               },
               {
+                name: '!date',
+                value: "Converts date between Gregorian and Badí'"
+              },
+              {
                 name: '!help',
                 value: 'Displays help text. For more commands, use ' +
                   '`!helpextras`, `!helpadmin`, and `!helpshortcuts`'
@@ -699,6 +703,15 @@ describe('`interactionCreate`', function () {
               {
                 name: '!echo words',
                 value: 'Just echoes back the words supplied.'
+              },
+              {
+                name: '!uptime',
+                value: 'Reports the duration of time since the server ' +
+                  'has been online'
+              },
+              {
+                name: '!date toggle',
+                value: 'Toggles whether to show the date as a channel'
               },
               {
                 name: '!checkin',

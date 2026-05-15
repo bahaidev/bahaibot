@@ -44,6 +44,15 @@ function mockDate ({
     }
 
     /**
+     * @param {Intl.LocalesArgument} locales
+     * @param {Intl.DateTimeFormatOptions} options
+     * @returns {string}
+     */
+    toLocaleDateString (locales, options) {
+      return this._date.toLocaleDateString(locales, options);
+    }
+
+    /**
      * @returns {import('../../src/getWikiTools.js').Integer}
      */
     getTime () {

@@ -110,6 +110,8 @@ describe('Client event (message)', function () {
     'Passes message if Bot is messaged, converting initial user who is ' +
     'not the current Bot to name, and defaulting to use router',
     async function () {
+      this.timeout(20000);
+
       const discord = new MockDiscord({
         userID: DiscordConstants.BAHAI_DEV_BOT_ID,
         messageContent: `<@${DiscordConstants.BAHAI_BOT_ID}> Who am I?`

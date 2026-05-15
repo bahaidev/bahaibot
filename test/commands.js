@@ -820,7 +820,7 @@ describe('Commands', () => {
       message.channel.send.firstCall.firstArg.embeds[0].data
     ).to.deep.include({
       author: {
-        name: 'The Arabic Hidden Words by Bahá’u’lláh',
+        name: "Arabic Hidden Words by Bahá'u'lláh",
         icon_url: 'https://cdn.discordapp.com/avatars/user-id/user-avatar-url.webp',
         url: undefined
       }
@@ -852,7 +852,7 @@ describe('Commands', () => {
       message.channel.send.firstCall.firstArg.embeds[0].data
     ).to.deep.include({
       author: {
-        name: 'The Persian Hidden Words by Bahá’u’lláh',
+        name: "Persian Hidden Words by Bahá'u'lláh",
         icon_url: 'https://cdn.discordapp.com/avatars/user-id/user-avatar-url.webp',
         url: undefined
       }
@@ -894,8 +894,8 @@ describe('Commands', () => {
         fields: [
           {
             name: 'Available Texts',
-            value: '\n**HWA**: The Arabic Hidden Words (Bahá’u’lláh)\n' +
-              '**HWP**: The Persian Hidden Words (Bahá’u’lláh)\n'
+            value: "\n**HWA**: Arabic Hidden Words (Bahá'u'lláh)\n" +
+              "**HWP**: Persian Hidden Words (Bahá'u'lláh)\n"
           }
         ]
       }]
