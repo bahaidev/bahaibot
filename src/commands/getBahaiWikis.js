@@ -587,6 +587,9 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
       if (!interaction.inCachedGuild() || interaction.isStringSelectMenu()) {
         return;
       }
+      await interaction.deferReply({
+        flags: Discord.MessageFlags.Ephemeral
+      });
       await this.action?.({
         author: interaction.user,
         content: /** @type {string} */ (
@@ -602,7 +605,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
            */
           // @ts-expect-error Just mocking what we need
           send (reply) {
-            interaction.reply(reply);
+            interaction.editReply(reply);
           }
         }
       });
@@ -671,7 +674,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
     }
   });
 
-  // This is only for slash commands, as the indidivual items allow random for
+  // This is only for slash commands, as the individual items allow random for
   //   the Bot dialogues
   const randomWiki = /** @type {import('./getCommands.js').BotCommand} */ ({
     name: 'rand',
@@ -689,6 +692,9 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
      */
     async slashCommand (interaction) {
       if (interaction.isStringSelectMenu()) {
+        await interaction.deferReply({
+          flags: Discord.MessageFlags.Ephemeral
+        });
         await this.action?.({
           author: interaction.user,
           content: /** @type {string} */ (
@@ -704,13 +710,16 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
              */
             // @ts-expect-error Just mocking what we need
             send (reply) {
-              interaction.reply(reply);
+              interaction.editReply(reply);
             }
           }
         });
         return;
       }
       if (interaction.isChatInputCommand()) {
+        await interaction.deferReply({
+          flags: Discord.MessageFlags.Ephemeral
+        });
         const selectMenu = new Discord.StringSelectMenuBuilder().
           setCustomId('rand_site').
           setPlaceholder('Choose a site!').
@@ -733,10 +742,9 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
            */ (Discord.ActionRowBuilder)
         )().addComponents(selectMenu);
 
-        await interaction.reply({
+        await interaction.editReply({
           content: 'Random wiki:',
-          components: [row],
-          flags: Discord.MessageFlags.Ephemeral
+          components: [row]
         });
       }
     }
