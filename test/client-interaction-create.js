@@ -147,7 +147,10 @@ describe('`interactionCreate`', function () {
           checkedCommands.push(true);
           return false;
         },
-        reply (repl) {
+        deferReply () {
+          //
+        },
+        editReply (repl) {
           reply = /** @type {import('discord.js').InteractionReplyOptions} */ (
             repl
           );
@@ -215,7 +218,10 @@ describe('`interactionCreate`', function () {
           checkedCommands.push(true);
           return false;
         },
-        reply (repl) {
+        deferReply () {
+          //
+        },
+        editReply (repl) {
           reply = /** @type {import('discord.js').InteractionReplyOptions} */ (
             repl
           );
@@ -273,8 +279,7 @@ describe('`interactionCreate`', function () {
             }
           }
         ],
-        content: 'Random wiki:',
-        flags: 64
+        content: 'Random wiki:'
       });
     }
   );

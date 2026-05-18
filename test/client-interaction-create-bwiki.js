@@ -158,7 +158,10 @@ describe('`interactionCreate` Bahá\'í wiki', function () {
             };
           }
         },
-        reply (msg) {
+        deferReply () {
+          //
+        },
+        editReply (msg) {
           // eslint-disable-next-line @stylistic/max-len -- Long
           message = /** @type {import('discord.js').InteractionReplyOptions} */ (
             msg
