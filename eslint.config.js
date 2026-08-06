@@ -1,7 +1,6 @@
 import ashNazg from 'eslint-config-ash-nazg';
 
 const commonRules = {
-  'unicorn/no-unreadable-object-destructuring': 0,
   'unicorn/no-this-outside-of-class': 0
 };
 

@@ -42,8 +42,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1
       intl-dom:
-        specifier: ^0.20.0
-        version: 0.20.0
+        specifier: ^0.21.0
+        version: 0.21.0
       set-safer-interval:
         specifier: ^0.4.0
         version: 0.4.0
@@ -103,8 +103,8 @@ importers:
         specifier: ^10.8.0
         version: 10.8.0(supports-color@5.5.0)
       eslint-config-ash-nazg:
-        specifier: 42.0.1
-        version: 42.0.1(@babel/core@8.0.1)(eslint@10.8.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@7.0.2)
+        specifier: 42.1.1
+        version: 42.1.1(@babel/core@8.0.1)(eslint@10.8.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@7.0.2)
       eslint-plugin-jsonc:
         specifier: ^3.4.1
         version: 3.4.1(eslint@10.8.0(supports-color@5.5.0))
@@ -1806,8 +1806,8 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
 
-  eslint-config-ash-nazg@42.0.1:
-    resolution: {integrity: sha512-4Z8eM83NNwn4DmwZT4R+beq1RbQk7omdBx9c+FAfdmb1sqT8jXXtcvOa71lSZ8KQJS3CW4ru/I0lckdfJpzioA==}
+  eslint-config-ash-nazg@42.1.1:
+    resolution: {integrity: sha512-3jWhbycxFENIzd88JPs38aMQUIra//9ruT3TiWOfdZx2mM3ZNI/u4PTpKs6wj++acAwqgN6i3P3U12wBbJN+qA==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       eslint: ^10.0.0
@@ -2443,9 +2443,9 @@ packages:
     resolution: {integrity: sha512-Ju0Bz/cEia55xDwUWEa8+olFpCiQoypjnQySseKtmjNrnps3P+xfpUmGr90T7yjlVJmOtybRvPXhKMbHr+fWnw==}
     engines: {node: '>= 0.10'}
 
-  intl-dom@0.20.0:
-    resolution: {integrity: sha512-1TO+MoTWXfeUvOxO1ZWz6olpQaq/onvpPnR14hRBdax7f/oMVQPGuU6Q2mDkLQCiYKWoOu0enAgkYkQIS2My3Q==}
-    engines: {node: '>=16.0.0'}
+  intl-dom@0.21.0:
+    resolution: {integrity: sha512-gg3801G/dlOam0VPhHj4Z27gpjenykt/MtILk42LqoI7PvhKglasiXncZ721E+ncO82VgskXQIOLTw4qDoADhQ==}
+    engines: {node: '>=22.0.0'}
 
   ip-address@10.4.0:
     resolution: {integrity: sha512-oSK96Grm3aP6OrS263xVxbNDGVL7rzBtYdpGqlDG8iQdoenDoTs/nkki+DflYbAEE8Xl6o5YxhxlrKvI3nqKXQ==}
@@ -5513,7 +5513,7 @@ snapshots:
       eslint: 10.8.0(supports-color@5.5.0)
       semver: 7.8.5
 
-  eslint-config-ash-nazg@42.0.1(@babel/core@8.0.1)(eslint@10.8.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@7.0.2):
+  eslint-config-ash-nazg@42.1.1(@babel/core@8.0.1)(eslint@10.8.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@7.0.2):
     dependencies:
       '@babel/eslint-parser': 8.0.1(@babel/core@8.0.1)(eslint@10.8.0(supports-color@5.5.0))
       '@babel/eslint-plugin': 8.0.1(@babel/core@8.0.1)(@babel/eslint-parser@8.0.1(@babel/core@8.0.1)(eslint@10.8.0(supports-color@5.5.0)))(eslint@10.8.0(supports-color@5.5.0))
@@ -6306,7 +6306,7 @@ snapshots:
 
   interpret@2.2.0: {}
 
-  intl-dom@0.20.0:
+  intl-dom@0.21.0:
     dependencies:
       file-fetch: 1.6.1
       json-6: 1.1.4
