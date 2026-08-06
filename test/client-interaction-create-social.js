@@ -10,6 +10,7 @@ describe('`interactionCreate` social', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       let optionName = '';
@@ -60,7 +61,7 @@ describe('`interactionCreate` social', function () {
       });
 
       await setTimeout();
-      expect(checkedCommands.length).to.equal(6);
+      expect(checkedCommands).to.have.lengthOf(6);
       expect(optionName).to.equal('user');
       expect(message).to.equal(
         "I haven't seen <@brettz9> lately."
@@ -73,6 +74,7 @@ describe('`interactionCreate` social', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       let optionName = '';
@@ -123,7 +125,7 @@ describe('`interactionCreate` social', function () {
               // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
               filter (cb) {
                 // eslint-disable-next-line @stylistic/max-len -- Long
-                // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
+                // eslint-disable-next-line n/no-callback-literal, promise/prefer-await-to-callbacks -- API
                 cb({
                   isTextBased () {
                     return true;
@@ -140,7 +142,7 @@ describe('`interactionCreate` social', function () {
                             // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
                             callback
                           ) {
-                            // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
+                            // eslint-disable-next-line n/no-callback-literal, promise/prefer-await-to-callbacks -- API
                             callback({author: {id: ''}});
                             /* eslint-enable @stylistic/max-len -- Long */
                             return {
@@ -194,7 +196,7 @@ describe('`interactionCreate` social', function () {
       });
 
       await setTimeout();
-      expect(checkedCommands.length).to.equal(6);
+      expect(checkedCommands).to.have.lengthOf(6);
       expect(optionName).to.equal('user');
       expect(message).to.equal(
         "<@brettz9> is now idle; I haven't seen them lately."
@@ -207,6 +209,7 @@ describe('`interactionCreate` social', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       let optionName = '';
@@ -257,7 +260,7 @@ describe('`interactionCreate` social', function () {
               // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
               filter (cb) {
                 // eslint-disable-next-line @stylistic/max-len -- Long
-                // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
+                // eslint-disable-next-line n/no-callback-literal, promise/prefer-await-to-callbacks -- API
                 cb({
                   isTextBased () {
                     return true;
@@ -281,7 +284,7 @@ describe('`interactionCreate` social', function () {
                             // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
                             callback
                           ) {
-                            // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
+                            // eslint-disable-next-line n/no-callback-literal, promise/prefer-await-to-callbacks -- API
                             callback({author: {id: ''}});
                             /* eslint-enable @stylistic/max-len -- Long */
                             return {
@@ -335,7 +338,7 @@ describe('`interactionCreate` social', function () {
       });
 
       await setTimeout();
-      expect(checkedCommands.length).to.equal(6);
+      expect(checkedCommands).to.have.lengthOf(6);
       expect(optionName).to.equal('user');
       expect(message).to.equal(
         "<@brettz9> is now busy; I haven't seen them lately."
@@ -348,6 +351,7 @@ describe('`interactionCreate` social', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       let optionName = '';
@@ -398,7 +402,7 @@ describe('`interactionCreate` social', function () {
               // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
               filter (cb) {
                 // eslint-disable-next-line @stylistic/max-len -- Long
-                // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
+                // eslint-disable-next-line n/no-callback-literal, promise/prefer-await-to-callbacks -- API
                 cb({
                   isTextBased () {
                     return true;
@@ -415,7 +419,7 @@ describe('`interactionCreate` social', function () {
                             // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
                             callback
                           ) {
-                            // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
+                            // eslint-disable-next-line n/no-callback-literal, promise/prefer-await-to-callbacks -- API
                             callback({author: {id: ''}});
                             /* eslint-enable @stylistic/max-len -- Long */
                             return {
@@ -469,7 +473,7 @@ describe('`interactionCreate` social', function () {
       });
 
       await setTimeout();
-      expect(checkedCommands.length).to.equal(6);
+      expect(checkedCommands).to.have.lengthOf(6);
       expect(optionName).to.equal('user');
       expect(message).to.equal(
         "I haven't seen <@brettz9> lately."
@@ -483,6 +487,7 @@ describe('`interactionCreate` social', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       let optionName = '';
@@ -533,7 +538,7 @@ describe('`interactionCreate` social', function () {
               // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
               filter (cb) {
                 // eslint-disable-next-line @stylistic/max-len -- Long
-                // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
+                // eslint-disable-next-line n/no-callback-literal, promise/prefer-await-to-callbacks -- API
                 cb({
                   isTextBased () {
                     return true;
@@ -550,7 +555,7 @@ describe('`interactionCreate` social', function () {
                             // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
                             callback
                           ) {
-                            // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
+                            // eslint-disable-next-line n/no-callback-literal, promise/prefer-await-to-callbacks -- API
                             callback({author: {id: ''}});
                             /* eslint-enable @stylistic/max-len -- Long */
                             return {
@@ -579,7 +584,7 @@ describe('`interactionCreate` social', function () {
                             // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
                             callback
                           ) {
-                            // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
+                            // eslint-disable-next-line n/no-callback-literal, promise/prefer-await-to-callbacks -- API
                             callback({author: {id: ''}});
                             /* eslint-enable @stylistic/max-len -- Long */
                             return {
@@ -635,7 +640,7 @@ describe('`interactionCreate` social', function () {
       });
 
       await setTimeout();
-      expect(checkedCommands.length).to.equal(6);
+      expect(checkedCommands).to.have.lengthOf(6);
       expect(optionName).to.equal('user');
       expect(message).to.equal(
         '<@brettz9> is now busy, and was last seen in ' +
@@ -650,6 +655,7 @@ describe('`interactionCreate` social', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       let optionName = '';
@@ -700,7 +706,7 @@ describe('`interactionCreate` social', function () {
               // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
               filter (cb) {
                 // eslint-disable-next-line @stylistic/max-len -- Long
-                // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
+                // eslint-disable-next-line n/no-callback-literal, promise/prefer-await-to-callbacks -- API
                 cb({
                   isTextBased () {
                     return true;
@@ -717,7 +723,7 @@ describe('`interactionCreate` social', function () {
                             // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
                             callback
                           ) {
-                            // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
+                            // eslint-disable-next-line n/no-callback-literal, promise/prefer-await-to-callbacks -- API
                             callback({author: {id: ''}});
                             /* eslint-enable @stylistic/max-len -- Long */
                             return {
@@ -746,7 +752,7 @@ describe('`interactionCreate` social', function () {
                             // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
                             callback
                           ) {
-                            // eslint-disable-next-line promise/prefer-await-to-callbacks -- API
+                            // eslint-disable-next-line n/no-callback-literal, promise/prefer-await-to-callbacks -- API
                             callback({author: {id: ''}});
                             /* eslint-enable @stylistic/max-len -- Long */
                             return {
@@ -802,7 +808,7 @@ describe('`interactionCreate` social', function () {
       });
 
       await setTimeout();
-      expect(checkedCommands.length).to.equal(6);
+      expect(checkedCommands).to.have.lengthOf(6);
       expect(optionName).to.equal('user');
       expect(message).to.equal(
         '<@brettz9> is now offline, and was last seen in ' +
@@ -816,6 +822,7 @@ describe('`interactionCreate` social', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {string} */
@@ -870,7 +877,7 @@ describe('`interactionCreate` social', function () {
       });
 
       await setTimeout();
-      expect(checkedCommands.length).to.equal(5);
+      expect(checkedCommands).to.have.lengthOf(5);
       expect(message).to.equal(
         'There are currently 0 users online, ' +
           'including 0 admin/mod/helper(s).'

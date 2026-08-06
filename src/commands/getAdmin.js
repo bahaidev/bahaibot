@@ -70,9 +70,9 @@ async function puppet ({
  * @param {string} cfg.PUPPET_AUTHOR
  * @param {import('../getCheckin.js').GuildCheckin} cfg.guildCheckin
  * @param {import('intl-dom').I18NCallback} cfg._
- * @param {import('discord-tts')} cfg.discordTTS
- * @param {import('discord.js')} cfg.Discord
- * @param {Pick<import('@discordjs/voice'),
+ * @param {typeof import('discord-tts')} cfg.discordTTS
+ * @param {typeof import('discord.js')} cfg.Discord
+ * @param {Pick<typeof import('@discordjs/voice'),
  *   "joinVoiceChannel"|"createAudioPlayer"|
  *   "createAudioResource">} cfg.DiscordVoice
  * @returns {import('./getCommands.js').BotCommands}
@@ -364,18 +364,20 @@ const getAdmin = ({
        * @returns {void}
        */
       action (message) {
-        if (ADMIN_IDS.includes(message.author.id)) {
-          message.channel.send(
-            `Here's what you said, ${
-              message.author.username
-            }: \`\`${message.content}\`\``
-          );
-
-          // eslint-disable-next-line no-console -- CLI
-          console.log(
-            `Echo command issued by ${message.author.username}.`
-          );
+        if (!ADMIN_IDS.includes(message.author.id)) {
+          return;
         }
+
+        message.channel.send(
+          `Here's what you said, ${
+            message.author.username
+          }: \`\`${message.content}\`\``
+        );
+
+        // eslint-disable-next-line no-console -- CLI
+        console.log(
+          `Echo command issued by ${message.author.username}.`
+        );
       }
     },
     uptime: {

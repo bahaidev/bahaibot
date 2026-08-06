@@ -2,7 +2,7 @@
 //  baking in these two modules, but they would be forced to non-modularly
 //  add script tags and rely on globals.
 import {i18n} from 'intl-dom';
-// eslint-disable-next-line import/no-unresolved -- Bug
+// // eslint-disable-next-line import-x/no-unresolved -- Bug
 import {stripHtml} from 'string-strip-html';
 
 import bot from './bot.js';
@@ -74,7 +74,7 @@ const fs = /** @type {LimitedFs} */ ({
  */
 
 /**
- * @typedef {Pick<import('node:fs/promises'),
+ * @typedef {Pick<typeof import('node:fs/promises'),
  *   'readFile'|'writeFile'|'stat'|'unlink'>} LimitedFs
  */
 

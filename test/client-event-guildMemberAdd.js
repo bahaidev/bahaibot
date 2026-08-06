@@ -19,7 +19,7 @@ describe('guildMemberAdd event', () => {
     this.sinon.spyOnGetterResults = spyOnGetterResults;
   });
   afterEach(function () {
-    globalThis.Math.random = _random;
+    Math.random = _random;
     this.sinon.restore();
   });
   it('guildMemberAdd event (non-existing channel)', async function () {
@@ -32,7 +32,7 @@ describe('guildMemberAdd event', () => {
     );
 
     client.emit('guildMemberAdd', discord.getGuildMember());
-    expect(channelsCacheFindSpy.returnValues[0]).to.equal(undefined);
+    expect(channelsCacheFindSpy.returnValues[0]).to.be.undefined;
   });
 
   it('guildMemberAdd event (existing channel)', async function () {
@@ -70,7 +70,7 @@ describe('guildMemberAdd event', () => {
     /**
      * @returns {Float}
      */
-    globalThis.Math.random = () => 0.3;
+    Math.random = () => 0.3;
 
     const client = discord.getClient();
 
@@ -213,7 +213,7 @@ describe('guildMemberAdd event', () => {
     /**
      * @returns {Float}
      */
-    globalThis.Math.random = () => 0.3;
+    Math.random = () => 0.3;
 
     const client = discord.getClient();
 

@@ -20,6 +20,7 @@ describe('`interactionCreate` admin', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       // @ts-expect-error Just mocking what we need
@@ -41,7 +42,7 @@ describe('`interactionCreate` admin', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(4);
+      expect(checkedCommands).to.have.lengthOf(4);
     }
   );
 
@@ -50,6 +51,7 @@ describe('`interactionCreate` admin', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {string[]} */
@@ -101,7 +103,7 @@ describe('`interactionCreate` admin', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(6);
+      expect(checkedCommands).to.have.lengthOf(6);
       expect(optionNames).to.deep.equal(['channel', 'message']);
       expect(message).to.equal(
         'Channel bot-testing does not exist or is not text-based!'
@@ -114,6 +116,7 @@ describe('`interactionCreate` admin', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {string[]} */
@@ -165,7 +168,7 @@ describe('`interactionCreate` admin', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(6);
+      expect(checkedCommands).to.have.lengthOf(6);
       expect(optionNames).to.deep.equal(['channel', 'message']);
       expect(message).to.equal('');
     }
@@ -206,6 +209,7 @@ describe('`interactionCreate` admin', function () {
               async on (ev, cb) {
                 await setTimeout();
 
+                // eslint-disable-next-line n/no-callback-literal -- API
                 cb({
                   message: '',
                   resource: {
@@ -224,6 +228,8 @@ describe('`interactionCreate` admin', function () {
           }
         }
       });
+
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {string} */
@@ -281,7 +287,7 @@ describe('`interactionCreate` admin', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(6);
+      expect(checkedCommands).to.have.lengthOf(6);
       // @ts-expect-error Sinon
       expect(console.log.firstCall.firstArg).to.have.string(
         'Speaking has begun.'
@@ -324,6 +330,7 @@ describe('`interactionCreate` admin', function () {
               async on (ev, cb) {
                 await setTimeout();
 
+                // eslint-disable-next-line n/no-callback-literal -- API
                 cb({message: ''});
                 // eslint-disable-next-line @stylistic/max-len -- Long
                 /* eslint-enable promise/prefer-await-to-callbacks, jsdoc/ts-no-empty-object-type -- API */
@@ -336,6 +343,8 @@ describe('`interactionCreate` admin', function () {
           }
         }
       });
+
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {string} */
@@ -396,7 +405,7 @@ describe('`interactionCreate` admin', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(6);
+      expect(checkedCommands).to.have.lengthOf(6);
       // @ts-expect-error Sinon
       expect(console.log.firstCall.firstArg).to.have.string(
         'Speaking has begun.'
@@ -412,6 +421,8 @@ describe('`interactionCreate` admin', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {string} */
@@ -459,7 +470,7 @@ describe('`interactionCreate` admin', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(6);
+      expect(checkedCommands).to.have.lengthOf(6);
       // @ts-expect-error Sinon
       expect(console.log.firstCall.firstArg).to.have.string(
         'Message member not in a voice channel'
@@ -475,6 +486,7 @@ describe('`interactionCreate` admin', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {string} */
@@ -520,7 +532,7 @@ describe('`interactionCreate` admin', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(6);
+      expect(checkedCommands).to.have.lengthOf(6);
       expect(message).to.equal(
         'Action only for admins'
       );

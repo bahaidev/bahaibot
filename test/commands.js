@@ -692,11 +692,10 @@ describe('Commands', () => {
         // @ts-expect-error Sinon
         message.channel.send.firstCall.firstArg
       ).to.equal(
-        testMultiple
-          ? 'There are currently 2 users online, ' +
-            'including 1 admin/mod/helper(s).'
-          : 'There is currently 1 user online, ' +
-            'including 1 admin/mod/helper(s).'
+        `${testMultiple
+          ? 'There are currently 2 users online, '
+          : 'There is currently 1 user online, '
+        }including 1 admin/mod/helper(s).`
       );
 
       expect(
@@ -2617,7 +2616,7 @@ describe('Commands', () => {
     expect(emojisFinderSpy.firstCall.firstArg.name).to.equal('9star');
     expect(emojisFinderSpy.firstCall.returnValue).to.equal(true);
 
-    expect(emojisFinderSpy2.secondCall).to.equal(null);
+    expect(emojisFinderSpy2.secondCall).to.be.null;
 
     expect(emojisFindResultToStringSpy.returnValues[0]).to.equal(
       `<:9star:${DiscordConstants._9STAR_EMOJI_ID_FYI}>`

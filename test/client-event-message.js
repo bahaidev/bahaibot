@@ -34,7 +34,7 @@ describe('Client event (message)', function () {
       this.sinon.spy(console, 'log');
 
       // @ts-expect-error Sinon
-      expect(console.log.firstCall).to.equal(null);
+      expect(console.log.firstCall).to.be.null;
     }
   );
 
@@ -428,7 +428,7 @@ describe('Client event (message)', function () {
     client.emit('messageCreate', message);
 
     // @ts-expect-error Sinon
-    expect(message.react.firstCall).to.equal(null);
+    expect(message.react.firstCall).to.be.null;
   });
 
   it('Reports errors with badly formed message', async function () {

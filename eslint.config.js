@@ -1,5 +1,10 @@
 import ashNazg from 'eslint-config-ash-nazg';
 
+const commonRules = {
+  'unicorn/no-unreadable-object-destructuring': 0,
+  'unicorn/no-this-outside-of-class': 0
+};
+
 export default [
   {
     name: 'bahaibot/ignores',
@@ -14,6 +19,8 @@ export default [
   {
     name: 'bahaibot/rules',
     rules: {
+      ...commonRules,
+
       'sonarjs/pseudo-random': 0,
       'prefer-template': ['error'],
 
@@ -40,13 +47,18 @@ export default [
   ...ashNazg(['sauron', 'browser']).map((cfg) => {
     return {
       files: ['src/integratedClientServerBot.js'],
-      ...cfg
+      ...cfg,
+      rules: {
+        ...cfg.rules,
+        ...commonRules
+      }
     };
   }),
   ...ashNazg(['sauron', 'node']).map((cfg) => {
     return {
       files: ['src/discordBot.js', 'test/**/*.js', 'dolt-scripts/**/*.js'],
       rules: {
+        ...commonRules,
         // Doesn't handle globals we use or some packages that rely
         //   on main file location for types instead of `package.json`
         'jsdoc/imports-as-dependencies': 0
@@ -91,11 +103,12 @@ export default [
     rules: {
       'no-shadow': 0,
       'jsdoc/require-jsdoc': 0,
-      'import/unambiguous': 0,
+      'import-x/unambiguous': 0,
 
-      'import/no-unresolved': ['error', {
-        ignore: ['bahaibot']
-      }],
+      // Todo[eslint-config-ash-nazg@>=43.0.0]: Reenable when supported again
+      // 'import-x/no-unresolved': ['error', {
+      //   ignore: ['bahaibot']
+      // }],
       'no-unused-vars': ['error', {
         varsIgnorePattern: 'commands|buildBahaiBot|bahaibot|fulfillmentText',
         argsIgnorePattern: 'message'

@@ -1,3 +1,9 @@
+allowBuilds:
+  '@discordjs/opus': true
+  protobufjs: true
+  unrs-resolver: true
+minimumReleaseAgeExclude:
+  - eslint-config-ash-nazg@42.0.0 || 42.0.1
 onlyBuiltDependencies:
   - '@discordjs/opus'
   - protobufjs

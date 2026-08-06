@@ -23,6 +23,8 @@ describe('ready event', () => {
     this.sinon.spyOnGetterResults = spyOnGetterResults;
   });
   afterEach(function () {
+    // eslint-disable-next-line @stylistic/max-len -- Long
+    // eslint-disable-next-line unicorn/no-global-object-property-assignment -- Testing
     globalThis.Date = _Date;
     this.sinon.restore();
   });
@@ -154,6 +156,8 @@ describe('ready event', () => {
     });
 
     // @ts-expect-error Just mocking what we need
+    // eslint-disable-next-line @stylistic/max-len -- Long
+    // eslint-disable-next-line unicorn/no-global-object-property-assignment -- Testing
     globalThis.Date = mockDate({
       /**
        * @returns {import('../src/getWikiTools.js').Integer}
@@ -251,6 +255,8 @@ describe('ready event', () => {
     });
 
     // @ts-expect-error Just need partial mock
+    // eslint-disable-next-line @stylistic/max-len -- Long
+    // eslint-disable-next-line unicorn/no-global-object-property-assignment -- Testing
     globalThis.Date = mockDate({
       /**
        * @returns {import('../src/getWikiTools.js').Integer}

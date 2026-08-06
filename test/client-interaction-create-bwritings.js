@@ -10,6 +10,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
       let filteredChoicesRan = false;
       // @ts-expect-error Just mocking what we need
@@ -33,13 +34,13 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
           }
         },
         respond (filteredChoices) {
-          expect(filteredChoices.length).to.equal(1);
+          expect(filteredChoices).to.have.lengthOf(1);
           filteredChoicesRan = true;
         }
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
+      expect(checkedCommands).to.have.lengthOf(5);
       expect(filteredChoicesRan).to.be.true;
     }
   );
@@ -49,6 +50,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {import('discord.js').InteractionReplyOptions} */
@@ -93,7 +95,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
+      expect(checkedCommands).to.have.lengthOf(5);
       expect(message).to.equal(
         '[\'Abdu\'l-Baha in London, 15](https://bahai-library.com/writings/abdulbaha/abl/abdulbahalondon.html#15)'
       );
@@ -106,6 +108,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {import('discord.js').InteractionReplyOptions} */
@@ -150,7 +153,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
+      expect(checkedCommands).to.have.lengthOf(5);
       expect(message).to.equal(
         '[\'Abdu\'l-Baha in London](https://bahai-library.com/writings/abdulbaha/abl/abdulbahalondon.html#)'
       );
@@ -162,6 +165,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {import('discord.js').InteractionReplyOptions} */
@@ -206,7 +210,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
+      expect(checkedCommands).to.have.lengthOf(5);
       expect(message).to.equal(
         '<[Bahai9.com random category, Writings](https://bahai9.com/wiki/Special:RandomInCategory/Writings)>'
       );
@@ -218,6 +222,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       let message = '';
@@ -247,7 +252,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(4);
+      expect(checkedCommands).to.have.lengthOf(4);
       expect(message).to.equal(
         "<[Random Bahá'í Writings](https://bahai-library.com/random)>"
       );
@@ -259,6 +264,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       let message = '';
@@ -293,7 +299,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
+      expect(checkedCommands).to.have.lengthOf(5);
       expect(message).to.equal(
         '[will of God](https://www.bahai.org/library/authoritative-texts/' +
           'search?q=will%20of%20God)'
@@ -306,6 +312,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       let message = '';
@@ -340,7 +347,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
+      expect(checkedCommands).to.have.lengthOf(5);
       expect(message).to.equal(
         '[will of God](https://www.google.com/search?client=firefox-b-d&q=' +
           'site%3Abahai-library.com+will%20of%20God)'
@@ -353,6 +360,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {import('discord.js').InteractionReplyOptions} */
@@ -396,7 +404,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
+      expect(checkedCommands).to.have.lengthOf(5);
       expect(message).to.deep.equal({
         embeds: [{
           data: {
@@ -423,6 +431,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {import('discord.js').InteractionReplyOptions} */
@@ -465,7 +474,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
+      expect(checkedCommands).to.have.lengthOf(5);
       expect(
         /**
          * @type {{
@@ -485,6 +494,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
       let filteredChoicesRan = false;
 
@@ -512,13 +522,13 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
           id: '410259427770499072'
         },
         respond (filteredChoices) {
-          expect(filteredChoices.length).to.equal(1);
+          expect(filteredChoices).to.have.lengthOf(1);
           filteredChoicesRan = true;
         }
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(3);
+      expect(checkedCommands).to.have.lengthOf(3);
       expect(filteredChoicesRan).to.be.true;
     }
   );
@@ -529,6 +539,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
       let filteredChoicesRan = false;
 
@@ -556,13 +567,13 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
           id: '410259427770499072'
         },
         respond (filteredChoices) {
-          expect(filteredChoices.length).to.equal(1);
+          expect(filteredChoices).to.have.lengthOf(1);
           filteredChoicesRan = true;
         }
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(3);
+      expect(checkedCommands).to.have.lengthOf(3);
       expect(filteredChoicesRan).to.be.true;
     }
   );

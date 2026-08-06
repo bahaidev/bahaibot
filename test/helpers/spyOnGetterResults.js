@@ -57,7 +57,7 @@
  * argument spy functions may get called multiple times as callbacks.
  */
 function spyOnGetterResults (ancestor, descendants, config) {
-  const [child, grandchild] = descendants.split('.');
+  const [child, grandchild] = descendants.split('.', 2);
 
   // Grab a copy of the method as it is now, then ovewrite it so
   //  that existing getters don't create new copies and remove our

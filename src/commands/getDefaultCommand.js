@@ -3,7 +3,7 @@
 * @param {import('@google-cloud/dialogflow').SessionsClient} cfg.app
 * @param {import('../router.js').Router} cfg.router
 * @param {import('discord.js').Client} cfg.client
-* @param {import('discord.js')} cfg.Discord
+* @param {typeof import('discord.js')} cfg.Discord
 * @param {import('intl-dom').I18NCallback} cfg._
 * @param {import('../discordBot.js').Settings} cfg.settings
 * @returns {import('./getCommands.js').BotCommand}

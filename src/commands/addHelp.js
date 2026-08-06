@@ -8,7 +8,7 @@ import {searchReferences} from './searchReferences.js';
 /**
  * @param {object} cfg
  * @param {import('./getCommands.js').BotCommands} cfg.commands
- * @param {import('discord.js')} cfg.Discord
+ * @param {typeof import('discord.js')} cfg.Discord
  */
 const addHelp = ({commands, Discord}) => {
   const help = {
@@ -232,10 +232,10 @@ const addHelp = ({commands, Discord}) => {
      * @returns {void}
      */
     action (message) {
-      const page = Number.parseInt(
+      const page = Math.trunc(Number(
         /* c8 ignore next -- Should always match */
         (/!helpshortcuts (?<number>[1-9]\d*)/v).exec(message.content)?.groups?.number ?? '1'
-      ) - 1;
+      )) - 1;
       const start = page * maxFieldsPerPage;
       const end = start + maxFieldsPerPage;
       message.channel.send({

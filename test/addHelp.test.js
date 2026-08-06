@@ -181,6 +181,7 @@ describe('addHelp', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
       let filteredChoicesRan = false;
       // @ts-expect-error Just mocking what we need
@@ -204,13 +205,13 @@ describe('addHelp', function () {
           }
         },
         respond (filteredChoices) {
-          expect(filteredChoices.length).to.equal(1);
+          expect(filteredChoices).to.have.lengthOf(1);
           filteredChoicesRan = true;
         }
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
+      expect(checkedCommands).to.have.lengthOf(5);
       expect(filteredChoicesRan).to.be.true;
     }
   );

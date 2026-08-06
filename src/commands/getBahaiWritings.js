@@ -2,6 +2,13 @@ import getQuoteReader from './getQuoteReader.js';
 import {searchEngines} from './searchEngines.js';
 import {searchReferences} from './searchReferences.js';
 
+/**
+ * @param {string} s
+ */
+const escapeReplace = (s) => {
+  return s.replaceAll('$', '$$$$');
+};
+
 export const hiddenWordsLanguages = [
   'Arabic', 'Chinese (Simplified)', 'English', 'Spanish', 'French',
   'Russian', 'Persian'
@@ -50,7 +57,7 @@ const worksByRandom = new Set([
  * @param {import('../integratedClientServerBot.js').LimitedFs} cfg.fs
  * @param {import('../discordBot.js').Settings} cfg.settings
  * @param {import('discord.js').Client} cfg.client
- * @param {import('discord.js')} cfg.Discord
+ * @param {typeof import('discord.js')} cfg.Discord
  * @param {import('intl-dom').I18NCallback} cfg._
  * @returns {Promise<import('./getCommands.js').BotCommands>}
  */
@@ -91,7 +98,7 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
   // Works by section/selection -> works -> section/selection
 
   /**
-   * @param {keyof groupedEngines} type
+   * @param {keyof typeof groupedEngines} type
    */
   const mixinWorks = (type) => {
     return {
@@ -176,7 +183,9 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
           `(${
             sectionSelection
               ? url.replaceAll(
-                '%s', encodeURIComponent(sectionSelection)
+                // eslint-disable-next-line @stylistic/max-len -- Long
+                // eslint-disable-next-line unicorn/no-unsafe-string-replacement -- Escaped
+                '%s', escapeReplace(encodeURIComponent(sectionSelection))
               )
               : url.replaceAll('%s', '')
           })${
@@ -256,7 +265,14 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
         await message.channel.send({
           content: `[${shortName} ${
             searchValue
-          }](${url?.replaceAll('%s', encodeURIComponent(searchValue))})`
+          }](${url?.replaceAll(
+            '%s',
+            // eslint-disable-next-line @stylistic/max-len -- Long
+            // eslint-disable-next-line unicorn/no-unsafe-string-replacement -- Escaped
+            escapeReplace(
+              encodeURIComponent(searchValue)
+            )
+          )})`
         });
       }
     }
@@ -304,7 +320,12 @@ const getBahaiWritings = async ({fs, settings, client, Discord, _}) => {
         await message.channel.send({
           content: `[${shortName} ${
             searchValue
-          }](${url?.replaceAll('%s', searchValue)})`
+          }](${url?.replaceAll(
+            '%s',
+            // eslint-disable-next-line @stylistic/max-len -- Long
+            // eslint-disable-next-line unicorn/no-unsafe-string-replacement -- Escaped
+            escapeReplace(searchValue)
+          )})`
         });
       }
     }

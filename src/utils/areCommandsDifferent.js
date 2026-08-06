@@ -76,18 +76,15 @@ const areCommandsDifferent = (existingCommand, localCommand) => {
       // If this option itself has nested options (subcommands or groups),
       // compare them recursively.
       if ('options' in localOption || 'options' in existingOption) {
-        let localNested = [];
-        if ('options' in localOption && Array.isArray(localOption.options)) {
-          localNested = localOption.options;
-        }
+        const localNested = 'options' in localOption &&
+          Array.isArray(localOption.options)
+          ? localOption.options
+          : [];
 
-        let existingNested = [];
-        if (
-          'options' in existingOption &&
+        const existingNested = 'options' in existingOption &&
           Array.isArray(existingOption.options)
-        ) {
-          existingNested = existingOption.options;
-        }
+          ? existingOption.options
+          : [];
 
         if (localNested.length !== existingNested.length) {
           return true;

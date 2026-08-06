@@ -21,14 +21,14 @@ import {langs, langCodes} from '../../dolt-scripts/langs.js';
  * @callback QuoteBook
  * @param {import('discord.js').Message<true>} message
  * @param {string|null} avatar
- * @param {import('discord.js')} Discord
+ * @param {typeof import('discord.js')} Discord
  * @returns {Promise<void>}
  */
 /**
  * @callback ReadRandom
  * @param {import('discord.js').Message<true>} message
  * @param {string|null} avatar
- * @param {import('discord.js')} Discord
+ * @param {typeof import('discord.js')} Discord
  * @returns {Promise<void>}
  */
 /**
@@ -161,7 +161,7 @@ async function getQuoteReader ({fs, settings, _}) {
 
     // Setup index. It's subtracted by 1 due to array listing
     // 0 is the first element, 1 is the second, etc.
-    index = Number.parseInt(String(index)) -
+    index = Math.trunc(index) -
       /* c8 ignore next -- Hidden Words only currently, so 0-based */
       (file.chapters[0].id === 0 ? 0 : 1);
 
@@ -223,7 +223,7 @@ async function getQuoteReader ({fs, settings, _}) {
 
   /**
    * Embed creator for the reader function.
-   * @param {import('discord.js')} Discord
+   * @param {typeof import('discord.js')} Discord
    * @param {string|null} avatar
    * @param {import('discord.js').Message<true>} message
    * @param {import('../getWikiTools.js').Integer} refNumber
@@ -249,6 +249,8 @@ async function getQuoteReader ({fs, settings, _}) {
     let embedDescription = '';
 
     // Initialize output
+    // eslint-disable-next-line @stylistic/max-len -- Long
+    // eslint-disable-next-line unicorn/prefer-minimal-ternary -- Semantically clearer
     embedDescription = (refName.toLowerCase() === 'hwa' ||
       refName.toLowerCase() === 'hwp')
       ? /** @type {string} */ (__('number_and_title', {

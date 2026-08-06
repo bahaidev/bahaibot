@@ -1,7 +1,7 @@
 /**
  * @param {object} cfg
  * @param {import('discord.js').Client} cfg.client
- * @param {import('discord.js')} cfg.Discord
+ * @param {typeof import('discord.js')} cfg.Discord
  * @returns {import('./getCommands.js').BotCommands}
  */
 const getBahaiInfo = ({client, Discord}) => {

@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "lib": ["es2024", "DOM"],
+    "types": ["node", "mocha", "chai"],
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
     "allowJs": true,

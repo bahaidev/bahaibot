@@ -34,6 +34,7 @@ describe('`interactionCreate` Bahá\'í wiki', function () {
         ]
       });
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {import('discord.js').InteractionReplyOptions} */
@@ -74,7 +75,7 @@ describe('`interactionCreate` Bahá\'í wiki', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(5);
+      expect(checkedCommands).to.have.lengthOf(5);
       expect(message.content).to.equal(
         'Here is the result of your query.'
       );
@@ -120,6 +121,7 @@ describe('`interactionCreate` Bahá\'í wiki', function () {
         ]
       });
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {import('discord.js').InteractionReplyOptions} */
@@ -170,7 +172,7 @@ describe('`interactionCreate` Bahá\'í wiki', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(6);
+      expect(checkedCommands).to.have.lengthOf(6);
       expect(optionName).to.equal('keywords');
       expect(message.content).to.equal(
         'Here is the result of your search.'

@@ -121,6 +121,9 @@ class MockDiscord {
     return guildChannel;
   }
 
+  /** @type {import('discord.js').GuildChannel|undefined} */
+  guildChannel;
+
   /**
   * @typedef {object} NameID
   * @property {string} id
@@ -566,17 +569,19 @@ class MockDiscord {
       if (Array.isArray(mentions)) {
         for (const m of mentions) {
           // Support the documented shape {member: GuildMember}
-          if (m && m.member) {
-            const gm = m.member;
-            // Ensure caches have the entities (helps some discord.js lookups)
-            if (gm.user) {
-              this.client.users.cache.set(gm.user.id, gm.user);
-            }
-            if (this.guild && gm.user) {
-              this.guild.members.cache.set(gm.user.id, gm);
-            }
-            users.set(gm.user.id, gm.user);
+          if (!(m && m.member)) {
+            continue;
           }
+
+          const gm = m.member;
+          // Ensure caches have the entities (helps some discord.js lookups)
+          if (gm.user) {
+            this.client.users.cache.set(gm.user.id, gm.user);
+          }
+          if (this.guild && gm.user) {
+            this.guild.members.cache.set(gm.user.id, gm);
+          }
+          users.set(gm.user.id, gm.user);
         }
       }
 

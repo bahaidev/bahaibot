@@ -77,7 +77,7 @@ async function savePersianHiddenWords (lang, langCode) {
         if (index >= 1) {
           paras[0][lang] += ` ${newPar}`;
         } else {
-          if (!paras[index]) {
+          if (!Object.hasOwn(paras, index)) {
             paras[index] = {
               id: index + 1
             };
@@ -93,7 +93,7 @@ async function savePersianHiddenWords (lang, langCode) {
         const idex = index === 0
           ? index
           : index - 1;
-        if (!paras[idex]) {
+        if (!Object.hasOwn(paras, idex)) {
           paras[idex] = {
             id: idex + 1
           };
@@ -138,7 +138,7 @@ async function saveArabicHiddenWords (lang, langCode) {
         paras[0][lang] += ` ${newPar}`;
       } else {
         const idex = index === 0 ? index : index - 1;
-        if (!paras[idex]) {
+        if (!Object.hasOwn(paras, idex)) {
           paras[idex] = {
             id: idex + 1
           };

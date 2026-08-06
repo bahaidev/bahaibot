@@ -1,5 +1,6 @@
-/* eslint-disable import/unambiguous, unicorn/no-empty-file -- Just
+/* eslint-disable unicorn/no-empty-file -- Just
     comments here */
+// eslint-disable import-x/unambiguous
 /*
 // Return DB based on the reference r
 db (r) {

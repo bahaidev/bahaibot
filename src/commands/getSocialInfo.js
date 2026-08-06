@@ -23,6 +23,7 @@ async function getLastUserMessage (guild, user, limit = 100) {
   const textChannels = guild.channels.cache.filter((c) => c.isTextBased());
 
   // Create an array of all channels and threads to check.
+  // eslint-disable-next-line unicorn/prefer-iterator-to-array -- Not iterator
   const channelsAndThreads = [...textChannels.values()];
 
   // Fetch all active threads in the guild and add them to the array.
@@ -62,7 +63,7 @@ async function getLastUserMessage (guild, user, limit = 100) {
 * @param {object} cfg
 * @param {string[]} cfg.ADMIN_ROLES
 * @param {import('discord.js').Client} cfg.client
-* @param {import('discord.js')} cfg.Discord
+* @param {typeof import('discord.js')} cfg.Discord
 * @param {import('intl-dom').I18NCallback} cfg._
 * @returns {import('./getCommands.js').BotCommands}
 */
@@ -215,8 +216,8 @@ const getSocialInfo = ({
        */
       async action (message) {
         const sname = message.content.split(' ').filter(
-          (word) => !(word.includes('391405681795923968') ||
-            word.includes('847456996738334730') || word === '!seen')
+          (word) => !(word === '!seen' || word.includes('391405681795923968') ||
+            word.includes('847456996738334730'))
         ).join(' ');
 
         const replies = [];
@@ -245,14 +246,14 @@ const getSocialInfo = ({
             lastChannel
           } = await getLastUserMessage(message.guild, user);
 
-          if (lastMessage) {
-            const stat = (
-              member.presence?.status === 'dnd'
-                ? 'busy'
-                /* c8 ignore next -- Inconsistent? */
-                : member.presence?.status ?? 'offline'
-            );
+          const stat = (
+            member.presence?.status === 'dnd'
+              ? 'busy'
+              /* c8 ignore next -- Inconsistent? */
+              : member.presence?.status ?? 'offline'
+          );
 
+          if (lastMessage) {
             const lastseen = new Date(lastMessage.createdAt);
             const now = new Date();
             const timedelta = (now > lastseen)
@@ -267,12 +268,6 @@ const getSocialInfo = ({
               } ${istr(_.resolvedLocale, timedelta / 1000)} ago.`
             );
           } else {
-            const stat = (
-              member.presence?.status === 'dnd'
-                ? 'busy'
-                /* c8 ignore next -- Inconsistent? */
-                : member.presence?.status ?? 'offline'
-            );
             if (stat === 'offline') {
               // User is invisible, so don't leak presence to channel
               haventSeen();

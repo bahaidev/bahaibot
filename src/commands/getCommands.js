@@ -77,7 +77,7 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
  * @param {object} cfg
  * @param {import('@google-cloud/dialogflow').SessionsClient} cfg.app
  * @param {import('../router.js').Router} cfg.router
- * @param {import('discord.js')} cfg.Discord
+ * @param {typeof import('discord.js')} cfg.Discord
  * @param {import('../getWikiTools.js').BotWikiTools} cfg.wikiTools
  * @param {import('discord.js').Client} cfg.client
  * @param {import('../getCheckin.js').GuildCheckin} cfg.guildCheckin
@@ -85,8 +85,8 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
  * @param {import('../bot.js').GetLocalizedSetting} cfg.getLocalizedSetting
  * @param {import('../integratedClientServerBot.js').LimitedFs} cfg.fs
  * @param {import('../discordBot.js').Settings} cfg.settings
- * @param {import('discord-tts')} cfg.discordTTS
- * @param {Pick<import('@discordjs/voice'),
+ * @param {typeof import('discord-tts')} cfg.discordTTS
+ * @param {Pick<typeof import('@discordjs/voice'),
  *   "joinVoiceChannel"|"createAudioPlayer"|
  *   "createAudioResource">} cfg.DiscordVoice
  * @returns {Promise<import('./getCommands.js').BotCommands>}

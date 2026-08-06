@@ -13,6 +13,7 @@ describe('`interactionCreate`', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
@@ -29,7 +30,7 @@ describe('`interactionCreate`', function () {
           return false;
         }
       });
-      expect(checkedCommands.length).to.equal(3);
+      expect(checkedCommands).to.have.lengthOf(3);
     }
   );
 
@@ -38,6 +39,7 @@ describe('`interactionCreate`', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
       // @ts-expect-error Just mocking what we need
       client.emit('interactionCreate', {
@@ -55,7 +57,7 @@ describe('`interactionCreate`', function () {
           return true;
         }
       });
-      expect(checkedCommands.length).to.equal(4);
+      expect(checkedCommands).to.have.lengthOf(4);
     }
   );
 
@@ -64,6 +66,7 @@ describe('`interactionCreate`', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
       let filteredChoicesRan = false;
       // @ts-expect-error Just mocking what we need
@@ -87,11 +90,11 @@ describe('`interactionCreate`', function () {
           }
         },
         respond (filteredChoices) {
-          expect(filteredChoices.length).to.equal(1);
+          expect(filteredChoices).to.have.lengthOf(1);
           filteredChoicesRan = true;
         }
       });
-      expect(checkedCommands.length).to.equal(5);
+      expect(checkedCommands).to.have.lengthOf(5);
       expect(filteredChoicesRan).to.be.true;
     }
   );
@@ -125,6 +128,7 @@ describe('`interactionCreate`', function () {
         ]
       });
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {import('discord.js').InteractionReplyOptions} */
@@ -163,7 +167,7 @@ describe('`interactionCreate`', function () {
       )?.description).includes(
         'Bahai9 has returned the following random page, abc:'
       );
-      expect(checkedCommands.length).to.equal(6);
+      expect(checkedCommands).to.have.lengthOf(6);
     }
   );
 
@@ -196,6 +200,7 @@ describe('`interactionCreate`', function () {
         ]
       });
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {import('discord.js').InteractionReplyOptions} */
@@ -229,7 +234,7 @@ describe('`interactionCreate`', function () {
       });
 
       await commandFinished(client);
-      expect(checkedCommands.length).to.equal(6);
+      expect(checkedCommands).to.have.lengthOf(6);
       expect(/** @type {import('discord.js').APIEmbed} */ (
         reply
       )).to.deep.equal({
@@ -289,6 +294,7 @@ describe('`interactionCreate`', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       let optionName = '';
@@ -329,7 +335,7 @@ describe('`interactionCreate`', function () {
       });
 
       await setTimeout();
-      expect(checkedCommands.length).to.equal(5);
+      expect(checkedCommands).to.have.lengthOf(5);
       expect(optionName).to.equal('echo-text');
       expect(message).to.equal(
         "Here's what you said, brettz9: ``testing``"
@@ -342,6 +348,7 @@ describe('`interactionCreate`', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {string} */
@@ -368,7 +375,7 @@ describe('`interactionCreate`', function () {
       });
 
       await setTimeout();
-      expect(checkedCommands.length).to.equal(4);
+      expect(checkedCommands).to.have.lengthOf(4);
       expect(message).to.deep.equal({
         embeds: [
           {
@@ -398,6 +405,7 @@ describe('`interactionCreate`', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {import('discord.js').InteractionReplyOptions} */
@@ -432,7 +440,7 @@ describe('`interactionCreate`', function () {
       });
 
       await setTimeout();
-      expect(checkedCommands.length).to.equal(5);
+      expect(checkedCommands).to.have.lengthOf(5);
       expect(message).to.deep.equal({
         content: 'Here are the instructions you need, abc.',
         embeds: [
@@ -497,6 +505,7 @@ describe('`interactionCreate`', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {import('discord.js').InteractionReplyOptions} */
@@ -531,7 +540,7 @@ describe('`interactionCreate`', function () {
       });
 
       await setTimeout();
-      expect(checkedCommands.length).to.equal(5);
+      expect(checkedCommands).to.have.lengthOf(5);
       expect(message).to.deep.equal({
         content: 'Here are the instructions you need, abc.',
         embeds: [
@@ -651,6 +660,7 @@ describe('`interactionCreate`', function () {
     async function () {
       const discord = new MockDiscord();
       const {client} = await bot({client: discord.getClient()});
+      /** @type {boolean[]} */
       const checkedCommands = [];
 
       /** @type {import('discord.js').InteractionReplyOptions} */
@@ -685,7 +695,7 @@ describe('`interactionCreate`', function () {
       });
 
       await setTimeout();
-      expect(checkedCommands.length).to.equal(5);
+      expect(checkedCommands).to.have.lengthOf(5);
       expect(message).to.deep.equal({
         content: 'Here are the instructions you need, abc.',
         embeds: [

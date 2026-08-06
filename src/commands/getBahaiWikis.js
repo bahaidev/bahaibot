@@ -7,7 +7,7 @@ import {months, monthsL, monthsLAliases} from './badiMonths.js';
  * @param {import('../getWikiTools.js').BotWikiTools} cfg.wikiTools
  * @param {import('discord.js').Client} cfg.client
  * @param {import('intl-dom').I18NCallback} cfg._
- * @param {import('discord.js')} cfg.Discord
+ * @param {typeof import('discord.js')} cfg.Discord
  * @returns {import('./getCommands.js').BotCommands}
  */
 const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
@@ -501,9 +501,9 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
           groups;
 
         const localBadiDate = new LocalBadiDate({
-          day: Number.parseInt(day),
+          day: Math.trunc(Number(day)),
           month: (/\d+/v).test(month)
-            ? Number.parseInt(month)
+            ? Math.trunc(Number(month))
             : months.has(month)
               ? months.get(month) ?? 1
               : monthsL.has(month)
@@ -511,7 +511,7 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
                 : monthsLAliases.has(month)
                   ? monthsLAliases.get(month) ?? 1
                   : 1,
-          year: Number.parseInt(year)
+          year: Math.trunc(Number(year))
         }, 0, 0, timezoneId);
 
         const {gregorianDate} = localBadiDate.badiDate;

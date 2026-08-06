@@ -4,7 +4,7 @@ import {expect} from 'chai';
 import * as Discord from 'discord.js';
 import {i18n, setFetch} from 'intl-dom';
 import fileFetch from 'file-fetch'; // For `intl-dom`
-// eslint-disable-next-line import/no-unresolved -- Bug
+// // eslint-disable-next-line import-x/no-unresolved -- Bug
 import {stripHtml} from 'string-strip-html';
 
 import getDialogflowAdapter from '../src/getDialogflowAdapter.js';

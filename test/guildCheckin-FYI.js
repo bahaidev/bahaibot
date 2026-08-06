@@ -368,7 +368,7 @@ describe('guildCheckin (FYI)', () => {
       'BAHAI_FYI_GENERAL_CHANNEL_ID',
       'BAHAI_FYI_STUDY_HALL_CHANNEL_ID'
     ].forEach((constant, idx) => {
-      /* eslint-disable import/namespace -- Safe */
+      // /* eslint-disable import-x/namespace -- Safe */
       expect(guildChannelsGetterSpy.getCall(idx).firstArg).to.equal(
         DiscordConstants[/** @type {keyof DiscordConstants} */ (constant)]
       );
@@ -376,7 +376,7 @@ describe('guildCheckin (FYI)', () => {
       const channelStringified = `<#${
         DiscordConstants[/** @type {keyof DiscordConstants} */ (constant)]
       }>`; // Shows, e.g., as `#general`
-      /* eslint-enable import/namespace -- Safe */
+      // /* eslint-enable import-x/namespace -- Safe */
 
       // This returns a `TextChannel` and `toString` gives:
       expect(guildChannelsGetterSpy.returnValues[idx].toString()).to.equal(
@@ -487,7 +487,7 @@ describe('guildCheckin (FYI)', () => {
         'BAHAI_FYI_GENERAL_CHANNEL_ID',
         'BAHAI_FYI_STUDY_HALL_CHANNEL_ID'
       ].forEach((constant, idx) => {
-        /* eslint-disable import/namespace -- Safe */
+        // /* eslint-disable import-x/namespace -- Safe */
         expect(guildChannelsGetterSpy.getCall(idx).firstArg).to.equal(
           DiscordConstants[/** @type {keyof DiscordConstants} */ (constant)]
         );
@@ -495,7 +495,7 @@ describe('guildCheckin (FYI)', () => {
         const channelStringified = `<#${
           DiscordConstants[/** @type {keyof DiscordConstants} */ (constant)]
         }>`; // Shows, e.g., as `#general`
-        /* eslint-enable import/namespace -- Safe */
+        // /* eslint-enable import-x/namespace -- Safe */
 
         // This returns a `TextChannel` and `toString` gives:
         expect(guildChannelsGetterSpy.returnValues[idx].toString()).to.equal(

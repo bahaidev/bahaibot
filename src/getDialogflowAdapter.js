@@ -19,7 +19,7 @@
  *   doAIProcessing: DoAIProcessing,
  *   projectAgentSessionPath?: ProjectAgentSessionPath
  * }} doAIProcessing
- * @returns {dialogflow}
+ * @returns {typeof dialogflow}
  */
 function getDialogflowAdapter ({
   doAIProcessing,

@@ -1,6 +1,4 @@
-/*
-  Resource Loader
-*/
+/* Resource Loader */
 
 // import questions from './questions.js';
 
@@ -14,7 +12,7 @@
  * NOTE: response.queryResult.fulfillmentText a string with default response
  * @param {import('discord.js').Message<true>} message
  * @param {import('discord.js').Client} client
- * @param {import('discord.js')} Discord
+ * @param {typeof import('discord.js')} Discord
  * @param {import('intl-dom').I18NCallback} _
  * @returns {void}
  */

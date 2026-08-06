@@ -14,7 +14,7 @@ describe('registerCommands', function () {
       {},
       _
     );
-    expect(res).to.equal(undefined);
+    expect(res).to.be.undefined;
   });
 
   it(
@@ -34,7 +34,8 @@ describe('registerCommands', function () {
            */
           async create (cmd) {
             /* eslint-enable require-await -- Testing */
-            return created.push(cmd);
+            created.push(cmd);
+            return created.length;
           }
         }
       };
@@ -48,7 +49,7 @@ describe('registerCommands', function () {
         localCommands,
         _
       );
-      expect(created.length).to.equal(1);
+      expect(created).to.have.lengthOf(1);
       expect(created[0].name).to.equal('test');
     }
   );
@@ -66,7 +67,8 @@ describe('registerCommands', function () {
          * @param {import('discord.js').ApplicationCommandDataResolvable} cmd
          */
         async create (cmd) {
-          await created.push(cmd);
+          created.push(cmd);
+          await created.length;
         }
       }
     };
@@ -80,7 +82,7 @@ describe('registerCommands', function () {
       localCommands,
       _
     );
-    expect(created.length).to.equal(0);
+    expect(created).to.have.lengthOf(0);
   });
 
   it('edits existing command when different', async function () {
@@ -129,7 +131,7 @@ describe('registerCommands', function () {
       localCommands,
       _
     );
-    expect(edits.length).to.equal(1);
+    expect(edits).to.have.lengthOf(1);
     expect(edits[0].payload.description).to.equal('new');
   });
 
@@ -174,7 +176,7 @@ describe('registerCommands', function () {
       localCommands,
       _
     );
-    expect(deletes.length).to.equal(1);
+    expect(deletes).to.have.lengthOf(1);
     expect(deletes[0]).to.equal('1');
   });
 });

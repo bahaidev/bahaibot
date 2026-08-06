@@ -1,6 +1,8 @@
 // API: https://discord.js.org/#/docs/main/stable/general/welcome
 // Reference: If any bugs remaining from v11, see
 //   https://discordjs.guide/additional-info/changes-in-v12.html
+/* eslint-disable unicorn/no-top-level-side-effects,
+  unicorn/no-top-level-assignment-in-function -- Necessary */
 
 import * as fs from 'node:fs/promises';
 
@@ -20,7 +22,7 @@ import dialogflow from '@google-cloud/dialogflow';
 
 import {i18n, setFetch} from 'intl-dom';
 import fileFetch from 'file-fetch'; // For `intl-dom`
-// eslint-disable-next-line import/no-unresolved -- Bug
+// // eslint-disable-next-line import-x/no-unresolved -- Bug
 import {stripHtml} from 'string-strip-html';
 
 import bot from './bot.js';
@@ -104,15 +106,17 @@ let enableReporting = false;
  * @param {string} msg
  */
 const notifyDiscordChannel = async (msg) => {
-  if (webhookURL && enableReporting) {
-    const webhookClient = new Discord.WebhookClient({
-      url: webhookURL
-    });
-
-    await webhookClient.send({
-      content: `The bot service went down! Error: ${msg}`
-    });
+  if (!(webhookURL && enableReporting)) {
+    return;
   }
+
+  const webhookClient = new Discord.WebhookClient({
+    url: webhookURL
+  });
+
+  await webhookClient.send({
+    content: `The bot service went down! Error: ${msg}`
+  });
 };
 
 process.on('uncaughtException', async (err) => {

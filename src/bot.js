@@ -25,17 +25,17 @@ import {
  * @property {boolean} [enableReporting=false]
  * @property {boolean} [checkins=false]
  * @property {string[]} [locales=["en-US"]]
- * @property {globalThis.fetch} [fetch=globalThis.fetch]
+ * @property {typeof globalThis.fetch} [fetch=globalThis.fetch]
  * @property {typeof import('intl-dom').i18n} [i18n=globalThis?.intlDom?.i18n]
  * @property {import('./getWikiTools.js').
  *   StripTags} [striptags=globalThis.striptags]
  * @property {import('discord.js').Client} [client=new Discord.Client()]
- * @property {import('discord.js')} Discord
- * @property {import('discord-tts')} discordTTS
- * @property {Pick<import('@discordjs/voice'),
+ * @property {typeof import('discord.js')} Discord
+ * @property {typeof import('discord-tts')} discordTTS
+ * @property {Pick<typeof import('@discordjs/voice'),
  *   "joinVoiceChannel"|"createAudioPlayer"|
  *   "createAudioResource">} DiscordVoice
- * @property {import('@google-cloud/dialogflow')} dialogflow
+ * @property {typeof import('@google-cloud/dialogflow')} dialogflow
  * @property {import('./integratedClientServerBot.js').LimitedFs} fs
  * @property {import('./discordBot.js').GetPath} getPath
  * @property {GetSettings} [getSettings]
@@ -299,7 +299,7 @@ const bot = async ({
       })
       : interaction.isStringSelectMenu()
         ? Object.values(botCommands).find((cmd) => {
-          return cmd.name === interaction.customId.split('_')[0];
+          return cmd.name === interaction.customId.split('_', 1)[0];
         })
         : Object.values(botCommands).find((cmd) => {
           return cmd.name === interaction.commandName;
