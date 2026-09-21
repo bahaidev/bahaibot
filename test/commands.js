@@ -15,7 +15,6 @@ import spyOnGetterResults from './helpers/spyOnGetterResults.js';
 describe('Commands', () => {
   beforeEach(function () {
     this.sinon = createSandbox();
-    // @ts-ignore We want to add it
     this.sinon.spyOnGetterResults = spyOnGetterResults;
     this.sinon.spy(console, 'log');
   });

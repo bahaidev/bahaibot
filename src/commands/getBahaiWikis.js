@@ -716,37 +716,40 @@ const getBahaiWikis = function ({wikiTools, client, _, Discord}) {
         });
         return;
       }
-      if (interaction.isChatInputCommand()) {
-        await interaction.deferReply({
-          flags: Discord.MessageFlags.Ephemeral
-        });
-        const selectMenu = new Discord.StringSelectMenuBuilder().
-          setCustomId('rand_site').
-          setPlaceholder('Choose a site!').
-          addOptions(
-            new Discord.StringSelectMenuOptionBuilder().
-              setLabel('bahaipedia.org').setValue('bp'),
-            new Discord.StringSelectMenuOptionBuilder().
-              setLabel('bahai9.com').setValue('b9'),
-            new Discord.StringSelectMenuOptionBuilder().
-              setLabel('bahai.media').setValue('bm'),
-            new Discord.StringSelectMenuOptionBuilder().
-              setLabel('bahai.works').setValue('bw')
-          );
 
-        const row = new (
-          /**
-           * @type {typeof import('discord.js').ActionRowBuilder<
-           *   import('discord.js').StringSelectMenuBuilder
-           * >}
-           */ (Discord.ActionRowBuilder)
-        )().addComponents(selectMenu);
-
-        await interaction.editReply({
-          content: 'Random wiki:',
-          components: [row]
-        });
+      if (!interaction.isChatInputCommand()) {
+        return;
       }
+
+      await interaction.deferReply({
+        flags: Discord.MessageFlags.Ephemeral
+      });
+      const selectMenu = new Discord.StringSelectMenuBuilder().
+        setCustomId('rand_site').
+        setPlaceholder('Choose a site!').
+        addOptions(
+          new Discord.StringSelectMenuOptionBuilder().
+            setLabel('bahaipedia.org').setValue('bp'),
+          new Discord.StringSelectMenuOptionBuilder().
+            setLabel('bahai9.com').setValue('b9'),
+          new Discord.StringSelectMenuOptionBuilder().
+            setLabel('bahai.media').setValue('bm'),
+          new Discord.StringSelectMenuOptionBuilder().
+            setLabel('bahai.works').setValue('bw')
+        );
+
+      const row = new (
+        /**
+         * @type {typeof import('discord.js').ActionRowBuilder<
+         *   import('discord.js').StringSelectMenuBuilder
+         * >}
+         */ (Discord.ActionRowBuilder)
+      )().addComponents(selectMenu);
+
+      await interaction.editReply({
+        content: 'Random wiki:',
+        components: [row]
+      });
     }
   });
 

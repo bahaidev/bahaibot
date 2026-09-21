@@ -125,10 +125,10 @@ class MockDiscord {
   guildChannel;
 
   /**
-  * @typedef {object} NameID
-  * @property {string} id
-  * @property {string} name
-  */
+   * @typedef {object} NameID
+   * @property {string} id
+   * @property {string} name
+   */
 
   /**
    * @typedef {object} Channel
@@ -144,13 +144,13 @@ class MockDiscord {
    */
 
   /**
-  * @typedef {NameID & {
-  *   userID?: string,
-  *   userName?: string,
-  *   channels?: Channel[],
-  *   emojis?: Emoji[]
-  * }} Guild
-  */
+   * @typedef {NameID & {
+   *   userID?: string,
+   *   userName?: string,
+   *   channels?: Channel[],
+   *   emojis?: Emoji[]
+   * }} Guild
+   */
 
   /**
    * @param {MockDiscordOptions} opts
@@ -337,12 +337,12 @@ class MockDiscord {
 
   /* eslint-disable class-methods-use-this -- Consistent */
   /**
-  * @param {object} cfg
-  * @param {import('discord.js').Client} cfg.client
-  * @param {string} [cfg.roleID]
-  * @param {string} [cfg.name]
-  * @returns {import('discord.js').Role}
-  */
+   * @param {object} cfg
+   * @param {import('discord.js').Client} cfg.client
+   * @param {string} [cfg.roleID]
+   * @param {string} [cfg.name]
+   * @returns {import('discord.js').Role}
+   */
   mockRole ({client, roleID, name}) {
     // @ts-expect-error We need it for mocking
     return new Discord.Role(client, {

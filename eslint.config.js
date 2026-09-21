@@ -104,7 +104,7 @@ export default [
       'jsdoc/require-jsdoc': 0,
       'import-x/unambiguous': 0,
 
-      // Todo[eslint-config-ash-nazg@>=43.0.0]: Reenable when supported again
+      // Todo[eslint-config-ash-nazg@>=44.0.0]: Reenable when supported again
       // 'import-x/no-unresolved': ['error', {
       //   ignore: ['bahaibot']
       // }],

@@ -28,12 +28,20 @@ const getPath = (path) => {
   return `${location.href.replace(/\/$/v, '')}/${path}`;
 };
 
+/**
+ * @typedef {{
+ *   readFile: (
+ *     fileName: string|URL,
+ *     options: 'utf8' | {encoding: 'utf8'}
+ *   ) => Promise<string>,
+ *   writeFile: (fileName: string, data: string) => void | Promise<void>,
+ *   stat: (fileName: string) => Promise<{mtime: Date}>,
+ *   unlink: (fileName: string) => void | Promise<void>
+ * }} LimitedFs
+ */
+
 // Note: These implementations are specific to our needs
 const fs = /** @type {LimitedFs} */ ({
-  /**
-   * @param {string|URL} fileName
-   * @returns {Promise<string>}
-   */
   async readFile (fileName) {
     return await (await fetch(
       typeof fileName === 'object' && 'href' in fileName && fileName.href
@@ -41,27 +49,14 @@ const fs = /** @type {LimitedFs} */ ({
         : fileName
     )).text();
   },
-  /**
-   * @param {string} fileName
-   * @param {string} data
-   * @returns {void}
-   */
   writeFile (fileName, data) {
     localStorage.setItem(`bahaibot-${fileName}`, String(data || Date.now()));
   },
-  /**
-   * @param {string} fileName
-   * @returns {Promise<{mtime: Date}>}
-   */
   stat (fileName) {
     return Promise.resolve({
       mtime: new Date(Number(localStorage.getItem(`bahaibot-${fileName}`)))
     });
   },
-  /**
-   * @param {string} fileName
-   * @returns {void}
-   */
   unlink (fileName) {
     localStorage.removeItem(fileName);
   }
@@ -71,11 +66,6 @@ const fs = /** @type {LimitedFs} */ ({
  * @template {object} T
  * @template {keyof T} K
  * @typedef {Omit<T, K> & Partial<Pick<T, K>>} SetOptional
- */
-
-/**
- * @typedef {Pick<typeof import('node:fs/promises'),
- *   'readFile'|'writeFile'|'stat'|'unlink'>} LimitedFs
  */
 
 /**

@@ -23,11 +23,7 @@ const areCommandsDifferent = (existingCommand, localCommand) => {
         (choice) => choice.name === localChoice.name
       );
 
-      if (!existingChoice) {
-        return true;
-      }
-
-      if (localChoice.value !== existingChoice.value) {
+      if (!existingChoice || (localChoice.value !== existingChoice.value)) {
         return true;
       }
     }
@@ -49,52 +45,48 @@ const areCommandsDifferent = (existingCommand, localCommand) => {
         (option) => option.name === localOption.name
       );
 
-      if (!existingOption) {
-        return true;
-      }
-
-      if (
+      if (!existingOption ||
         localOption.description !== existingOption.description ||
         localOption.type !== existingOption.type ||
         (
-          ('required' in localOption && localOption.required) || false) !==
-            ('required' in existingOption && existingOption.required) ||
-              (('choices' in localOption &&
-                localOption.choices?.length) || 0) !==
-                  (('choices' in existingOption &&
-                    existingOption.choices?.length) || 0) ||
-                      areChoicesDifferent(
-                        ('choices' in existingOption &&
-                          existingOption.choices) || [],
-                        ('choices' in localOption && localOption.choices) || []
-                      )
-      ) {
+          ('required' in localOption && localOption.required) || false
+        ) !== ('required' in existingOption && existingOption.required) ||
+            (('choices' in localOption &&
+              localOption.choices?.length) || 0) !==
+                (('choices' in existingOption &&
+                  existingOption.choices?.length) || 0) ||
+                    areChoicesDifferent(
+                      ('choices' in existingOption &&
+                        existingOption.choices) || [],
+                      ('choices' in localOption && localOption.choices) || []
+                    )) {
         return true;
       }
       // If this option itself has nested options (subcommands or groups),
       // compare them recursively.
       // If this option itself has nested options (subcommands or groups),
       // compare them recursively.
-      if ('options' in localOption || 'options' in existingOption) {
-        const localNested = 'options' in localOption &&
-          Array.isArray(localOption.options)
-          ? localOption.options
-          : [];
+      if (!('options' in localOption || 'options' in existingOption)) {
+        return false;
+      }
 
-        const existingNested = 'options' in existingOption &&
-          Array.isArray(existingOption.options)
-          ? existingOption.options
-          : [];
+      const localNested = 'options' in localOption &&
+        Array.isArray(localOption.options)
+        ? localOption.options
+        : [];
 
-        if (localNested.length !== existingNested.length) {
-          return true;
-        }
+      const existingNested = 'options' in existingOption &&
+        Array.isArray(existingOption.options)
+        ? existingOption.options
+        : [];
 
-        if (areOptionsDifferent(existingNested, localNested)) {
-          return true;
-        }
+      if ((localNested.length !== existingNested.length) ||
+        areOptionsDifferent(existingNested, localNested)
+      ) {
+        return true;
       }
     }
+
     return false;
   };
 

@@ -1,12 +1,12 @@
 /**
-* @callback DoAIProcessing
-* @param {object} cfg
-* @param {string} cfg.userInput
-* @param {string} cfg.sessionId
-* @param {string} cfg.languageCode
-* @param {string} cfg.keyFilename
-* @returns {Promise<string>}
-*/
+ * @callback DoAIProcessing
+ * @param {object} cfg
+ * @param {string} cfg.userInput
+ * @param {string} cfg.sessionId
+ * @param {string} cfg.languageCode
+ * @param {string} cfg.keyFilename
+ * @returns {Promise<string>}
+ */
 
 /**
  * @typedef {(
@@ -53,7 +53,7 @@ function getDialogflowAdapter ({
        * @param {string} cfg.queryInput.text.languageCode
        * @returns {Promise<
        *   import('@google-cloud/dialogflow').protos.google.
-      *     cloud.dialogflow.v2.IDetectIntentResponse[]
+       *     cloud.dialogflow.v2.IDetectIntentResponse[]
        * >} Resolved value not
        * used internally.
        */

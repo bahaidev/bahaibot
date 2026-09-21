@@ -47,26 +47,27 @@ async function getLastUserMessage (guild, user, limit = 100) {
     ).first();
 
     // Compare it to the current latest message found.
-    if (userMessage &&
+    if (!(userMessage &&
       (!lastMessage ||
-        userMessage.createdTimestamp > lastMessage.createdTimestamp)
-    ) {
-      lastMessage = userMessage;
-      lastChannel = channel;
+        userMessage.createdTimestamp > lastMessage.createdTimestamp))) {
+      return;
     }
+
+    lastMessage = userMessage;
+    lastChannel = channel;
   }));
 
   return {lastMessage, lastChannel};
 }
 
 /**
-* @param {object} cfg
-* @param {string[]} cfg.ADMIN_ROLES
-* @param {import('discord.js').Client} cfg.client
-* @param {typeof import('discord.js')} cfg.Discord
-* @param {import('intl-dom').I18NCallback} cfg._
-* @returns {import('./getCommands.js').BotCommands}
-*/
+ * @param {object} cfg
+ * @param {string[]} cfg.ADMIN_ROLES
+ * @param {import('discord.js').Client} cfg.client
+ * @param {typeof import('discord.js')} cfg.Discord
+ * @param {import('intl-dom').I18NCallback} cfg._
+ * @returns {import('./getCommands.js').BotCommands}
+ */
 const getSocialInfo = ({
   ADMIN_ROLES, client, Discord, _
 }) => {

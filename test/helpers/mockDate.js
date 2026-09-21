@@ -1,5 +1,6 @@
 const _Date = Date;
 
+/* eslint-disable jsdoc/require-returns -- Dynamic class */
 /**
  * @todo See about replacing with `mockdate` if it exports its own `MockDate`
  * class for purposes of our overwriting `global.Date`:
@@ -7,12 +8,12 @@ const _Date = Date;
  * @param {object} [cfg]
  * @param {string|((num: number|undefined) => string|number|Date)} [cfg.date]
  * @param {string|number|Date|(() => string|number|Date)} [cfg.now]
- * @returns {{new (): MockDate}}
  */
 function mockDate ({
   date,
   now
 } = {}) {
+  /* eslint-enable jsdoc/require-returns -- Dynamic class */
   /**
    * Mock `Date`.
    */

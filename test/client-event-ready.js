@@ -19,7 +19,6 @@ describe('ready event', () => {
   const _Date = Date;
   beforeEach(function () {
     this.sinon = createSandbox();
-    // @ts-ignore We want to add it
     this.sinon.spyOnGetterResults = spyOnGetterResults;
   });
   afterEach(function () {

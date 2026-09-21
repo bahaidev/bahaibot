@@ -115,7 +115,6 @@ const discordOptions = {
 describe('guildCheckin (FYI)', () => {
   beforeEach(function () {
     this.sinon = createSandbox();
-    // @ts-ignore We want it here
     this.sinon.spyOnGetterResults = spyOnGetterResults;
   });
   afterEach(function () {
@@ -167,7 +166,9 @@ describe('guildCheckin (FYI)', () => {
 
   it('silently fails if no testing channel', async function () {
     await fs.writeFile('greet.guild.txt', '');
-    const opts = /** @type {discordOptions} */ (jsonClone(discordOptions));
+    const opts = /** @type {typeof discordOptions} */ (
+      jsonClone(discordOptions)
+    );
 
     // Remove #general (FYI) and #study-hall
     opts.guilds[0].channels = [];
@@ -370,11 +371,15 @@ describe('guildCheckin (FYI)', () => {
     ].forEach((constant, idx) => {
       // /* eslint-disable import-x/namespace -- Safe */
       expect(guildChannelsGetterSpy.getCall(idx).firstArg).to.equal(
-        DiscordConstants[/** @type {keyof DiscordConstants} */ (constant)]
+        DiscordConstants[
+          /** @type {keyof typeof DiscordConstants} */ (constant)
+        ]
       );
 
       const channelStringified = `<#${
-        DiscordConstants[/** @type {keyof DiscordConstants} */ (constant)]
+        DiscordConstants[
+          /** @type {keyof typeof DiscordConstants} */ (constant)
+        ]
       }>`; // Shows, e.g., as `#general`
       // /* eslint-enable import-x/namespace -- Safe */
 
@@ -489,11 +494,15 @@ describe('guildCheckin (FYI)', () => {
       ].forEach((constant, idx) => {
         // /* eslint-disable import-x/namespace -- Safe */
         expect(guildChannelsGetterSpy.getCall(idx).firstArg).to.equal(
-          DiscordConstants[/** @type {keyof DiscordConstants} */ (constant)]
+          DiscordConstants[
+            /** @type {keyof typeof DiscordConstants} */ (constant)
+          ]
         );
 
         const channelStringified = `<#${
-          DiscordConstants[/** @type {keyof DiscordConstants} */ (constant)]
+          DiscordConstants[
+            /** @type {keyof typeof DiscordConstants} */ (constant)
+          ]
         }>`; // Shows, e.g., as `#general`
         // /* eslint-enable import-x/namespace -- Safe */
 

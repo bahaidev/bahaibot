@@ -18,22 +18,22 @@ import addHelp from './addHelp.js';
 import * as DiscordConstants from '../messages/DiscordConstants.js';
 
 /**
-* @callback ActionBehavior
-* @param {import('discord.js').Message<true>} message
-* @returns {Promise<void>|void}
-*/
+ * @callback ActionBehavior
+ * @param {import('discord.js').Message<true>} message
+ * @returns {Promise<void>|void}
+ */
 
 /**
-* @callback ActionCheck
-* @param {import('discord.js').Message<true>} message
-* @returns {boolean}
-*/
+ * @callback ActionCheck
+ * @param {import('discord.js').Message<true>} message
+ * @returns {boolean}
+ */
 
 /**
-* @typedef {object} NotMentionedCommand
-* @property {ActionBehavior} action
-* @property {ActionCheck} [check]
-*/
+ * @typedef {object} NotMentionedCommand
+ * @property {ActionBehavior} action
+ * @property {ActionCheck} [check]
+ */
 
 /**
  * @typedef {import('discord.js').ChatInputCommandInteraction<
@@ -70,8 +70,8 @@ import * as DiscordConstants from '../messages/DiscordConstants.js';
  */
 
 /**
-* @typedef {Object<string,BotCommand>} BotCommands
-*/
+ * @typedef {Object<string,BotCommand>} BotCommands
+ */
 
 /**
  * @param {object} cfg
@@ -133,13 +133,10 @@ const getCommands = async function ({
     ['salutations', () => getSalutations()],
     ['lightHearted', () => getLightHearted()]
   ]).map(async ([name, cmd]) => {
-    if (
-      (anyCommand || enabledCommandGroups.includes(name)) &&
+    return (anyCommand || enabledCommandGroups.includes(name)) &&
       !disabledCommandGroups.includes(name)
-    ) {
-      return await cmd();
-    }
-    return null;
+      ? (await cmd())
+      : null;
   }));
 
   const commands = /** @type {{[x: string]: BotCommand}} */ (

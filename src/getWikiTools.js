@@ -31,12 +31,12 @@
  * @returns {Promise<PageInfo|false|undefined>}
  */
 /**
-* @typedef {object} BotWikiTools
-* @property {import('./commands/getAdmin.js').PuppetTool} [puppet]
-* @property {BpGetTodayTool} bpGetToday
-* @property {WikiGetRandomTool} wikiGetRandom
-* @property {WikiGetURLTool} wikiGetURL
-*/
+ * @typedef {object} BotWikiTools
+ * @property {import('./commands/getAdmin.js').PuppetTool} [puppet]
+ * @property {BpGetTodayTool} bpGetToday
+ * @property {WikiGetRandomTool} wikiGetRandom
+ * @property {WikiGetURLTool} wikiGetURL
+ */
 
 /**
  * @param {object} cfg

@@ -35,7 +35,6 @@ const discordOptions = {
 describe('guildCheckin (Lab)', () => {
   beforeEach(function () {
     this.sinon = createSandbox();
-    // @ts-ignore Adding method deliberately
     this.sinon.spyOnGetterResults = spyOnGetterResults;
   });
   afterEach(function () {

@@ -11,8 +11,8 @@ import getDialogflowAdapter from '../src/getDialogflowAdapter.js';
 import bot from '../src/bot.js';
 
 /**
-* @type {import('../src/discordBot.js').GetPath}
-*/
+ * @type {import('../src/discordBot.js').GetPath}
+ */
 const getPath = (path) => {
   return join(process.cwd(), path);
 };

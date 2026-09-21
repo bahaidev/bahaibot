@@ -1,13 +1,13 @@
 /**
-* @param {object} cfg
-* @param {import('@google-cloud/dialogflow').SessionsClient} cfg.app
-* @param {import('../router.js').Router} cfg.router
-* @param {import('discord.js').Client} cfg.client
-* @param {typeof import('discord.js')} cfg.Discord
-* @param {import('intl-dom').I18NCallback} cfg._
-* @param {import('../discordBot.js').Settings} cfg.settings
-* @returns {import('./getCommands.js').BotCommand}
-*/
+ * @param {object} cfg
+ * @param {import('@google-cloud/dialogflow').SessionsClient} cfg.app
+ * @param {import('../router.js').Router} cfg.router
+ * @param {import('discord.js').Client} cfg.client
+ * @param {typeof import('discord.js')} cfg.Discord
+ * @param {import('intl-dom').I18NCallback} cfg._
+ * @param {import('../discordBot.js').Settings} cfg.settings
+ * @returns {import('./getCommands.js').BotCommand}
+ */
 const getDefaultCommand = ({
   app, router, client, Discord, _, settings
 }) => {
@@ -65,12 +65,12 @@ const getDefaultCommand = ({
       };
 
       /**
-      * @throws {DialogflowError}
-      * @returns {Promise<
-      *   import('@google-cloud/dialogflow').protos.google.
-      *     cloud.dialogflow.v2.IDetectIntentResponse
-      * >} responses
-      */
+       * @throws {DialogflowError}
+       * @returns {Promise<
+       *   import('@google-cloud/dialogflow').protos.google.
+       *     cloud.dialogflow.v2.IDetectIntentResponse
+       * >} responses
+       */
       async function dialogflowCall () {
         // Send request and log result
         try {

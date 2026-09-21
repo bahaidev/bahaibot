@@ -192,9 +192,9 @@ const bot = async ({
   exitNoThrow = true
 }) => {
   /**
-  * @param {import('discord.js').Message} message
-  * @returns {boolean}
-  */
+   * @param {import('discord.js').Message} message
+   * @returns {boolean}
+   */
   const isUserAbusive = (message) => {
     const limited = rateLimiter.take(message.author.id);
     return limited;
@@ -320,9 +320,9 @@ const bot = async ({
   });
 
   /**
-  * @callback ReadyListener
-  * @returns {Promise<void>}
-  */
+   * @callback ReadyListener
+   * @returns {Promise<void>}
+   */
 
   // The ready event is vital, it means that your bot will only start
   //  reacting to information from Discord _after_ ready is emitted
@@ -407,7 +407,7 @@ const bot = async ({
               // eslint-disable-next-line @stylistic/max-len -- Long
               // eslint-disable-next-line no-await-in-loop -- Needs to be in series
               await command.action?.(message);
-            /* c8 ignore start */
+            /* c8 ignore start -- How to trigger? */
             } catch (err) {
               // eslint-disable-next-line no-console -- CLI
               console.error(
@@ -418,7 +418,7 @@ const bot = async ({
                 message.content, err
               );
             }
-            /* c8 ignore stop */
+            /* c8 ignore stop -- See comment above */
             break;
           }
         }
@@ -453,10 +453,10 @@ const bot = async ({
   // New user added
 
   /**
-  * @callback GuildMemberAddListener
-  * @param {import('discord.js').GuildMember} ev
-  * @returns {void}
-  */
+   * @callback GuildMemberAddListener
+   * @param {import('discord.js').GuildMember} ev
+   * @returns {void}
+   */
 
   client.on('guildMemberAdd', /** @type {GuildMemberAddListener} */ (ev) => {
     const wcChannel = ev.guild.channels.cache.find(

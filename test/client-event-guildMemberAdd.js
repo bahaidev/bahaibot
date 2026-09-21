@@ -15,7 +15,6 @@ describe('guildMemberAdd event', () => {
   const _random = Math.random;
   beforeEach(function () {
     this.sinon = createSandbox();
-    // @ts-ignore The spy exists on sinon now (sometimes triggered)
     this.sinon.spyOnGetterResults = spyOnGetterResults;
   });
   afterEach(function () {

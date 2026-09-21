@@ -1,6 +1,6 @@
 /**
-* @returns {import('./getCommands.js').BotCommands}
-*/
+ * @returns {import('./getCommands.js').BotCommands}
+ */
 const getLightHearted = () => {
   return {
     /* OTHER CHIT-CHAT */

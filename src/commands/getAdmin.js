@@ -42,10 +42,9 @@ async function puppet ({
 
   const destination = guild?.channels.cache.find(
     (val) => {
-      if (userChannel.startsWith('<#') || (/^\d+$/v).test(userChannel)) {
-        return val.id === userChannel.replace(/^<#/v, '').replace(/>$/v, '');
-      }
-      return val.name === userChannel;
+      return userChannel.startsWith('<#') || (/^\d+$/v).test(userChannel)
+        ? val.id === userChannel.replace(/^<#/v, '').replace(/>$/v, '')
+        : val.name === userChannel;
     }
   );
 

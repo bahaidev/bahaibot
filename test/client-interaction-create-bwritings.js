@@ -387,11 +387,7 @@ describe('`interactionCreate` Bahá\'í Writings', function () {
         },
         options: {
           getString (opt) {
-            if (opt === 'book') {
-              return 'hwa';
-            }
-
-            return 'English';
+            return opt === 'book' ? 'hwa' : 'English';
           },
           getInteger () {
             return 15;

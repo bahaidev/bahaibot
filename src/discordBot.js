@@ -34,8 +34,8 @@ import bot from './bot.js';
  */
 
 /**
-* @type {GetPath}
-*/
+ * @type {GetPath}
+ */
 const getPath = (path) => {
   return join(process.cwd(), path);
 };
@@ -86,8 +86,8 @@ const getPath = (path) => {
  */
 
 /**
-* @param {SettingsFile} sys
-*/
+ * @param {SettingsFile} sys
+ */
 const getSettings = (sys) => {
   return process.argv.includes('--production')
     /* c8 ignore next -- Not needed for testing */
